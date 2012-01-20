@@ -449,52 +449,54 @@ BlossomTest.ButtonPane = SC.Pane.extend(SC.Control, SC.Button, {
     return YES ;
   },
   
-  // touchStart: function(touch){
-  //   var buttonBehavior = this.get('buttonBehavior');
-  // 
-  //   if (!this.get('isEnabled')) return YES ; // handled event, but do nothing
-  //   this.set('isActive', YES);
-  // 
-  //   if (buttonBehavior === SC.HOLD_BEHAVIOR) {
-  //     this._action(touch);
-  //   } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
-  //     this._isFocused = YES ;
-  //     this.becomeFirstResponder();
-  //     if (this.get('isVisibleInWindow')) {
-  //       this.$()[0].focus();
-  //     }
-  //   }
-  // 
-  //   // don't want to do whatever default is...
-  //   touch.preventDefault();
-  // 
-  //   return YES;
-  // },
-  // 
-  // touchesDragged: function(evt, touches) {
-  //   if (!this.touchIsInBoundary(evt)) {
-  //     if (!this._touch_exited) this.set('isActive', NO);
-  //     this._touch_exited = YES;
-  //   } else {
-  //     if (this._touch_exited) this.set('isActive', YES);
-  //     this._touch_exited = NO;
-  //   }
-  //   
-  //   evt.preventDefault();
-  //   return YES;
-  // },
-  // 
-  // touchEnd: function(touch){
-  //   this._touch_exited = NO;
-  //   this.set('isActive', NO); // track independently in case isEnabled has changed
-  // 
-  //   if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-  //     if (this.touchIsInBoundary(touch)) this._action();
-  //   }
-  //   
-  //   touch.preventDefault();
-  //   return YES ;
-  // },
+  touchStart: function(touch){
+    var buttonBehavior = this.get('buttonBehavior');
+  
+    if (!this.get('isEnabled')) return YES ; // handled event, but do nothing
+    this.set('isActive', YES);
+  
+    if (buttonBehavior === SC.HOLD_BEHAVIOR) {
+      this._action(touch);
+    } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
+      this._isFocused = YES ;
+      this.becomeFirstResponder();
+      if (SPROUTCORE) {
+        if (this.get('isVisibleInWindow')) {
+          this.$()[0].focus();
+        }
+      }
+    }
+  
+    // don't want to do whatever default is...
+    touch.preventDefault();
+  
+    return YES;
+  },
+  
+  touchesDragged: function(evt, touches) {
+    if (!this.touchIsInBoundary(evt)) {
+      if (!this._touch_exited) this.set('isActive', NO);
+      this._touch_exited = YES;
+    } else {
+      if (this._touch_exited) this.set('isActive', YES);
+      this._touch_exited = NO;
+    }
+    
+    evt.preventDefault();
+    return YES;
+  },
+  
+  touchEnd: function(touch){
+    this._touch_exited = NO;
+    this.set('isActive', NO); // track independently in case isEnabled has changed
+  
+    if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
+      if (this.touchIsInBoundary(touch)) this._action();
+    }
+    
+    touch.preventDefault();
+    return YES ;
+  },
   
   
   /** @private */
