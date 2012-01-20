@@ -7,7 +7,7 @@
   "contributors"  : [],
   "dependencies"  : {},
   "main"          : "./node/buildfile",
-  "version"       : "0.1",
+  "version"       : "0.1.0",
   "scripts"       : {},
   "engines"       : {"node": "0.6.x"}
 }
