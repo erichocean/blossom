@@ -239,14 +239,19 @@ BT.Target = BT.BuildNode.extend({
         frameworks = this.get('frameworks'),
         ary = [];
 
-    function processFramework(name, parent) {
-      var framework = project.findFramework(name, parent),
-          dependencies = framework.get('frameworks');
+    if (!project) return ary;
 
-      dependencies.forEach(function(dep) {
-        processFramework(dep, framework);
-      });
-      ary.push(framework);
+    function processFramework(name, parent) {
+      // console.log(name);
+      var framework = project.findFramework(name, parent),
+          dependencies = framework ? framework.get('frameworks') : null;
+
+      if (dependencies) {
+        dependencies.forEach(function(dep) {
+          processFramework(dep, framework);
+        });
+        ary.push(framework);
+      }
     }
 
     frameworks.forEach(function(name) {
@@ -255,11 +260,12 @@ BT.Target = BT.BuildNode.extend({
 
     // console.log(ary.map(function(f) { return f.get('nodeName'); }));
     return ary;
-  }.property().cacheable(),
+  }.property(),
 
   init: function() {
     arguments.callee.base.apply(this, arguments); // sc_super()
-    var sourceTree = this.get('sourceTree');
+    var sourceTree = this.get('sourceTree'),
+        frameworks = this.get('frameworks');
 
     function processDirectory(dirname, node, deep) {
       var files = fs.readdirSync(dirname);
@@ -273,9 +279,13 @@ BT.Target = BT.BuildNode.extend({
             sourceTree: sourceTree
           }));
         } else if (stat.isDirectory()) {
-          var dir = BT.Directory.create();
-          node.set(filename, dir);
-          processDirectory(relativePath, dir, true);
+          // Skip directories named after embedded frameworks.
+          if (frameworks.indexOf(filename) !== -1) return;
+          else {
+            var dir = BT.Directory.create();
+            node.set(filename, dir);
+            processDirectory(relativePath, dir, true);
+          }
         } else {
           console.log("the file is something strange");
         }
