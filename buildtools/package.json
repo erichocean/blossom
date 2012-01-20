@@ -1,0 +1,13 @@
+{
+  "name"          : "sproutcore-buildtools",
+  "description"   : "JavaScript Application Buildtools",
+  "url"           : "http://fohr.com/",
+  "keywords"      : ["sproutcore", "buildtools"],
+  "author"        : "Erich Ocean <eocean@fohr.com>",
+  "contributors"  : [],
+  "dependencies"  : {},
+  "main"          : "./buildtools.js",
+  "version"       : "0.1.0",
+  "scripts"       : {},
+  "engines"       : {"node": "0.6.x"}
+}
