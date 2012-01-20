@@ -6,6 +6,7 @@
 // ==========================================================================
 
 sc_require('system/locale');
+sc_require('system/error');
 
 SC.IMAGE_ABORTED_ERROR = SC.$error("SC.Image.AbortedError", "Image", -100) ;
 

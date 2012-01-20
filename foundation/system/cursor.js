@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/object');
+
 // standard browser cursor definitions
 SC.SYSTEM_CURSOR = 'default' ;
 SC.AUTO_CURSOR = SC.DEFAULT_CURSOR = 'auto' ;

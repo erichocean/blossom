@@ -6,6 +6,8 @@
 // ==========================================================================
 /*global ActiveXObject */
 
+sc_require('system/object');
+
 /**
   A response represents a single response from a server request.  An instance
   of this class is returned whenever you call SC.Request.send().

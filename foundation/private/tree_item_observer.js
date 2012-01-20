@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/object');
+sc_require('mixins/array');
 sc_require('mixins/tree_item_content');
 sc_require('mixins/collection_content');
 

@@ -8,10 +8,9 @@
 var path = require('path');
 
 module.exports = BT.Framework.create({
-  "frameworks": "bootstrap runtime".w(),
+  "frameworks": "bootstrap".w(),
 
   sourceTree: path.join(__dirname, ".."),
 
-  "bootstrap": require('../bootstrap/node/buildfile'),
-  "runtime": require('../runtime/node/buildfile')
+  "bootstrap": require('../bootstrap/node/buildfile')
 });

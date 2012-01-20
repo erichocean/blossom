@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/object');
+
 /**
   Represents a single task which can be run by a task queue. Note that tasks
   are actually allowed to add themselves back onto the queue if they did not/

@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals ie7userdata openDatabase*/
+
+sc_require('system/object');
+
 /**
   @class
   
