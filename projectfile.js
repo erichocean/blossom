@@ -5,7 +5,7 @@
 // ==========================================================================
 /*globals global require __dirname BT */
 
-require('blossom/buildtools'); // adds the SC and BT namespaces as globals
+require('./buildtools'); // adds the SC and BT namespaces as globals
 
 var project = BT.Project.create({
   "static": BT.Directory.create({
