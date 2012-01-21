@@ -2,8 +2,6 @@
 // SC.Cookie
 // ==========================================================================
 
-sc_require('system/object');
-
 /** @class
   
   Allows for easier handling of the document.cookie object. To create a cookie,

@@ -5,9 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/object');
-sc_require('system/platform');
-
 /**
   SC.routes manages the browser location. You can change the hash part of the
   current location. The following code

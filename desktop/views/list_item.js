@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+sc_require('mixins/control');
+
 SC.LIST_ITEM_ACTION_CANCEL = 'sc-list-item-cancel-action';
 SC.LIST_ITEM_ACTION_REFRESH = 'sc-list-item-cancel-refresh';
 SC.LIST_ITEM_ACTION_EJECT = 'sc-list-item-cancel-eject';

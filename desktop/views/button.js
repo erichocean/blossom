@@ -5,6 +5,11 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+sc_require('mixins/control');
+sc_require('mixins/button');
+sc_require('mixins/static_layout');
+
 /*jslint evil:true */
 
 /** @class

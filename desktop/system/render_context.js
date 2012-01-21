@@ -5,8 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/object');
-sc_require('system/builder');
+sc_require('system/browser');
 
 /** set update mode on context to replace content (preferred) */
 SC.MODE_REPLACE = 'replace';

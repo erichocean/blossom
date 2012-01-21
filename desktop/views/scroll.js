@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/container');
 sc_require('views/scroller');
 sc_require('mixins/border');
 

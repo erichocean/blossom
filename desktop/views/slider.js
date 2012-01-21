@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+sc_require('mixins/control');
+
 /** @class
 
   A SliderView shows a horizontal slider control that you can use to set 

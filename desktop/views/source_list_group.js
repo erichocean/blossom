@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+sc_require('mixins/control');
 sc_require('mixins/collection_group');
 sc_require('views/disclosure');
 

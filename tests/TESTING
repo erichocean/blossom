@@ -3,7 +3,8 @@ SproutCore Unit Testing
 ABOUT UNIT TESTS
 
 Unit tests are divided into two types of tests: API unit tests and integration 
-tests. API unit tests test each public method and property to ensure that the method behaves correctly according to its documentation.  Integration tests 
+tests. API unit tests test each public method and property to ensure that the
+ method behaves correctly according to its documentation.  Integration tests 
 spot check the way various API methods are used together to ensure they 
 function correctly in usage scenarios.
 
@@ -35,7 +36,8 @@ test file and add it there.
 HOW TO WRITE API UNIT TESTS VS INTEGRATION
 
 The purpose of an API unit test is to exercise individual methods in the API
-in isolation of the rest of the API.  You should swap out methods, mock objects, or make any other temporary modifications to the framework needed to
+in isolation of the rest of the API.  You should swap out methods, mock 
+objects, or make any other temporary modifications to the framework needed to
 make the method run as isolated as possible from other methods.
 
 Integration tests, on the other hand, are about testing API usage in place.

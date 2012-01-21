@@ -10,7 +10,6 @@
 // ==========================================================================
 /*globals SPROUTCORE BLOSSOM */
 
-sc_require('system/object');
 sc_require('system/ready');
 
 /** Set to NO to leave the backspace key under the control of the browser.*/

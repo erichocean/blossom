@@ -5,9 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/object');
-sc_require('private/observer_set');
-
 /**
   @class
   

@@ -4,6 +4,10 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+
+sc_require('views/view');
+sc_require('mixins/control');
+
 /** @class
 
   A RadioView is used to create a group of radio buttons.  The user can use

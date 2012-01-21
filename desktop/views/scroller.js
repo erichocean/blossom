@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+
 /** @class
 
   Displays a horizontal or vertical scroller.  You will not usually need to

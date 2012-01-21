@@ -7,7 +7,6 @@
 
 sc_require('system/ready');
 sc_require('system/root_responder');
-sc_require('system/platform');
 
 /**
   The device object allows you to check device specific properties such as 

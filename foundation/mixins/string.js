@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/locale');
-
 // These are basic enhancements to the string class used throughout 
 // SproutCore.
 /** @private */
@@ -117,40 +115,14 @@ SC.INFLECTION_CONSTANTS = {
 SC.String = {
 
   /**
-    Localizes the string.  This will look up the reciever string as a key 
-    in the current Strings hash.  If the key matches, the loc'd value will be
-    used.  The resulting string will also be passed through fmt() to insert
-    any variables.
-    
-    @param args {Object...} optional arguments to interpolate also
-    @returns {String} the localized and formatted string.
+    Stub out .loc(); doesn't actually localize.
+
+    See desktop/mixins/string.js for the localized version.
   */
   loc: function() {
-    // NB: This could be implemented as a wrapper to locWithDefault() but
-    // it would add some overhead to deal with the arguments and adds stack
-    // frames, so we are keeping the implementation separate.
-    if(!SC.Locale.currentLocale) SC.Locale.createCurrentLocale();
-    var str = SC.Locale.currentLocale.locWithDefault(this);
-    if (SC.typeOf(str) !== SC.T_STRING) str = this;
-    return str.fmt.apply(str,arguments) ;
+    return SC.String.fmt.apply(this, arguments);
   },
 
-  /**
-    Works just like loc() except that it will return the passed default 
-    string if a matching key is not found.
-    
-    @param {String} def the default to return
-    @param {Object...} args optional formatting arguments
-    @returns {String} localized and formatted string
-  */
-  locWithDefault: function(def) {
-    if(!SC.Locale.currentLocale) SC.Locale.createCurrentLocale();
-    var str = SC.Locale.currentLocale.locWithDefault(this, def);
-    if (SC.typeOf(str) !== SC.T_STRING) str = this;
-    var args = SC.$A(arguments); args.shift(); // remove def param
-    return str.fmt.apply(str,args) ;
-  },
-  
   /** 
     Capitalizes a string.
 

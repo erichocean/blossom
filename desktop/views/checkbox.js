@@ -6,6 +6,8 @@
 // ==========================================================================
 
 sc_require('views/button');
+sc_require('mixins/button');
+sc_require('mixins/static_layout');
 
 /** @class
 

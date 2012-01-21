@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+
 /** @class
 
   A toolbar view can be anchored at the top or bottom of the window to contain

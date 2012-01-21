@@ -4,6 +4,8 @@
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
 
+sc_require('panes/pane');
+
 /** @class
 
   A modal pane is used to capture mouse events inside a pane that is modal.

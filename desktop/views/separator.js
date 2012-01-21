@@ -4,6 +4,8 @@
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
 
+sc_require('views/view');
+
 /**
   @class
 

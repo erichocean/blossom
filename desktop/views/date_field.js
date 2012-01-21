@@ -6,6 +6,8 @@
 // ==========================================================================
 /*globals Shared */
 
+sc_require('views/text_field');
+
 /** @class
 
   A Date field add behaviour to the Text Field to support date management, 

@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/container');
+
 /** @class
 
   Displays several views as scenes that can slide on and off the screen.  The

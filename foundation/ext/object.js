@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/object');
+
 // Extensions to the core SC.Object class
 SC.mixin(SC.Object.prototype, /** @scope SC.Object.prototype */ {
   

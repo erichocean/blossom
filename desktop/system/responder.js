@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/object');
-
 /** @class
 
   Provides common methods for sending events down a responder chain.

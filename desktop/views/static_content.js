@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
+sc_require('mixins/static_layout');
+
 /** @class
 
   StaticContentView allows you to display arbitrary HTML content inside your

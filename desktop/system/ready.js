@@ -4,12 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*global main */
 
-SC.BENCHMARK_LOG_READY = YES;
+sc_require('system/event');
+sc_require('system/browser');
 
-sc_require('system/event') ;
+SC.BENCHMARK_LOG_READY = YES;
 
 SC.mixin({
   _isReadyBound: NO,

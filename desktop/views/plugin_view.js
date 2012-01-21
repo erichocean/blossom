@@ -4,6 +4,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/view');
 sc_require("ext/common");
 
 /** @class

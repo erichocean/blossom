@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('views/button');
+
 /**
   @class
 
@@ -22,8 +24,6 @@
   @version 1.0
   @author Alex Iskander, Mohammed Ashik
 */
-sc_require('views/button');
-
 SC.SelectView = SC.ButtonView.extend(
 /** @scope SC.SelectView.prototype */ {
 
