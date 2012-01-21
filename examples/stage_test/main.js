@@ -20,9 +20,9 @@ function main() {
 
   stage.attach(); // Must currently attach *before* adding shapes.
 
-  BlossomTest.clipDragExample(stage);
+  // BlossomTest.clipDragExample(stage);
   // BlossomTest.tooltipExample(stage);
-  // BlossomTest.curvesExample(stage);
+  BlossomTest.curvesExample(stage);
   // BlossomTest.physicsExample(stage);
   // BlossomTest.colorExample(stage);
   // BlossomTest.stressExample(stage);
