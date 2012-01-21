@@ -6,9 +6,9 @@
 /*globals BT require */
 
 module.exports = BT.Framework.create({
-  "frameworks": "foundation desktop datastore".w(),
+  "frameworks": "foundation application datastore".w(),
 
   "foundation": require('../foundation/node/buildfile'),
-  "desktop": require('../desktop/node/buildfile'),
+  "application": require('../application/node/buildfile'),
   "datastore": require('../datastore/node/buildfile')
 });
