@@ -320,11 +320,11 @@ SC.Benchmark = {
     // For each item in the chart, print it out on the screen.
     for(i=0;i<chartLen; i++)
     {
-    	var row = document.createElement('div');
-    	row.style.top = (75+(i*30))+'px';
-    	row.style.width = maxWidth+'px';
-    	row.className = (i%2===0) ? 'sc-benchmark-row even' : 'sc-benchmark-row';
-    	graph.appendChild(row);
+      var row = document.createElement('div');
+      row.style.top = (75+(i*30))+'px';
+      row.style.width = maxWidth+'px';
+      row.className = (i%2===0) ? 'sc-benchmark-row even' : 'sc-benchmark-row';
+      graph.appendChild(row);
 
       var div = document.createElement('div');
       var start = chart[i][1];

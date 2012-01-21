@@ -208,7 +208,7 @@ SC.ListView = SC.CollectionView.extend(
     ret = idx * rowHeight;
 
     rowSpacing = this.get('rowSpacing');
-		if(rowSpacing){ 
+    if(rowSpacing){ 
       ret += idx * rowSpacing; 
     } 
 

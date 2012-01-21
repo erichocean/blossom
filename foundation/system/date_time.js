@@ -977,8 +977,8 @@ SC.DateTime.mixin(SC.Comparable,
     @returns {String} the padded string
   */
   _pad: function(x, len) {
-  	var str = '' + x;
-  	if (len === undefined) len = 2;
+    var str = '' + x;
+    if (len === undefined) len = 2;
     while (str.length < len) str = '0' + str;
     return str;
   },

@@ -3,7 +3,7 @@
 // Copyright: ©2010 TPSi
 // Copyright: ©2010 Alex Iskander
 // Portions © Apple Inc under BSD License:
-//	See: http://trac.webkit.org/browser/trunk/WebCore/platform/graphics/UnitBezier.h
+//  See: http://trac.webkit.org/browser/trunk/WebCore/platform/graphics/UnitBezier.h
 // ==========================================================================
 /*globals */
 
@@ -957,7 +957,7 @@ SC.Animatable = {
   },
 
   // NOTE: I tested this with two separate functions (one for each X and Y)
-  // 		 no definite performance difference on Safari, at least.
+  //      no definite performance difference on Safari, at least.
   _animateTickCenter: function(t)
   {
     // prepare timing stuff

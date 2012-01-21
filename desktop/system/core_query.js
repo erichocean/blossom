@@ -440,10 +440,10 @@ SC.CoreQuery = (function() {
     
     html: function( value ) {
       return value === undefined ?
-      			(this[0] ?
-      				this[0].innerHTML.replace(CQHtmlRegEx, "") :
-      				null) :
-      			this.empty().append( value );
+            (this[0] ?
+              this[0].innerHTML.replace(CQHtmlRegEx, "") :
+              null) :
+            this.empty().append( value );
     },
 
     andSelf: function() { return this.add( this.prevObject ); },
@@ -1437,14 +1437,14 @@ SC.CoreQuery = (function() {
           // elem.tabIndex doesn't always return the correct value when it hasn't been explicitly set
           // http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javascript/
           if ( name === "tabIndex" ) {
-          	var attributeNode = elem.getAttributeNode( "tabIndex" );
-          	return attributeNode && attributeNode.specified
-          				? attributeNode.value
-          				: elem.nodeName.match(tagsWithTabIndexRegEx)
-          					? 0
-          					: elem.nodeName.match(/^(a|area)$/i) && elem.href
-          						? 0
-          						: undefined;
+            var attributeNode = elem.getAttributeNode( "tabIndex" );
+            return attributeNode && attributeNode.specified
+                  ? attributeNode.value
+                  : elem.nodeName.match(tagsWithTabIndexRegEx)
+                    ? 0
+                    : elem.nodeName.match(/^(a|area)$/i) && elem.href
+                      ? 0
+                      : undefined;
           }
 
           return elem[ name ];

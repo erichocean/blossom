@@ -476,13 +476,13 @@ SC.SplitView = SC.View.extend(
   
   mouseUp: function(evt) {
     if (this._inLiveResize === YES) {
-    	this._thumbView = null ; // avoid memory leaks
-    	this._inLiveResize = NO ;
-    	this.endLiveResize() ;
-    	return YES ;
-		}
-		
-		return NO ;
+      this._thumbView = null ; // avoid memory leaks
+      this._inLiveResize = NO ;
+      this.endLiveResize() ;
+      return YES ;
+    }
+    
+    return NO ;
   },
   
   touchesDragged: function(evt){

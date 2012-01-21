@@ -209,7 +209,7 @@ SC.AlertPane = SC.PanelPane.extend({
     useStaticLayout: YES,
     
     layout: { left: 0, right: 0, top: 0, height: "auto" },
-		
+    
     childViews: [
       SC.View.extend(SC.StaticLayout, {
         classNames: ['info'],

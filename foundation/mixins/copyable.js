@@ -63,10 +63,10 @@ SC.Copyable = {
 // Make Array copyable
 SC.mixin(Array.prototype, SC.Copyable);
 Array.prototype.copy = function(deep) {
-	var ret = this.slice(), idx;
-	if (deep) {
+  var ret = this.slice(), idx;
+  if (deep) {
       idx = ret.length;
-	  while (idx--) ret[idx] = SC.copy(ret[idx], true);
-	}
-	return ret;
+    while (idx--) ret[idx] = SC.copy(ret[idx], true);
+  }
+  return ret;
 }

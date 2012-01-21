@@ -884,8 +884,8 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
     @returns {Array} list of tokens
   */
   tokenizeString: function (inputString, grammar) {
-	
-	
+  
+  
     var tokenList           = [],
         c                   = null,
         t                   = null,

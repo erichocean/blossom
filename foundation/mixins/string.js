@@ -95,9 +95,9 @@ SC.INFLECTION_CONSTANTS = {
       "money",
       "rice",
       "information",
-			"info",
+      "info",
       "equipment"
-  ]					
+  ]          
 };
 
 
@@ -436,29 +436,29 @@ SC.String = {
     @returns {String} the plural form of the string
   */
   pluralize: function() {
-			var idx, len,
-			 		compare = this.split(/\s/).pop(), //check only the last word of a string
-					restOfString = this.replace(compare,''),
-					isCapitalized = compare.charAt(0).match(/[A-Z]/) ? true : false;									
+      var idx, len,
+           compare = this.split(/\s/).pop(), //check only the last word of a string
+          restOfString = this.replace(compare,''),
+          isCapitalized = compare.charAt(0).match(/[A-Z]/) ? true : false;                  
 
-			compare = compare.toLowerCase();
+      compare = compare.toLowerCase();
       for (idx=0, len=SC.INFLECTION_CONSTANTS.UNCOUNTABLE.length; idx < len; idx++) {
           var uncountable = SC.INFLECTION_CONSTANTS.UNCOUNTABLE[idx];
-          if (compare == uncountable) {	
+          if (compare == uncountable) {  
               return this.toString();
           }
       }
       for (idx=0, len=SC.INFLECTION_CONSTANTS.IRREGULAR.length; idx < len; idx++) {
           var singular = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][0],
-							plural   = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][1];
+              plural   = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][1];
           if ((compare == singular) || (compare == plural)) {
-							if(isCapitalized) plural = plural.capitalize();
+              if(isCapitalized) plural = plural.capitalize();
               return restOfString + plural;
           }
       }
       for (idx=0, len=SC.INFLECTION_CONSTANTS.PLURAL.length; idx < len; idx++) {
           var regex          = SC.INFLECTION_CONSTANTS.PLURAL[idx][0],
-							replace_string = SC.INFLECTION_CONSTANTS.PLURAL[idx][1];
+              replace_string = SC.INFLECTION_CONSTANTS.PLURAL[idx][1];
           if (regex.test(compare)) {
               return this.replace(regex, replace_string);
           }
@@ -471,12 +471,12 @@ SC.String = {
     @returns {String} the singular form of the string
   */
   singularize: function() {
-			var idx, len,
-					compare = this.split(/\s/).pop(), //check only the last word of a string								
-					restOfString = this.replace(compare,''),	
-					isCapitalized = compare.charAt(0).match(/[A-Z]/) ? true : false;
+      var idx, len,
+          compare = this.split(/\s/).pop(), //check only the last word of a string                
+          restOfString = this.replace(compare,''),  
+          isCapitalized = compare.charAt(0).match(/[A-Z]/) ? true : false;
 
-			compare = compare.toLowerCase();
+      compare = compare.toLowerCase();
       for (idx=0, len=SC.INFLECTION_CONSTANTS.UNCOUNTABLE.length; idx < len; idx++) {
           var uncountable = SC.INFLECTION_CONSTANTS.UNCOUNTABLE[idx];
           if (compare == uncountable) {
@@ -485,15 +485,15 @@ SC.String = {
       }
       for (idx=0, len=SC.INFLECTION_CONSTANTS.IRREGULAR.length; idx < len; idx++) {
           var singular = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][0],
-							plural   = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][1];
+              plural   = SC.INFLECTION_CONSTANTS.IRREGULAR[idx][1];
           if ((compare == singular) || (compare == plural)) {
-							if(isCapitalized) singular = singular.capitalize();
+              if(isCapitalized) singular = singular.capitalize();
               return restOfString + singular;
           }
       }
       for (idx=0, len=SC.INFLECTION_CONSTANTS.SINGULAR.length; idx < len; idx++) {
           var regex          = SC.INFLECTION_CONSTANTS.SINGULAR[idx][0],
-							replace_string = SC.INFLECTION_CONSTANTS.SINGULAR[idx][1];
+              replace_string = SC.INFLECTION_CONSTANTS.SINGULAR[idx][1];
           if (regex.test(compare)) {
               return this.replace(regex, replace_string);
           }
