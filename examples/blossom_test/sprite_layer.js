@@ -5,8 +5,6 @@
 // ==========================================================================
 /*globals BlossomTest */
 
-sc_require('sprite_data_uri');
-
 var base03 =   "#002b36";
 var base02 =   "#073642";
 var base01 =   "#586e75";
@@ -25,7 +23,7 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 
 SC.spriteImage = SC.Image.create({
-  source: BlossomTest.SPRITE,
+  source: "static/sc-theme-repeat-x.png",
 
   imageDidLoad: function() {
     // console.log('SC.spriteImage#imageDidLoad()');

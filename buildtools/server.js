@@ -94,20 +94,33 @@ BT.Server = SC.Object.extend({
 
           if (node) {
             // Send back the file.
-            var sourcePath = node.get('sourcePath');
-            fs.readFile(sourcePath, "utf-8", function(error, content) {
-              if (error) {
-                res.writeHead(500);
-                res.end(error.toString());
-              } else {
-                res.writeHead(200, {'Content-Type': 'application/javascript'});
-                var superCalls = new Date().getTime();
-                content = replaceScSuperCalls(content);
-                var end = new Date().getTime();
-                if (BT.LOG_SERVING) console.log(sourcePath, (end-start)+'ms read', '('+(end-superCalls)+'ms process)');
-                res.end(content, 'utf-8');
-              }
-            });
+            var sourcePath = node.get('sourcePath'),
+                mimeType = node.get('mimeType');
+            if (!mimeType) {
+              fs.readFile(sourcePath, "utf-8", function(error, content) {
+                if (error) {
+                  res.writeHead(500);
+                  res.end(error.toString());
+                } else {
+                  res.writeHead(200, {'Content-Type': 'application/javascript'});
+                  var superCalls = new Date().getTime();
+                  content = replaceScSuperCalls(content);
+                  var end = new Date().getTime();
+                  if (BT.LOG_SERVING) console.log(sourcePath, (end-start)+'ms read', '('+(end-superCalls)+'ms process)');
+                  res.end(content, 'utf-8');
+                }
+              });
+            } else {
+              fs.readFile(sourcePath, "binary", function(error, content) {
+                if (error) {
+                  res.writeHead(500);
+                  res.end(error.toString());
+                } else {
+                  res.writeHead(200, {'Content-Type': node.get('mimeType')});
+                  res.end(content, 'binary');
+                }
+              });
+            }
           } else {
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end("That file does not exist.");
