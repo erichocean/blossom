@@ -304,6 +304,21 @@ BT.Project = BT.BuildNode.extend({
 
   accept: acceptBuilder('visitProject'),
 
+  apps: function() {
+    var ret = [];
+
+    var visitor = BT.Visitor.create({
+      visitApp: function(node, name, depth) {
+        ret.push(node);
+        arguments.callee.base.apply(this, arguments);
+      }
+    });
+
+    this.accept(visitor);
+
+    return ret;
+  }.property(),
+
   /**
     Returns the app if `str` refers to an app is this project; null otherwise.
   */
@@ -358,6 +373,34 @@ BT.Project = BT.BuildNode.extend({
 
     return ret;
   },
+
+  indexHTML: function() {
+    var ret = "", project = this.get('project');
+
+    ret += '<html>\n';
+    ret += '  <head>\n';
+    ret += '    <title>Blossom Project</title>\n';
+    ret += '    <style>\n';
+    ret += '      .sc-pane { position: absolute; margin: 0; }\n';
+    ret += '    </style>\n';
+
+    ret += '  </head>\n';
+    ret += '  <body style="background: #fdf6e3; margin: 40; overflow: hidden;">\n';
+
+    ret += '    <h2>Welcome to Blossom.</h2>\n';
+    ret += "    <p>Here's a list of apps in this project:\n";
+    ret += '      <ul>\n';
+    this.get('apps').forEach(function outputAppListItem(app) {
+      ret += '        <li><a href="' + app.get('nodeName') + '">'+app.get('nodeName')+'</a></li>\n';
+    });
+    ret += '      </ul>\n';
+    ret += '     </p>\n';
+
+    ret += '  </body>\n';
+    ret += '</html>';
+    
+    return ret;
+  }.property(),
 
   init: function() {
     arguments.callee.base.apply(this, arguments);

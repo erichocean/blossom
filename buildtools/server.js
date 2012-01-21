@@ -50,7 +50,8 @@ BT.Server = SC.Object.extend({
 
       // if the url is in the project, send it back
       if (url === "/") {
-        res.end("You're in the 'test' project.");
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end(project.get('indexHTML'));
       } else {
         var ary = url.slice(1).split('/');
 
