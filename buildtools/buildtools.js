@@ -9,8 +9,8 @@ var fs = require('fs'),
     path = require('path');
 
 if (!global.SC) {
-  require('../lib/sc/runtime/core');
-  require('../lib/sc/foundation/core');
+  require('./lib/sc/runtime/core');
+  require('./lib/sc/foundation/core');
 }
 
 var Graph = require('./utils/graph'); // needed for topological sorting

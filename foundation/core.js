@@ -10,7 +10,6 @@
 var require = require || function require() { } ;
 var sc_require = sc_require || require;
 var sc_resource = sc_resource || function sc_resource() {};
-sc_require('license') ;
 
 var sc_assert = function(assertion, msg) {
   if (!assertion) throw msg || "sc_assert()";
