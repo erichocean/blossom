@@ -8,9 +8,7 @@
 var path = require('path');
 
 module.exports = BT.Framework.create({
-  "frameworks": "desktop".w(),
 
-  sourceTree: path.join(__dirname, ".."),
+  sourceTree: path.join(__dirname, "..")
 
-  "desktop": require('../desktop/node/buildfile')
 });
