@@ -1,0 +1,13 @@
+{
+  "name"          : "blossom-datastore",
+  "description"   : "Blossom's datastore framework",
+  "url"           : "http://fohr.com/",
+  "keywords"      : ["blossom", "sproutcore"],
+  "author"        : "Erich Ocean <eocean@fohr.com>",
+  "contributors"  : [],
+  "dependencies"  : {},
+  "main"          : "./node/buildfile",
+  "version"       : "0.1.0",
+  "scripts"       : {},
+  "engines"       : {"node": "0.6.x"}
+}
