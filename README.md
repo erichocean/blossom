@@ -1,6 +1,11 @@
 Blossom - Modern, Cross-Platform Application Framework
 ======================================================
 
+**Note: This is a developer preview. Not all functionality is present. The 
+code is being released now to get feedback from the SproutCore community.**
+
+_The beta release of Blossom with all features enabled is scheduled for March 1, 2012._
+
 Blossom extends the reach of traditional SproutCore applications beyond the
 web browser by re-architecting the view layer to be HTML and CSS-independent.
 
