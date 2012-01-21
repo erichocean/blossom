@@ -710,7 +710,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
         return this; // nothing to do
       }
 
-      this.render(this.get('context'), true);
+      this.render(this.getPath('layer.context'), true);
       elem.insertBefore(container, null); // add to DOM
       elem = container = null;
 
