@@ -8,11 +8,10 @@
 var path = require('path');
 
 module.exports = BT.Framework.create({
-  "frameworks": "desktop statechart plugin".w(),
+  "frameworks": "desktop statechart".w(),
 
   sourceTree: path.join(__dirname, ".."),
 
   "desktop": require('../desktop/node/buildfile'),
-  "statechart": require('../statechart/node/buildfile'),
-  "plugin": require('../plugin/node/buildfile')
+  "statechart": require('../statechart/node/buildfile')
 });
