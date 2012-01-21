@@ -32,6 +32,8 @@ function replaceScSuperCalls(str) {
   return gsub(str, /sc_super\(\)/, "arguments.callee.base.apply(this, arguments)");
 }
 
+BT.LOG_SERVING = false;
+
 BT.Server = SC.Object.extend({
   
   hostname: '127.0.0.1',
@@ -47,6 +49,7 @@ BT.Server = SC.Object.extend({
 
     this._bt_server = http.createServer(function (req, res) {
       var url = path.normalize(req.url);
+      var start = new Date().getTime();
 
       // if the url is in the project, send it back
       if (url === "/") {
@@ -98,7 +101,10 @@ BT.Server = SC.Object.extend({
                 res.end(error.toString());
               } else {
                 res.writeHead(200, {'Content-Type': 'application/javascript'});
+                var superCalls = new Date().getTime();
                 content = replaceScSuperCalls(content);
+                var end = new Date().getTime();
+                if (BT.LOG_SERVING) console.log(sourcePath, (end-start)+'ms read', '('+(end-superCalls)+'ms process)');
                 res.end(content, 'utf-8');
               }
             });
