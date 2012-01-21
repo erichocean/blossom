@@ -416,6 +416,7 @@ BT.App = BT.Target.extend({
 
     ret += '<html>\n';
     ret += '  <head>\n';
+    ret += '    <title>Blossom</title>\n';
 
     ret += '    <script>var BLOSSOM = true; var SPROUTCORE = false;</script>\n';
 
@@ -437,7 +438,8 @@ BT.App = BT.Target.extend({
 
     ret += '  </head>\n';
     
-    ret += '  <body style="background: #fdf6e3; margin: 0; overflow: hidden;">\n';
+    ret += '  <body style="background: #fdf6e3; margin: 0; overflow: hidden;"></body>\n';
+    ret += '</html>';
     
     return ret;
   }.property()
