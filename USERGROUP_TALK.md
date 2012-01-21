@@ -3,12 +3,14 @@
 ## Why does Blossom exist?
 
 - A brief history of views in SproutCore
-  - Cappuccino's influence
   - templates (0.9, Ruby) -> javascript (1.0) -> templates (SC 2)
-  - IE 7 and DOM performance
+  - Cappuccino's influence
+  - IE 7 and crappy DOM performance
+  - did I mention positioning?
   
 - Why are SproutCore views so dang hard to write?
   - HTML and CSS play off each other (no central way to style)
+  - going from a pixel-perfect mockup to the equivalent HTML/CSS in 
   - surprising interplay between unrelated views
   - lots of CSS is a pain (conflicts, !important, very long selectors)
   - very, very hard to subclass an existing view due to styling issues
@@ -16,7 +18,8 @@
 - SproutCore sucks on mobile IMO
   - the code itself takes a long time to parse (not to mention download)
   - touch events in mobile browser are pretty hacky
-  - the framework as a whole is structured in a way that makes good mobile hard
+  - the framework as a whole is structured in a way that makes good mobile
+    hard
 
 - The world is different now than in 2008
   - browsers are better
