@@ -1,4 +1,15 @@
 // ==========================================================================
+// SC Statechart - Buildfile
+// copyright (c) 2009 - Evin Grano, and contributors
+// ==========================================================================
+
+// ..........................................................
+// State Constants
+// 
+
+SC.DEFAULT_TREE = 'default';
+
+// ==========================================================================
 // Project:   SproutCore Plugin Architecture
 // Copyright: ©2012 xTuple. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
