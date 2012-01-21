@@ -34,7 +34,7 @@
  * THE SOFTWARE.
  */
 
-sc_require('blossom/layer');
+sc_require('layers/layer');
 
 if (BLOSSOM) {
 

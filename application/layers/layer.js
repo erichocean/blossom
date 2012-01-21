@@ -6,9 +6,9 @@
 /*globals BLOSSOM CanvasRenderingContext2D HTMLCanvasElement
   ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
 
-sc_require('blossom/matrix');
-sc_require('blossom/ext/browser');
-sc_require('blossom/ext/float32');
+sc_require('system/matrix');
+sc_require('ext/browser');
+sc_require('ext/float32');
 
 if (BLOSSOM) {
 

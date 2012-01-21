@@ -35,7 +35,7 @@
  */
 
 sc_require('panes/pane');
-sc_require('blossom/shape_layer');
+sc_require('layers/shape_layer');
 
 if (BLOSSOM) {
 

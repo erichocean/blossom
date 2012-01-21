@@ -12,8 +12,8 @@
 
 sc_require('views/view');
 sc_require('mixins/responder_context');
-sc_require('blossom/layer');
-sc_require('blossom/property_animation');
+sc_require('layers/layer');
+sc_require('system/property_animation');
 
 /** @class
   A Pane is like a regular view except that it does not need to live within a 

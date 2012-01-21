@@ -5,7 +5,7 @@
 // ==========================================================================
 /*globals BLOSSOM */
 
-sc_require('blossom/layer');
+sc_require('layers/layer');
 
 SC.ImageLayer = SC.Layer.extend({
 

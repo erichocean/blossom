@@ -34,8 +34,8 @@
  * THE SOFTWARE.
  */
 
-sc_require('blossom/stage');
-sc_require('blossom/shape_layer');
+sc_require('panes/stage');
+sc_require('layers/shape_layer');
 
 if (BLOSSOM) {
 
