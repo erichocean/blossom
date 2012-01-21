@@ -882,7 +882,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @returns {SC.View} receiver 
   */
   updateLayer: function() {
-    console.log('SC.View#updateLayer()');
+    // console.log('SC.View#updateLayer()');
     if (BLOSSOM) {
       this.render(this.getPath('layer.context'));
     }

@@ -8,6 +8,8 @@
 // ==========================================================================
 /*globals BlossomTest BLOSSOM SPROUTCORE */
 
+/*jslint evil:true */
+
 var base03 =   "#002b36";
 var base02 =   "#073642";
 var base01 =   "#586e75";
@@ -28,7 +30,7 @@ var green =    "#859900";
 BlossomTest.ButtonPane = SC.Pane.extend(SC.Control, SC.Button, {
 
   render: function(context, firstTime) {
-    console.log('BlossomTest.ButtonPane#render()');
+    // console.log('BlossomTest.ButtonPane#render()');
 
     if (firstTime) {
       var that = this;
@@ -523,7 +525,7 @@ BlossomTest.ButtonPane = SC.Pane.extend(SC.Control, SC.Button, {
    - otherwise: invoke target/action
   */
   _action: function(evt, skipHoldRepeat) {
-    console.log('_action');
+    // console.log('_action');
     switch(this.get('buttonBehavior')) {
       
     // When toggling, try to invert like values. i.e. 1 => 0, etc.

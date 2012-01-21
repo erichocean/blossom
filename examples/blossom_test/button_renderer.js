@@ -89,7 +89,7 @@ SC.ButtonRenderer = SC.Object.extend({
   },
 
   render: function(context, selected, disabled, mixed, active, title, x, y, w, h) {
-    console.log('title:',title);
+    // console.log('title:',title);
     // console.log('selected:',selected);
     // console.log('disabled:',disabled);
     // console.log('mixed:',mixed);

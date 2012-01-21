@@ -28,7 +28,7 @@ SC.spriteImage = SC.Image.create({
   source: BlossomTest.SPRITE,
 
   imageDidLoad: function() {
-    console.log('SC.spriteImage#imageDidLoad()');
+    // console.log('SC.spriteImage#imageDidLoad()');
     SC.spriteLayer.set('content', this);
     SC.spriteLayer.flushDependentSprites();
   }
