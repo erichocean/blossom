@@ -10,7 +10,9 @@ Foundation framework to run.
 If you have installed Blossom as an `npm` module (see `npm link`), you can 
 include Blossom's Foundation framework in your code like this:
 
-    // in projectfile.js, somewhere in your SC.Project definition
-    var project = SC.Project.create({
+    // in your projectfile.js
+    require('blossom/buildtools'); // needed to bring in the BT global
+
+    var project = BT.Project.create({
       "foundation": require('blossom/foundation')
     });
