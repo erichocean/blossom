@@ -1,6 +1,8 @@
 {
   "name"          : "blossom",
   "description"   : "Modern, Cross-Platform Application Framework",
+  "repository"    : { "type" : "git",
+                      "url"  : "https://github.com/fohr/blossom.git" },
   "url"           : "http://fohr.com/",
   "keywords"      : ["blossom", "sproutcore"],
   "author"        : "Erich Ocean <eocean@fohr.com>",
