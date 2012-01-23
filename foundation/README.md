@@ -10,7 +10,7 @@ Foundation framework to run.
 If you have installed Blossom as an `npm` module (see `npm link`), you can 
 include Blossom's Foundation framework in your code like this:
 
-  // in projectfile.js, somewhere in your SC.Project definition
-  var project = SC.Project.create({
-    "foundation": require('blossom/foundation')
-  });
+    // in projectfile.js, somewhere in your SC.Project definition
+    var project = SC.Project.create({
+      "foundation": require('blossom/foundation')
+    });
