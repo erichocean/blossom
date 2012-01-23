@@ -12,10 +12,12 @@ can optionally use Blossom's Datastore framework for your app's model layer
 If you have installed Blossom as an `npm` module (see `npm link`), you can 
 include Blossom's Application framework in your code like this:
 
-    // in your projectfile.js
-    require('blossom/buildtools'); // needed to bring in the BT global
+```javascript
+// in your projectfile.js
+require('blossom/buildtools'); // needed to bring in the BT global
 
-    var project = BT.Project.create({
-      "foundation": require('blossom/foundation'), // required dependency
-      "application": require('blossom/application')
-    });
+var project = BT.Project.create({
+  "foundation": require('blossom/foundation'), // required dependency
+  "application": require('blossom/application')
+});
+```
