@@ -715,20 +715,20 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       elem = container = null;
 
       this.paneDidAttach();
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       console.warn("SC.Pane#attach() is a Blossom API. Use SC.Pane#append() in SproutCore instead.");
       this.append();
-    }
+    } // SPROUTCORE
   },
 
   render: function(context, firstTime) {
     if (BLOSSOM) {
       return;
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       return sc_super(); // Ideally, we wouldn't have this method at all.
-    }
+    } // SPROUTCORE
   },
 
   /**
@@ -741,10 +741,10 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   append: function() {
     if (BLOSSOM) {
       console.error("SC.Pane#append() is not part of Blossom. Use SC.Pane#attach() instead.");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       return this.appendTo(document.body) ;
-    }
+    } // SPROUTCORE
   },
   
   /**
@@ -756,7 +756,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   remove: function() {
     if (BLOSSOM) {
       alert("Please implement SC.Pane#remove().");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       if (!this.get('isVisibleInWindow')) return this ; // nothing to do
       if (!this.get('isPaneAttached')) return this ; // nothing to do
@@ -782,7 +782,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       this.set('isPaneAttached', NO) ;
       this.parentViewDidChange();
       return this ;
-    }
+    } // SPROUTCORE
   },
   
   /**
@@ -798,7 +798,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   appendTo: function(elem) {
     if (BLOSSOM) {
       console.error("SC.Pane#appendTo() is not part of Blossom. Use SC.Pane#attach() instead.");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       var layer = this.get('layer');
       if (!layer) layer =this.createLayer().get('layer'); 
@@ -811,7 +811,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       elem = layer = null ;
 
       return this.paneDidAttach(); // do the rest of the setup
-    }
+    } // SPROUTCORE
   },
 
   /** 
@@ -823,7 +823,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   prependTo: function(elem) {
     if (BLOSSOM) {
       console.error("SC.Pane#prependTo() is not part of Blossom. Use SC.Pane#attach() instead.");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       if (this.get('isPaneAttached')) return this;
     
@@ -838,7 +838,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       elem = layer = null ;
 
       return this.paneDidAttach(); // do the rest of the setup
-    }
+    } // SPROUTCORE
   },
 
   /** 
@@ -851,7 +851,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   before: function(elem) {
     if (BLOSSOM) {
       console.error("SC.Pane#before() is not part of Blossom. Use SC.Pane#attach() instead.");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       if (this.get('isPaneAttached')) return this;
     
@@ -868,7 +868,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       parent = elem = layer = null ;
 
       return this.paneDidAttach(); // do the rest of the setup
-    }
+    } // SPROUTCORE
   },
 
   /** 
@@ -881,7 +881,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   after: function(elem) {
     if (BLOSSOM) {
       console.error("SC.Pane#after() is not part of Blossom. Use SC.Pane#attach() instead.");
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       var layer = this.get('layer');
       if (!layer) layer =this.createLayer().get('layer'); 
@@ -896,7 +896,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       parent = elem = layer = null ;
 
       return this.paneDidAttach(); // do the rest of the setup
-    }
+    } // SPROUTCORE
   },
   
   /**

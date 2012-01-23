@@ -628,24 +628,6 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @property {DOMElement} the layer
   */
   layer: function(key, value) {
-    if (SPROUTCORE) {
-      if (value !== undefined) {
-        this._view_layer = value ;
-      
-      // no layer...attempt to discover it...  
-      } else {
-        value = this._view_layer;
-        if (!value) {
-          var parent = this.get('parentView');
-          if (parent) parent = parent.get('layer');
-          if (parent) {
-            this._view_layer = value = this.findLayerInParentLayer(parent);
-          }
-          parent = null ; // avoid memory leak
-        }
-      }
-      return value ;
-    }
     if (BLOSSOM) {
       if (value !== undefined) {
         this._view_layer = value ;
@@ -666,8 +648,26 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
           });
         }
       }
+      return value;
+    } // BLOSSOM
+    if (SPROUTCORE) {
+      if (value !== undefined) {
+        this._view_layer = value ;
+      
+      // no layer...attempt to discover it...  
+      } else {
+        value = this._view_layer;
+        if (!value) {
+          var parent = this.get('parentView');
+          if (parent) parent = parent.get('layer');
+          if (parent) {
+            this._view_layer = value = this.findLayerInParentLayer(parent);
+          }
+          parent = null ; // avoid memory leak
+        }
+      }
       return value ;
-    }
+    } // SPROUTCORE
   }.property('isVisibleInWindow').cacheable(),
   // FIXME: Why is this being invalidate when isVisibleInWindow changes?
   
@@ -885,7 +885,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.View#updateLayer()');
     if (BLOSSOM) {
       this.render(this.getPath('layer.context'));
-    }
+    } // BLOSSOM
     if (SPROUTCORE) {
       var context = this.renderContext(this.get('layer')) ;
       this.prepareContext(context, NO) ;
@@ -906,7 +906,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
         this.designer.viewDidUpdateLayer(); //let the designer know
       }
       return this ;
-    }
+    } // SPROUTCORE
   },
   
   /**

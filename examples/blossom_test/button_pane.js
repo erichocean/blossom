@@ -441,11 +441,11 @@ BlossomTest.ButtonPane = SC.Pane.extend(SC.Control, SC.Button, {
       if (BLOSSOM) {
         inside = true;
         if (inside && this.get('isEnabled')) this._action(evt) ;
-      }
+      } // BLOSSOM
       if (SPROUTCORE) {
         inside = this.$().within(evt.target) ;
         if (inside && this.get('isEnabled')) this._action(evt) ;
-      }
+      } // SPROUTCORE
     }
 
     return YES ;
