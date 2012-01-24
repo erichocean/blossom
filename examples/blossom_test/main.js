@@ -79,10 +79,14 @@ function drawButton(ctx, pressed) {
 
 function main() {
   var pane = SC.Pane.create({
-    layout: { top: 10, left: 10, width: 850, height: 550 }
+    layout: { top: 10, left: 10, width: 850, height: 550 },
+    mouseDown: function(evt) {
+      alert('clicked pane');
+    }
   });
 
   pane.attach();
+
   var ctx = pane.getPath('layer.context');
 
   ctx.fillStyle = base3;
@@ -91,142 +95,176 @@ function main() {
   ctx.lineWidth = 2; // overlap of 1 on the inside
   ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
-  ctx.fillStyle = base00;
-  ctx.font = "14pt Calibri";
-  ctx.textBaseline = "top";
-  ctx.fillText("SC.ButtonView Sampler", 15, 10);
+  var layer = SC.Layer.create();
+  layer.get('bounds').height = 50;
+  layer.get('bounds').width = 50;
+  layer.get('position').x = 50;
+  layer.get('position').y = 50;
+  layer.get('transform').m11 = 2; // scale x by 2
+  layer.get('transform').m12 = 0.176326980708465; // skew y by 10 units
+  layer.get('transform').m22 = 5; // scale y by 5
 
-  ctx.fillStyle = green;
-  ctx.font = "10pt Calibri";
-  ctx.fillText("Rendered with Blossom\u2122", 40, 33);
-
-  ctx.font = "10pt Calibri";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = base1;
-  'Enabled Disabled Selected Selected&Disabled'.w().forEach(function(title, idx) {
-    ctx.fillText(title.split('&').join(' & '), 270+idx*150, 46);
-  });
-
-  ctx.textAlign = "right";
-  var anchors = [70, 190, 310, 430];
-  'PUSH TOGGLE TOGGLE_ON TOGGLE_OFF'.w().forEach(function(behavior, idx) {
-    ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 180, 103+idx*120);
-
-    var anchor = anchors[idx];
-    var buttonBehavior = SC[behavior+'_BEHAVIOR'];
-    var button = BlossomTest.ButtonPane.create({
-      layout: { top: anchor, left: 210, width: 140, height: 24 },
-      title: "Regular Button",
-      theme: 'regular',
-      action: function() {
-        alert("Hi from Blossom");
-      },
-      buttonBehavior: buttonBehavior
-    });
-    button.attach();
-
-    var buttonD = BlossomTest.ButtonPane.create({
-      layout: { top: anchor, left: 360, width: 140, height: 24 },
-      title: "Regular Button",
-      theme: 'regular',
-      isEnabled: false,
-      buttonBehavior: buttonBehavior
-    });
-    buttonD.attach();
-
-    var buttonS = BlossomTest.ButtonPane.create({
-      layout: { top: anchor, left: 510, width: 140, height: 24 },
-      title: "Regular Button",
-      theme: 'regular',
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    buttonS.attach();
-
-    var buttonDS = BlossomTest.ButtonPane.create({
-      layout: { top: anchor, left: 660, width: 140, height: 24 },
-      title: "Regular Button",
-      theme: 'regular',
-      isEnabled: false,
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    buttonDS.attach();
-
-    var button2 = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+30, left: 210, width: 140, height: 24 },
-      title: "Square Button",
-      theme: 'square',
-      buttonBehavior: buttonBehavior
-    });
-    button2.attach();
-
-    var button2D = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+30, left: 360, width: 140, height: 24 },
-      title: "Square Button",
-      theme: 'square',
-      isEnabled: false,
-      buttonBehavior: buttonBehavior
-    });
-    button2D.attach();
-
-    var button2S = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+30, left: 510, width: 140, height: 24 },
-      title: "Square Button",
-      theme: 'square',
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    button2S.attach();
-
-    var button2DS = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+30, left: 660, width: 140, height: 24 },
-      title: "Square Button",
-      theme: 'square',
-      isEnabled: false,
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    button2DS.attach();
-
-    var button3 = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+60, left: 210, width: 140, height: 24 },
-      title: "Capsule Button",
-      theme: 'capsule',
-      buttonBehavior: buttonBehavior
-    });
-    button3.attach();
-
-    var button3D = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+60, left: 360, width: 140, height: 24 },
-      title: "Capsule Button",
-      theme: 'capsule',
-      isEnabled: false,
-      buttonBehavior: buttonBehavior
-    });
-    button3D.attach();
-
-    var button3S = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+60, left: 510, width: 140, height: 24 },
-      title: "Capsule Button",
-      theme: 'capsule',
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    button3S.attach();
-
-    var button3DS = BlossomTest.ButtonPane.create({
-      layout: { top: anchor+60, left: 660, width: 140, height: 24 },
-      title: "Capsule Button",
-      theme: 'capsule',
-      isEnabled: false,
-      isSelected: true,
-      buttonBehavior: buttonBehavior
-    });
-    button3DS.attach();
+  // Simulate proper layer setup for now.
+  pane.layer.sublayers.push(layer);
+  layer.superlayer = pane.layer;
+  layer.view = SC.View.create({
+    pane: pane,
+    mouseDown: function(evt) {
+      alert('clicked view');
+    }
   });
 }
+
+// function main() {
+//   var pane = SC.Pane.create({
+//     layout: { top: 10, left: 10, width: 850, height: 550 }
+//   });
+// 
+//   pane.attach();
+//   var ctx = pane.getPath('layer.context');
+// 
+//   ctx.fillStyle = base3;
+//   ctx.fillRect(0, 0, ctx.width, ctx.height);
+//   ctx.strokeStyle = base0;
+//   ctx.lineWidth = 2; // overlap of 1 on the inside
+//   ctx.strokeRect(0, 0, ctx.width, ctx.height);
+// 
+//   ctx.fillStyle = base00;
+//   ctx.font = "14pt Calibri";
+//   ctx.textBaseline = "top";
+//   ctx.fillText("SC.ButtonView Sampler", 15, 10);
+// 
+//   ctx.fillStyle = green;
+//   ctx.font = "10pt Calibri";
+//   ctx.fillText("Rendered with Blossom\u2122", 40, 33);
+// 
+//   ctx.font = "10pt Calibri";
+//   ctx.textAlign = "center";
+//   ctx.textBaseline = "middle";
+//   ctx.fillStyle = base1;
+//   'Enabled Disabled Selected Selected&Disabled'.w().forEach(function(title, idx) {
+//     ctx.fillText(title.split('&').join(' & '), 270+idx*150, 46);
+//   });
+// 
+//   ctx.textAlign = "right";
+//   var anchors = [70, 190, 310, 430];
+//   'PUSH TOGGLE TOGGLE_ON TOGGLE_OFF'.w().forEach(function(behavior, idx) {
+//     ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 180, 103+idx*120);
+// 
+//     var anchor = anchors[idx];
+//     var buttonBehavior = SC[behavior+'_BEHAVIOR'];
+//     var button = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor, left: 210, width: 140, height: 24 },
+//       title: "Regular Button",
+//       theme: 'regular',
+//       action: function() {
+//         alert("Hi from Blossom");
+//       },
+//       buttonBehavior: buttonBehavior
+//     });
+//     button.attach();
+// 
+//     var buttonD = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor, left: 360, width: 140, height: 24 },
+//       title: "Regular Button",
+//       theme: 'regular',
+//       isEnabled: false,
+//       buttonBehavior: buttonBehavior
+//     });
+//     buttonD.attach();
+// 
+//     var buttonS = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor, left: 510, width: 140, height: 24 },
+//       title: "Regular Button",
+//       theme: 'regular',
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     buttonS.attach();
+// 
+//     var buttonDS = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor, left: 660, width: 140, height: 24 },
+//       title: "Regular Button",
+//       theme: 'regular',
+//       isEnabled: false,
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     buttonDS.attach();
+// 
+//     var button2 = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+30, left: 210, width: 140, height: 24 },
+//       title: "Square Button",
+//       theme: 'square',
+//       buttonBehavior: buttonBehavior
+//     });
+//     button2.attach();
+// 
+//     var button2D = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+30, left: 360, width: 140, height: 24 },
+//       title: "Square Button",
+//       theme: 'square',
+//       isEnabled: false,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button2D.attach();
+// 
+//     var button2S = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+30, left: 510, width: 140, height: 24 },
+//       title: "Square Button",
+//       theme: 'square',
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button2S.attach();
+// 
+//     var button2DS = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+30, left: 660, width: 140, height: 24 },
+//       title: "Square Button",
+//       theme: 'square',
+//       isEnabled: false,
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button2DS.attach();
+// 
+//     var button3 = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+60, left: 210, width: 140, height: 24 },
+//       title: "Capsule Button",
+//       theme: 'capsule',
+//       buttonBehavior: buttonBehavior
+//     });
+//     button3.attach();
+// 
+//     var button3D = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+60, left: 360, width: 140, height: 24 },
+//       title: "Capsule Button",
+//       theme: 'capsule',
+//       isEnabled: false,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button3D.attach();
+// 
+//     var button3S = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+60, left: 510, width: 140, height: 24 },
+//       title: "Capsule Button",
+//       theme: 'capsule',
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button3S.attach();
+// 
+//     var button3DS = BlossomTest.ButtonPane.create({
+//       layout: { top: anchor+60, left: 660, width: 140, height: 24 },
+//       title: "Capsule Button",
+//       theme: 'capsule',
+//       isEnabled: false,
+//       isSelected: true,
+//       buttonBehavior: buttonBehavior
+//     });
+//     button3DS.attach();
+//   });
+// }
 
 // function main() {
 //   var rect = SC.MakeRect(1,2,3,4);

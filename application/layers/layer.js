@@ -18,6 +18,9 @@ SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.
 
+  zIndex: 0,
+  cornerRadius: 0,
+
   /**
     Defines the anchor point of the layer's bounds rectangle. Animatable.
     
@@ -618,7 +621,7 @@ SC.Layer = SC.Object.extend({
     if (value !== undefined) {
       throw "No implementation for SC.Layer#set('isHidden', value)";
     } else return this._sc_isHidden;
-  }
+  }.property()
 
 });
 
