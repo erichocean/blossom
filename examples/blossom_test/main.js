@@ -95,7 +95,9 @@ function main() {
   ctx.lineWidth = 2; // overlap of 1 on the inside
   ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
-  var layer = SC.Layer.create();
+  var layer = SC.Layer.create({
+    cornerRadius: 20
+  });
   layer.get('bounds').height = 50;
   layer.get('bounds').width = 50;
   layer.get('position').x = 50;
@@ -113,6 +115,16 @@ function main() {
       alert('clicked view');
     }
   });
+
+  // Draw something so we can see where to click.
+  layer._sc_computeTransformFromSuperlayerToLayer();
+  ctx.save();
+  var t = layer._sc_transformFromSuperlayerToLayer;
+  ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+  layer.renderHitTestPath(ctx);
+  ctx.fillStyle = 'red';
+  ctx.fill();
+  ctx.restore();
 }
 
 // function main() {
