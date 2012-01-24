@@ -372,10 +372,10 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       // higher than whatever hit has been found so far.
       var sublayerZ = sublayer.get('zIndex');
       if (!hitLayer || zIndex < sublayerZ) {
-        // See if we actually hit something. Start by begining a new path.
+        // See if we actually hit something. Start by beginning a new path.
         context.beginPath();
 
-        // Next, draw the paths we'll test.
+        // Next, draw the path(s) we'll test.
         sublayer.renderHitTestPath(context);
 
         // Finally, test the point for intersection with the path(s).
@@ -391,6 +391,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     context.save();
 
     // First, clip the context to the pane's layer's bounds.
+    context.beginPath();
     this.get('layer')._sc_renderBoundsPath(context);
     context.clip();
 
