@@ -351,6 +351,11 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       if (sublayer.get('isHidden')) return;
       context.save();
 
+      // Prevent this layer and any sublayer from drawing paths outside our 
+      // bounds.
+      sublayer._sc_renderBoundsPath(context);
+      context.clip();
+
       // Make sure the layer's transform is current.
       if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
         sublayer._sc_computeTransformFromSuperlayerToLayer();
@@ -383,9 +388,17 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       context.restore();
     }
 
-    // Begin the hit testing process. When this completes, hitLayer will 
-    // contain the layer that was hit with highest zIndex.
+    context.save();
+
+    // First, clip the context to the pane's layer's bounds.
+    this.get('layer')._sc_renderBoundsPath(context);
+    context.clip();
+
+    // Next, begin the hit testing process. When this completes, hitLayer 
+    // will contain the layer that was hit with highest zIndex.
     this.getPath('layer.sublayers').forEach(hitTestSublayer);
+
+    context.restore();
 
     // We don't need to test `layer`, because we already know it was hit when 
     // this method is called by SC.RootResponder.

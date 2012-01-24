@@ -566,25 +566,8 @@ SC.Layer = SC.Object.extend({
     SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
   },
 
-  /**
-    This method is called to render the path that should be tested to 
-    determine if the mouse intersects with this layer.
-
-    By default, the layer's bounds are used as the path. You can override 
-    this method to provide a smaller path.
-
-    You do not need to call context.beginPath(); it has already been called 
-    for you.  See http://www.w3.org/TR/2dcontext/#complex-shapes-paths for a 
-    list of drawing operations that construct paths.
-
-    Note: `context` is not the same drawing context as the layer's context.
-
-    Note: Text is not represented as paths; use the text's bounding box if 
-    you need to know when the area where the text is drawn is hit.
-
-    @param context {CanvasRenderingContext2D} the context to construct the path in
-  */
-  renderHitTestPath: function(context) {
+  /** @private Do not override! */
+  _sc_renderBoundsPath: function(context) {
     var b = this.get('bounds'),
         cornerRadius = this.get('cornerRadius');
 
@@ -607,6 +590,28 @@ SC.Layer = SC.Object.extend({
     } else {
       context.rect(0, 0, b[2]/*width*/, b[3]/*height*/);
     }
+  },
+
+  /**
+    This method is called to render the path that should be tested to 
+    determine if the mouse intersects with this layer.
+
+    By default, the layer's bounds are used as the path. You can override 
+    this method to provide a smaller path.
+
+    You do not need to call context.beginPath(); it has already been called 
+    for you.  See http://www.w3.org/TR/2dcontext/#complex-shapes-paths for a 
+    list of drawing operations that construct paths.
+
+    Note: `context` is not the same drawing context as the layer's context.
+
+    Note: Text is not represented as paths; use the text's bounding box if 
+    you need to know when the area where the text is drawn is hit.
+
+    @param context {CanvasRenderingContext2D} the context to construct the path in
+  */
+  renderHitTestPath: function(context) {
+    this._sc_renderBoundsPath(context);
   },
 
   isHidden: function(key, value) {
