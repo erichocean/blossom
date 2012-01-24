@@ -33,9 +33,9 @@ SC.MakePoint = function(point, y) {
 SC.ZERO_POINT = SC.MakePoint();
 
 SC.PointApplyAffineTransformTo = function(point, transform, dest) {
-  sc_assert(point !== dest);
-  dest[0]/*x*/ = point[0]/*x*/ * transform[0]/*m11*/ + point[1]/*y*/ * transform[2]/*m21*/ + transform[4]/*tx*/;
-  dest[1]/*y*/ = point[0]/*x*/ * transform[1]/*m12*/ + point[1]/*y*/ * transform[3]/*m22*/ + transform[5]/*ty*/;
+  var x = point[0], y = point[1];
+  dest[0]/*x*/ = x * transform[0]/*m11*/ + y * transform[2]/*m21*/ + transform[4]/*tx*/;
+  dest[1]/*y*/ = x * transform[1]/*m12*/ + y * transform[3]/*m22*/ + transform[5]/*ty*/;
 };
 
 // offset is in floats, numElements is in floats

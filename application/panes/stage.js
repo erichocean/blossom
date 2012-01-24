@@ -268,27 +268,6 @@ SC.StagePane = SC.Pane.extend({
     }
   },
 
-  updateMousePositionWithEvent: function(evt) {
-    var containerPos = this.computeContainerPosition(),
-        mouseX = evt.clientX - containerPos.left + window.pageXOffset,
-        mouseY = evt.clientY - containerPos.top + window.pageYOffset;
-
-    this.set('mousePosition', { x: mouseX, y: mouseY });
-  },
-
-  computeContainerPosition: function() {
-    var el = this.get('container'),
-        top = 0, left = 0;
-
-    while (el && el.tagName != "BODY") {
-      top += el.offsetTop;
-      left += el.offsetLeft;
-      el = el.offsetParent;
-    }
-
-    return { top: top, left: left };
-  },
-
   createLayersForContainer: function(container, width, height) {
     this._width = width;
     this._height = height;

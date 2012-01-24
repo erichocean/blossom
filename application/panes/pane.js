@@ -308,7 +308,89 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     return opacity;
   }.property(),
 
-  
+  mousePosition: null,
+
+  updateMousePositionWithEvent: function(evt) {
+    var containerPos = this.computeContainerPosition(),
+        mouseX = evt.clientX - containerPos.left + window.pageXOffset,
+        mouseY = evt.clientY - containerPos.top + window.pageYOffset,
+        ret = { x: mouseX, y: mouseY };
+
+    this.set('mousePosition', ret);
+    return ret;
+  },
+
+  computeContainerPosition: function() {
+    var el = this.get('container'),
+        top = 0, left = 0;
+
+    while (el && el.tagName != "BODY") {
+      top += el.offsetTop;
+      left += el.offsetLeft;
+      el = el.offsetParent;
+    }
+
+    return { top: top, left: left };
+  },
+
+  hitTestLayer: null,
+
+  /**
+    Finds the layer that is hit by this event, and returns its view.
+  */
+  targetViewForEvent: function(evt) {
+    var context = this.getPath('hitTestLayer.context'),
+        hitLayer = null, zIndex = -1,
+        mousePosition, x, y;
+
+    mousePosition = this.updateMousePositionWithEvent(evt);
+    x = mousePosition.x;
+    y = mousePosition.y;
+
+    function hitTestSublayer(sublayer) {
+      if (sublayer.get('isHidden')) return;
+      context.save();
+
+      // Make sure the layer's transform is current.
+      if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
+        sublayer._sc_computeTransformFromSuperlayerToLayer();
+      }
+
+      // Apply the sublayer's transform from our layer (it's superlayer).
+      var t = sublayer._sc_transformFromSuperlayerToLayer;
+      context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+
+      // First, test our sublayers.
+      sublayer.get('sublayers').forEach(hitTestSublayer);
+
+      // Only test ourself if (a) no hit has been found, or (b) our zIndex is 
+      // higher than whatever hit has been found so far.
+      var sublayerZ = sublayer.get('zIndex');
+      if (!hitLayer || zIndex < sublayerZ) {
+        // See if we actually hit something. Start by begining a new path.
+        context.beginPath();
+
+        // Next, draw the paths we'll test.
+        sublayer.renderHitTestPath(context);
+
+        // Finally, test the point for intersection with the path(s).
+        if (context.isPointInPath(x, y)) {
+          hitLayer = sublayer;
+          zIndex = sublayerZ;
+        }
+      }
+
+      context.restore();
+    }
+
+    // Begin the hit testing process. When this completes, hitLayer will 
+    // contain the layer that was hit with highest zIndex.
+    this.getPath('layer.sublayers').forEach(hitTestSublayer);
+
+    // We don't need to test `layer`, because we already know it was hit when 
+    // this method is called by SC.RootResponder.
+    return hitLayer? hitLayer.get('view') : this ;
+  },
 
   /**
     Attempts to send the event down the responder chain for this pane.  If you 
@@ -656,15 +738,16 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   }.property().cacheable(),
 
   createLayersForContainer: function(container, width, height) {
-    // SC.Pane only has a single layer, named "layer".
-    var layer = SC.Layer.create({
+    // SC.Pane only has two layers `layer` and `hitTestLayer`.
+    var K = SC.Layer.extend({
       container: container,
       owner: this,
       width: width,
       height: height
     });
 
-    this.set('layer', layer);
+    this.set('layer', K.create());
+    this.set('hitTestLayer', K.create({ isHitTestOnly: true, container: null }));
   },
 
   container: function(key, element) {

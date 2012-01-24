@@ -550,7 +550,8 @@ SC.RootResponder = SC.Object.extend({
   targetViewForEvent: function(evt) {
     if (BLOSSOM) {
       // FIXME: this only works for panes for now...
-      return evt.target ? SC.$(evt.target).view()[0] : null ;
+      var pane = evt.target ? SC.$(evt.target).view()[0] : null ;
+      return pane? pane.targetViewForEvent(evt) : null ;
     } // BLOSSOM
     if (SPROUTCORE) {
       return evt.target ? SC.$(evt.target).view()[0] : null ;

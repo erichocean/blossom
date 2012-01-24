@@ -411,9 +411,9 @@ SC.Layer = SC.Object.extend({
     this._sc_frame = SC.MakeRectFromBuffer(buf, 20);
     this._sc_frameIsDirty = true; // force re-compute on get('frame')
 
-    this._sc_transformToLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 24);
-    this._sc_transformFromLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 30);
-    this._sc_transformToLayerIsDirty = this._sc_transformFromLayerIsDirty = true; // force re-compute
+    this._sc_transformFromSuperlayerToLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 24);
+    this._sc_transformFromLayerToSuperlayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 30);
+    this._sc_transformFromSuperlayerToLayerIsDirty = this._sc_transformFromLayerToSuperlayerIsDirty = true; // force re-compute
 
     // This is used by various methods for temporary computations.
     this._sc_tmpTransform = SC.MakeAffineTransformFromBuffer(buf, 36);
@@ -424,16 +424,48 @@ SC.Layer = SC.Object.extend({
     this.sublayers = [];
     this._sc_sublayersDidChange();
 
-    this._sc_isHidden = true; // we start out hidden
+    this._sc_isHidden = false; // we start out visible
 
     // This is a specialized initializer for our subclasses, so that each 
     // subclass can create their own backing layer type (canvas, video, etc.).
     this.initElement();
   },
 
-  _sc_computeTransformFromLayer: function() {
+  /* @private
+    This method computes the accumulated transform from this layer's 
+    coordinate system to it's superlayer's coordinate system, taking into 
+    account all properties of this layer and this layer's superlayer that 
+    go into that accumulated transform. The 
+    _sc_computeTransformFromSuperlayerToLayer() method computes the inverse.
+
+    This transform is used internally by the various convert*FromLayer() 
+    methods to transform points, sizes and rects in this layer's coordinate 
+    system to their equivalent values in the layer's superlayer's coordinate 
+    system.
+
+    Here are the properties that go into this computation:
+      - from this layer: anchorPoint, bounds, position, transform
+      - from this layer's superlayer: sublayerTransform
+  */
+  _sc_computeTransformFromLayerToSuperlayer: function() {
     // Assume our callers have checked to determine if we should be called.
-    // if (!this._sc_transformFromLayerIsDirty) return;
+    // if (!this._sc_transformFromLayerToSuperlayerIsDirty) return;
+    sc_assert(this._sc_transformFromLayerToSuperlayerIsDirty);
+
+    // _sc_transformFromSuperlayerToLayer is just the inverse of _sc_transformFromLayerToSuperlayer. 
+    // Make sure it's ready to be inverted first.
+    if (this._sc_transformFromSuperlayerToLayerIsDirty) this._sc_computeTransformFromSuperlayerToLayer();
+
+    // Actually do the inverse transform now.
+    SC.AffineTransformInvertTo(this._sc_transformFromSuperlayerToLayer, this._sc_transformFromLayerToSuperlayer);
+
+    this._sc_transformFromLayerToSuperlayerIsDirty = false;
+  },
+
+  _sc_computeTransformFromSuperlayerToLayer: function() {
+    // Assume our callers have checked to determine if we should be called.
+    // if (!this._sc_transformFromSuperlayerToLayerIsDirty) return;
+    sc_assert(this._sc_transformFromSuperlayerToLayerIsDirty);
 
     // This implementation is designed to prevent any memory allocations.
     var anchorPoint = this._sc_anchorPoint,
@@ -441,47 +473,41 @@ SC.Layer = SC.Object.extend({
         position = this._sc_position,
         superlayer = this._sc_superlayer,
         transform = this._sc_transform,
-        tmpTransform = this._sc_tmpTransform,
-        transformFromLayer = this._sc_transformFromLayer;
+        computedAnchorPoint = this._sc_tmpPoint,
+        transformFromSuperlayer = this._sc_transformFromSuperlayerToLayer;
 
-    // Set our initial offset based on our anchorPoint and bounds.
-    SC.SetIdentityAffineTransform(transformFromLayer);
-    transformFromLayer[4]/*tx*/ = -bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/;
-    transformFromLayer[5]/*ty*/ = -bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/;
+    // Adjust the origin of our superlayer's coordinate system to `position`.
+    SC.SetIdentityAffineTransform(transformFromSuperlayer);
+    transformFromSuperlayer[4]/*tx*/ = -position[0]/*x*/;
+    transformFromSuperlayer[5]/*ty*/ = -position[1]/*y*/;
 
-    // Make a temporary transform from our position property.
-    SC.SetIdentityAffineTransform(tmpTransform);
-    tmpTransform[4]/*tx*/ = position[0]/*x*/;
-    tmpTransform[5]/*ty*/ = position[1]/*y*/;
+    // Apply our layer's own `transform`. Because `position` and 
+    // `anchorPoint` are the same, any rotation is effectively being done 
+    // around `anchorPoint`.
+    SC.AffineTransformConcatTo(transformFromSuperlayer, transform, transformFromSuperlayer);
 
-    // Take our primary transform and adjust its position using tmpTransform.
-    // Note: Don't accidentally modify transform (reuse tmpTransform instead).
-    SC.AffineTransformConcatTo(transform, tmpTransform, tmpTransform);
+    // Calculate the computed anchor point within `bounds`.
+    computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + bounds[2]/*width*/  * anchorPoint[0]/*x*/;
+    computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + bounds[3]/*height*/ * anchorPoint[1]/*y*/;
 
-    // The final result is the initial offset result concatentated with the 
-    // transform-concatentated-with-the-position result.
-    SC.AffineTransformConcatTo(transformFromLayer, tmpTransform, transformFromLayer);
+    // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
+    // origin, taking into account `anchorPoint`. `position` is where the 
+    // origin is now, and this is the same as `computedAnchorPoint`, so 
+    // add that to get back to the `bounds` origin.
+    transformFromSuperlayer[4]/*tx*/ += computedAnchorPoint[0]/*x*/ * transform[0]/*m11*/;
+    transformFromSuperlayer[5]/*ty*/ += computedAnchorPoint[1]/*y*/ * transform[3]/*m22*/;
 
-    // Unless, that is, our superlayer is pushing us around too...
+    // Our co-ordinate system is now set up how it would be for drawing...
+
+    // However, our superlayer can apply a sublayerTransform before we are 
+    // drawn. Pre-concatenate that to the transform so far if it exists. 
+    // Otherwise, points expressed in our superlayer's coordinate system will 
+    // end up with the incorrect transform.
     if (superlayer && superlayer._sc_hasSublayerTransform) {
-      SC.AffineTransformConcatTo(transformFromLayer, superlayer._sc_sublayerTransform, transformFromLayer);
+      SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
     }
 
-    this._sc_transformFromLayerIsDirty = false;
-  },
-
-  _sc_computeTransformToLayer: function() {
-    // Assume our callers have checked to determine if we should be called.
-    // if (!this._sc_transformToLayerIsDirty) return;
-
-    // _sc_transformToLayer is just the inverse of _sc_transformFromLayer. 
-    // Make sure it's ready to be inverted first.
-    if (this._sc_transformFromLayerIsDirty) this._sc_computeTransformFromLayer();
-
-    // Actually do the inverse transform now.
-    SC.AffineTransformInvertTo(this._sc_transformFromLayer, this._sc_transformToLayer);
-
-    this._sc_transformToLayerIsDirty = false;
+    this._sc_transformFromSuperlayerToLayerIsDirty = false;
   },
 
   /**
@@ -541,70 +567,52 @@ SC.Layer = SC.Object.extend({
   },
 
   /**
-    Returns true if the layer contains the point. Point is specified in the 
-    layer's own coordinate system.
-    
-    @param point the point to test
-    @returns Boolean
+    This method is called to render the path that should be tested to 
+    determine if the mouse intersects with this layer.
+
+    By default, the layer's bounds are used as the path. You can override 
+    this method to provide a smaller path.
+
+    You do not need to call context.beginPath(); it has already been called 
+    for you.  See http://www.w3.org/TR/2dcontext/#complex-shapes-paths for a 
+    list of drawing operations that construct paths.
+
+    Note: `context` is not the same drawing context as the layer's context.
+
+    Note: Text is not represented as paths; use the text's bounding box if 
+    you need to know when the area where the text is drawn is hit.
+
+    @param context {CanvasRenderingContext2D} the context to construct the path in
   */
-  containsPoint: function(point) {
-    var bounds = this._sc_bounds;
-    
-    return (point[0]/*x*/ >= bounds[0]/*x*/ &&
-            point[1]/*y*/ >= bounds[1]/*y*/ &&
-            point[0]/*x*/ <  bounds[0]/*x*/ + bounds[2]/*width*/  &&
-            point[1]/*y*/ <  bounds[1]/*y*/ + bounds[3]/*height*/ );
+  renderHitTestPath: function(context) {
+    var b = this.get('bounds'),
+        cornerRadius = this.get('cornerRadius');
+
+    // We use zero here for x and y because the origin of the CTM is already 
+    // adjusted so that bounds.x and bounds.y are positioned at (0,0).
+    if (cornerRadius > 0) {
+      var width =  b[2]/*width*/,
+          height = b[3]/*height*/;
+
+      context.moveTo(cornerRadius, 0);
+      context.lineTo(width - cornerRadius, 0);
+      context.quadraticCurveTo(width, 0, width, cornerRadius);
+      context.lineTo(width, height - cornerRadius);
+      context.quadraticCurveTo(width, height, width - cornerRadius, height);
+      context.lineTo(cornerRadius, height);
+      context.quadraticCurveTo(0, height, 0, height - cornerRadius);
+      context.lineTo(0, cornerRadius);
+      context.quadraticCurveTo(0, 0, cornerRadius, 0);
+      context.closePath();
+    } else {
+      context.rect(0, 0, b[2]/*width*/, b[3]/*height*/);
+    }
   },
 
-  /**
-    Returns the farthest descendant of this layer that contains the 
-    specified point.
-
-    @param point the point to test
-    @returns the containing layer or null if there was no hit.
-  */
-  hitTest: function(point, force) {
-    if (!force && this._sc_isHidden) return null;
-
-    var tmpPoint = this._sc_tmpPoint,
-        sublayers = this.sublayers,
-        idx, len,
-        layer, hits = [], hit,
-        zIndex, tmp;
-
-    // Make sure our transform is current.
-    if (this._sc_transformToLayerIsDirty) this._sc_computeTransformToLayer();
-
-    // Convert point from superlayer's coordinate system to our own.
-    SC.PointApplyAffineTransformTo(point, this._sc_transformToLayer, tmpPoint);
-
-    // See if any of our children contain the point.
-    for (idx=0, len = sublayers.get('length'); idx<len; ++idx) {
-      if (hit = sublayers.objectAt(idx).hitTest(tmpPoint)) hits.push(hit);
-    }
-
-    len = hits.length;
-    if (len === 1) return hits[0]; // only one hit, return it!
-    else if (len > 1) {
-      // We need to return the hit that has the highest zIndex.
-      zIndex = -1;
-      for (idx=0; idx<len; ++idx) {
-        hit = hits[idx];
-        tmp = hit.get('zIndex');
-
-        // In case of a tie, we favor sublayers defined later in the 
-        // sublayers array.
-        if (tmp >= zIndex) {
-          zIndex = tmp;
-          layer = hit;
-        }
-      }
-      sc_assert(layer);
-      return layer;
-    } else {
-      if (this.containsPoint(tmpPoint)) return this;
-      else return null;
-    }
+  isHidden: function(key, value) {
+    if (value !== undefined) {
+      throw "No implementation for SC.Layer#set('isHidden', value)";
+    } else return this._sc_isHidden;
   }
 
 });
@@ -623,10 +631,10 @@ SC.Layer.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
   if (fromLayer) {
     layer = fromLayer;
     while (layer && layer !== toLayer) {
-      // layer._sc_transformFromLayer isn't recomputed immediately. Check to
+      // layer._sc_transformFromLayerToSuperlayer isn't recomputed immediately. Check to
       // see if we need to recompute it now.
-      if (layer._sc_transformFromLayerIsDirty) layer._sc_computeTransformFromLayer();
-      SC.AffineTransformConcatTo(dest, layer._sc_transformFromLayer, dest);
+      if (layer._sc_transformFromLayerToSuperlayerIsDirty) layer._sc_computeTransformFromLayerToSuperlayer();
+      SC.AffineTransformConcatTo(dest, layer._sc_transformFromLayerToSuperlayer, dest);
       layer = layer._sc_superlayer;
     }
 
@@ -645,10 +653,10 @@ SC.Layer.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
   idx = ary.length;
   while (idx--) {
     layer = ary[idx];
-    // layer._sc_transformToLayer isn't recomputed immediately. Check to
+    // layer._sc_transformFromSuperlayerToLayer isn't recomputed immediately. Check to
     // see if we need to recompute it now.
-    if (layer._sc_transformToLayerIsDirty) layer._sc_computeTransformToLayer();
-    SC.AffineTransformConcatTo(dest, layer._sc_transformToLayer, dest);
+    if (layer._sc_transformFromSuperlayerToLayerIsDirty) layer._sc_computeTransformFromSuperlayerToLayer();
+    SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
   }
 };
 
