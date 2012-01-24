@@ -569,8 +569,7 @@ SC.Layer = SC.Object.extend({
     SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
   },
 
-  /** @private Do not override! */
-  _sc_renderBoundsPath: function(context) {
+  renderBoundsPath: function(context) {
     var b = this.get('bounds'),
         cornerRadius = this.get('cornerRadius');
 
@@ -614,7 +613,7 @@ SC.Layer = SC.Object.extend({
     @param context {CanvasRenderingContext2D} the context to construct the path in
   */
   renderHitTestPath: function(context) {
-    this._sc_renderBoundsPath(context);
+    this.renderBoundsPath(context);
   },
 
   isHidden: function(key, value) {

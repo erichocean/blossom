@@ -353,7 +353,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
       // Prevent this layer and any sublayer from drawing paths outside our 
       // bounds.
-      sublayer._sc_renderBoundsPath(context);
+      sublayer.renderBoundsPath(context);
       context.clip();
 
       // Make sure the layer's transform is current.
@@ -392,11 +392,11 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
     // First, clip the context to the pane's layer's bounds.
     context.beginPath();
-    this.get('layer')._sc_renderBoundsPath(context);
+    this.get('layer').renderBoundsPath(context);
     context.clip();
 
     // Next, begin the hit testing process. When this completes, hitLayer 
-    // will contain the layer that was hit with highest zIndex.
+    // will contain the layer that was hit with the highest zIndex.
     this.getPath('layer.sublayers').forEach(hitTestSublayer);
 
     context.restore();
