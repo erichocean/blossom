@@ -96,15 +96,18 @@ function main() {
   ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
   var layer = SC.Layer.create({
-    cornerRadius: 20
+    cornerRadius: 5
   });
   layer.get('bounds').height = 50;
   layer.get('bounds').width = 50;
   layer.get('position').x = 50;
   layer.get('position').y = 50;
-  layer.get('transform').m11 = 2; // scale x by 2
-  layer.get('transform').m12 = 0.176326980708465; // skew y by 10 units
-  layer.get('transform').m22 = 5; // scale y by 5
+  layer.get('transform').m11 = 3;    // scale x by 3
+  layer.get('transform').m12 = 0.18; // skew y by 10 units
+  layer.get('transform').m21 = 0.78; // skew x by 10 units
+  layer.get('transform').m22 = 5;    // scale y by 5
+  layer.get('transform').tx = 250;
+  layer.get('transform').ty = 250;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
