@@ -55,21 +55,26 @@ SC.MakePointFromBuffer = function(buffer, offset, point, y) {
   offset = offset*Float32Array.BYTES_PER_ELEMENT;
 
   if (arguments.length === 4) {
-    ret = new Float32Array(buffer, offset); // initialize from function arguments
+    ret = new Float32Array(buffer, offset, 2); // initialize from function arguments
     ret[0] = x;
     ret[1] = y;
 
   } else if (point) {
     sc_assert(point.length === 2 && point.constructor === Float32Array);
-    ret = new Float32Array(buffer, offset);
-    ret.set(point);                         // initialize with existing point
+    ret = new Float32Array(buffer, offset, 2);
+    ret.set(point);                            // initialize with existing point
 
   } else {
-    ret = new Float32Array(buffer, offset);
-    ret.set(SC.ZERO_POINT);                 // zero-initialize
+    ret = new Float32Array(buffer, offset, 2);
+    ret.set(SC.ZERO_POINT);                    // zero-initialize
   }
 
+  sc_assert(ret.length === 2);
   return ret;
+};
+
+SC.IsPoint = function(point) {
+  return (point.length === 2 && point.constructor === Float32Array);
 };
 
 SC.MakeSize = function(size, height) {
@@ -107,21 +112,26 @@ SC.MakeSizeFromBuffer = function(buffer, offset, size, height) {
   offset = offset*Float32Array.BYTES_PER_ELEMENT;
 
   if (arguments.length === 4) {
-    ret = new Float32Array(buffer, offset); // initialize from function arguments
+    ret = new Float32Array(buffer, offset, 2); // initialize from function arguments
     ret[0] = width;
     ret[1] = height;
 
   } else if (size) {
     sc_assert(size.length === 2 && size.constructor === Float32Array);
-    ret = new Float32Array(buffer, offset);
-    ret.set(size);                         // initialize with existing size
+    ret = new Float32Array(buffer, offset, 2);
+    ret.set(size);                             // initialize with existing size
 
   } else {
-    ret = new Float32Array(buffer, offset);
-    ret.set(SC.ZERO_SIZE);                 // zero-initialize
+    ret = new Float32Array(buffer, offset, 2);
+    ret.set(SC.ZERO_SIZE);                     // zero-initialize
   }
 
+  sc_assert(ret.length === 2);
   return ret;
+};
+
+SC.IsSize = function(size) {
+  return (size.length === 2 && size.constructor === Float32Array);
 };
 
 SC.MakeRect = function(rect, y, width, height) {
@@ -163,7 +173,7 @@ SC.MakeRectFromBuffer = function(buffer, offset, rect, y, width, height) {
   offset = offset*Float32Array.BYTES_PER_ELEMENT;
 
   if (arguments.length === 6) {
-    ret = new Float32Array(buffer, offset); // initialize from function arguments
+    ret = new Float32Array(buffer, offset, 4); // initialize from function arguments
     ret[0] = x;
     ret[1] = y;
     ret[2] = width;
@@ -171,15 +181,20 @@ SC.MakeRectFromBuffer = function(buffer, offset, rect, y, width, height) {
 
   } else if (rect) {
     sc_assert(rect.length === 4 && rect.constructor === Float32Array);
-    ret = new Float32Array(buffer, offset);
-    ret.set(rect);                         // initialize with existing rect
+    ret = new Float32Array(buffer, offset, 4);
+    ret.set(rect);                             // initialize with existing rect
 
   } else {
-    ret = new Float32Array(buffer, offset);
-    ret.set(SC.ZERO_RECT);                 // zero-initialize
+    ret = new Float32Array(buffer, offset, 4);
+    ret.set(SC.ZERO_RECT);                     // zero-initialize
   }
 
+  sc_assert(ret.length === 4);
   return ret;
+};
+
+SC.IsRect = function(rect) {
+  return (rect.length === 4 && rect.constructor === Float32Array);
 };
 
 SC.MakeAffineTransform = function(mat, m12,
@@ -241,14 +256,15 @@ SC.MakeAffineTransformFromBuffer = function(buffer, offset, mat, m12,
 
   } else if (mat) {
     sc_assert(mat.length === 6 && mat.constructor === Float32Array);
-    ret = new Float32Array(buffer, offset);
+    ret = new Float32Array(buffer, offset, 6);
     ret.set(mat);                           // initialize with existing transform
 
   } else {
-    ret = new Float32Array(buffer, offset);
+    ret = new Float32Array(buffer, offset, 6);
     ret.set(SC.AFFINE_TRANSFORM_ZERO);      // zero-initialize
   }
 
+  sc_assert(ret.length === 6);
   return ret;
 };
 
@@ -336,6 +352,10 @@ SC.MakeTransform3D = function(mat, m12, m13, m14,
   return ret;
 };
 
+SC.IsAffineTransform = function(mat) {
+  return (mat.length === 6 && mat.constructor === Float32Array);
+};
+
 SC.MakeIdentityTransform3D = function() {
   var ret = new Float32Array(16);
 
@@ -360,11 +380,11 @@ SC.MakeTransform3DFromBuffer = function(buffer, offset, mat, m12, m13, m14,
 {
   var ret, m11 = mat;
 
-  sc_assert_valid_float32_buffer(buffer, offset, 16);
+  sc_assert_valid_float32_buffer(buffer, offset);
   offset = offset*Float32Array.BYTES_PER_ELEMENT;
 
   if (arguments.length === 18) {
-    ret = new Float32Array(buffer, offset); // initialize from function arguments
+    ret = new Float32Array(buffer, offset, 16); // initialize from function arguments
     ret[0]  = m11; ret[1]  = m12; ret[2]  = m13; ret[3]  = m14;
     ret[4]  = m21; ret[5]  = m22; ret[6]  = m23; ret[7]  = m24;
     ret[8]  = m31; ret[9]  = m32; ret[10] = m33; ret[11] = m34;
@@ -372,14 +392,15 @@ SC.MakeTransform3DFromBuffer = function(buffer, offset, mat, m12, m13, m14,
 
   } else if (mat) {
     sc_assert(mat.length === 16 && mat.constructor === Float32Array);
-    ret = new Float32Array(buffer, offset);
-    ret.set(mat);                           // initialize with existing transform3d
+    ret = new Float32Array(buffer, offset, 16);
+    ret.set(mat);                               // initialize with existing transform3d
 
   } else {
-    ret = new Float32Array(buffer, offset);
-    ret.set(SC.TRANSFORM3D_ZERO);           // zero-initialize
+    ret = new Float32Array(buffer, offset, 16);
+    ret.set(SC.TRANSFORM3D_ZERO);               // zero-initialize
   }
 
+  sc_assert(ret.length === 16);
   return ret;
 };
 
@@ -397,6 +418,10 @@ SC.SetIdentityTransform3D = function(mat) {
   //   mat[4]  = 0; mat[5]  = 1; mat[6]  = 0; mat[7]  = 0;
   //   mat[8]  = 0; mat[9]  = 0; mat[10] = 1; mat[11] = 0;
   //   mat[12] = 0; mat[13] = 0; mat[14] = 0; mat[15] = 1;
+};
+
+SC.IsTransform3D = function(mat) {
+  return (mat.length === 16 && mat.constructor === Float32Array);
 };
 
 // Below are ways to access these structures using names, rather than
