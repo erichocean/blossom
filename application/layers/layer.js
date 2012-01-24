@@ -47,6 +47,7 @@ SC.Layer = SC.Object.extend({
   */
   bounds: function(key, value) {
     if (value !== undefined) {
+      sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Layer#set('bounds', value)";
     } else return this._sc_bounds;
   }.property(),
@@ -59,18 +60,54 @@ SC.Layer = SC.Object.extend({
     of the receiver's bounds are changed to match the new frame rectangle. 
     The value of this property is specified in points.
 
+    Setting the frame _does not_ cause implicit animation to occur. If you 
+    desire animation, please set the bounds and positions properties 
+    directly.
+
+    Note: The frame does not take into account the layer's transform 
+    property, or the superlayer's sublayerTransform property. The value of 
+    frame is before these transforms have been applied.
+
     @property SC.Rect
   */
   frame: function(key, value) {
+    var frame = this._sc_frame, anchorPoint, bounds, position;
     if (value !== undefined) {
-      throw "No implementation for SC.Layer#set('frame', value)";
+      if (!SC.IsRect(value)) throw new TypeError("SC.Layer's 'frame' property can only be set to an SC.Rect.");
+
+      anchorPoint = this._sc_anchorPoint;
+      bounds = this._sc_bounds;
+      position = this._sc_position;
+
+      // The bounds' size should have the same size as the frame. Set this 
+      // first so that the position can take into account the new size.
+      bounds[2]/*width*/  = value[2]/*width*/;
+      bounds[3]/*height*/ = value[3]/*height*/;
+
+      // Position is updated relative to the bounds' origin, taking into account the layer's anchorPoint.
+      position[0]/*x*/ = -((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/);
+      position[1]/*y*/ = -((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/);
+
+      // Cache the new frame so we don't need to compute it later.
+      frame.set(value);
+      this._sc_frameIsDirty = false;
     } else {
-      var frame = this._sc_frame;
       if (this._sc_frameIsDirty) {
-        // Update the frame in place.
-        throw "No implementation for SC.Layer#get('frame')";
+        anchorPoint = this._sc_anchorPoint;
+        bounds = this._sc_bounds;
+        position = this._sc_position;
+
+        // The x and y coordinates take into account the bounds, anchorPoint, and position properties.
+        frame[0]/*x*/ = (-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) + position[0]/*x*/;
+        frame[1]/*y*/ = (-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) + position[1]/*y*/;
+
+        // The frame has the same size as the bounds.
+        frame[2]/*width*/  = bounds[2]/*width*/;
+        frame[3]/*height*/ = bounds[3]/*height*/;
+
+        this._sc_frameIsDirty = false;
       }
-      return frame;
+      return SC.MakeRect(frame); // give caller a copy
     }
   }.property(),
   
@@ -403,19 +440,19 @@ SC.Layer = SC.Object.extend({
         bounds = this._sc_bounds,
         position = this._sc_position,
         superlayer = this._sc_superlayer,
-        transform = this._sc_trasform,
+        transform = this._sc_transform,
         tmpTransform = this._sc_tmpTransform,
         transformFromLayer = this._sc_transformFromLayer;
 
     // Set our initial offset based on our anchorPoint and bounds.
-    transformFromLayer[0] = transformFromLayer[1] = transformFromLayer[2] = transformFromLayer[3] = 0; // zero m11, m12, m21, m22
-    transformFromLayer[4] = -bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/; // set tx
-    transformFromLayer[5] = -bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/; // set ty
+    SC.SetIdentityAffineTransform(transformFromLayer);
+    transformFromLayer[4]/*tx*/ = -bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/;
+    transformFromLayer[5]/*ty*/ = -bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/;
 
     // Make a temporary transform from our position property.
-    tmpTransform[0] = tmpTransform[1] = tmpTransform[2] = tmpTransform[3] = 0; // zero m11, m12, m21, m22
-    tmpTransform[4] = position[0]/*x*/; // set tx
-    tmpTransform[5] = position[1]/*y*/; // set ty
+    SC.SetIdentityAffineTransform(tmpTransform);
+    tmpTransform[4]/*tx*/ = position[0]/*x*/;
+    tmpTransform[5]/*ty*/ = position[1]/*y*/;
 
     // Take our primary transform and adjust its position using tmpTransform.
     // Note: Don't accidentally modify transform (reuse tmpTransform instead).
@@ -526,24 +563,24 @@ SC.Layer = SC.Object.extend({
     @param point the point to test
     @returns the containing layer or null if there was no hit.
   */
-  hitTest: function(point) {
-    if (this._sc_isHidden) return null;
+  hitTest: function(point, force) {
+    if (!force && this._sc_isHidden) return null;
 
     var tmpPoint = this._sc_tmpPoint,
-        subLayers = this._sc_subLayers,
+        sublayers = this.sublayers,
         idx, len,
         layer, hits = [], hit,
         zIndex, tmp;
 
     // Make sure our transform is current.
-    if (this._sc_transformToLayerIsDirty) layer._sc_computeTransformToLayer();
+    if (this._sc_transformToLayerIsDirty) this._sc_computeTransformToLayer();
 
     // Convert point from superlayer's coordinate system to our own.
     SC.PointApplyAffineTransformTo(point, this._sc_transformToLayer, tmpPoint);
 
     // See if any of our children contain the point.
-    for (idx=0, len = subLayers.get('length'); idx<len; ++idx) {
-      if (hit = subLayers.objectAt(idx).hitTest(tmpPoint)) hits.push(hit);
+    for (idx=0, len = sublayers.get('length'); idx<len; ++idx) {
+      if (hit = sublayers.objectAt(idx).hitTest(tmpPoint)) hits.push(hit);
     }
 
     len = hits.length;
