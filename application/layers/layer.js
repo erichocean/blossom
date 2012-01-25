@@ -620,7 +620,17 @@ SC.Layer = SC.Object.extend({
     if (value !== undefined) {
       throw "No implementation for SC.Layer#set('isHidden', value)";
     } else return this._sc_isHidden;
-  }.property()
+  }.property(),
+
+  /**
+    Destroy the layer (and all of its sublayers), including any related 
+    resources (e.g. drawing contexts, backing storage, etc.).
+  */
+  destroy: function() {
+    console.log("SC.Layer#destroy()");
+    console.log("FIXME: Implement me.");
+    sc_assert(!this.get('superlayer'));
+  }
 
 });
 

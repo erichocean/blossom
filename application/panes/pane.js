@@ -792,7 +792,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
         var layout = this.get('layout');
         if (!layout.width || !layout.height) {
-          layout = SC.View.convertLayoutToAnchoredLayout(layout, this.computeParentDimensions());
+          layout = SC.View.convertLayoutToAnchoredLayout(layout, { width: 0, height: 0 });
         }
         this.createLayersForContainer(element, layout.width, layout.height);
       }
@@ -1069,6 +1069,10 @@ if (BLOSSOM) {
 
 SC.Pane = SC.Pane.extend({
 
+  // ...........................................
+  // LAYOUT SUPPORT
+  //
+
   /** @private
     Called when the pane is attached to a DOM element in a window, this will 
     change the view status to be visible in the window and also register 
@@ -1090,6 +1094,239 @@ SC.Pane = SC.Pane.extend({
     this._addIntercept();
     return this ;
   },
+
+  /** FIXME: Remove this method.
+    layoutStyle describes the current styles to be written to your element
+    based on the layout you defined.  Both layoutStyle and frame reset when
+    you edit the layout property.  Both are read only.
+
+    Computes the layout style settings needed for the current anchor.
+
+    @property {Hash}
+    @readOnly
+  */
+  layoutStyle: function() {
+    var layout = this.get('layout'), ret = {}, pdim = null, error,
+        AUTO = SC.LAYOUT_AUTO,
+        dims = SC._VIEW_DEFAULT_DIMS, loc = dims.length, x, value, key,
+        stLayout = this.get('useStaticLayout'),
+        lR = layout.right,
+        lL = layout.left,
+        lT = layout.top,
+        lB = layout.bottom,
+        lW = layout.width,
+        lH = layout.height,
+        lMW = layout.maxWidth,
+        lMH = layout.maxHeight,
+        lcX = layout.centerX,
+        lcY = layout.centerY,
+        hasAcceleratedLayer = this.get('hasAcceleratedLayer'),
+        translateTop = 0,
+        translateLeft = 0;
+    if (lW !== undefined && lW === SC.LAYOUT_AUTO && !stLayout) {
+      error= SC.Error.desc("%@.layout() you cannot use width:auto if "+
+              "staticLayout is disabled".fmt(this),"%@".fmt(this),-1);
+      console.error(error.toString()) ;
+      throw error ;
+    }
+
+    if (lH !== undefined && lH === SC.LAYOUT_AUTO && !stLayout) {
+      error = SC.Error.desc("%@.layout() you cannot use height:auto if "+
+                "staticLayout is disabled".fmt(this),"%@".fmt(this),-1);
+      console.error(error.toString()) ;
+      throw error ;
+    }
+
+    // X DIRECTION
+
+    // handle left aligned and left/right
+    if (!SC.none(lL)) {
+      if(SC.isPercentage(lL)) {
+        ret.left = (lL*100)+"%";  //percentage left
+      } else if (hasAcceleratedLayer && !SC.empty(lW)) {
+        translateLeft = Math.floor(lL);
+        ret.left = 0;
+      } else {
+        ret.left = Math.floor(lL); //px left
+      }
+      ret.marginLeft = 0 ;
+
+      if (lW !== undefined) {
+        if(lW === SC.LAYOUT_AUTO) ret.width = SC.LAYOUT_AUTO ;
+        else if(SC.isPercentage(lW)) ret.width = (lW*100)+"%"; //percentage width
+        else ret.width = Math.floor(lW) ; //px width
+        ret.right = null ;
+      } else {
+        ret.width = null ;
+        if(lR && SC.isPercentage(lR)) ret.right = (lR*100)+"%"; //percentage right
+        else ret.right = Math.floor(lR || 0) ; //px right
+      }
+
+    // handle right aligned
+    } else if (!SC.none(lR)) {
+      if(SC.isPercentage(lR)) {
+        ret.right = Math.floor(lR*100)+"%";  //percentage left
+      }else{
+        ret.right = Math.floor(lR) ;
+      }
+      ret.marginLeft = 0 ;
+
+      if (SC.none(lW)) {
+        if (SC.none(lMW)) ret.left = 0;
+        ret.width = null;
+      } else {
+        ret.left = null ;
+        if(lW === SC.LAYOUT_AUTO) ret.width = SC.LAYOUT_AUTO ;
+        else if(lW && SC.isPercentage(lW)) ret.width = (lW*100)+"%" ; //percentage width
+        else ret.width = Math.floor(lW || 0) ; //px width
+      }
+
+    // handle centered
+    } else if (!SC.none(lcX)) {
+      ret.left = "50%";
+      if(lW && SC.isPercentage(lW)) ret.width = (lW*100)+"%" ; //percentage width
+      else ret.width = Math.floor(lW || 0) ;
+      if(lW && SC.isPercentage(lW) && (SC.isPercentage(lcX) || SC.isPercentage(lcX*-1))){
+        ret.marginLeft = Math.floor((lcX - lW/2)*100)+"%" ;
+      }else if(lW && lW >= 1 && !SC.isPercentage(lcX)){
+        ret.marginLeft = Math.floor(lcX - ret.width/2) ;
+      }else {
+        // This error message happens whenever width is not set.
+        console.warn("You have to set width and centerX usign both percentages or pixels");
+        ret.marginLeft = "50%";
+      }
+      ret.right = null ;
+
+    // if width defined, assume top/left of zero
+    } else if (!SC.none(lW)) {
+      ret.left =  0;
+      ret.right = null;
+      if(lW === SC.LAYOUT_AUTO) ret.width = SC.LAYOUT_AUTO ;
+      else if(SC.isPercentage(lW)) ret.width = (lW*100)+"%";
+      else ret.width = Math.floor(lW);
+      ret.marginLeft = 0;
+
+    // fallback, full width.
+    } else {
+      ret.left = 0;
+      ret.right = 0;
+      ret.width = null ;
+      ret.marginLeft= 0;
+    }
+
+
+    // handle min/max
+    ret.minWidth = (layout.minWidth === undefined) ? null : layout.minWidth ;
+    ret.maxWidth = (layout.maxWidth === undefined) ? null : layout.maxWidth ;
+
+    // Y DIRECTION
+
+    // handle top aligned and left/right
+    if (!SC.none(lT)) {
+      if(SC.isPercentage(lT)) {
+        ret.top = (lT*100)+"%";
+      } else if (hasAcceleratedLayer && !SC.empty(lH)) {
+        translateTop = Math.floor(lT);
+        ret.top = 0;
+      } else {
+        ret.top = Math.floor(lT);
+      }
+      if (lH !== undefined) {
+        if(lH === SC.LAYOUT_AUTO) ret.height = SC.LAYOUT_AUTO ;
+        else if(SC.isPercentage(lH)) ret.height = (lH*100)+"%" ;
+        else ret.height = Math.floor(lH) ;
+        ret.bottom = null ;
+      } else {
+        ret.height = null ;
+        if(lB && SC.isPercentage(lB)) ret.bottom = (lB*100)+"%" ;
+        else ret.bottom = Math.floor(lB || 0) ;
+      }
+      ret.marginTop = 0 ;
+
+    // handle bottom aligned
+    } else if (!SC.none(lB)) {
+      ret.marginTop = 0 ;
+      if(SC.isPercentage(lB)) ret.bottom = (lB*100)+"%";
+      else ret.bottom = Math.floor(lB) ;
+      if (SC.none(lH)) {
+        if (SC.none(lMH)) ret.top = 0;
+        ret.height = null ;
+      } else {
+        ret.top = null ;
+        if(lH === SC.LAYOUT_AUTO) ret.height = SC.LAYOUT_AUTO ;
+        else if(lH && SC.isPercentage(lH)) ret.height = (lH*100)+"%" ;
+        else ret.height = Math.floor(lH || 0) ;
+      }
+
+    // handle centered
+    } else if (!SC.none(lcY)) {
+      ret.top = "50%";
+      ret.bottom = null ;
+
+      if(lH && SC.isPercentage(lH)) ret.height = (lH*100)+ "%" ;
+      else ret.height = Math.floor(lH || 0) ;
+
+      if(lH && SC.isPercentage(lH) && (SC.isPercentage(lcY) || SC.isPercentage(lcY*-1))){ //height is percentage and lcy too
+        ret.marginTop = Math.floor((lcY - lH/2)*100)+"%" ;
+      }else if(lH && lH >= 1 && !SC.isPercentage(lcY)){
+        ret.marginTop = Math.floor(lcY - ret.height/2) ;
+      }else {
+        console.warn("You have to set height and centerY to use both percentages or pixels");
+        ret.marginTop = "50%";
+      }
+    } else if (!SC.none(lH)) {
+      ret.top = 0;
+      ret.bottom = null;
+      if(lH === SC.LAYOUT_AUTO) ret.height = SC.LAYOUT_AUTO ;
+      else if(lH && SC.isPercentage(lH)) ret.height = (lH*100)+"%" ;
+      else ret.height = Math.floor(lH || 0) ;
+      ret.marginTop = 0;
+
+    // fallback, full width.
+    } else {
+      ret.top = 0;
+      ret.bottom = 0;
+      ret.height = null ;
+      ret.marginTop= 0;
+    }
+
+    // handle min/max
+    ret.minHeight = (layout.minHeight === undefined) ?
+      null :
+      layout.minHeight ;
+    ret.maxHeight = (layout.maxHeight === undefined) ?
+      null :
+      layout.maxHeight ;
+
+    // if zIndex is set, use it.  otherwise let default shine through
+    ret.zIndex = SC.none(layout.zIndex) ? null : layout.zIndex.toString();
+
+    // if backgroundPosition is set, use it.
+    // otherwise let default shine through
+    ret.backgroundPosition = SC.none(layout.backgroundPosition) ?
+      null :
+      layout.backgroundPosition.toString() ;
+
+    // set default values to null to allow built-in CSS to shine through
+    // currently applies only to marginLeft & marginTop
+    while(--loc >=0) {
+      x = dims[loc];
+      if (ret[x]===0) ret[x]=null;
+    }
+
+    if (hasAcceleratedLayer) {
+      var transform = 'translateX('+translateLeft+'px) translateY('+translateTop+'px)';
+      if (SC.platform.supportsCSS3DTransforms) transform += ' translateZ(0px)'
+      ret[SC.platform.domCSSPrefix+'Transform'] = transform;
+    }
+
+    // convert any numbers into a number + "px".
+    for(key in ret) {
+      value = ret[key];
+      if (typeof value === SC.T_NUMBER) ret[key] = (value + "px");
+    }
+    return ret ;
+  }.property().cacheable(),
 
   /** @private */
   init: function() {
