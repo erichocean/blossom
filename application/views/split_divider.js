@@ -2,7 +2,11 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
 
 sc_require('views/view');
@@ -33,26 +37,36 @@ SC.SplitDividerView = SC.View.extend(
 /** @scope SC.SplitDividerView.prototype */ {
 
   classNames: ['sc-split-divider-view'],
-  
+
+  /**
+    The current split view this view is embedded in (may be null).
+    @property {SC.SplitView}
+  */
+  splitView: function() {
+    var view = this ;
+    while (view && !view.isSplitView) view = view.get('parentView') ;
+    return view ;
+  }.property(),
+
   /** @private */
   prepareContext: function(context, firstTime) {
     var splitView = this.get('splitView') ;
     if (splitView) this.set('cursor', splitView.get('thumbViewCursor')) ;
     return sc_super() ;
   },
-  
+
   mouseDown: function(evt) {
     var splitView = this.get('splitView');
     return (splitView) ? splitView.mouseDownInThumbView(evt, this) : sc_super();
   },
-  
+
   doubleClick: function(evt) {
     var splitView = this.get('splitView');
     return (splitView) ? splitView.doubleClickInThumbView(evt, this) : sc_super();
   },
-  
+
   touchStart: function(evt){
     return this.mouseDown(evt);
   }
-  
+
 });

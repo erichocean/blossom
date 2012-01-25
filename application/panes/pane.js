@@ -339,6 +339,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     Finds the layer that is hit by this event, and returns its view.
   */
   targetViewForEvent: function(evt) {
+    // console.log('SC.Pane#targetViewForEvent(', evt, ')');
     var context = this.getPath('hitTestLayer.context'),
         hitLayer = null, zIndex = -1,
         mousePosition, x, y;
@@ -419,6 +420,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {Object} object that handled the event
   */
   sendEvent: function(action, evt, target) {
+    // console.log('SC.Pane#sendEvent(', action, evt, target, ')');
     var handler ;
     
     // walk up the responder chain looking for a method to handle the event
@@ -1003,32 +1005,6 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   */
   removeFromParent: function() { },
   
-  /** @private
-    Called when the pane is attached to a DOM element in a window, this will 
-    change the view status to be visible in the window and also register 
-    with the rootResponder.
-  */
-  paneDidAttach: function() {
-
-    // hook into root responder
-    var responder = (this.rootResponder = SC.RootResponder.responder);
-    responder.panes.add(this);
-  
-    // set currentWindowSize
-    this.set('currentWindowSize', responder.computeWindowSize()) ;
-    
-    // update my own location
-    this.set('isPaneAttached', YES) ;
-    this.parentViewDidChange() ;
-    
-    //notify that the layers have been appended to the document
-    this._notifyDidAppendToDocument();
-    
-    // handle intercept if needed
-    this._addIntercept();
-    return this ;
-  },
-  
   /**
     YES when the pane is currently attached to a document DOM.  Read only.
     
@@ -1085,60 +1061,75 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   
   showTouchIntercept: function() {
     if (this._touchIntercept) this._touchIntercept.style.display = "block";
-  },
+  }
 
-  /**
-    Updates the isVisibleInWindow state on the pane and its childViews if 
-    necessary.  This works much like SC.View's default implementation, but it
-    does not need a parentView to function.
-    
-    @returns {SC.Pane} receiver
+});
+
+if (BLOSSOM) {
+
+SC.Pane = SC.Pane.extend({
+
+  /** @private
+    Called when the pane is attached to a DOM element in a window, this will 
+    change the view status to be visible in the window and also register 
+    with the rootResponder.
   */
-  recomputeIsVisibleInWindow: function() {
-    if (this.get('designer') && SC.suppressMain) return sc_super();
-    var previous = this.get('isVisibleInWindow'),
-        current  = this.get('isVisible') && this.get("isPaneAttached");
-
-    // If our visibility has changed, then set the new value and notify our
-    // child views to update their value.
-    if (previous !== current) {
-      this.set('isVisibleInWindow', current);
-      
-      var childViews = this.get('childViews'), len = childViews.length, idx;
-      for(idx=0;idx<len;idx++) {
-        childViews[idx].recomputeIsVisibleInWindow(current);
-      }
-
-
-      // For historical reasons, we'll also layout the child views if
-      // necessary.
-      if (current) {
-        if (this.get('childViewsNeedLayout')) this.invokeOnce(this.layoutChildViewsIfNeeded);
-      }
-      else {
-        // Also, if we were previously visible and were the key pane, resign
-        // it.  This more appropriately belongs in a 'isVisibleInWindow'
-        // observer or some such helper method because this work is not
-        // strictly related to computing the visibility, but view performance
-        // is critical, so avoiding the extra observer is worthwhile.
-        if (this.get('isKeyPane')) this.resignKeyPane();
-      }
-    }
-
-    // If we're in this function, then that means one of our ancestor views
-    // changed, or changed its 'isVisibleInWindow' value.  That means that if
-    // we are out of sync with the layer, then we need to update our state
-    // now.
-    //
-    // For example, say we're isVisible=NO, but we have not yet added the
-    // 'hidden' class to the layer because of the "don't update the layer if
-    // we're not visible in the window" check.  If any of our parent views
-    // became visible, our layer would incorrectly be shown!
-    this.updateLayerIfNeeded(YES);
-
-    return this;
-  },
+  paneDidAttach: function() {
+    // hook into root responder
+    var responder = (this.rootResponder = SC.RootResponder.responder);
+    responder.panes.add(this);
   
+    // set currentWindowSize
+    this.set('currentWindowSize', responder.computeWindowSize()) ;
+    
+    // update my own location
+    this.set('isPaneAttached', YES) ;
+    this.parentViewDidChange() ;
+    
+    // handle intercept if needed
+    this._addIntercept();
+    return this ;
+  },
+
+  /** @private */
+  init: function() {
+    sc_super() ;
+    this.pane = this; // Needed so that our childViews can get our "pane".
+  }
+
+});
+
+} // BLOSSOM
+
+if (SPROUTCORE) {
+
+SC.Pane = SC.Pane.extend({
+
+  /** @private
+    Called when the pane is attached to a DOM element in a window, this will 
+    change the view status to be visible in the window and also register 
+    with the rootResponder.
+  */
+  paneDidAttach: function() {
+    // hook into root responder
+    var responder = (this.rootResponder = SC.RootResponder.responder);
+    responder.panes.add(this);
+  
+    // set currentWindowSize
+    this.set('currentWindowSize', responder.computeWindowSize()) ;
+    
+    // update my own location
+    this.set('isPaneAttached', YES) ;
+    this.parentViewDidChange() ;
+    
+    //notify that the layers have been appended to the document
+    this._notifyDidAppendToDocument();
+    
+    // handle intercept if needed
+    this._addIntercept();
+    return this ;
+  },
+
   /** @private */
   updateLayerLocation: function() {
     if(this.get('designer') && SC.suppressMain) return sc_super();
@@ -1159,5 +1150,6 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   /** @private */
   classNames: 'sc-pane'.w()
   
-}) ;
+});
 
+} // SPROUTCORE
