@@ -10,8 +10,8 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
   var limitsWereNotSatisfied = false,
       pwidth = pbounds[2]/*width*/,
       pheight = pbounds[3]/*height*/,
-      minLeft, maxLeft, minRight, maxRight, minWidth,  maxWidth,
-      minTop, maxTop, minBottom, maxBottom, minHeight, maxHeight;
+      minLeft, maxLeft, minRight, maxRight, minWidth, maxWidth, left, width, right,
+      minTop, maxTop, minBottom, maxBottom, minHeight, maxHeight, top, height, bottom;
 
   // Calculate position.x, bounds.width using layoutValues and pbounds. 
   // Duplicate the switch statement, sorted by left value the first time 
@@ -117,7 +117,18 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
   // true if the proposed limits cannot be satisfied.  Note that a value of 0 
   // (no limits) for hlimit will skip this.
   if (hlimit) {
-    
+    // left and right are effectively margins around the bounds
+    left  = position[0]/*x*/;
+    width = bounds[2]/*width*/;
+    right = pwidth - (left + width);
+
+    if (left < minLeft || left >= maxLeft)  {
+      limitsWereNotSatisfied = true;
+    } else if (width < minWidth || width >= maxWidth) {
+      limitsWereNotSatisfied = true;
+    } else if (right < minRight || right >= maxRight) {
+      limitsWereNotSatisfied = true;
+    }
   }
 
   // Calculate position.y, bounds.height using layoutValues and pbounds. 
@@ -224,7 +235,18 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
   // to true if the proposed limits cannot be satisfied.  Note that a value 
   // of 0 (no limits) for vlimit will skip this.
   if (vlimit) {
-    
+    // top and bottom are effectively margins around the bounds
+    top    = position[1]/*y*/;
+    height = bounds[3]/*height*/;
+    bottom = pheight - (top + height);
+
+    if (top < minTop || top >= maxTop)  {
+      limitsWereNotSatisfied = true;
+    } else if (height < minHeight || height >= maxHeight) {
+      limitsWereNotSatisfied = true;
+    } else if (bottom < minBottom || bottom >= maxBottom) {
+      limitsWereNotSatisfied = true;
+    }
   }
 
   if (limitsWereNotSatisfied) {
