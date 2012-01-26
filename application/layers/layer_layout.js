@@ -12,8 +12,8 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
       pheight = pbounds[3]/*height*/;
 
   // Calculate position.x, bounds.width using layoutValues and pbounds. 
-  // Duplicate the switch statement, sorted by right value the first time 
-  // (for position.x), left value the second time (for bounds.width). This 
+  // Duplicate the switch statement, sorted by left value the first time 
+  // (for position.x), right value the second time (for bounds.width). This 
   // keeps duplicate code at a minimum.
   switch (hmode) {
     case  0: // left, width
@@ -89,7 +89,10 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
       break;
   }
 
-  // Calculate position.y, bounds.height.
+  // Calculate position.y, bounds.height using layoutValues and pbounds. 
+  // Duplicate the switch statement, sorted by left value the first time 
+  // (for position.y), right value the second time (for bounds.height). This 
+  // keeps duplicate code at a minimum.
   switch (vmode) {
     case  0: // top, height
     case  2: // top, height percentage
