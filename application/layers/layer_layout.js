@@ -9,7 +9,9 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
 
   var limitsWereNotSatisfied = false,
       pwidth = pbounds[2]/*width*/,
-      pheight = pbounds[3]/*height*/;
+      pheight = pbounds[3]/*height*/,
+      minLeft, maxLeft, minRight, maxRight, minWidth,  maxWidth,
+      minTop, maxTop, minBottom, maxBottom, minHeight, maxHeight;
 
   // Calculate position.x, bounds.width using layoutValues and pbounds. 
   // Duplicate the switch statement, sorted by left value the first time 
@@ -78,15 +80,44 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
       break;
   }
 
-  // Apply limits to position.x, bounds.width.  Set limitsWereNotSatisfied to 
-  // true if the proposed limits cannot be satisfied.
+  // Calculate minLeft, maxLeft, minRight, maxRight, minWidth, and maxWidth.
   switch (hlimit) {
-    case 0: // no limit (skip)
+    // case 0: // no limits (skip)
+    //   break;
+    case 1: // horizontal limits (no percentages)
+      minLeft  = layoutValues[4]/*minLeft*/;
+      maxLeft  = layoutValues[5]/*maxLeft*/;
+      minRight = layoutValues[6]/*minRight*/;
+      maxRight = layoutValues[7]/*maxRight*/;
+      minWidth = layoutValues[8]/*minWidth*/;
+      maxWidth = layoutValues[9]/*maxWidth*/;
       break;
-    case 1: // horizontal limit
+    case 2: // horizontal w/ percentage limits – test each individually
+      minLeft = layoutValues[4]/*minLeft, could be a percentage*/;
+      if (minLeft > 0 && minLeft <= 1) minLeft = pwidth * minLeft;
+
+      maxLeft = layoutValues[5]/*maxLeft, could be a percentage*/;
+      if (maxLeft > 0 && maxLeft <= 1) maxLeft = pwidth * maxLeft;
+
+      minRight = layoutValues[6]/*minRight, could be a percentage*/;
+      if (minRight > 0 && minRight <= 1) minRight = pwidth * minRight;
+
+      maxRight = layoutValues[7]/*maxRight, could be a percentage*/;
+      if (maxRight > 0 && maxRight <= 1) maxRight = pwidth * maxRight;
+
+      minWidth = layoutValues[8]/*minWidth, could be a percentage*/;
+      if (minWidth > 0 && minWidth <= 1) minWidth = pwidth * minWidth;
+
+      maxWidth = layoutValues[9]/*maxWidth, could be a percentage*/;
+      if (maxWidth > 0 && maxWidth <= 1) maxWidth = pwidth * maxWidth;
       break;
-    case 2: // horizontal percentage limit
-      break;
+  }
+
+  // Apply limits to position.x, bounds.width.  Set limitsWereNotSatisfied to 
+  // true if the proposed limits cannot be satisfied.  Note that a value of 0 
+  // (no limits) for hlimit will skip this.
+  if (hlimit) {
+    
   }
 
   // Calculate position.y, bounds.height using layoutValues and pbounds. 
@@ -156,15 +187,44 @@ function layoutFunction(layoutValues, pbounds, anchorPoint, position, bounds, hm
       break;
   }
 
-  // Apply limits to position.y, bounds.height.  Set limitsWereNotSatisfied 
-  // to true if the proposed limits cannot be satisfied.
+  // Calculate minTop, maxTop, minBottom, maxBottom, minHeight, and maxHeight.
   switch (vlimit) {
-    case 0: // no limit (skip)
+    // case 0: // no limits (skip)
+    //   break;
+    case 1: // vertical limits (no percentages)
+      minTop    = layoutValues[10]/*minTop*/;
+      maxTop    = layoutValues[11]/*maxTop*/;
+      minBottom = layoutValues[12]/*minBottom*/;
+      maxBottom = layoutValues[13]/*maxBottom*/;
+      minHeight = layoutValues[14]/*minHeight*/;
+      maxHeight = layoutValues[15]/*maxHeight*/;
       break;
-    case 1: // vertical limit
+    case 2: // vertical w/ percentage limits – test each individually
+      minTop = layoutValues[10]/*minTop, could be a percentage*/;
+      if (minTop > 0 && minTop <= 1) minTop = pheight * minTop;
+
+      maxTop = layoutValues[11]/*maxTop, could be a percentage*/;
+      if (maxTop > 0 && maxTop <= 1) maxTop = pheight * maxTop;
+
+      minBottom = layoutValues[12]/*minBottom, could be a percentage*/;
+      if (minBottom > 0 && minBottom <= 1) minBottom = pheight * minBottom;
+
+      maxBottom = layoutValues[13]/*maxBottom, could be a percentage*/;
+      if (maxBottom > 0 && maxBottom <= 1) maxBottom = pheight * maxBottom;
+
+      minHeight = layoutValues[14]/*minHeight, could be a percentage*/;
+      if (minHeight > 0 && minHeight <= 1) minHeight = pheight * minHeight;
+
+      maxHeight = layoutValues[15]/*maxHeight, could be a percentage*/;
+      if (maxHeight > 0 && maxHeight <= 1) maxHeight = pheight * maxHeight;
       break;
-    case 2: // vertical percentage limit
-      break;
+  }
+
+  // Apply limits to position.y, bounds.height.  Set limitsWereNotSatisfied 
+  // to true if the proposed limits cannot be satisfied.  Note that a value 
+  // of 0 (no limits) for vlimit will skip this.
+  if (vlimit) {
+    
   }
 
   if (limitsWereNotSatisfied) {
