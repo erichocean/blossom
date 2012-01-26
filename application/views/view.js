@@ -3990,11 +3990,12 @@ SC.FULL_HEIGHT = { top: 0, bottom: 0 };
 */
 SC.ANCHOR_CENTER = { centerX: 0, centerY: 0 };
 
-/**
-  Layout property for width, height
-*/
+if (SPROUTCORE) {
 
+/** Layout property for width, height */
 SC.LAYOUT_AUTO = 'auto';
+
+} // SPROUTCORE
 
 /**
   Default property to disable or enable by default the contextMenu

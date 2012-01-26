@@ -193,6 +193,20 @@ SC.MakeRectFromBuffer = function(buffer, offset, rect, y, width, height) {
   return ret;
 };
 
+// offset is in floats, not bytes
+SC.MakeLayoutValuesFromBuffer = function(buffer, offset) {
+  var ret;
+
+  sc_assert_valid_float32_buffer(buffer, offset, 16);
+  offset = offset*Float32Array.BYTES_PER_ELEMENT;
+
+  ret = new Float32Array(buffer, offset, 16);
+  ret.set(SC.ZERO_RECT); // zero-initialize
+
+  sc_assert(ret.length === 16);
+  return ret;
+};
+
 SC.IsRect = function(rect) {
   return (rect.length === 4 && rect.constructor === Float32Array);
 };

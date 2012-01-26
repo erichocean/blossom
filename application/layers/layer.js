@@ -349,7 +349,7 @@ SC.Layer = SC.Object.extend({
     // improves memory locality, and since these structures are frequently 
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(48); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(64); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -422,6 +422,10 @@ SC.Layer = SC.Object.extend({
     this._sc_tmpTransform = SC.MakeAffineTransformFromBuffer(buf, 36);
     this._sc_tmpPoint = SC.MakePointFromBuffer(buf, 42);
     this._sc_tmpRect = SC.MakeRectFromBuffer(buf, 44);
+
+    // This is used by layout functions, which know the meaning of the sixteen
+    // indices in the context of a particular layout function.
+    this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 48);
 
     // We need to observe sublayers for changes; set that up now.
     this.sublayers = [];
