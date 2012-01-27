@@ -258,9 +258,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     src.push('bounds.height = height;');
 
     src = src.join('\n  ');
-    // console.log(src);
     func = SC.layoutFunctions[funcName] = new Function("layout", "pwidth", "pheight", "position", "bounds", src);
-    func.src = src; // for debugging
   }
 
   return func;
