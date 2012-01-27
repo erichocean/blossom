@@ -8,18 +8,17 @@
 SC.layoutFunctions = {};
 
 SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
+  sc_assert(hmode >= 0 && hmode < 16);
+  sc_assert(vmode >= 0 && vmode < 16);
+  sc_assert(typeof hmax === "boolean");
+  sc_assert(typeof vmax === "boolean");
+  sc_assert(layoutMode >= 0 && layoutMode < 9);
+
   var funcName = ['sc', hmode, vmode, hmax, vmax, layoutMode].join('_'),
       func = SC.layoutFunctions[funcName];
 
-  console.log(funcName);
   if (!func) {
     func = SC.layoutFunctions[funcName] = function(layout, pbounds, position, bounds) {
-      sc_assert(hmode >= 0 && hmode < 16);
-      sc_assert(vmode >= 0 && vmode < 16);
-      sc_assert(typeof hmax === "boolean");
-      sc_assert(typeof vmax === "boolean");
-      sc_assert(layoutMode >= 0 && layoutMode < 9);
-
       var pwidth = pbounds[2]/*width*/, pheight = pbounds[3]/*height*/,
           minLayoutWidth,  xAdjustment = 0,
           minLayoutHeight, yAdjustment = 0,
@@ -27,9 +26,9 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
           maxLayoutHeight,
           x, y, width, height;
 
-      // Clamp pwidth and pheight to min/max layout values. This is a requirement 
-      // for the layout process below: pwidth and pheight are assumed to lie 
-      // within the correct range.
+      // Clamp pwidth and pheight to min/max layout values. This is a 
+      // requirement for the layout process below: pwidth and pheight are 
+      // assumed to lie within the correct range.
       minLayoutWidth  = layout[4]/*minLayoutWidth*/;
       if (pwidth < minLayoutWidth) {
         xAdjustment = minLayoutWidth - pwidth; // a positive number
@@ -57,8 +56,8 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       }
 
       // Calculate x and width using layout and pwidth. Duplicate the switch 
-      // statement, sorted by left value the first time (for x), right value the 
-      // second time (for width). This keeps duplicate code at a minimum.
+      // statement, sorted by left value the first time (for x), right value 
+      // the second time (for width). This keeps duplicate code at a minimum.
       switch (hmode) {
         case  0: // left, width
         case  2: // left, width percentage
@@ -90,25 +89,26 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
           break;
       }
 
-      switch (hmode) {
-        case  0:                                                    // left, width
-        case  1:                                         // left percentage, width
-        case  4:                                                   // right, width
-        case  5:                                        // right percentage, width
-        case  8:                                                 // centerX, width
-        case  9:                                      // centerX percentage, width
-          width = layout[1]/*width*/;
-          break;
-        case  2:                                         // left, width percentage
-        case  3:                              // left percentage, width percentage
-        case  6:                                        // right, width percentage
-        case  7:                             // right percentage, width percentage
-        case 10:                                      // centerX, width percentage
-        case 11:                           // centerX percentage, width percentage
+      switch (hmode) {                 
+        case  0:                                                // left, width
+        case  1:                                     // left percentage, width
+        case  4:                                               // right, width
+        case  5:                                    // right percentage, width
+        case  8:                                             // centerX, width
+        case  9:                                  // centerX percentage, width
+          width = layout[1]/*width*/;  
+          break;                       
+        case  2:                                     // left, width percentage
+        case  3:                          // left percentage, width percentage
+        case  6:                                    // right, width percentage
+        case  7:                         // right percentage, width percentage
+        case 10:                                  // centerX, width percentage
+        case 11:                       // centerX percentage, width percentage
           width = pwidth * layout[1]/*width percentage*/;
           break;
 
-        // Each of the following cases require both the first and second value.
+        // Each of the following cases require both the first and second 
+        // value.
         case 12: // left, right
           width = pwidth - layout[0]/*left*/ - layout[1]/*right*/;
           break;
@@ -125,8 +125,8 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
 
       // Calculate position.y, bounds.height using layout and pheight. 
       // Duplicate the switch statement, sorted by left value the first time 
-      // (for position.y), right value the second time (for bounds.height). This 
-      // keeps duplicate code at a minimum.
+      // (for position.y), right value the second time (for bounds.height). 
+      // This keeps duplicate code at a minimum.
       switch (vmode) {
         case  0: // top, height
         case  2: // top, height percentage
@@ -159,20 +159,20 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       }
 
       switch (vmode) {
-        case  0:                                                    // top, height
-        case  1:                                         // top percentage, height
-        case  4:                                                 // bottom, height
-        case  5:                                       // bottom prcentage, height
-        case  8:                                                // centerY, height
-        case  9:                                     // centerY percentage, height
+        case  0:                                                // top, height
+        case  1:                                     // top percentage, height
+        case  4:                                             // bottom, height
+        case  5:                                   // bottom prcentage, height
+        case  8:                                            // centerY, height
+        case  9:                                 // centerY percentage, height
           height = layout[3]/*height*/;
           break;
-        case  2:                                         // top, height percentage
-        case  3:                              // top percentage, height percentage
-        case  6:                                      // bottom, height percentage
-        case  7:                           // bottom percentage, height percentage
-        case 10:                                     // centerY, height percentage
-        case 11:                          // centerY percentage, height percentage
+        case  2:                                     // top, height percentage
+        case  3:                          // top percentage, height percentage
+        case  6:                                  // bottom, height percentage
+        case  7:                       // bottom percentage, height percentage
+        case 10:                                 // centerY, height percentage
+        case 11:                      // centerY percentage, height percentage
           height = pheight * layout[3]/*height percentage*/;
           break;
 
@@ -191,8 +191,8 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
           break;
       }
 
-      // All adjustments only affect x and y (position.x and position.y). Bounds 
-      // are left unchanged.
+      // All adjustments only affect x and y (position.x and position.y). 
+      // Bounds are left unchanged.
       if (xAdjustment !== 0 || yAdjustment !== 0) {
         switch (layoutMode) {
           case 0: // align center
@@ -234,7 +234,8 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
         }
       }
 
-      // Update the position and bounds structs with the newly-computed values.
+      // Update the position and bounds structs with the newly-computed 
+      // values.
       position.x    = x;
       position.y    = y;
       bounds.width  = width;
