@@ -3,9 +3,12 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert */
+/*globals sc_assert BLOSSOM SLOW_LAYOUT_FUNCTION */
 
 SC.layoutFunctions = {};
+
+if (BLOSSOM) {
+if (!FAST_LAYOUT_FUNCTION) {
 
 SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
   sc_assert(hmode >= 0 && hmode < 16);
@@ -242,3 +245,6 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
 
   return func;
 };
+
+} // SLOW_LAYOUT_FUNCTION
+} // BLOSSOM

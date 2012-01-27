@@ -461,7 +461,11 @@ BT.App = BT.Target.extend({
     ret += '  <head>\n';
     ret += '    <title>Blossom</title>\n';
 
-    ret += '    <script>var BLOSSOM = true; var SPROUTCORE = false;</script>\n';
+    ret += '    <script>\n';
+    ret += '      var BLOSSOM = true;\n';
+    ret += '      var SPROUTCORE = false;\n';
+    ret += '      var FAST_LAYOUT_FUNCTION = true;\n';
+    ret += '    </script>\n';
 
     function outputScriptTag(file) {
       ret += '    <script src="' + file.get('targetPath') + '"></script>\n';
