@@ -34,6 +34,22 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     // at all, and thus does not have any post-layout adjustments.
     if (layoutMode === 5) {
       src.push('  var x, y, width, height;');
+
+    // Modes 3 and 5 don't have x adjustment, but they do have y.
+    } else if (layoutMode === 3 || layoutMode === 7) {
+      src.push('  var minLayoutWidth,');
+      src.push('    minLayoutHeight, yAdjustment = 0,');
+      if (hmax) src.push('    maxLayoutWidth,');
+      if (vmax) src.push('    maxLayoutHeight,');
+      src.push('    x, y, width, height;');
+
+      // Modes 1 and 6 have x adjustment, but they don't have y.
+    } else if (layoutMode === 1 || layoutMode === 6) {
+      src.push('  var minLayoutWidth,  xAdjustment = 0,');
+      src.push('    minLayoutHeight,');
+      if (hmax) src.push('    maxLayoutWidth,');
+      if (vmax) src.push('    maxLayoutHeight,');
+      src.push('    x, y, width, height;');
     } else {
       src.push('  var minLayoutWidth,  xAdjustment = 0,');
       src.push('    minLayoutHeight, yAdjustment = 0,');
@@ -49,11 +65,11 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       src.push('minLayoutWidth  = layout[4]/*minLayoutWidth*/;');
       if (hmax) src.push('maxLayoutWidth  = layout[5]/*maxLayoutWidth*/;');
       src.push('if (pwidth < minLayoutWidth) {');
-      src.push('  xAdjustment = minLayoutWidth - pwidth;'); // a positive number
+      if (layoutMode !== 3 && layoutMode !== 7) src.push('  xAdjustment = minLayoutWidth - pwidth;'); // a positive number
       src.push('  pwidth = minLayoutWidth;');
       if (hmax) {
         src.push('} else if (pwidth > maxLayoutWidth) {');
-        src.push('  xAdjustment = maxLayoutWidth - pwidth;'); // a negative number
+        if (layoutMode !== 3 && layoutMode !== 7) src.push('  xAdjustment = maxLayoutWidth - pwidth;'); // a negative number
         src.push('  pwidth = maxLayoutWidth;');
       }
       src.push('}');
@@ -62,11 +78,11 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       src.push('minLayoutHeight = layout[6]/*minLayoutHeight*/;');
       if (vmax) src.push('maxLayoutHeight = layout[7]/*maxLayoutHeight*/;');
       src.push('if (pheight < minLayoutHeight) {');
-      src.push('  yAdjustment = minLayoutHeight - pheight;'); // a positive number
+      if (layoutMode !== 1 && layoutMode !== 6) src.push('  yAdjustment = minLayoutHeight - pheight;'); // a positive number
       src.push('  pheight = minLayoutHeight;');
       if (vmax) {
         src.push('} else if (pheight > maxLayoutHeight) {');
-        src.push('  yAdjustment = maxLayoutHeight - pheight;'); // a negative number
+        if (layoutMode !== 1 && layoutMode !== 6) src.push('  yAdjustment = maxLayoutHeight - pheight;'); // a negative number
         src.push('  pheight = maxLayoutHeight;');
       }
       src.push('}');
@@ -211,42 +227,45 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     // All adjustments only affect x and y (position.x and position.y). 
     // Bounds are left unchanged.
     if (layoutMode !== 5) {
-      src.push('if (xAdjustment !== 0 || yAdjustment !== 0) {');
-        switch (layoutMode) {
-          case 0: // align center
-          case 1: // align top
-          case 2: // align bottom
-            src.push('  x += xAdjustment/2;');
-            break;
-          // case 3: // align left
-          // case 5: // align top left
-          // case 7: // align bottom left
-          //   // x is already correct
-          //   break;
-          case 4: // align right
-          case 6: // align top right
-          case 8: // align bottom right
-            src.push('  x += xAdjustment;');
-            break;
-        }
+      if (layoutMode !== 3 && layoutMode !== 7) src.push('if (xAdjustment !== 0) {');
+      else if (layoutMode !== 1 && layoutMode !== 6) src.push('if (yAdjustment !== 0) {');
+      else src.push('if (xAdjustment !== 0 || yAdjustment !== 0) {');
 
-        switch (layoutMode) {
-          case 0: // align center
-          case 3: // align left
-          case 4: // align right
-            src.push('  y += yAdjustment/2;');
-            break;
-          // case 1: // align top
-          // case 5: // align top left
-          // case 6: // align top right
-          //   // y is already correct
-          //   break;
-          case 2: // align bottom
-          case 7: // align bottom left
-          case 8: // align bottom right
-            src.push('  y += yAdjustment;');
-            break;
-        }
+      switch (layoutMode) {
+        case 0: // align center
+        case 1: // align top
+        case 2: // align bottom
+          src.push('  x += xAdjustment/2;');
+          break;
+        // case 3: // align left
+        // case 5: // align top left
+        // case 7: // align bottom left
+        //   // x is already correct
+        //   break;
+        case 4: // align right
+        case 6: // align top right
+        case 8: // align bottom right
+          src.push('  x += xAdjustment;');
+          break;
+      }
+
+      switch (layoutMode) {
+        case 0: // align center
+        case 3: // align left
+        case 4: // align right
+          src.push('  y += yAdjustment/2;');
+          break;
+        // case 1: // align top
+        // case 5: // align top left
+        // case 6: // align top right
+        //   // y is already correct
+        //   break;
+        case 2: // align bottom
+        case 7: // align bottom left
+        case 8: // align bottom right
+          src.push('  y += yAdjustment;');
+          break;
+      }
       src.push('}');
     }
 
