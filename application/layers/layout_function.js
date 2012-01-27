@@ -18,9 +18,9 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       func = SC.layoutFunctions[funcName];
 
   if (!func) {
-    func = SC.layoutFunctions[funcName] = function(layout, pbounds, position, bounds) {
-      var pwidth = pbounds[2]/*width*/, pheight = pbounds[3]/*height*/,
-          minLayoutWidth,  xAdjustment = 0,
+    // There are 9,216 unique layout functions.
+    func = SC.layoutFunctions[funcName] = function(layout, pwidth, pheight, position, bounds) {
+      var minLayoutWidth,  xAdjustment = 0,
           minLayoutHeight, yAdjustment = 0,
           maxLayoutWidth,
           maxLayoutHeight,
