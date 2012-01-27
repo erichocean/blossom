@@ -196,39 +196,36 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       if (xAdjustment !== 0 || yAdjustment !== 0) {
         switch (layoutMode) {
           case 0: // align center
-            x += xAdjustment/2;
-            y += yAdjustment/2;
-            break;
           case 1: // align top
-            x += xAdjustment/2;
-            // y is already correct
-            break;
           case 2: // align bottom
             x += xAdjustment/2;
-            y += yAdjustment;
             break;
-          case 3: // align left
-            // x is already correct
-            y += yAdjustment/2;
-            break;
+          // case 3: // align left
+          // case 5: // align top left
+          // case 7: // align bottom left
+          //   // x is already correct
+          //   break;
           case 4: // align right
-            x += xAdjustment;
-            y += yAdjustment/2;
-            break;
-          case 5: // align top left
-            // x is already correct
-            // y is already correct
-            break;
           case 6: // align top right
-            x += xAdjustment;
-            // y is already correct
-            break;
-          case 7: // align bottom left
-            // x is already correct
-            y += yAdjustment;
-            break;
           case 8: // align bottom right
             x += xAdjustment;
+            break;
+        }
+
+        switch (layoutMode) {
+          case 0: // align center
+          case 3: // align left
+          case 4: // align right
+            y += yAdjustment/2;
+            break;
+          // case 1: // align top
+          // case 5: // align top left
+          // case 6: // align top right
+          //   // y is already correct
+          //   break;
+          case 2: // align bottom
+          case 7: // align bottom left
+          case 8: // align bottom right
             y += yAdjustment;
             break;
         }
