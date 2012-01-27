@@ -349,7 +349,7 @@ SC.Layer = SC.Object.extend({
     // improves memory locality, and since these structures are frequently 
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(64); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(56); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
