@@ -1,18 +1,20 @@
+// ==========================================================================
+// Project:   Blossom - Modern, Cross-Platform Application Framework
+// Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
+// License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
+// ==========================================================================
 /*globals sc_assert */
 
-// TODO: Take into account anchorPoint.
-function layoutFunction(layout, pbounds, anchorPoint, position, bounds, hmode, vmode, hmax, vmax, layoutMode) {
+function layoutFunction(layout, pbounds, position, bounds, hmode, vmode, hmax, vmax, layoutMode) {
   sc_assert(hmode >= 0 && hmode < 16);
   sc_assert(vmode >= 0 && vmode < 16);
   sc_assert(typeof hmax === "boolean");
   sc_assert(typeof vmax === "boolean");
-  sc_assert(layoutMode >= 0 && layoutMode < 10);
+  sc_assert(layoutMode >= 0 && layoutMode < 9);
 
-  var xMinWasNotSatisfied = false, yMinWasNotSatisfied = false,
-      xMaxWasNotSatisfied = false,
-      yMaxWasNotSatisfied = false,
-      pwidth = pbounds[2]/*width*/, pheight = pbounds[3]/*height*/,
-      minLayoutWidth, minLayoutHeight,
+  var pwidth = pbounds[2]/*width*/, pheight = pbounds[3]/*height*/,
+      minLayoutWidth,  xAdjustment = 0,
+      minLayoutHeight, yAdjustment = 0,
       maxLayoutWidth,
       maxLayoutHeight,
       x, y, width, height;
@@ -22,27 +24,27 @@ function layoutFunction(layout, pbounds, anchorPoint, position, bounds, hmode, v
   // within the correct range.
   minLayoutWidth  = layout[4]/*minLayoutWidth*/;
   if (pwidth < minLayoutWidth) {
+    xAdjustment = minLayoutWidth - pwidth; // a positive number
     pwidth = minLayoutWidth;
-    xMinWasNotSatisfied = true;
 
   } else if (hmax) {
     maxLayoutWidth  = layout[5]/*maxLayoutWidth*/;
     if (pwidth > maxLayoutWidth) {
+      xAdjustment = maxLayoutWidth - pwidth; // a negative number
       pwidth = maxLayoutWidth;
-      xMaxWasNotSatisfied = true;
     }
   }
 
   minLayoutHeight = layout[6]/*minLayoutHeight*/;
   if (pheight < minLayoutHeight) {
+    yAdjustment = minLayoutHeight - pheight; // a positive number
     pheight = minLayoutHeight;
-    yMinWasNotSatisfied = true;
 
   } else if (vmax) {
     maxLayoutHeight = layout[7]/*maxLayoutHeight*/;
-    if (pheight > maxLayoutWidth) {
+    if (pheight > maxLayoutHeight) {
+      yAdjustment = maxLayoutHeight - pheight; // a negative number
       pheight = maxLayoutHeight;
-      yMaxWasNotSatisfied = true;
     }
   }
 
@@ -182,94 +184,45 @@ function layoutFunction(layout, pbounds, anchorPoint, position, bounds, hmode, v
       break;
   }
 
-  if (xMinWasNotSatisfied) {
+  // All adjustments only affect x and y (position.x and position.y). Bounds 
+  // are left unchanged.
+  if (xAdjustment !== 0 || yAdjustment !== 0) {
     switch (layoutMode) {
       case 0: // align center
+        x += xAdjustment/2;
+        y += yAdjustment/2;
         break;
       case 1: // align top
+        x += xAdjustment/2;
+        // y is already correct
         break;
       case 2: // align bottom
+        x += xAdjustment/2;
+        y += yAdjustment;
         break;
       case 3: // align left
+        // x is already correct
+        y += yAdjustment/2;
         break;
       case 4: // align right
+        x += xAdjustment;
+        y += yAdjustment/2;
         break;
       case 5: // align top left
+        // x is already correct
+        // y is already correct
         break;
       case 6: // align top right
+        x += xAdjustment;
+        // y is already correct
         break;
       case 7: // align bottom left
+        // x is already correct
+        y += yAdjustment;
         break;
       case 8: // align bottom right
-        break;
-    }
-  }
-
-  if (xMaxWasNotSatisfied) {
-    switch (layoutMode) {
-      case 0: // align center
-        break;
-      case 1: // align top
-        break;
-      case 2: // align bottom
-        break;
-      case 3: // align left
-        break;
-      case 4: // align right
-        break;
-      case 5: // align top left
-        break;
-      case 6: // align top right
-        break;
-      case 7: // align bottom left
-        break;
-      case 8: // align bottom right
-        break;
-    }
-  }
-
-  if (yMinWasNotSatisfied) {
-    switch (layoutMode) {
-      case 0: // align center
-        break;
-      case 1: // align top
-        break;
-      case 2: // align bottom
-        break;
-      case 3: // align left
-        break;
-      case 4: // align right
-        break;
-      case 5: // align top left
-        break;
-      case 6: // align top right
-        break;
-      case 7: // align bottom left
-        break;
-      case 8: // align bottom right
-        break;
-    }
-  }
-
-  if (yMaxWasNotSatisfied) {
-    switch (layoutMode) {
-      case 0: // align center
-        break;
-      case 1: // align top
-        break;
-      case 2: // align bottom
-        break;
-      case 3: // align left
-        break;
-      case 4: // align right
-        break;
-      case 5: // align top left
-        break;
-      case 6: // align top right
-        break;
-      case 7: // align bottom left
-        break;
-      case 8: // align bottom right
+        x += xAdjustment;
+        y += yAdjustment;
         break;
     }
   }
