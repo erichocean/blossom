@@ -379,6 +379,14 @@ SC.IsAffineTransform = function(mat) {
   return (mat.length === 6 && mat.constructor === Float32Array);
 };
 
+SC.CopyAffineTransformTo = function(src, dest) {
+  sc_assert(src !== dest);
+  sc_assert(src.length === 6 && src.constructor === Float32Array);
+  sc_assert(dest.length === 6 && dest.constructor === Float32Array);
+
+  dest.set(src);
+};
+
 SC.MakeIdentityTransform3D = function() {
   var ret = new Float32Array(16);
 
