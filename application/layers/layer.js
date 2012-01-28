@@ -18,6 +18,64 @@ SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.
 
+  /**
+    The `layout` property describes how you want the layer to be sized and 
+    positioned on the screen, relative to its superlayer.  You can define the 
+    following layout properties:
+
+    Horizontal axis (pick exactly two):
+     - left: an offset from the left edge
+     - right: an offset from the right edge
+     - centerX: an offset from center X
+     - width: a width
+
+    Vertical axis (pick exactly two):
+     - top: an offset from the top edge
+     - bottom: an offset from the bottom edge
+     - centerY: an offset from center Y
+     - height: a height
+
+    Layout rectangle constraints (all are optional):
+     - minLayoutWidth: the minimum width at which to do layout on the x-axis
+     - maxLayoutWidth: the maximum width at which to do layout on the x-axis
+     - minLayoutHeight: the minimum height at which to do layout on the y-axis
+     - maxLayoutHeight: the maximum height at which to do layout on the y-axis
+
+    You can also specify where to position the layout rectangle relative to 
+    the parent's layout rectangle when it is smaller or larger on a 
+    particular axis due to layout rectangle min/max clamping:
+     - position: valid strings are: "center", "top", "bottom", "left"
+       "top left", "bottom left", "right", "top right", and "bottom right".
+
+    Each of these layout properties can take either an absolute value, or a 
+    percentage (with the exception of `position`, which only takes the 
+    strings listed above). Percentages can be defined in one of two ways:
+      - a number between -1 and 1, e.g. 0.5 or -0.2. Note that -1 and 1 are 
+        not considered to be percentages; they are absolute values.
+      - a string containing a number followed by the '%' character
+      - for width and height only: negative numbers are not allowed
+
+    When a negative number or percentage is given, it will specify a negative 
+    offset. For example, `top: -10` offsets the layer -10 units in the y axis 
+    relative to its superlayer.
+
+    An exception is thrown when `layout` is set to an invalid value.  If too 
+    few properties are specified for the Horizontal or Vertical axis, the 
+    first property in the above list that is not specified is specified and 
+    assumed to be 0.  So, if you set `right: 0` only, `left: 0` will be 
+    added for you (because `left` is the first property not set). If you set 
+    `left: 0` only, `right: 0` would be set for you, because that is the 
+    first property not set.
+  */
+  layout: { top: 0, left: 0, bottom: 0, right: 0 },
+
+  needsLayout: false,
+
+  _sc_layoutDidChange: function() {
+    this.updateLayoutRules(); // Lots of code, so it's put in its own file.
+    this.set('needsLayout', true);
+  }.observes('layout'),
+
   zIndex: 0,
   cornerRadius: 0,
 
