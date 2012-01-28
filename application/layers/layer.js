@@ -59,13 +59,7 @@ SC.Layer = SC.Object.extend({
     offset. For example, `top: -10` offsets the layer -10 units in the y axis 
     relative to its superlayer.
 
-    An exception is thrown when `layout` is set to an invalid value.  If too 
-    few properties are specified for the Horizontal or Vertical axis, the 
-    first property in the above list that is not specified is specified and 
-    assumed to be 0.  So, if you set `right: 0` only, `left: 0` will be 
-    added for you (because `left` is the first property not set). If you set 
-    `left: 0` only, `right: 0` would be set for you, because that is the 
-    first property not set.
+    An exception is thrown when `layout` is set to an invalid value.
   */
   layout: { top: 0, left: 0, bottom: 0, right: 0 },
 

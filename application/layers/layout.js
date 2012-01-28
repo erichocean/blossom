@@ -33,14 +33,14 @@ SC.Layer.PERCENT_REGEX = /(([+\-]?\d+)|([+\-]?((\d*\.\d+)|(\d+\.\d*))))\%/;
 SC.Layer.POSITIVE_PERCENT_REGEX = /(([+]?\d+)|([+]?((\d*\.\d+)|(\d+\.\d*))))\%/;
 
 /**
-  This method takes a layout hash, verifies it's valid, supplies any missing 
-  values, and then updates this._sc_layoutValues and this._sc_layoutFunction 
-  to match. Layout is actually done later, during the animation loop.
+  This method takes a layout hash, verifies it's valid, and then updates 
+  this._sc_layoutValues and this._sc_layoutFunction to match. Layout is 
+  actually done later, during the animation loop.
 */
 SC.Layer.prototype.updateLayoutRules = function() {
   var layout = this.get('layout'),
       values = this._sc_layoutValues,
-      isValid = true, key, val, ary, invalidKeys = [], re, re2,
+      isValid = true, key, val, ary, tmp = [], re, re2, percentages = {},
       hmode, vmode, hmax, vmax, layoutMode;
 
   if (typeof layout !== "object") {
@@ -53,29 +53,34 @@ SC.Layer.prototype.updateLayoutRules = function() {
   ary = SC.Layer.LAYOUT_ALL_PROPERTIES;
   for (key in layout) {
     if (!layout.hasOwnProperty(key)) continue;
-    if (ary.indexOf(key) === -1) invalidKeys.push(key);
+    if (ary.indexOf(key) === -1) tmp.push(key);
   }
-  if (invalidKeys.length > 0) {
-    throw new TypeError("layout contains invalid keys: "+invalidKeys);
+  if (tmp.length > 0) {
+    throw new TypeError("layout contains invalid keys: "+tmp);
   }
 
   // Next, make sure we have only two X properties and two Y properties.
   ary = SC.Layer.LAYOUT_X_PROPERTIES;
   for (key in layout) {
     if (!layout.hasOwnProperty(key)) continue;
-    if (ary.indexOf(key) !== -1) invalidKeys.push(key);
+    if (ary.indexOf(key) !== -1) tmp.push(key);
   }
-  if (invalidKeys.length > 2) {
-    throw new TypeError("layout has too many horizontal properties: "+invalidKeys);
+  if (tmp.length > 2) {
+    throw new TypeError("layout has too many horizontal properties (it should have exactly two): "+tmp);
+  } else if (tmp.length < 2) {
+    throw new TypeError("layout has too few horizontal properties (it should have exactly two): "+tmp);
   }
+  tmp.length = 0;
 
   ary = SC.Layer.LAYOUT_Y_PROPERTIES;
   for (key in layout) {
     if (!layout.hasOwnProperty(key)) continue;
-    if (ary.indexOf(key) !== -1) invalidKeys.push(key);
+    if (ary.indexOf(key) !== -1) tmp.push(key);
   }
-  if (invalidKeys.length > 2) {
-    throw new TypeError("layout has too many vertical properties: "+invalidKeys);
+  if (tmp.length > 2) {
+    throw new TypeError("layout has too many vertical properties (it should have exactly two): "+tmp);
+  } else if (tmp.length < 2) {
+    throw new TypeError("layout has too few vertical properties (it should have exactly two): "+tmp);
   }
 
   // If the position property is present, make sure it is valid.  Also, cache 
@@ -87,10 +92,10 @@ SC.Layer.prototype.updateLayoutRules = function() {
     }
   } else layoutMode = 5; // default is "top left" (for speed)
 
-  // At this point, we at least don't have any invalid keys. It's still 
-  // possible we have missing keys (we require two for each axis). It's also 
-  // possible that the keys we do have don't contain good values. First, lets
-  // verify the values.
+  // At this point, we at least don't have any invalid keys, but it's also 
+  // possible that the keys we do have don't contain good values. Verify the 
+  // values, and convert any percentage strings into their floating-point 
+  // equivalent. Also note which keys contain percentages.
   re = SC.Layer.PERCENT_REGEX;
   re2 = SC.Layer.POSITIVE_PERCENT_REGEX;
   for (key in layout) {
@@ -103,10 +108,14 @@ SC.Layer.prototype.updateLayoutRules = function() {
       case "top":
       case "bottom":
       case "centerY":
-        if (typeof val === "number") continue;
-        else if (typeof val === "string") {
+        if (typeof val === "number") {
+          if (val > 0 && val < 1) percentages[key] = true;
+        } else if (typeof val === "string") {
           if (!re.test(val)) {
             throw new TypeError("layout."+key+" is not a percentage: "+val);
+          } else {
+            layout[key] = val.slice(0,-1)/100; // converts string to number
+            percentages[key] = true;
           }
         } else {
           throw new TypeError("layout."+key+" must be either a number or a percentage. It's a "+typeof key);
@@ -114,10 +123,14 @@ SC.Layer.prototype.updateLayoutRules = function() {
         break;
       case "width":
       case "height":
-        if (typeof val === "number" && val >= 0) continue;
-        else if (typeof val === "string") {
+        if (typeof val === "number" && val >= 0) {
+          if (val > 0 && val < 1) percentages[key] = true;
+        } else if (typeof val === "string") {
           if (!re2.test(val)) {
             throw new TypeError("layout."+key+" is not a positive percentage: "+val);
+          } else {
+            layout[key] = val.slice(0,-1)/100; // converts string to number
+            percentages[key] = true;
           }
         } else {
           throw new TypeError("layout."+key+" must be either a number or a positive percentage. It's a "+typeof key);
@@ -138,6 +151,10 @@ SC.Layer.prototype.updateLayoutRules = function() {
         break;
     }
   }
+
+  // Okay, the values for the keys supplied are okay, and any percentages 
+  // have been converted. (If a key's value is a percentage, an entry has 
+  // been made in the percentages hash.)
 };
 
 } // BLOSSOM
