@@ -111,28 +111,19 @@ function main() {
   // layer.get('transform').m12 = -0.058; // skew in y
   
   // translation
-  // layer.get('transform').tx = 212.5;
-  // layer.get('transform').ty = 137.5;
+  // layer.get('transform').tx = -50; // Why is the opposite of what I'd expect?
+  // layer.get('transform').ty = -50;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
   layer.superlayer = pane.layer;
   layer.view = SC.View.create({
     pane: pane,
-    mouseDown: function(evt) {
-      alert('clicked view');
-    },
-
-    mouseEntered: function(evt) {
-      document.body.style.cursor = "pointer";
-    },
-
-    mouseExited: function(evt) {
-      document.body.style.cursor = "default";
-    }
+    mouseDown:    function(evt) { alert('clicked view'); },
+    mouseEntered: function(evt) { document.body.style.cursor = "pointer"; },
+    mouseExited:  function(evt) { document.body.style.cursor = "default"; }
   });
 
-  console.log('updating layout:');
   layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_anchorPoint[0], layer._sc_anchorPoint[1],layer._sc_position, layer._sc_bounds);
 
   function draw() {
@@ -176,7 +167,6 @@ function main() {
   }
 
   var rotation = 0;
-
   function animate(lastTime) {
     var date = new Date(),
         time = date.getTime(),
@@ -199,7 +189,7 @@ function main() {
     window.requestAnimFrame(function() { animate(time); });
   }
 
-  animate(new Date().getTime());
+  animate(new Date().getTime()); // start our drawing loop
 }
 
 // function main() {
