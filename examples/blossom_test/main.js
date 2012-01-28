@@ -99,20 +99,6 @@ function main() {
     layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
     cornerRadius: 25
   });
-  // layer.get('anchorPoint').x = 0;
-  // layer.get('anchorPoint').y = 0;
-  // layer.get('anchorPoint').x = 1;
-  // layer.get('anchorPoint').y = 1;
-
-  // layer.get('transform').m11 =  0.400; // scale x axis
-  // layer.get('transform').m22 =  0.700; // scale y axis
-
-  // layer.get('transform').m21 =  0.380; // skew in x
-  // layer.get('transform').m12 = -0.058; // skew in y
-  
-  // translation
-  // layer.get('transform').tx = -50; // Why is the opposite of what I'd expect?
-  // layer.get('transform').ty = -50;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
@@ -130,11 +116,31 @@ function main() {
     var ctx = pane.getPath('layer.context');
 
     ctx.clearRect(0,0,w,h);
+
+    // Draw background.
     ctx.fillStyle = base3;
     ctx.fillRect(0, 0, ctx.width, ctx.height);
     ctx.strokeStyle = base0;
     ctx.lineWidth = 2; // overlap of 1 on the inside
     ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+    // Draw something so we can see where to click.
+    layer._sc_transformFromSuperlayerToLayerIsDirty = true;
+    layer._sc_computeTransformFromSuperlayerToLayer();
+    ctx.save();
+    var t = layer._sc_transformFromSuperlayerToLayer;
+    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    ctx.beginPath();
+    layer.renderHitTestPath(ctx);
+    ctx.fillStyle = green;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 15;
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.fill();
+    ctx.restore();
+
+    // Drow lines overlay.
     ctx.beginPath();
     ctx.moveTo(0, h/2);
     ctx.lineTo(w, h/2);
@@ -151,19 +157,6 @@ function main() {
     ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
     ctx.lineWidth = 0.5;
     ctx.stroke();
-
-    // Draw something so we can see where to click.
-    layer._sc_transformFromSuperlayerToLayerIsDirty = true;
-    layer._sc_computeTransformFromSuperlayerToLayer();
-    ctx.save();
-    var t = layer._sc_transformFromSuperlayerToLayer;
-    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
-    ctx.beginPath();
-    layer.renderHitTestPath(ctx);
-    ctx.fillStyle = green;
-    ctx.globalAlpha = 0.5;
-    ctx.fill();
-    ctx.restore();
   }
 
   var rotation = 0;
