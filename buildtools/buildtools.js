@@ -464,7 +464,7 @@ BT.App = BT.Target.extend({
     ret += '    <script>\n';
     ret += '      var BLOSSOM = true;\n';
     ret += '      var SPROUTCORE = false;\n';
-    ret += '      var FAST_LAYOUT_FUNCTION = true;\n';
+    ret += '      var FAST_LAYOUT_FUNCTION = false;\n';
     ret += '    </script>\n';
 
     function outputScriptTag(file) {
@@ -481,6 +481,14 @@ BT.App = BT.Target.extend({
 
     ret += '    <style>\n';
     ret += '      .sc-pane { position: absolute; margin: 0; }\n';
+    // ret += '      #foo {\n';
+    // ret += '        top: 10px;\n';
+    // ret += '        left: 10px;\n';
+    // ret += '        height: 100px;\n';
+    // ret += '        width: 100px;\n';
+    // ret += '        -webkit-transform-origin: 50 50;\n';
+    // ret += '        -webkit-transform: rotate(45deg);\n';
+    // ret += '      }\n';
     ret += '    </style>\n';
 
     ret += '  </head>\n';

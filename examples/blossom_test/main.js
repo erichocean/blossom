@@ -23,6 +23,15 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
+window.requestAnimFrame = function(callback) {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) { window.setTimeout(callback, 1000 / 60); };
+}();
+
 function roundRect(ctx, x, y, width, height, radius) {
   if (typeof radius === "undefined") {
     radius = 5;
@@ -78,39 +87,32 @@ function drawButton(ctx, pressed) {
 }
 
 function main() {
+  var w = 853, h = 553;
   var pane = SC.Pane.create({
-    layout: { top: 10, left: 10, width: 850, height: 550 },
-    mouseDown: function(evt) {
-      alert('clicked pane');
-    }
+    layout: { top: 10, left: 10, width: w, height: h }
   });
 
   pane.attach();
 
-  var ctx = pane.getPath('layer.context');
-
-  ctx.fillStyle = base3;
-  ctx.fillRect(0, 0, ctx.width, ctx.height);
-  ctx.strokeStyle = base0;
-  ctx.lineWidth = 2; // overlap of 1 on the inside
-  ctx.strokeRect(0, 0, ctx.width, ctx.height);
-
   var layer = SC.Layer.create({
+    // layout: { top: 40, left: 50, width: 200, height: 200 },
     layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
     cornerRadius: 25
   });
-  layer.get('anchorPoint').x = 1;
-  layer.get('anchorPoint').y = 1;
-  // layer.get('bounds').height = 50;
-  // layer.get('bounds').width = 50;
-  // layer.get('position').x = 50;
-  // layer.get('position').y = 50;
-  // layer.get('transform').m11 = 0.4;     // scale x by #
-  // layer.get('transform').m12 = 0.18; // skew y by 10 units
-  // layer.get('transform').m21 = 0.38; // skew x by 10 units
-  // layer.get('transform').m22 = 0.7;     // scale y by #
-  // layer.get('transform').tx = 10;
-  // layer.get('transform').ty = 10;
+  // layer.get('anchorPoint').x = 0;
+  // layer.get('anchorPoint').y = 0;
+  // layer.get('anchorPoint').x = 1;
+  // layer.get('anchorPoint').y = 1;
+
+  // layer.get('transform').m11 =  0.400; // scale x axis
+  // layer.get('transform').m22 =  0.700; // scale y axis
+
+  // layer.get('transform').m21 =  0.380; // skew in x
+  // layer.get('transform').m12 = -0.058; // skew in y
+  
+  // translation
+  // layer.get('transform').tx = 212.5;
+  // layer.get('transform').ty = 137.5;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
@@ -133,16 +135,71 @@ function main() {
   console.log('updating layout:');
   layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_anchorPoint[0], layer._sc_anchorPoint[1],layer._sc_position, layer._sc_bounds);
 
-  // Draw something so we can see where to click.
-  layer._sc_computeTransformFromSuperlayerToLayer();
-  ctx.save();
-  var t = layer._sc_transformFromSuperlayerToLayer;
-  ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
-  layer.renderHitTestPath(ctx);
-  ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.restore();
+  function draw() {
+    var ctx = pane.getPath('layer.context');
 
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = base3;
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.strokeStyle = base0;
+    ctx.lineWidth = 2; // overlap of 1 on the inside
+    ctx.strokeRect(0, 0, ctx.width, ctx.height);
+    ctx.beginPath();
+    ctx.moveTo(0, h/2);
+    ctx.lineTo(w, h/2);
+    ctx.moveTo(w/2, 0);
+    ctx.lineTo(w/2, h);
+    ctx.strokeStyle = orange;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+    ctx.fillStyle = orange;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // Draw something so we can see where to click.
+    layer._sc_transformFromSuperlayerToLayerIsDirty = true;
+    layer._sc_computeTransformFromSuperlayerToLayer();
+    ctx.save();
+    var t = layer._sc_transformFromSuperlayerToLayer;
+    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    ctx.beginPath();
+    layer.renderHitTestPath(ctx);
+    ctx.fillStyle = green;
+    ctx.globalAlpha = 0.5;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  var rotation = 0;
+
+  function animate(lastTime) {
+    var date = new Date(),
+        time = date.getTime(),
+        timeDiff = time - lastTime,
+        angularSpeed = 0.2, // revolutions per second
+        angularDiff = angularSpeed * 2 * Math.PI * timeDiff / 1000;
+
+    // console.log(1000 / timeDiff); // log fps
+
+    // rotate layer
+    rotation += angularDiff;
+    // rotation (should be happenning around the anchorPoint!)
+    layer.get('transform').m11 =  Math.cos(rotation);
+    layer.get('transform').m12 =  Math.sin(rotation);
+    layer.get('transform').m21 = -Math.sin(rotation);
+    layer.get('transform').m22 =  Math.cos(rotation);
+
+
+    draw();
+    window.requestAnimFrame(function() { animate(time); });
+  }
+
+  animate(new Date().getTime());
 }
 
 // function main() {

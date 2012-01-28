@@ -302,6 +302,13 @@ SC.SetIdentityAffineTransform = function(mat) {
 };
 
 SC.AffineTransformConcatTo = function(left, right, dest) {
+  var left_m11 = left[0]/*m11*/,
+      left_m12 = left[1]/*m12*/,
+      left_m21 = left[2]/*m21*/,
+      left_m22 = left[3]/*m22*/,
+      left_tx  = left[4]/*tx*/,
+      left_ty  = left[5]/*ty*/;
+
   // Result:
   //   dest.m11 = left.m11 * right.m11 + left.m12 * right.m21;
   //   dest.m12 = left.m11 * right.m12 + left.m12 * right.m22;
@@ -309,12 +316,12 @@ SC.AffineTransformConcatTo = function(left, right, dest) {
   //   dest.m22 = left.m21 * right.m12 + left.m22 * right.m22;
   //   dest.tx = left.tx * right.m11 + left.ty * right.m21 + right.tx;
   //   dest.ty = left.tx * right.m12 + left.ty * right.m22 + right.ty;
-  dest[0] = left[0] * right[0] + left[1] * right[2];
-  dest[1] = left[0] * right[1] + left[1] * right[3];
-  dest[2] = left[2] * right[0] + left[3] * right[2];
-  dest[3] = left[2] * right[1] + left[3] * right[3];
-  dest[4] = left[4] * right[0] + left[5] * right[2] + right[4];
-  dest[5] = left[4] * right[1] + left[5] * right[3] + right[5];
+  dest[0] = left_m11 * right[0] + left_m12 * right[2];
+  dest[1] = left_m11 * right[1] + left_m12 * right[3];
+  dest[2] = left_m21 * right[0] + left_m22 * right[2];
+  dest[3] = left_m21 * right[1] + left_m22 * right[3];
+  dest[4] = left_tx  * right[0] + left_tx  * right[2] + right[4];
+  dest[5] = left_ty  * right[1] + left_ty  * right[3] + right[5];
 };
 
 SC.IsIdentityAffineTransform = function(mat) {

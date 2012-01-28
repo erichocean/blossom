@@ -340,7 +340,7 @@ SC.Layer = SC.Object.extend({
   },
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
-    console.log('SC.Layer#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    // console.log('SC.Layer#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
 
@@ -404,7 +404,7 @@ SC.Layer = SC.Object.extend({
     // improves memory locality, and since these structures are frequently 
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(56); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(58); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -476,11 +476,12 @@ SC.Layer = SC.Object.extend({
     // This is used by various methods for temporary computations.
     this._sc_tmpTransform = SC.MakeAffineTransformFromBuffer(buf, 36);
     this._sc_tmpPoint = SC.MakePointFromBuffer(buf, 42);
-    this._sc_tmpRect = SC.MakeRectFromBuffer(buf, 44);
+    this._sc_tmpPoint2 = SC.MakePointFromBuffer(buf, 44);
+    this._sc_tmpRect = SC.MakeRectFromBuffer(buf, 46);
 
     // This is used by layout functions, which know the meaning of the sixteen
     // indices in the context of a particular layout function.
-    this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 48);
+    this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 50);
     this._sc_layoutDidChange();
 
     // We need to observe sublayers for changes; set that up now.
@@ -537,33 +538,31 @@ SC.Layer = SC.Object.extend({
         superlayer = this._sc_superlayer,
         transform = this._sc_transform,
         computedAnchorPoint = this._sc_tmpPoint,
+        transformedAnchorPoint = this._sc_tmpPoint2,
         transformFromSuperlayer = this._sc_transformFromSuperlayerToLayer;
+
+    // Calculate the computed anchor point within `bounds`.
+    computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + (bounds[2]/*width*/  * anchorPoint[0]/*x*/);
+    computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + (bounds[3]/*height*/ * anchorPoint[1]/*y*/);
 
     // Adjust the origin of our superlayer's coordinate system to `position`.
     SC.SetIdentityAffineTransform(transformFromSuperlayer);
-    transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/;
-    transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/;
 
     // Apply our layer's own `transform`. Because `position` and 
     // `anchorPoint` are the same, any rotation is effectively being done 
     // around `anchorPoint`.
+    // debugger;
     SC.AffineTransformConcatTo(transformFromSuperlayer, transform, transformFromSuperlayer);
 
-    // Calculate the computed anchor point within `bounds`.
-    computedAnchorPoint[0]/*x*/ = (bounds[0]/*x*/ + bounds[2]/*width*/)  * anchorPoint[0]/*x*/;
-    computedAnchorPoint[1]/*y*/ = (bounds[1]/*y*/ + bounds[3]/*height*/) * anchorPoint[1]/*y*/;
-
-    console.log('computedAnchorPoint[0]/*x*/ =', computedAnchorPoint[0]);
-    console.log('computedAnchorPoint[1]/*y*/ =', computedAnchorPoint[1]);
-    console.log('transform[0]/*m11*/ =', transform[0]);
-    console.log('transform[3]/*m22*/ =', transform[3]);
+    // Find the new location of our anchorPoint, post-transformation.
+    SC.PointApplyAffineTransformTo(computedAnchorPoint, transformFromSuperlayer, transformedAnchorPoint);
 
     // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
     // origin, taking into account `anchorPoint`. `position` is where the 
     // origin is now, and this is the same as `computedAnchorPoint`, so 
     // add that to get back to the `bounds` origin.
-    transformFromSuperlayer[4]/*tx*/ -= computedAnchorPoint[0]/*x*/ * transform[0]/*m11*/;
-    transformFromSuperlayer[5]/*ty*/ -= computedAnchorPoint[1]/*y*/ * transform[3]/*m22*/;
+    transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/ - computedAnchorPoint[0]/*x*/ + (computedAnchorPoint[0]/*x*/ - transformedAnchorPoint[0]/*x*/);
+    transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/ - computedAnchorPoint[1]/*y*/ + (computedAnchorPoint[1]/*y*/ - transformedAnchorPoint[1]/*y*/);
 
     // Our co-ordinate system is now set up how it would be for drawing...
 
@@ -572,6 +571,7 @@ SC.Layer = SC.Object.extend({
     // Otherwise, points expressed in our superlayer's coordinate system will 
     // end up with the incorrect transform.
     if (superlayer && superlayer._sc_hasSublayerTransform) {
+      console.log("applying superlayer's sublayerTransform");
       SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
     }
 
