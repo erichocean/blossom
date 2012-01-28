@@ -541,37 +541,26 @@ SC.Layer = SC.Object.extend({
         transformedAnchorPoint = this._sc_tmpPoint2,
         transformFromSuperlayer = this._sc_transformFromSuperlayerToLayer;
 
+    // Our `transformFromSuperlayer` starts out as just our `transform`. 
+    // Later, we'll adjust it to account for `anchorPoint` and `position`.
+    SC.CopyAffineTransformTo(transform, transformFromSuperlayer);
+
     // Calculate the computed anchor point within `bounds`.
     computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + (bounds[2]/*width*/  * anchorPoint[0]/*x*/);
     computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + (bounds[3]/*height*/ * anchorPoint[1]/*y*/);
-
-    // Adjust the origin of our superlayer's coordinate system to `position`.
-    SC.SetIdentityAffineTransform(transformFromSuperlayer);
-
-    // Apply our layer's own `transform`. Because `position` and 
-    // `anchorPoint` are the same, any rotation is effectively being done 
-    // around `anchorPoint`.
-    // debugger;
-    SC.AffineTransformConcatTo(transformFromSuperlayer, transform, transformFromSuperlayer);
 
     // Find the new location of our anchorPoint, post-transformation.
     SC.PointApplyAffineTransformTo(computedAnchorPoint, transformFromSuperlayer, transformedAnchorPoint);
 
     // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
-    // origin, taking into account `anchorPoint`. `position` is where the 
-    // origin is now, and this is the same as `computedAnchorPoint`, so 
-    // add that to get back to the `bounds` origin.
+    // origin, taking into account `anchorPoint` and `position`, as well as 
+    // how `transform` modified the actual location of `anchorPoint`.
     transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/ - computedAnchorPoint[0]/*x*/ + (computedAnchorPoint[0]/*x*/ - transformedAnchorPoint[0]/*x*/);
     transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/ - computedAnchorPoint[1]/*y*/ + (computedAnchorPoint[1]/*y*/ - transformedAnchorPoint[1]/*y*/);
 
-    // Our co-ordinate system is now set up how it would be for drawing...
-
-    // However, our superlayer can apply a sublayerTransform before we are 
-    // drawn. Pre-concatenate that to the transform so far if it exists. 
-    // Otherwise, points expressed in our superlayer's coordinate system will 
-    // end up with the incorrect transform.
+    // Our superlayer can apply a sublayerTransform before we are drawn. 
+    // Pre-concatenate that to the transform so far if it exists.
     if (superlayer && superlayer._sc_hasSublayerTransform) {
-      console.log("applying superlayer's sublayerTransform");
       SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
     }
 
