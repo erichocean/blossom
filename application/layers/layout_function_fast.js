@@ -227,15 +227,11 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     // All adjustments only affect x and y (position.x and position.y). 
     // Bounds are left unchanged.
     if (layoutMode !== 5) {
-      if (layoutMode !== 3 && layoutMode !== 7) src.push('if (xAdjustment !== 0) {');
-      else if (layoutMode !== 1 && layoutMode !== 6) src.push('if (yAdjustment !== 0) {');
-      else src.push('if (xAdjustment !== 0 || yAdjustment !== 0) {');
-
       switch (layoutMode) {
         case 0: // align center
         case 1: // align top
         case 2: // align bottom
-          src.push('  x += xAdjustment/2;');
+          src.push('if (xAdjustment !== 0) x += xAdjustment/2;');
           break;
         // case 3: // align left
         // case 5: // align top left
@@ -245,7 +241,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
         case 4: // align right
         case 6: // align top right
         case 8: // align bottom right
-          src.push('  x += xAdjustment;');
+          src.push('if (xAdjustment !== 0) x += xAdjustment;');
           break;
       }
 
@@ -253,7 +249,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
         case 0: // align center
         case 3: // align left
         case 4: // align right
-          src.push('  y += yAdjustment/2;');
+          src.push('if (yAdjustment !== 0) y += yAdjustment/2;');
           break;
         // case 1: // align top
         // case 5: // align top left
@@ -263,10 +259,9 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
         case 2: // align bottom
         case 7: // align bottom left
         case 8: // align bottom right
-          src.push('  y += yAdjustment;');
+          src.push('if (yAdjustment !== 0) y += yAdjustment;');
           break;
       }
-      src.push('}');
     }
 
     // Update the position and bounds structs with the newly-computed 
