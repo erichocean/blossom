@@ -139,7 +139,7 @@ function main() {
     ctx.shadowColor = "rgba(0,0,0,0.3)";
     ctx.fill();
 
-    // Drow some text.
+    // Draw some text.
     var bounds = layer.get('bounds');
     ctx.fillStyle = base3;
     ctx.font = "16pt Calibri";
@@ -150,7 +150,7 @@ function main() {
     ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
     ctx.restore();
 
-    // Drow lines overlay.
+    // Draw lines overlay.
     ctx.beginPath();
     ctx.moveTo(0, h/2);
     ctx.lineTo(w, h/2);
