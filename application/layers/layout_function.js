@@ -62,37 +62,6 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       // Calculate x and width using layout and pwidth. Duplicate the switch 
       // statement, sorted by left value the first time (for x), right value 
       // the second time (for width). This keeps duplicate code at a minimum.
-      switch (hmode) {
-        case  0: // left, width
-        case  2: // left, width percentage
-        case 12: // left, right
-        case 14: // left, right percentage
-          x = layout[0]/*left*/;
-          break;
-        case  1: // left percentage, width
-        case  3: // left percentage, width percentage
-        case 13: // left percentage, right
-        case 15: // left percentage, right percentage
-          x = pwidth * layout[0]/*left percentage*/;
-          break;
-        case  4: // right, width
-        case  6: // right, width percentage
-          x = pwidth + layout[0]/*right*/;
-          break;
-        case  5: // right percentage, width
-        case  7: // right percentage, width percentage
-          x = pwidth + (pwidth * layout[0]/*right percentage*/);
-          break;
-        case  8: // centerX, width
-        case 10: // centerX, width percentage
-          x = (pwidth/2) + layout[0]/*centerX*/;
-          break;
-        case  9: // centerX percentage, width
-        case 11: // centerX percentage, width percentage
-          x = (pwidth/2) + (pwidth * layout[0]/*centerX percentage*/);
-          break;
-      }
-
       switch (hmode) {                 
         case  0:                                                // left, width
         case  1:                                     // left percentage, width
@@ -127,41 +96,41 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
           break;
       }
 
+      switch (hmode) {
+        case  0: // left, width
+        case  2: // left, width percentage
+        case 12: // left, right
+        case 14: // left, right percentage
+          x = layout[0]/*left*/;
+          break;
+        case  1: // left percentage, width
+        case  3: // left percentage, width percentage
+        case 13: // left percentage, right
+        case 15: // left percentage, right percentage
+          x = pwidth * layout[0]/*left percentage*/;
+          break;
+        case  4: // right, width
+        case  6: // right, width percentage
+          x = pwidth - layout[0]/*right*/ - width;
+          break;
+        case  5: // right percentage, width
+        case  7: // right percentage, width percentage
+          x = pwidth - (pwidth * layout[0]/*right percentage*/) - width;
+          break;
+        case  8: // centerX, width
+        case 10: // centerX, width percentage
+          x = (pwidth/2) + layout[0]/*centerX*/ - width/2;
+          break;
+        case  9: // centerX percentage, width
+        case 11: // centerX percentage, width percentage
+          x = (pwidth/2) + (pwidth * layout[0]/*centerX percentage*/) - width/2;
+          break;
+      }
+
       // Calculate position.y, bounds.height using layout and pheight. 
       // Duplicate the switch statement, sorted by left value the first time 
       // (for position.y), right value the second time (for bounds.height). 
       // This keeps duplicate code at a minimum.
-      switch (vmode) {
-        case  0: // top, height
-        case  2: // top, height percentage
-        case 12: // top, bottom
-        case 14: // top, bottom percentage
-          y = layout[2]/*top*/;
-          break;
-        case  1: // top percentage, height
-        case  3: // top percentage, height percentage
-        case 13: // top percentage, bottom
-        case 15: // top percentage, bottom percentage
-          y = pheight * layout[2]/*top percentage*/;
-          break;
-        case  4: // bottom, height
-        case  6: // bottom, height percentage
-          y = pheight + layout[2]/*bottom*/;
-          break;
-        case  5: // bottom percentage, height
-        case  7: // bottom percentage, height percentage
-          y = pheight + (pheight * layout[2]/*bottom percentage*/);
-          break;
-        case  8: // centerY, height
-        case 10: // centerY, height percentage
-          y = (pheight/2) + layout[2]/*centerY*/;
-          break;
-        case  9: // centerY percentage, height
-        case 11: // centerY percentage, height percentage
-          y = (pheight/2) + (pheight * layout[2]/*centerY percentage*/);
-          break;
-      }
-
       switch (vmode) {
         case  0:                                                // top, height
         case  1:                                     // top percentage, height
@@ -192,6 +161,37 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
           break;
         case 15: // top percentage, bottom percentage
           height = pheight - (pheight * layout[2]/*top percentage*/) - (pheight * layout[3]/*bottom percentage*/);
+          break;
+      }
+
+      switch (vmode) {
+        case  0: // top, height
+        case  2: // top, height percentage
+        case 12: // top, bottom
+        case 14: // top, bottom percentage
+          y = layout[2]/*top*/;
+          break;
+        case  1: // top percentage, height
+        case  3: // top percentage, height percentage
+        case 13: // top percentage, bottom
+        case 15: // top percentage, bottom percentage
+          y = pheight * layout[2]/*top percentage*/;
+          break;
+        case  4: // bottom, height
+        case  6: // bottom, height percentage
+          y = pheight - layout[2]/*bottom*/ - height;
+          break;
+        case  5: // bottom percentage, height
+        case  7: // bottom percentage, height percentage
+          y = pheight - (pheight * layout[2]/*bottom percentage*/) - height;
+          break;
+        case  8: // centerY, height
+        case 10: // centerY, height percentage
+          y = (pheight/2) + layout[2]/*centerY*/ - height/2;
+          break;
+        case  9: // centerY percentage, height
+        case 11: // centerY percentage, height percentage
+          y = (pheight/2) + (pheight * layout[2]/*centerY percentage*/) - height/2;
           break;
       }
 

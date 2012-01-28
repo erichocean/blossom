@@ -541,8 +541,8 @@ SC.Layer = SC.Object.extend({
 
     // Adjust the origin of our superlayer's coordinate system to `position`.
     SC.SetIdentityAffineTransform(transformFromSuperlayer);
-    transformFromSuperlayer[4]/*tx*/ = -position[0]/*x*/;
-    transformFromSuperlayer[5]/*ty*/ = -position[1]/*y*/;
+    transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/;
+    transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/;
 
     // Apply our layer's own `transform`. Because `position` and 
     // `anchorPoint` are the same, any rotation is effectively being done 

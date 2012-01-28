@@ -96,20 +96,21 @@ function main() {
   ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
   var layer = SC.Layer.create({
-    cornerRadius: 50
+    layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+    cornerRadius: 25
   });
   layer.get('anchorPoint').x = 0;
   layer.get('anchorPoint').y = 0;
-  layer.get('bounds').height = 50;
-  layer.get('bounds').width = 50;
-  layer.get('position').x = 50;
-  layer.get('position').y = 50;
-  layer.get('transform').m11 = 0.4;     // scale x by #
-  layer.get('transform').m12 = 0.18; // skew y by 10 units
-  layer.get('transform').m21 = 0.38; // skew x by 10 units
-  layer.get('transform').m22 = 0.7;     // scale y by #
-  layer.get('transform').tx = 10;
-  layer.get('transform').ty = 10;
+  // layer.get('bounds').height = 50;
+  // layer.get('bounds').width = 50;
+  // layer.get('position').x = 50;
+  // layer.get('position').y = 50;
+  // layer.get('transform').m11 = 0.4;     // scale x by #
+  // layer.get('transform').m12 = 0.18; // skew y by 10 units
+  // layer.get('transform').m21 = 0.38; // skew x by 10 units
+  // layer.get('transform').m22 = 0.7;     // scale y by #
+  // layer.get('transform').tx = 10;
+  // layer.get('transform').ty = 10;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
