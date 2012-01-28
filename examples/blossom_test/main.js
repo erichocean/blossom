@@ -87,113 +87,149 @@ function drawButton(ctx, pressed) {
 }
 
 function main() {
-  var w = 853, h = 553;
-  var pane = SC.Pane.create({
-    layout: { top: 10, left: 10, width: w, height: h }
-  });
+    var w = 853, h = 553;
+
+    var pane = SC.Pane.create({
+      layout: { top: 10, left: 10, width: w, height: h },
+      render: function(ctx) {
+        // Draw background.
+        ctx.fillStyle = base3;
+        ctx.fillRect(0, 0, ctx.width, ctx.height);
+        ctx.strokeStyle = base0;
+        ctx.lineWidth = 2; // overlap of 1 on the inside
+        ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+        // Draw lines overlay.
+        ctx.beginPath();
+        ctx.moveTo(0, h/2);
+        ctx.lineTo(w, h/2);
+        ctx.moveTo(w/2, 0);
+        ctx.lineTo(w/2, h);
+        ctx.strokeStyle = orange;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+        ctx.fillStyle = orange;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
 
   pane.attach();
-
-  var layer = SC.Layer.create({
-    // layout: { top: 40, left: 50, width: 200, height: 200 },
-    layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
-    cornerRadius: 25
-  });
-
-  // Simulate proper layer setup for now.
-  pane.layer.sublayers.push(layer);
-  layer.superlayer = pane.layer;
-  layer.view = SC.View.create({
-    pane: pane,
-    mouseDown:    function(evt) { alert('clicked view'); },
-    mouseEntered: function(evt) { document.body.style.cursor = "pointer"; },
-    mouseExited:  function(evt) { document.body.style.cursor = "default"; }
-  });
-
-  layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_anchorPoint[0], layer._sc_anchorPoint[1],layer._sc_position, layer._sc_bounds);
-
-  function draw() {
-    var ctx = pane.getPath('layer.context');
-
-    ctx.clearRect(0,0,w,h);
-
-    // Draw background.
-    ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
-    ctx.strokeStyle = base0;
-    ctx.lineWidth = 2; // overlap of 1 on the inside
-    ctx.strokeRect(0, 0, ctx.width, ctx.height);
-
-    // Draw something so we can see where to click.
-    layer._sc_transformFromSuperlayerToLayerIsDirty = true;
-    layer._sc_computeTransformFromSuperlayerToLayer();
-    ctx.save();
-    var t = layer._sc_transformFromSuperlayerToLayer;
-    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
-    ctx.beginPath();
-    layer.renderHitTestPath(ctx);
-    ctx.fillStyle = green;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 15;
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "rgba(0,0,0,0.3)";
-    ctx.fill();
-
-    // Draw some text.
-    var bounds = layer.get('bounds');
-    ctx.fillStyle = base3;
-    ctx.font = "16pt Calibri";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
-    ctx.restore();
-
-    // Draw lines overlay.
-    ctx.beginPath();
-    ctx.moveTo(0, h/2);
-    ctx.lineTo(w, h/2);
-    ctx.moveTo(w/2, 0);
-    ctx.lineTo(w/2, h);
-    ctx.strokeStyle = orange;
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
-    ctx.fillStyle = orange;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-  }
-
-  var rotation = 0;
-  function animate(lastTime) {
-    var date = new Date(),
-        time = date.getTime(),
-        timeDiff = time - lastTime,
-        angularSpeed = 0.1, // revolutions per second
-        angularDiff = angularSpeed * 2 * Math.PI * timeDiff / 1000;
-
-    // console.log(1000 / timeDiff); // log fps
-
-    // rotate layer
-    rotation += angularDiff;
-    // rotation (should be happenning around the anchorPoint!)
-    layer.get('transform').m11 =  Math.cos(rotation);
-    layer.get('transform').m12 =  Math.sin(rotation);
-    layer.get('transform').m21 = -Math.sin(rotation);
-    layer.get('transform').m22 =  Math.cos(rotation);
-
-
-    draw();
-    window.requestAnimFrame(function() { animate(time); });
-  }
-
-  animate(new Date().getTime()); // start our drawing loop
 }
+
+// function main() {
+//   var w = 853, h = 553;
+//   var pane = SC.Pane.create({
+//     layout: { top: 10, left: 10, width: w, height: h }
+//   });
+// 
+//   pane.attach();
+// 
+//   var layer = SC.Layer.create({
+//     // layout: { top: 40, left: 50, width: 200, height: 200 },
+//     layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+//     cornerRadius: 25
+//   });
+// 
+//   // Simulate proper layer setup for now.
+//   pane.layer.sublayers.push(layer);
+//   layer.superlayer = pane.layer;
+//   layer.view = SC.View.create({
+//     pane: pane,
+//     mouseDown:    function(evt) { alert('clicked view'); },
+//     mouseEntered: function(evt) { document.body.style.cursor = "pointer"; },
+//     mouseExited:  function(evt) { document.body.style.cursor = "default"; }
+//   });
+// 
+//   layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_anchorPoint[0], layer._sc_anchorPoint[1],layer._sc_position, layer._sc_bounds);
+// 
+//   function draw() {
+//     var ctx = pane.getPath('layer.context');
+// 
+//     ctx.clearRect(0,0,w,h);
+// 
+//     // Draw background.
+//     ctx.fillStyle = base3;
+//     ctx.fillRect(0, 0, ctx.width, ctx.height);
+//     ctx.strokeStyle = base0;
+//     ctx.lineWidth = 2; // overlap of 1 on the inside
+//     ctx.strokeRect(0, 0, ctx.width, ctx.height);
+// 
+//     // Draw something so we can see where to click.
+//     layer._sc_transformFromSuperlayerToLayerIsDirty = true;
+//     layer._sc_computeTransformFromSuperlayerToLayer();
+//     ctx.save();
+//     var t = layer._sc_transformFromSuperlayerToLayer;
+//     ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+//     ctx.beginPath();
+//     layer.renderHitTestPath(ctx);
+//     ctx.fillStyle = green;
+//     ctx.shadowOffsetX = 0;
+//     ctx.shadowOffsetY = 15;
+//     ctx.shadowBlur = 25;
+//     ctx.shadowColor = "rgba(0,0,0,0.3)";
+//     ctx.fill();
+// 
+//     // Draw some text.
+//     var bounds = layer.get('bounds');
+//     ctx.fillStyle = base3;
+//     ctx.font = "16pt Calibri";
+//     ctx.textBaseline = "middle";
+//     ctx.textAlign = "center";
+//     ctx.shadowBlur = 0;
+//     ctx.shadowColor = "rgba(0,0,0,0)";
+//     ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+//     ctx.restore();
+// 
+//     // Draw lines overlay.
+//     ctx.beginPath();
+//     ctx.moveTo(0, h/2);
+//     ctx.lineTo(w, h/2);
+//     ctx.moveTo(w/2, 0);
+//     ctx.lineTo(w/2, h);
+//     ctx.strokeStyle = orange;
+//     ctx.lineWidth = 0.5;
+//     ctx.stroke();
+//     ctx.beginPath();
+//     ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+//     ctx.fillStyle = orange;
+//     ctx.fill();
+//     ctx.beginPath();
+//     ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+//     ctx.lineWidth = 0.5;
+//     ctx.stroke();
+//   }
+// 
+//   var rotation = 0;
+//   function animate(lastTime) {
+//     var date = new Date(),
+//         time = date.getTime(),
+//         timeDiff = time - lastTime,
+//         angularSpeed = 0.1, // revolutions per second
+//         angularDiff = angularSpeed * 2 * Math.PI * timeDiff / 1000;
+// 
+//     // console.log(1000 / timeDiff); // log fps
+// 
+//     // rotate layer
+//     rotation += angularDiff;
+//     // rotation (should be happenning around the anchorPoint!)
+//     layer.get('transform').m11 =  Math.cos(rotation);
+//     layer.get('transform').m12 =  Math.sin(rotation);
+//     layer.get('transform').m21 = -Math.sin(rotation);
+//     layer.get('transform').m22 =  Math.cos(rotation);
+// 
+// 
+//     draw();
+//     window.requestAnimFrame(function() { animate(time); });
+//   }
+// 
+//   animate(new Date().getTime()); // start our drawing loop
+// }
 
 // function main() {
 //   var pane = SC.Pane.create({

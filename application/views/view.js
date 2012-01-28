@@ -892,6 +892,24 @@ SC.View = SC.View.extend(
   //
 
   /**
+    The layout property shadows the layout property on this view's root 
+    layer (aka the result of `this.get('layer')`).
+
+    As a special, non-standard capability, if you set this property to a hash 
+    when creating the view, the hash will be used as the initial `layout` of 
+    the root layer. The hash will then be deleted from the view, allowing the 
+    computed property below to shine through from the prototype.
+
+    Note: since `layer` is read only, we don't add the unnecessary observer 
+    on the `layer` key.
+  */
+  layout: function(key, value) {
+    var layer = this.get('layer');
+    if (value !== undefined) layer.set('layout', value);
+    else return layer.get('layout');
+  }.property(),
+
+  /**
     The SC.Layer subclass to instantiate to create this view's layer.
 
     @property {SC.Layer}
@@ -911,18 +929,37 @@ SC.View = SC.View.extend(
 
     var ret = this._sc_layer;
     if (!ret) {
-      var layout = this.get('layout');
-      if (!layout.width || !layout.height) {
-        throw new Error("Can't handle layouts without width and height.");
-      }
       var K = this.get('layerClass');
-      sc_assert(K && K.subclassOf(SC.Layer));
-      this._sc_layer = ret = K.create({
-        owner: this, // TODO: Do we need owner here?
-        delegate: this,
-        width: layout.width,
-        height: layout.height
-      });
+      sc_assert(K && K.kindOf(SC.Layer));
+
+      // We want to allow the developer to provide a layout hash on the view, 
+      // or to override the `layout` computed property.
+      if (this.hasOwnProperty('layout')) {
+        // It's still possible that layout is a computed property. Don't use 
+        // `get()` to find out!
+        var layout = this.layout;
+        if (typeof layout === "object") {
+          // We assume `layout` is a layout hash. The layer will throw an 
+          // exception if `layout` is invalid -- don't test for that here.
+          this._sc_layer = ret = K.create({
+            layout: layout,
+            owner: this, // TODO: Do we need owner here?
+            delegate: this
+          });
+        } else {
+          this._sc_layer = ret = K.create({
+            // `layout` is whatever the default on SC.Layer is
+            owner: this, // TODO: Do we need owner here?
+            delegate: this
+          });
+        }
+
+        // Only delete layout if it is not a computed property. This allows 
+        // the computed property on the prototype to shine through.
+        if (typeof layout !== "function" || !layout.isProperty) {
+          delete this.layout;
+        }
+      }
     }
     return ret;
   }.property().cacheable(),

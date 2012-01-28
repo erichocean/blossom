@@ -107,7 +107,37 @@ SC.Layer = SC.Object.extend({
     if (value !== undefined) {
       sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Layer#set('bounds', value)";
-    } else return this._sc_bounds;
+    } else {
+      if (this.get('needsLayout')) {
+        var container = this.get('container'),
+            superlayer = this.get('superlayer'),
+            anchorPoint = this.get('anchorPoint'),
+            pbounds;
+        if (container) {
+          sc_assert(!superlayer);
+          // Use the container's bounds as the parents bounds.
+          pbounds = container.getBoundingClientRect();
+         } else if (superlayer) {
+          // Use our superlayer's bounds.
+          pbounds = superlayer.get('bounds');
+        } else {
+          // We'll get the minimum layout allowed.
+          pbounds = { width: 0, height: 0 };
+        }
+
+        // This updates `position` and `bounds`.
+        this._sc_layoutFunction(
+            this._sc_layoutValues,
+            pbounds.width, pbounds.height,
+            anchorPoint[0]/*x*/, anchorPoint[1]/*y*/,
+            this._sc_position,
+            this._sc_bounds
+          );
+
+        this.set('needsLayout', false);
+      }
+      return this._sc_bounds;
+    }
   }.property(),
 
   /**
@@ -240,19 +270,6 @@ SC.Layer = SC.Object.extend({
   */
   isHitTestOnly: false,
 
-  width: 300,
-  height: 500,
-
-  /** @private
-    Maintains the layer's dimensions – use width and height properties to 
-    adjust.
-  */
-  widthOrHeightDidChange: function() {
-    var canvas = this.__sc_element__;
-    canvas.width = this.get('width');
-    canvas.height = this.get('height');
-  }.observes('width', 'height'),
-
   /**
     The ID to use when trying to locate the layer in the DOM.  If you do not
     set the layerId explicitly, then the layer's GUID will be used instead.
@@ -298,16 +315,14 @@ SC.Layer = SC.Object.extend({
     Clears the layer.
   */
   clear: function() {
-    var width = this.get('width'),
-        height = this.get('height'),
-        context = this.get('context');
-
-    context.clearRect(0, 0, width, height);
+    var context = this.get('context');
+    if (context) context.clearRect(0, 0, context.width, context.height);
   },
 
   initElement: function() {
     var canvas = document.createElement('canvas'),
-        context = canvas.getContext('2d');
+        context = canvas.getContext('2d'),
+        bounds = this.get('bounds');
 
     this.context = context;
     this.__sc_element__ = canvas;
@@ -317,7 +332,8 @@ SC.Layer = SC.Object.extend({
 
     canvas.id = this.get('id');
     canvas.style.position = 'absolute';
-    this.widthOrHeightDidChange(); // configures canvas with the right size
+    canvas.width = bounds[2]/*width*/;
+    canvas.height = bounds[3]/*height*/;
 
     if (this.get('isHitTestOnly')) {
       var defineRect = SC.Layer._sc_defineRect, K = SC.K;

@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM */
+/*globals SPROUTCORE BLOSSOM sc_assert */
 
 sc_require('views/view');
 sc_require('mixins/responder_context');
@@ -745,7 +745,15 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   // ADDING/REMOVE PANES TO SCREEN
   //  
 
-  layer: null,
+  layer: function(key, value) {
+    sc_assert(value === undefined); // We're read only.
+    return this._sc_layer;
+  }.property(),
+
+  hitTestLayer: function(key, value) {
+    sc_assert(value === undefined); // We're read only.
+    return this._sc_hitTestLayer;
+  }.property(),
 
   containerId: function(key, value) {
     if (value) this._containerId = value;
@@ -755,15 +763,56 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
   createLayersForContainer: function(container, width, height) {
     // SC.Pane only has two layers `layer` and `hitTestLayer`.
-    var K = SC.Layer.extend({
-      container: container,
-      owner: this,
-      width: width,
-      height: height
-    });
+    var K = this.get('layerClass');
+    sc_assert(K && K.kindOf(SC.Layer));
 
-    this.set('layer', K.create());
-    this.set('hitTestLayer', K.create({ isHitTestOnly: true, container: null }));
+    // We want to allow the developer to provide a layout hash on the view, 
+    // or to override the 'layout' computed property.
+    if (this.hasOwnProperty('layout')) {
+      // It's still possible that layout is a computed property. Don't use 
+      // `get()` to find out!
+      var layout = this.layout;
+      if (typeof layout === "object") {
+        // We assume `layout` is a layout hash. The layer will throw an 
+        // exception if `layout` is invalid -- don't test for that here.
+        this._sc_layer = K.create({
+          layout: layout,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+        this._sc_hitTestLayer = K.create({
+          layout: layout,
+          isHitTestOnly: true,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+      } else {
+        this._sc_layer = K.create({
+          // `layout` is whatever the default on SC.Layer is
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+        this._sc_hitTestLayer = K.create({
+          // `layout` is whatever the default on SC.Layer is
+          isHitTestOnly: true,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+      }
+
+      // Only delete layout if it is not a computed property. This allows 
+      // the computed property on the prototype to shine through.
+      if (typeof layout !== "function" || !layout.isProperty) {
+        delete this.layout;
+      }
+    }
+
+    this.notifyPropertyChange('layer');
+    this.notifyPropertyChange('hitTestLayer');
   },
 
   container: function(key, element) {
@@ -790,11 +839,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
         // Make sure SproutCore can find this view.
         SC.View.views[this.get('containerId')] = this;
 
-        var layout = this.get('layout');
-        if (!layout.width || !layout.height) {
-          layout = SC.View.convertLayoutToAnchoredLayout(layout, { width: 0, height: 0 });
-        }
-        this.createLayersForContainer(element, layout.width, layout.height);
+        this.createLayersForContainer(element);
       }
     }
     return element ;
