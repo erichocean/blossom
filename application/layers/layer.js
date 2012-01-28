@@ -60,6 +60,9 @@ SC.Layer = SC.Object.extend({
     relative to its superlayer.
 
     An exception is thrown when `layout` is set to an invalid value.
+
+    Note: `centerX` may only be combined with `width`, and `centerY` may only 
+    be combined with `height`.
   */
   layout: { top: 0, left: 0, bottom: 0, right: 0 },
 

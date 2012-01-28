@@ -12,21 +12,12 @@ if (BLOSSOM) {
 SC.Layer.LAYOUT_X_PROPERTIES = 'left right centerX width'.w();
 SC.Layer.LAYOUT_Y_PROPERTIES = 'top bottom centerY height'.w();
 SC.Layer.LAYOUT_MINMAX_PROPERTIES = 'minLayoutWidth minLayoutHeight maxLayoutWidth maxLayoutHeight position'.w();
-SC.Layer.LAYOUT_ALL_PROPERTIES = SC.Layer.LAYOUT_X_PROPERTIES.concat(
-    SC.Layer.LAYOUT_Y_PROPERTIES,
-    SC.Layer.LAYOUT_MINMAX_PROPERTIES
-  );
-// DO NOT CHANGE THE ORDER OF LAYOUT_POSITIONS.
+SC.Layer.LAYOUT_ALL_PROPERTIES = SC.Layer.LAYOUT_X_PROPERTIES.concat(SC.Layer.LAYOUT_Y_PROPERTIES, SC.Layer.LAYOUT_MINMAX_PROPERTIES);
+
 SC.Layer.LAYOUT_POSITIONS = {
-  "center"       : 0,
-  "top"          : 1,
-  "bottom"       : 2,
-  "left"         : 3,
-  "right"        : 4, 
-  "top left"     : 5,
-  "top right"    : 6,
-  "bottom left"  : 7,
-  "bottom right" : 8
+  "center"       : 0, "top"          : 1, "bottom"       : 2,
+  "left"         : 3, "right"        : 4, "top left"     : 5,
+  "top right"    : 6, "bottom left"  : 7, "bottom right" : 8
 };
 
 SC.Layer.PERCENT_REGEX = /(([+\-]?\d+)|([+\-]?((\d*\.\d+)|(\d+\.\d*))))\%/;
@@ -69,6 +60,11 @@ SC.Layer.prototype.updateLayoutRules = function() {
     throw new TypeError("layout has too many horizontal properties (it should have exactly two): "+tmp);
   } else if (tmp.length < 2) {
     throw new TypeError("layout has too few horizontal properties (it should have exactly two): "+tmp);
+  } else if (tmp.indexOf("centerX") !== -1) {
+    // only centerX, width is allowed
+    if (tmp.indexOf("width") === -1) {
+      throw new TypeError("centerX can only be combined with width in a layout hash");
+    }
   }
   tmp.length = 0;
 
@@ -81,6 +77,11 @@ SC.Layer.prototype.updateLayoutRules = function() {
     throw new TypeError("layout has too many vertical properties (it should have exactly two): "+tmp);
   } else if (tmp.length < 2) {
     throw new TypeError("layout has too few vertical properties (it should have exactly two): "+tmp);
+  } else if (tmp.indexOf("centerY") !== -1) {
+    // only centerY, height is allowed
+    if (tmp.indexOf("height") === -1) {
+      throw new TypeError("centerY can only be combined with height in a layout hash");
+    }
   }
 
   // If the position property is present, make sure it is valid.  Also, cache 
@@ -154,7 +155,184 @@ SC.Layer.prototype.updateLayoutRules = function() {
 
   // Okay, the values for the keys supplied are okay, and any percentages 
   // have been converted. (If a key's value is a percentage, an entry has 
-  // been made in the percentages hash.)
+  // been made in the percentages hash.) For the next part, it's easiest if 
+  // we know what kind of layout we're dealing with. That means we need to 
+  // solve for hmode, vmode, hmax, and vmax (layoutMode we've already solved 
+  // for).
+
+  // Solve for hmode.
+  if (layout.left !== undefined) {
+    if (percentages.left) {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // left percentage, width percentage
+          hmode = 3;
+        } else {
+          // left percentage, width
+          hmode = 1;
+        }
+      } else if (layout.right !== undefined) {
+        if (percentages.right) {
+          // left percentage, right percentage
+          hmode = 15;
+        } else {
+          // left percentage, right
+          hmode = 13;
+        }
+      }
+    } else {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // left, width percentage
+          hmode = 2;
+        } else {
+          // left, width
+          hmode = 0;
+        }
+      } else if (layout.right !== undefined) {
+        if (percentages.right) {
+          // left, right percentage
+          hmode = 14;
+        } else {
+          // left, right
+          hmode = 12;
+        }
+      }
+    }
+  } else if (layout.right !== undefined) {
+    if (percentages.right) {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // right percentage, width percentage
+          hmode = 7;
+        } else {
+          // right percentage, width
+          hmode = 5;
+        }
+      }
+    } else {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // right, width percentage
+          hmode = 6;
+        } else {
+          // right, width
+          hmode = 4;
+        }
+      }
+    }
+  } else if (layout.centerX !== undefined) {
+    if (percentages.centerX) {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // centerX percentage, width percentage
+          hmode = 11;
+        } else {
+          // centerX percentage, width
+          hmode = 9;
+        }
+      }
+    } else {
+      if (layout.width !== undefined) {
+        if (percentages.width) {
+          // centerX, width percentage
+          hmode = 10;
+        } else {
+          // centerX, width
+          hmode = 8;
+        }
+      }
+    }
+  }
+
+  // Solve for vmode.
+  if (layout.top !== undefined) {
+    if (percentages.top) {
+      if (layout.height !== undefined) {
+        if (percentages.height) {
+          // top percentage, height percentage
+          vmode = 3;
+        } else {
+          // top percentage, height
+          vmode = 1;
+        }
+      } else if (layout.bottom !== undefined) {
+        if (percentages.bottom) {
+          // top percentage, bottom percentage
+          vmode = 15;
+        } else {
+          // top percentage, bottom
+          vmode = 13;
+        }
+      }
+    } else {
+      if (layout.height !== undefined) {
+        if (percentages.height) {
+          // top, height percentage
+          vmode = 2;
+        } else {
+          // top, height
+          vmode = 0;
+        }
+      } else if (layout.bottom !== undefined) {
+        if (percentages.bottom) {
+          // top, bottom percentage
+          vmode = 14;
+        } else {
+          // top, bottom
+          vmode = 12;
+        }
+      }
+    }
+  } else if (layout.bottom !== undefined) {
+    if (percentages.bottom) {
+      if (layout.height !== undefined) {
+        if (percentages.height) {
+          // bottom percentage, height percentage
+          vmode = 7;
+        } else {
+          // bottom percentage, height
+          vmode = 5;
+        }
+      }
+    } else {
+      if (layout.height !== undefined) {
+        if (percentages.height) {
+          // bottom, height percentage
+          vmode = 6;
+        } else {
+          // bottom, height
+          vmode = 4;
+        }
+      }
+    }
+  } else if (layout.centerY !== undefined) {
+    if (percentages.centerY) {
+      if (layout.height !== undefined) {
+        if (percentages.width) {
+          // centerY percentage, height percentage
+          vmode = 11;
+        } else {
+          // centerY percentage, height
+          vmode = 9;
+        }
+      }
+    } else {
+      if (layout.height !== undefined) {
+        if (percentages.height) {
+          // centerY, height percentage
+          vmode = 10;
+        } else {
+          // centerY, height
+          vmode = 8;
+        }
+      }
+    }
+  }
+
+  // Solve for hmax and vmax.
+  hmax = layout.maxLayoutWidth  !== undefined;
+  vmax = layout.maxLayoutHeight !== undefined;
 };
 
 } // BLOSSOM
