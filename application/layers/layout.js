@@ -157,10 +157,10 @@ SC.Layer.prototype.updateLayoutRules = function() {
   // have been converted. (If a key's value is a percentage, an entry has 
   // been made in the percentages hash.) For the next part, it's easiest if 
   // we know what kind of layout we're dealing with. That means we need to 
-  // solve for hmode, vmode, hmax, and vmax (layoutMode we've already solved 
-  // for).
+  // solve for `hmode`, `vmode`, `hmax`, and `vmax` (`layoutMode` we've 
+  // already solved for).
 
-  // Solve for hmode.
+  // Solve for `hmode`.
   if (layout.left !== undefined) {
     if (percentages.left) {
       if (layout.width !== undefined) {
@@ -245,7 +245,7 @@ SC.Layer.prototype.updateLayoutRules = function() {
     }
   }
 
-  // Solve for vmode.
+  // Solve for `vmode`.
   if (layout.top !== undefined) {
     if (percentages.top) {
       if (layout.height !== undefined) {
@@ -330,9 +330,219 @@ SC.Layer.prototype.updateLayoutRules = function() {
     }
   }
 
-  // Solve for hmax and vmax.
+  // Solve for `hmax` and `vmax`.
   hmax = layout.maxLayoutWidth  !== undefined;
   vmax = layout.maxLayoutHeight !== undefined;
+
+  // Time to update `values`.
+  switch (hmode) {
+    case  0: // left, width
+    case  2: // left, width percentage
+    case 12: // left, right
+    case 14: // left, right percentage
+    case  1: // left percentage, width
+    case  3: // left percentage, width percentage
+    case 13: // left percentage, right
+    case 15: // left percentage, right percentage
+      values[0]/*left OR left percentage*/ = layout.left;
+      break;
+    case  4: // right, width
+    case  6: // right, width percentage
+    case  5: // right percentage, width
+    case  7: // right percentage, width percentage
+      values[0]/*right OR right percentage*/ = layout.right;
+      break;
+    case  8: // centerX, width
+    case 10: // centerX, width percentage
+    case  9: // centerX percentage, width
+    case 11: // centerX percentage, width percentage
+      values[0]/*centerX OR centerX percentage*/ = layout.centerX;
+      break;
+  }
+
+  switch (hmode) {                 
+    case  0:                                                // left, width
+    case  1:                                     // left percentage, width
+    case  4:                                               // right, width
+    case  5:                                    // right percentage, width
+    case  8:                                             // centerX, width
+    case  9:                                  // centerX percentage, width
+    case  2:                                     // left, width percentage
+    case  3:                          // left percentage, width percentage
+    case  6:                                    // right, width percentage
+    case  7:                         // right percentage, width percentage
+    case 10:                                  // centerX, width percentage
+    case 11:                       // centerX percentage, width percentage
+      values[1]/*width OR width percentage*/ = layout.width;
+      break;
+
+    // Each of the following cases require both the first and second 
+    // value.
+    case 12: // left, right
+    case 13: // left percentage, right
+    case 14: // left, right percentage
+    case 15: // left percentage, right percentage
+      values[1]/*right OR right percentage*/ = layout.right;
+      break;
+  }
+
+  switch (vmode) {
+    case  0: // top, height
+    case  2: // top, height percentage
+    case 12: // top, bottom
+    case 14: // top, bottom percentage
+    case  1: // top percentage, height
+    case  3: // top percentage, height percentage
+    case 13: // top percentage, bottom
+    case 15: // top percentage, bottom percentage
+      values[2]/*top OR top percentage*/ = layout.top;
+      break;
+    case  4: // bottom, height
+    case  6: // bottom, height percentage
+    case  5: // bottom percentage, height
+    case  7: // bottom percentage, height percentage
+      values[2]/*bottom OR bottom percentage*/ =  layout.bottom;
+      break;
+    case  8: // centerY, height
+    case 10: // centerY, height percentage
+    case  9: // centerY percentage, height
+    case 11: // centerY percentage, height percentage
+      values[2]/*centerY OR centerY percentage*/ = layout.centerY;
+      break;
+  }
+
+  switch (vmode) {
+    case  0:                                                // top, height
+    case  1:                                     // top percentage, height
+    case  4:                                             // bottom, height
+    case  5:                                   // bottom prcentage, height
+    case  8:                                            // centerY, height
+    case  9:                                 // centerY percentage, height
+    case  2:                                     // top, height percentage
+    case  3:                          // top percentage, height percentage
+    case  6:                                  // bottom, height percentage
+    case  7:                       // bottom percentage, height percentage
+    case 10:                                 // centerY, height percentage
+    case 11:                      // centerY percentage, height percentage
+      values[3]/*height OR height percentage*/ =  layout.height;
+      break;
+
+    // Each of the following cases require both the first and second value.
+    case 12: // top, bottom
+    case 13: // top percentage, bottom
+    case 14: // top, bottom percentage
+    case 15: // top percentage, bottom percentage
+      values[3]/*bottom OR bottom percentage*/ = layout.bottom;
+      break;
+  }
+
+  // Okay, time to deal with the min/max limits. minLayoutWidth depends on 
+  // hmode.
+  var minLayoutWidth, maxLayoutWidth, minLayoutHeight, maxLayoutHeight;
+  switch (hmode) {
+    case  0: // left, width
+      minLayoutWidth = layout.left + layout.width;
+      break;
+    case  1: // left percentage, width
+    case  5: // right percentage, width
+    case  8: // centerX, width
+    case  9: // centerX percentage, width
+      minLayoutWidth = layout.width;
+      break;
+    case  2: // left, width percentage
+    case 14: // left, right percentage
+      minLayoutWidth = layout.left;
+      break;
+    case  3: // left percentage, width percentage
+    case  7: // right percentage, width percentage
+    case 10: // centerX, width percentage
+    case 11: // centerX percentage, width percentage
+    case 15: // left percentage, right percentage
+      minLayoutWidth = 0;
+      break;
+    case  4: // right, width
+      minLayoutWidth = layout.right + layout.width;
+      break;
+    case  6: // right, width percentage
+    case 13: // left percentage, right
+      minLayoutWidth = layout.right;
+      break;
+    case 12: // left, right
+      minLayoutWidth = layout.left + layout.right;
+      break;
+  }
+
+  if (layout.minLayoutWidth !== undefined) {
+    if (layout.minLayoutWidth > minLayoutWidth) {
+      minLayoutWidth = layout.minLayoutWidth;
+    }
+  }
+  values[4] = minLayoutWidth;
+
+  if (layout.maxLayoutWidth !== undefined) {
+    if (layout.maxLayoutWidth >= minLayoutWidth) {
+      maxLayoutWidth = layout.maxLayoutWidth;
+    } else {
+      maxLayoutWidth = minLayoutWidth;
+    }
+  } else {
+    maxLayoutWidth = Infinity;
+  }
+  values[5] = maxLayoutWidth;
+
+  switch (vmode) {
+    case  0: // top, height
+      minLayoutHeight = layout.top + layout.height;
+      break;
+    case  1: // top percentage, height
+    case  5: // bottom percentage, height
+    case  8: // centerY, height
+    case  9: // centerY percentage, height
+      minLayoutHeight = layout.height;
+      break;
+    case  2: // top, height percentage
+    case 14: // top, bottom percentage
+      minLayoutHeight = layout.top;
+      break;
+    case  3: // top percentage, height percentage
+    case  7: // bottom percentage, height percentage
+    case 10: // centerY, height percentage
+    case 11: // centerY percentage, height percentage
+    case 15: // top percentage, bottom percentage
+      minLayoutHeight = 0;
+      break;
+    case  4: // bottom, height
+      minLayoutHeight = layout.bottom + layout.height;
+      break;
+    case  6: // bottom, height percentage
+    case 13: // top percentage, bottom
+      minLayoutHeight = layout.bottom;
+      break;
+    case 12: // top, bottom
+      minLayoutHeight = layout.top + layout.bottom;
+      break;
+  }
+
+  if (layout.minLayoutHeight !== undefined) {
+    if (layout.minLayoutHeight > minLayoutHeight) {
+      minLayoutHeight = layout.minLayoutHeight;
+    }
+  }
+  values[6] = minLayoutHeight;
+
+  if (layout.maxLayoutHeight !== undefined) {
+    if (layout.maxLayoutHeight >= minLayoutHeight) {
+      maxLayoutHeight = layout.maxLayoutHeight;
+    } else {
+      maxLayoutHeight = minLayoutHeight;
+    }
+  } else {
+    maxLayoutHeight = Infinity;
+  }
+  values[7] = maxLayoutHeight;
+
+  // Now that values is fully updated, assign the correct layout function.
+  this._sc_layoutFunction = SC.GetLayoutFunction(hmode, vmode, hmax, vmax, layoutMode);
 };
 
 } // BLOSSOM
