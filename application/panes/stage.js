@@ -117,6 +117,10 @@ SC.StagePane = SC.Pane.extend({
     layer.addShape(shape);
   },
 
+  targetViewForEvent: function(evt) {
+    return this;
+  },
+
   /**
     Attempts to send the event to the shape(s) under the mouse.
 
