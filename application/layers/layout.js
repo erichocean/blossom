@@ -29,6 +29,7 @@ SC.Layer.POSITIVE_PERCENT_REGEX = /(([+]?\d+)|([+]?((\d*\.\d+)|(\d+\.\d*))))\%/;
   actually done later, during the animation loop.
 */
 SC.Layer.prototype.updateLayoutRules = function() {
+  SC.Benchmark.start("SC.Layer#updateLayoutRules");
   var layout = this.get('layout'),
       values = this._sc_layoutValues,
       isValid = true, key, val, ary, tmp = [], re, re2, percentages = {},
@@ -543,6 +544,7 @@ SC.Layer.prototype.updateLayoutRules = function() {
 
   // Now that values is fully updated, assign the correct layout function.
   this._sc_layoutFunction = SC.GetLayoutFunction(hmode, vmode, hmax, vmax, layoutMode);
+  SC.Benchmark.end("SC.Layer#updateLayoutRules");
 };
 
 } // BLOSSOM

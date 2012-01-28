@@ -481,6 +481,7 @@ SC.Layer = SC.Object.extend({
     // This is used by layout functions, which know the meaning of the sixteen
     // indices in the context of a particular layout function.
     this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 48);
+    this._sc_layoutDidChange();
 
     // We need to observe sublayers for changes; set that up now.
     this.sublayers = [];

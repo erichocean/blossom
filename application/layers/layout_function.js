@@ -11,6 +11,7 @@ if (BLOSSOM) {
 if (!FAST_LAYOUT_FUNCTION) {
 
 SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
+  SC.Benchmark.start("SC.GetLayoutFunction");
   sc_assert(hmode >= 0 && hmode < 16);
   sc_assert(vmode >= 0 && vmode < 16);
   sc_assert(typeof hmax === "boolean");
@@ -243,6 +244,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     };
   }
 
+  SC.Benchmark.end("SC.GetLayoutFunction");
   return func;
 };
 

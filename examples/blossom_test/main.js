@@ -96,18 +96,20 @@ function main() {
   ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
   var layer = SC.Layer.create({
-    cornerRadius: 5
+    cornerRadius: 50
   });
+  layer.get('anchorPoint').x = 0;
+  layer.get('anchorPoint').y = 0;
   layer.get('bounds').height = 50;
   layer.get('bounds').width = 50;
   layer.get('position').x = 50;
   layer.get('position').y = 50;
-  layer.get('transform').m11 = 3;    // scale x by 3
+  layer.get('transform').m11 = 0.4;     // scale x by #
   layer.get('transform').m12 = 0.18; // skew y by 10 units
-  layer.get('transform').m21 = 0.78; // skew x by 10 units
-  layer.get('transform').m22 = 5;    // scale y by 5
-  layer.get('transform').tx = 250;
-  layer.get('transform').ty = 250;
+  layer.get('transform').m21 = 0.38; // skew x by 10 units
+  layer.get('transform').m22 = 0.7;     // scale y by #
+  layer.get('transform').tx = 10;
+  layer.get('transform').ty = 10;
 
   // Simulate proper layer setup for now.
   pane.layer.sublayers.push(layer);
@@ -116,8 +118,19 @@ function main() {
     pane: pane,
     mouseDown: function(evt) {
       alert('clicked view');
+    },
+
+    mouseEntered: function(evt) {
+      document.body.style.cursor = "pointer";
+    },
+
+    mouseExited: function(evt) {
+      document.body.style.cursor = "default";
     }
   });
+
+  console.log('updating layout:');
+  layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_position, layer._sc_bounds);
 
   // Draw something so we can see where to click.
   layer._sc_computeTransformFromSuperlayerToLayer();
@@ -128,6 +141,7 @@ function main() {
   ctx.fillStyle = 'red';
   ctx.fill();
   ctx.restore();
+
 }
 
 // function main() {
