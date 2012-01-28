@@ -23,7 +23,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
 
   if (!func) {
     // There are 9,216 unique layout functions.
-    func = SC.layoutFunctions[funcName] = function(layout, pwidth, pheight, position, bounds) {
+    func = SC.layoutFunctions[funcName] = function(layout, pwidth, pheight, anchorX, anchorY, position, bounds) {
       var minLayoutWidth,  xAdjustment = 0,
           minLayoutHeight, yAdjustment = 0,
           maxLayoutWidth,
@@ -236,9 +236,9 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       }
 
       // Update the position and bounds structs with the newly-computed 
-      // values.
-      position.x    = x;
-      position.y    = y;
+      // values, offset to take into account anchorX and anchorY.
+      position.x    = x + anchorX * width;
+      position.y    = y + anchorY * height;
       bounds.width  = width;
       bounds.height = height;
     };

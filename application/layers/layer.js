@@ -550,15 +550,20 @@ SC.Layer = SC.Object.extend({
     SC.AffineTransformConcatTo(transformFromSuperlayer, transform, transformFromSuperlayer);
 
     // Calculate the computed anchor point within `bounds`.
-    computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + bounds[2]/*width*/  * anchorPoint[0]/*x*/;
-    computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + bounds[3]/*height*/ * anchorPoint[1]/*y*/;
+    computedAnchorPoint[0]/*x*/ = (bounds[0]/*x*/ + bounds[2]/*width*/)  * anchorPoint[0]/*x*/;
+    computedAnchorPoint[1]/*y*/ = (bounds[1]/*y*/ + bounds[3]/*height*/) * anchorPoint[1]/*y*/;
+
+    console.log('computedAnchorPoint[0]/*x*/ =', computedAnchorPoint[0]);
+    console.log('computedAnchorPoint[1]/*y*/ =', computedAnchorPoint[1]);
+    console.log('transform[0]/*m11*/ =', transform[0]);
+    console.log('transform[3]/*m22*/ =', transform[3]);
 
     // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
     // origin, taking into account `anchorPoint`. `position` is where the 
     // origin is now, and this is the same as `computedAnchorPoint`, so 
     // add that to get back to the `bounds` origin.
-    transformFromSuperlayer[4]/*tx*/ += computedAnchorPoint[0]/*x*/ * transform[0]/*m11*/;
-    transformFromSuperlayer[5]/*ty*/ += computedAnchorPoint[1]/*y*/ * transform[3]/*m22*/;
+    transformFromSuperlayer[4]/*tx*/ -= computedAnchorPoint[0]/*x*/ * transform[0]/*m11*/;
+    transformFromSuperlayer[5]/*ty*/ -= computedAnchorPoint[1]/*y*/ * transform[3]/*m22*/;
 
     // Our co-ordinate system is now set up how it would be for drawing...
 

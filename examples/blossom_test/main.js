@@ -99,8 +99,8 @@ function main() {
     layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
     cornerRadius: 25
   });
-  layer.get('anchorPoint').x = 0;
-  layer.get('anchorPoint').y = 0;
+  layer.get('anchorPoint').x = 1;
+  layer.get('anchorPoint').y = 1;
   // layer.get('bounds').height = 50;
   // layer.get('bounds').width = 50;
   // layer.get('position').x = 50;
@@ -131,7 +131,7 @@ function main() {
   });
 
   console.log('updating layout:');
-  layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_position, layer._sc_bounds);
+  layer._sc_layoutFunction(layer._sc_layoutValues, 850, 550, layer._sc_anchorPoint[0], layer._sc_anchorPoint[1],layer._sc_position, layer._sc_bounds);
 
   // Draw something so we can see where to click.
   layer._sc_computeTransformFromSuperlayerToLayer();

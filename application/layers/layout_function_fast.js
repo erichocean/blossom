@@ -265,14 +265,14 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     }
 
     // Update the position and bounds structs with the newly-computed 
-    // values.
-    src.push('position.x    = x;');
-    src.push('position.y    = y;');
+    // values, offset to take into account anchorX and anchorY.
+    src.push('position.x    = x + anchorX * width;');
+    src.push('position.y    = y + anchorY * height;');
     src.push('bounds.width  = width;');
     src.push('bounds.height = height;');
 
     src = src.join('\n  ');
-    func = SC.layoutFunctions[funcName] = new Function("layout", "pwidth", "pheight", "position", "bounds", src);
+    func = SC.layoutFunctions[funcName] = new Function("layout", "pwidth", "pheight", "anchorX", "anchorY", "position", "bounds", src);
   }
 
   return func;
