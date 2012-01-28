@@ -138,6 +138,16 @@ function main() {
     ctx.shadowBlur = 25;
     ctx.shadowColor = "rgba(0,0,0,0.3)";
     ctx.fill();
+
+    // Drow some text.
+    var bounds = layer.get('bounds');
+    ctx.fillStyle = base3;
+    ctx.font = "16pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "rgba(0,0,0,0)";
+    ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
     ctx.restore();
 
     // Drow lines overlay.
@@ -164,7 +174,7 @@ function main() {
     var date = new Date(),
         time = date.getTime(),
         timeDiff = time - lastTime,
-        angularSpeed = 0.2, // revolutions per second
+        angularSpeed = 0.1, // revolutions per second
         angularDiff = angularSpeed * 2 * Math.PI * timeDiff / 1000;
 
     // console.log(1000 / timeDiff); // log fps
