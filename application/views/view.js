@@ -959,6 +959,12 @@ SC.View = SC.View.extend(
         if (typeof layout !== "function" || !layout.isProperty) {
           delete this.layout;
         }
+      } else {
+        this._sc_layer = ret = K.create({
+          // `layout` is whatever the default on SC.Layer is
+          owner: this, // TODO: Do we need owner here?
+          delegate: this
+        });
       }
     }
     return ret;
@@ -1007,7 +1013,22 @@ SC.View = SC.View.extend(
   */
   updateLayerLocation: function() {
     console.log("SC.View#updateLayerLocation()");
-    console.log("FIXME: Not implemented.");
+
+    var parentView = this.get('parentView'),
+        layer = this.get('layer'),
+        oldSuperlayer = layer.get('superlayer'),
+        newSuperlayer;
+
+    debugger;
+    if (oldSuperlayer) oldSuperlayer.removeSublayer(layer);
+    sc_assert(!layer.get('superlayer'));
+
+    if (parentView) {
+      newSuperlayer = parentView.get('containerLayer');
+      if (newSuperlayer) {
+        newSuperlayer.addSublayer(layer);
+      }
+    }
     // // collect some useful value
     // // if there is no node for some reason, just exit
     // var node = this.get('layer'),
@@ -1207,6 +1228,7 @@ SC.View = SC.View.extend(
 
     // Now add this to the attributes and create.
     view = view.create(attrs) ;
+    view.parentViewDidChange();
     return view ;
   },
 
@@ -1219,6 +1241,8 @@ SC.View = SC.View.extend(
   */
   init: function() {
     sc_super() ;
+
+    console.log('SC.View#init()');
 
     var parentView, path, root, idx, len, lp, dp, childViews ;
 

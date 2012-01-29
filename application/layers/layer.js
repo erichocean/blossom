@@ -73,6 +73,10 @@ SC.Layer = SC.Object.extend({
     this.set('needsLayout', true);
   }.observes('layout'),
 
+  _sc_superlayerDidChange: function() {
+    this.set('needsLayout', true);
+  }.observes('superlayer'),
+
   zIndex: 0,
   cornerRadius: 0,
 
@@ -700,6 +704,25 @@ SC.Layer = SC.Object.extend({
     console.log("SC.Layer#destroy()");
     console.log("FIXME: Implement me.");
     sc_assert(!this.get('superlayer'));
+  },
+
+  addSublayer: function(layer) {
+    sc_assert(layer && layer.instanceOf(SC.Layer));
+    sc_assert(!layer.get('superlayer'));
+    
+    var sublayers = this.get('sublayers');
+    sublayers.push(layer);
+    layer.set('superlayer', this);
+  },
+
+  removeSublayer: function(layer) {
+    sc_assert(layer && layer.instanceOf(SC.Layer));
+    sc_assert(layer.get('superlayer') === this);
+    
+    var sublayers = this.get('sublayers');
+    sc_assert(sublayers.indexOf(layer) !== -1);
+    sublayers.removeObject(layer);
+    layer.set('superlayer', null);
   }
 
 });
