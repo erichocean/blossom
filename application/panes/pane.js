@@ -10,14 +10,18 @@
 // ==========================================================================
 /*globals SPROUTCORE BLOSSOM sc_assert */
 
-sc_require('views/view');
+sc_require('system/responder');
 sc_require('mixins/responder_context');
+sc_require('views/view');
 sc_require('layers/layer');
 sc_require('system/property_animation');
 
 if (BLOSSOM) {
 
 /** @class
+  A pane is the onscreen container for views and their layers. Panes support 
+  implicit animation, just like layers, and can b e
+  
   A Pane is like a regular view except that it does not need to live within a 
   parent view.  You usually use a Pane to form the root of a view hierarchy in 
   your application, such as your main application view or for floating 
@@ -296,7 +300,6 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
     */
     windowSizeDidChange: function(oldSize, newSize) {
       this.set('currentWindowSize', newSize) ;
-      this.parentViewDidResize(); // start notifications.
       return this ;
     },
 
@@ -1037,8 +1040,8 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
   
   /** @private */
   init: function() {
-    this.pane = this; // Needed so that our childViews can get our "pane".
     sc_super() ;
+    this.pane = this; // Needed so that our childViews can get our "pane".
   }
 
 });
