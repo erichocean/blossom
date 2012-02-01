@@ -20,7 +20,7 @@ if (BLOSSOM) {
 
 /** @class
   A pane is the onscreen container for views and their layers. Panes support 
-  implicit animation, just like layers, and can b e
+  implicit animation, just like layers, and can be
   
   A Pane is like a regular view except that it does not need to live within a 
   parent view.  You usually use a Pane to form the root of a view hierarchy in 
@@ -290,453 +290,431 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
     return hitLayer? hitLayer.get('view') : this ;
   },
 
-    /** 
-      Invoked by the root responder whenever the window resizes.  This should
-      simply begin the process of notifying children that the view size has
-      changed, if needed.
+  /**
+    Invoked by the root responder whenever the window resizes.  This should
+    simply begin the process of notifying children that the view size has
+    changed, if needed.
 
-      @param {Rect} oldSize the old window size
-      @param {Rect} newSize the new window size
-      @returns {SC.Pane} receiver
-    */
-    windowSizeDidChange: function(oldSize, newSize) {
-      this.set('currentWindowSize', newSize) ;
-      return this ;
-    },
+    @param {Rect} oldSize the old window size
+    @param {Rect} newSize the new window size
+    @returns {SC.Pane} receiver
+  */
+  windowSizeDidChange: function(oldSize, newSize) {
+    this.set('currentWindowSize', newSize) ;
+    return this ;
+  },
 
-    /** @private */
-    paneLayoutDidChange: function() {
-      this.invokeOnce(this.updateLayout);
-    }.observes('layout'),
+  /** @private */
+  paneLayoutDidChange: function() {
+    this.invokeOnce(this.updateLayout);
+  }.observes('layout'),
 
-    /**
-      Attempts to send the event down the responder chain for this pane.  If you 
-      pass a target, this method will begin with the target and work up the 
-      responder chain.  Otherwise, it will begin with the current rr 
-      and walk up the chain looking for any responder that implements a handler 
-      for the passed method and returns YES when executed.
+  /**
+    Attempts to send the event down the responder chain for this pane.  If you 
+    pass a target, this method will begin with the target and work up the 
+    responder chain.  Otherwise, it will begin with the current rr 
+    and walk up the chain looking for any responder that implements a handler 
+    for the passed method and returns YES when executed.
 
-      @param {String} action
-      @param {SC.Event} evt
-      @param {Object} target
-      @returns {Object} object that handled the event
-    */
-    sendEvent: function(action, evt, target) {
-      // console.log('SC.Pane#sendEvent(', action, evt, target, ')');
-      var handler ;
+    @param {String} action
+    @param {SC.Event} evt
+    @param {Object} target
+    @returns {Object} object that handled the event
+  */
+  sendEvent: function(action, evt, target) {
+    // console.log('SC.Pane#sendEvent(', action, evt, target, ')');
+    var handler ;
 
-      // walk up the responder chain looking for a method to handle the event
-      if (!target) target = this.get('firstResponder') ;
-      while(target && !target.tryToPerform(action, evt)) {
+    // walk up the responder chain looking for a method to handle the event
+    if (!target) target = this.get('firstResponder') ;
+    while(target && !target.tryToPerform(action, evt)) {
 
-        // even if someone tries to fill in the nextResponder on the pane, stop
-        // searching when we hit the pane.
-        target = (target === this) ? null : target.get('nextResponder') ;
+      // even if someone tries to fill in the nextResponder on the pane, stop
+      // searching when we hit the pane.
+      target = (target === this) ? null : target.get('nextResponder') ;
+    }
+
+    // if no handler was found in the responder chain, try the default
+    if (!target && (target = this.get('defaultResponder'))) {
+      if (typeof target === SC.T_STRING) {
+        target = SC.objectForPropertyPath(target);
       }
 
-      // if no handler was found in the responder chain, try the default
-      if (!target && (target = this.get('defaultResponder'))) {
-        if (typeof target === SC.T_STRING) {
-          target = SC.objectForPropertyPath(target);
+      if (!target) target = null;
+      else target = target.tryToPerform(action, evt) ? target : null ;
+    }
+
+    // if we don't have a default responder or no responders in the responder
+    // chain handled the event, see if the pane itself implements the event
+    else if (!target && !(target = this.get('defaultResponder'))) {
+      target = this.tryToPerform(action, evt) ? this : null ;
+    }
+
+    return evt.mouseHandler || target ;
+  },
+
+  performKeyEquivalent: function(keystring, evt) {
+    var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
+    if (!ret) {
+      var defaultResponder = this.get('defaultResponder') ;
+      if (defaultResponder) {
+        // try default responder's own performKeyEquivalent method,
+        // if it has one...
+        if (defaultResponder.performKeyEquivalent) {
+          ret = defaultResponder.performKeyEquivalent(keystring, evt) ;
         }
 
-        if (!target) target = null;
-        else target = target.tryToPerform(action, evt) ? target : null ;
-      }
-
-      // if we don't have a default responder or no responders in the responder
-      // chain handled the event, see if the pane itself implements the event
-      else if (!target && !(target = this.get('defaultResponder'))) {
-        target = this.tryToPerform(action, evt) ? this : null ;
-      }
-
-      return evt.mouseHandler || target ;
-    },
-
-    performKeyEquivalent: function(keystring, evt) {
-      var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
-      if (!ret) {
-        var defaultResponder = this.get('defaultResponder') ;
-        if (defaultResponder) {
-          // try default responder's own performKeyEquivalent method,
-          // if it has one...
-          if (defaultResponder.performKeyEquivalent) {
-            ret = defaultResponder.performKeyEquivalent(keystring, evt) ;
-          }
-
-          // even if it does have one, if it doesn't handle the event, give
-          // methodName-style key equivalent handling a try
-          if (!ret && defaultResponder.tryToPerform) {
-            ret = defaultResponder.tryToPerform(keystring, evt) ;
-          }
+        // even if it does have one, if it doesn't handle the event, give
+        // methodName-style key equivalent handling a try
+        if (!ret && defaultResponder.tryToPerform) {
+          ret = defaultResponder.tryToPerform(keystring, evt) ;
         }
       }
-      return ret ;
-    },
+    }
+    return ret ;
+  },
 
-    // .......................................................
-    // RESPONDER CONTEXT
-    //
+  // .......................................................
+  // RESPONDER CONTEXT
+  //
 
-    /**
-      Pane's never have a next responder.
+  /**
+    Pane's never have a next responder.
 
-      @property {SC.Responder}
-      @readOnly
-    */
-    nextResponder: function() {
-      return null;
-    }.property().cacheable(),
+    @property {SC.Responder}
+    @readOnly
+  */
+  nextResponder: function() {
+    return null;
+  }.property().cacheable(),
 
-    /**
-      The first responder.  This is the first view that should receive action 
-      events.  Whenever you click on a view, it will usually become 
-      firstResponder. 
+  /**
+    The first responder.  This is the first view that should receive action 
+    events.  Whenever you click on a view, it will usually become 
+    firstResponder. 
 
-      @property {SC.Responder}
-    */
-    firstResponder: null,
+    @property {SC.Responder}
+  */
+  firstResponder: null,
 
-    /** 
-      If YES, this pane can become the key pane.  You may want to set this to NO 
-      for certain types of panes.  For example, a palette may never want to 
-      become key.  The default value is YES.
+  /** 
+    If YES, this pane can become the key pane.  You may want to set this to NO 
+    for certain types of panes.  For example, a palette may never want to 
+    become key.  The default value is YES.
 
-      @property {Boolean}
-    */
-    acceptsKeyPane: YES,
+    @property {Boolean}
+  */
+  acceptsKeyPane: YES,
 
-    /**
-      This is set to YES when your pane is currently the target of key events. 
+  /**
+    This is set to YES when your pane is currently the target of key events. 
 
-      @property {Boolean}
-    */
-    isKeyPane: NO,
+    @property {Boolean}
+  */
+  isKeyPane: NO,
 
-    /**
-      Make the pane receive key events.  Until you call this method, the 
-      keyView set for this pane will not receive key events. 
+  /**
+    Make the pane receive key events.  Until you call this method, the 
+    keyView set for this pane will not receive key events. 
 
-      @returns {SC.Pane} receiver
-    */
-    becomeKeyPane: function() {
-      if (this.get('isKeyPane')) return this ;
-      if (this.rootResponder) this.rootResponder.makeKeyPane(this) ;
-      return this ;
-    },
+    @returns {SC.Pane} receiver
+  */
+  becomeKeyPane: function() {
+    if (this.get('isKeyPane')) return this ;
+    if (this.rootResponder) this.rootResponder.makeKeyPane(this) ;
+    return this ;
+  },
 
-    /**
-      Remove the pane view status from the pane.  This will simply set the 
-      keyPane on the rootResponder to null.
+  /**
+    Remove the pane view status from the pane.  This will simply set the 
+    keyPane on the rootResponder to null.
 
-      @returns {SC.Pane} receiver
-    */
-    resignKeyPane: function() {
-      if (!this.get('isKeyPane')) return this ;
-      if (this.rootResponder) this.rootResponder.makeKeyPane(null);
-      return this ;
-    },
+    @returns {SC.Pane} receiver
+  */
+  resignKeyPane: function() {
+    if (!this.get('isKeyPane')) return this ;
+    if (this.rootResponder) this.rootResponder.makeKeyPane(null);
+    return this ;
+  },
 
-    /**
-      Makes the passed view (or any object that implements SC.Responder) into 
-      the new firstResponder for this pane.  This will cause the current first
-      responder to lose its responder status and possibly keyResponder status as
-      well.
+  /**
+    Makes the passed view (or any object that implements SC.Responder) into 
+    the new firstResponder for this pane.  This will cause the current first
+    responder to lose its responder status and possibly keyResponder status as
+    well.
 
-      @param {SC.View} view
-      @param {Event} evt that cause this to become first responder
-      @returns {SC.Pane} receiver
-    */
-    makeFirstResponder: function(view, evt) {
-      var current=this.get('firstResponder'), isKeyPane=this.get('isKeyPane');
-      if (current === view) return this ; // nothing to do
-      if (SC.platform.touch && view && view.kindOf(SC.TextFieldView) && !view.get('focused')) return this;
+    @param {SC.View} view
+    @param {Event} evt that cause this to become first responder
+    @returns {SC.Pane} receiver
+  */
+  makeFirstResponder: function(view, evt) {
+    var current=this.get('firstResponder'), isKeyPane=this.get('isKeyPane');
+    if (current === view) return this ; // nothing to do
+    if (SC.platform.touch && view && view.kindOf(SC.TextFieldView) && !view.get('focused')) return this;
 
-      // notify current of firstResponder change
-      if (current) current.willLoseFirstResponder(current, evt);
+    // notify current of firstResponder change
+    if (current) current.willLoseFirstResponder(current, evt);
 
-      // if we are currently key pane, then notify key views of change also
-      if (isKeyPane) {
-        if (current) current.willLoseKeyResponderTo(view) ;
-        if (view) view.willBecomeKeyResponderFrom(current) ;
+    // if we are currently key pane, then notify key views of change also
+    if (isKeyPane) {
+      if (current) current.willLoseKeyResponderTo(view) ;
+      if (view) view.willBecomeKeyResponderFrom(current) ;
+    }
+
+    // change setting
+    if (current) {
+      current.beginPropertyChanges()
+        .set('isFirstResponder', NO).set('isKeyResponder', NO)
+      .endPropertyChanges();
+    }
+
+    this.set('firstResponder', view) ;
+
+    if (view) {
+      view.beginPropertyChanges()
+        .set('isFirstResponder', YES).set('isKeyResponder', isKeyPane)
+      .endPropertyChanges();
+    }
+
+    // and notify again if needed.
+    if (isKeyPane) {
+      if (view) view.didBecomeKeyResponderFrom(current) ; 
+      if (current) current.didLoseKeyResponderTo(view) ;
+    }
+
+    if (view) view.didBecomeFirstResponder(view);
+    return this ;
+  },
+
+  /** @private
+    If the user presses the tab key and the pane does not have a first
+    responder, try to give it to the next eligible responder.
+
+    If the keyDown event reaches the pane, we can assume that no responders in
+    the responder chain, nor the default responder, handled the event.
+  */
+  keyDown: function(evt) {
+    var nextValidKeyView;
+
+    // Handle tab key presses if we don't have a first responder already
+    if (evt.which === 9 && !this.get('firstResponder')) {
+      // Cycle forwards by default, backwards if the shift key is held
+      if (evt.shiftKey) {
+        nextValidKeyView = this.get('previousValidKeyView');
+      } else {
+        nextValidKeyView = this.get('nextValidKeyView');
       }
 
-      // change setting
-      if (current) {
-        current.beginPropertyChanges()
-          .set('isFirstResponder', NO).set('isKeyResponder', NO)
-        .endPropertyChanges();
+      if (nextValidKeyView) {
+        this.makeFirstResponder(nextValidKeyView);
+        return YES;
       }
+    }
 
-      this.set('firstResponder', view) ;
+    return NO;
+  },
 
-      if (view) {
-        view.beginPropertyChanges()
-          .set('isFirstResponder', YES).set('isKeyResponder', isKeyPane)
-        .endPropertyChanges();
+  /** @private method forwards status changes in a generic way. */
+  _forwardKeyChange: function(shouldForward, methodName, pane, isKey) {
+    var keyView, responder, newKeyView;
+    if (shouldForward && (responder = this.get('firstResponder'))) {
+      newKeyView = (pane) ? pane.get('firstResponder') : null ;
+      keyView = this.get('firstResponder') ;
+      if (keyView) keyView[methodName](newKeyView);
+
+      if ((isKey !== undefined) && responder) {
+        responder.set('isKeyResponder', isKey);
       }
+    } 
+  },
 
-      // and notify again if needed.
-      if (isKeyPane) {
-        if (view) view.didBecomeKeyResponderFrom(current) ; 
-        if (current) current.didLoseKeyResponderTo(view) ;
-      }
+  /**
+    Called just before the pane loses it's keyPane status.  This will notify 
+    the current keyView, if there is one, that it is about to lose focus, 
+    giving it one last opportunity to save its state. 
 
-      if (view) view.didBecomeFirstResponder(view);
-      return this ;
-    },
+    @param {SC.Pane} pane
+    @returns {SC.Pane} reciever
+  */
+  willLoseKeyPaneTo: function(pane) {
+    this._forwardKeyChange(this.get('isKeyPane'), 'willLoseKeyResponderTo', pane, NO);
+    return this ;
+  },
 
-    /** @private
-      If the user presses the tab key and the pane does not have a first
-      responder, try to give it to the next eligible responder.
+  /**
+    Called just before the pane becomes keyPane.  Notifies the current keyView 
+    that it is about to gain focus.  The keyView can use this opportunity to 
+    prepare itself, possibly stealing any value it might need to steal from 
+    the current key view.
 
-      If the keyDown event reaches the pane, we can assume that no responders in
-      the responder chain, nor the default responder, handled the event.
-    */
-    keyDown: function(evt) {
-      var nextValidKeyView;
-
-      // Handle tab key presses if we don't have a first responder already
-      if (evt.which === 9 && !this.get('firstResponder')) {
-        // Cycle forwards by default, backwards if the shift key is held
-        if (evt.shiftKey) {
-          nextValidKeyView = this.get('previousValidKeyView');
-        } else {
-          nextValidKeyView = this.get('nextValidKeyView');
-        }
-
-        if (nextValidKeyView) {
-          this.makeFirstResponder(nextValidKeyView);
-          return YES;
-        }
-      }
-
-      return NO;
-    },
-
-    /** @private method forwards status changes in a generic way. */
-    _forwardKeyChange: function(shouldForward, methodName, pane, isKey) {
-      var keyView, responder, newKeyView;
-      if (shouldForward && (responder = this.get('firstResponder'))) {
-        newKeyView = (pane) ? pane.get('firstResponder') : null ;
-        keyView = this.get('firstResponder') ;
-        if (keyView) keyView[methodName](newKeyView);
-
-        if ((isKey !== undefined) && responder) {
-          responder.set('isKeyResponder', isKey);
-        }
-      } 
-    },
-
-    /**
-      Called just before the pane loses it's keyPane status.  This will notify 
-      the current keyView, if there is one, that it is about to lose focus, 
-      giving it one last opportunity to save its state. 
-
-      @param {SC.Pane} pane
-      @returns {SC.Pane} reciever
-    */
-    willLoseKeyPaneTo: function(pane) {
-      this._forwardKeyChange(this.get('isKeyPane'), 'willLoseKeyResponderTo', pane, NO);
-      return this ;
-    },
-
-    /**
-      Called just before the pane becomes keyPane.  Notifies the current keyView 
-      that it is about to gain focus.  The keyView can use this opportunity to 
-      prepare itself, possibly stealing any value it might need to steal from 
-      the current key view.
-
-      @param {SC.Pane} pane
-      @returns {SC.Pane} receiver
-    */
-    willBecomeKeyPaneFrom: function(pane) {
-      this._forwardKeyChange(!this.get('isKeyPane'), 'willBecomeKeyResponderFrom', pane, YES);
-      return this ;
-    },
+    @param {SC.Pane} pane
+    @returns {SC.Pane} receiver
+  */
+  willBecomeKeyPaneFrom: function(pane) {
+    this._forwardKeyChange(!this.get('isKeyPane'), 'willBecomeKeyResponderFrom', pane, YES);
+    return this ;
+  },
 
 
-    /**
-      Called just after the pane has lost its keyPane status.  Notifies the 
-      current keyView of the change.  The keyView can use this method to do any 
-      final cleanup and changes its own display value if needed.
+  /**
+    Called just after the pane has lost its keyPane status.  Notifies the 
+    current keyView of the change.  The keyView can use this method to do any 
+    final cleanup and changes its own display value if needed.
 
-      @param {SC.Pane} pane
-      @returns {SC.Pane} reciever
-    */
-    didLoseKeyPaneTo: function(pane) {
-      var isKeyPane = this.get('isKeyPane');
-      this.set('isKeyPane', NO);
-      this._forwardKeyChange(isKeyPane, 'didLoseKeyResponderTo', pane);
-      return this ;
-    },
+    @param {SC.Pane} pane
+    @returns {SC.Pane} reciever
+  */
+  didLoseKeyPaneTo: function(pane) {
+    var isKeyPane = this.get('isKeyPane');
+    this.set('isKeyPane', NO);
+    this._forwardKeyChange(isKeyPane, 'didLoseKeyResponderTo', pane);
+    return this ;
+  },
 
-    /**
-      Called just after the keyPane focus has changed to the receiver.  Notifies 
-      the keyView of its new status.  The keyView should use this method to 
-      update its display and actually set focus on itself at the browser level 
-      if needed.
+  /**
+    Called just after the keyPane focus has changed to the receiver.  Notifies 
+    the keyView of its new status.  The keyView should use this method to 
+    update its display and actually set focus on itself at the browser level 
+    if needed.
 
-      @param {SC.Pane} pane
-      @returns {SC.Pane} receiver
+    @param {SC.Pane} pane
+    @returns {SC.Pane} receiver
 
-    */
-    didBecomeKeyPaneFrom: function(pane) {
-      var isKeyPane = this.get('isKeyPane');
-      this.set('isKeyPane', YES);
-      this._forwardKeyChange(!isKeyPane, 'didBecomeKeyResponderFrom', pane, YES);
-      return this ;
-    },
+  */
+  didBecomeKeyPaneFrom: function(pane) {
+    var isKeyPane = this.get('isKeyPane');
+    this.set('isKeyPane', YES);
+    this._forwardKeyChange(!isKeyPane, 'didBecomeKeyResponderFrom', pane, YES);
+    return this ;
+  },
 
-    // .......................................................
-    // MAIN PANE SUPPORT
-    //
+  // .......................................................
+  // MAIN PANE SUPPORT
+  //
 
-    /**
-      Returns YES whenever the pane has been set as the main pane for the 
-      application.
+  /**
+    Returns YES whenever the pane has been set as the main pane for the 
+    application.
 
-      @property {Boolean}
-    */
-    isMainPane: NO,
+    @property {Boolean}
+  */
+  isMainPane: NO,
 
-    /**
-      Invoked when the pane is about to become the focused pane.  Override to
-      implement your own custom handling.
+  /**
+    Invoked when the pane is about to become the focused pane.  Override to
+    implement your own custom handling.
 
-      @param {SC.Pane} pane the pane that currently have focus
-      @returns {void}
-    */
-    focusFrom: function(pane) {},
+    @param {SC.Pane} pane the pane that currently have focus
+    @returns {void}
+  */
+  focusFrom: function(pane) {},
 
-    /**
-      Invoked when the the pane is about to lose its focused pane status.  
-      Override to implement your own custom handling
+  /**
+    Invoked when the the pane is about to lose its focused pane status.  
+    Override to implement your own custom handling
 
-      @param {SC.Pane} pane the pane that will receive focus next
-      @returns {void}
-    */
-    blurTo: function(pane) {},
+    @param {SC.Pane} pane the pane that will receive focus next
+    @returns {void}
+  */
+  blurTo: function(pane) {},
 
-    /**
-      Invoked when the view is about to lose its mainPane status.  The default 
-      implementation will also remove the pane from the document since you can't 
-      have more than one mainPane in the document at a time.
+  /**
+    Invoked when the view is about to lose its mainPane status.  The default 
+    implementation will also remove the pane from the document since you can't 
+    have more than one mainPane in the document at a time.
 
-      @param {SC.Pane} pane
-      @returns {void}
-    */
-    blurMainTo: function(pane) {
-      this.set('isMainPane', NO) ;
-    },
+    @param {SC.Pane} pane
+    @returns {void}
+  */
+  blurMainTo: function(pane) {
+    this.set('isMainPane', NO) ;
+  },
 
-    /** 
-      Invokes when the view is about to become the new mainPane.  The default 
-      implementation simply updates the isMainPane property.  In your subclass, 
-      you should make sure your pane has been added to the document before 
-      trying to make it the mainPane.  See SC.MainPane for more information.
+  /** 
+    Invokes when the view is about to become the new mainPane.  The default 
+    implementation simply updates the isMainPane property.  In your subclass, 
+    you should make sure your pane has been added to the document before 
+    trying to make it the mainPane.  See SC.MainPane for more information.
 
-      @param {SC.Pane} pane
-      @returns {void}
-    */
-    focusMainFrom: function(pane) {
-      this.set('isMainPane', YES);
-    },
+    @param {SC.Pane} pane
+    @returns {void}
+  */
+  focusMainFrom: function(pane) {
+    this.set('isMainPane', YES);
+  },
 
-    // .......................................................
-    // ADDING/REMOVE PANES TO SCREEN
-    //  
+  // .......................................................
+  // ADDING/REMOVE PANES TO SCREEN
+  //  
 
-    /**
-      The layout property shadows the layout property on this view's root 
-      layer (aka the result of `this.get('layer')`).
+  /**
+    The layout property shadows the layout property on this view's root 
+    layer (aka the result of `this.get('layer')`).
 
-      As a special, non-standard capability, if you set this property to a hash 
-      when creating the view, the hash will be used as the initial `layout` of 
-      the root layer. The hash will then be deleted from the view, allowing the 
-      computed property below to shine through from the prototype.
+    As a special, non-standard capability, if you set this property to a hash 
+    when creating the view, the hash will be used as the initial `layout` of 
+    the root layer. The hash will then be deleted from the view, allowing the 
+    computed property below to shine through from the prototype.
 
-      Note: since `layer` is read only, we don't add the unnecessary observer 
-      on the `layer` key.
-    */
-    layout: function(key, value) {
-      var layer = this.get('layer');
-      if (value !== undefined) layer.set('layout', value);
-      else return layer.get('layout');
-    }.property(),
+    Note: since `layer` is read only, we don't add the unnecessary observer 
+    on the `layer` key.
+  */
+  layout: function(key, value) {
+    var layer = this.get('layer');
+    if (value !== undefined) layer.set('layout', value);
+    else return layer.get('layout');
+  }.property(),
 
-    /**
-      The SC.Layer subclass to instantiate to create this view's layer.
+  /**
+    The SC.Layer subclass to instantiate to create this view's layer.
 
-      @property {SC.Layer}
-    */
-    layerClass: SC.Layer,
+    @property {SC.Layer}
+  */
+  layerClass: SC.Layer,
 
-    layer: function(key, value) {
-      sc_assert(value === undefined); // We're read only.
-      return this._sc_layer;
-    }.property(),
+  layer: function(key, value) {
+    sc_assert(value === undefined); // We're read only.
+    return this._sc_layer;
+  }.property(),
 
-    hitTestLayer: function(key, value) {
-      sc_assert(value === undefined); // We're read only.
-      return this._sc_hitTestLayer;
-    }.property(),
+  hitTestLayer: function(key, value) {
+    sc_assert(value === undefined); // We're read only.
+    return this._sc_hitTestLayer;
+  }.property(),
 
-    containerId: function(key, value) {
-      if (value) this._containerId = value;
-      if (this._containerId) return this._containerId;
-      return SC.guidFor(this) ;
-    }.property().cacheable(),
+  containerId: function(key, value) {
+    if (value) this._containerId = value;
+    if (this._containerId) return this._containerId;
+    return SC.guidFor(this) ;
+  }.property().cacheable(),
 
-    createLayersForContainer: function(container, width, height) {
-      // SC.Pane only has two layers `layer` and `hitTestLayer`.
-      var K = this.get('layerClass');
-      sc_assert(K && K.kindOf(SC.Layer));
+  createLayersForContainer: function(container, width, height) {
+    // SC.Pane only has two layers `layer` and `hitTestLayer`.
+    var K = this.get('layerClass');
+    sc_assert(K && K.kindOf(SC.Layer));
 
-      // We want to allow the developer to provide a layout hash on the view, 
-      // or to override the 'layout' computed property.
-      if (this.hasOwnProperty('layout')) {
-        // It's still possible that layout is a computed property. Don't use 
-        // `get()` to find out!
-        var layout = this.layout;
-        if (typeof layout === "object") {
-          // We assume `layout` is a layout hash. The layer will throw an 
-          // exception if `layout` is invalid -- don't test for that here.
-          this._sc_layer = K.create({
-            layout: layout,
-            owner: this, // TODO: Do we need owner here?
-            container: container,
-            delegate: this
-          });
-          this._sc_hitTestLayer = K.create({
-            layout: layout,
-            isHitTestOnly: true,
-            owner: this, // TODO: Do we need owner here?
-            container: container,
-            delegate: this
-          });
-        } else {
-          this._sc_layer = K.create({
-            // `layout` is whatever the default on SC.Layer is
-            owner: this, // TODO: Do we need owner here?
-            container: container,
-            delegate: this
-          });
-          this._sc_hitTestLayer = K.create({
-            // `layout` is whatever the default on SC.Layer is
-            isHitTestOnly: true,
-            owner: this, // TODO: Do we need owner here?
-            container: container,
-            delegate: this
-          });
-        }
-
-        // Only delete layout if it is not a computed property. This allows 
-        // the computed property on the prototype to shine through.
-        if (typeof layout !== "function" || !layout.isProperty) {
-          console.log('deleting layout');
-          delete this.layout;
-        }
+    // We want to allow the developer to provide a layout hash on the view, 
+    // or to override the 'layout' computed property.
+    if (this.hasOwnProperty('layout')) {
+      // It's still possible that layout is a computed property. Don't use 
+      // `get()` to find out!
+      var layout = this.layout;
+      if (typeof layout === "object") {
+        // We assume `layout` is a layout hash. The layer will throw an 
+        // exception if `layout` is invalid -- don't test for that here.
+        this._sc_layer = K.create({
+          layout: layout,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+        this._sc_hitTestLayer = K.create({
+          layout: layout,
+          isHitTestOnly: true,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
       } else {
         this._sc_layer = K.create({
           // `layout` is whatever the default on SC.Layer is
@@ -753,59 +731,81 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
         });
       }
 
-      this.notifyPropertyChange('layer');
-      this.notifyPropertyChange('hitTestLayer');
-    },
+      // Only delete layout if it is not a computed property. This allows 
+      // the computed property on the prototype to shine through.
+      if (typeof layout !== "function" || !layout.isProperty) {
+        console.log('deleting layout');
+        delete this.layout;
+      }
+    } else {
+      this._sc_layer = K.create({
+        // `layout` is whatever the default on SC.Layer is
+        owner: this, // TODO: Do we need owner here?
+        container: container,
+        delegate: this
+      });
+      this._sc_hitTestLayer = K.create({
+        // `layout` is whatever the default on SC.Layer is
+        isHitTestOnly: true,
+        owner: this, // TODO: Do we need owner here?
+        container: container,
+        delegate: this
+      });
+    }
 
-    container: function(key, element) {
-      if (element !== undefined) {
-        this._pane_container = element ;
-      } else {
-        element = this._pane_container;
-        if (!element) {
-          this._pane_container = element = document.createElement('div');
-          element.id = this.get('containerId');
-          element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
-  //        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
-          element.style.webkitTransform = "translateZ(0)";
+    this.notifyPropertyChange('layer');
+    this.notifyPropertyChange('hitTestLayer');
+  },
 
-          // apply the layout style manually for now...
-          var layoutStyle = this.get('layoutStyle');
-          for (key in layoutStyle) {
-            if (!layoutStyle.hasOwnProperty(key)) continue;
-            if (layoutStyle[key] !== null) {
-              element.style[key] = layoutStyle[key];
-            }
+  container: function(key, element) {
+    if (element !== undefined) {
+      this._pane_container = element ;
+    } else {
+      element = this._pane_container;
+      if (!element) {
+        this._pane_container = element = document.createElement('div');
+        element.id = this.get('containerId');
+        element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
+//        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
+        element.style.webkitTransform = "translateZ(0)";
+
+        // apply the layout style manually for now...
+        var layoutStyle = this.get('layoutStyle');
+        for (key in layoutStyle) {
+          if (!layoutStyle.hasOwnProperty(key)) continue;
+          if (layoutStyle[key] !== null) {
+            element.style[key] = layoutStyle[key];
           }
-
-          // Make sure SproutCore can find this view.
-          SC.View.views[this.get('containerId')] = this;
         }
+
+        // Make sure SproutCore can find this view.
+        SC.View.views[this.get('containerId')] = this;
       }
-      return element ;
-    }.property(),
+    }
+    return element ;
+  }.property(),
 
-    attach: function() {
-      var container = this.get('container'),
-          elem = document.body;
+  attach: function() {
+    var container = this.get('container'),
+        elem = document.body;
 
-      if (this.get('isPaneAttached') && (container.parentNode === elem)) {
-        return this; // nothing to do
-      }
+    if (this.get('isPaneAttached') && (container.parentNode === elem)) {
+      return this; // nothing to do
+    }
 
-      // Okay, the order here is very important; otherwise, the layers will 
-      // not know their correct size.
+    // Okay, the order here is very important; otherwise, the layers will 
+    // not know their correct size.
 
-      elem.insertBefore(container, null); // add to DOM
+    elem.insertBefore(container, null); // add to DOM
 
-      this.createLayersForContainer(container);
+    this.createLayersForContainer(container);
 
-      this.render(this.getPath('layer.context'), true);
+    this.render(this.getPath('layer.context'), true);
 
-      elem = container = null;
+    elem = container = null;
 
-      this.paneDidAttach();
-    },
+    this.paneDidAttach();
+  },
 
   render: function(context) {},
 
