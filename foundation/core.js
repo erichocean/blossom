@@ -726,7 +726,7 @@ SC.mixin(/** @scope SC */ {
 
     var loc, nextDotAt, key, max ;
 
-    if (!root) root = window ;
+    if (!root) root = global ;
 
     // faster method for strings
     if (SC.typeOf(path) === SC.T_STRING) {
