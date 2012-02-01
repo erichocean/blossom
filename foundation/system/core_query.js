@@ -6,7 +6,7 @@
 // ==========================================================================
 /*globals CQ add*/
 
-sc_require('system/browser');
+sc_require('system/builder');
 
 /**
   CoreQuery is a simplified DOM manipulation library used internally by 
