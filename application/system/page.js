@@ -41,7 +41,7 @@ SC.Page = SC.Object.extend(
       this[key] = value = value.create({ page: this }) ;
       if (!this.get('inDesignMode')) value.awake() ;
       return value ;
-    } else return arguments.callee.base.apply(this, arguments);;
+    } else return arguments.callee.base.apply(this, arguments);
   },
   
   /**

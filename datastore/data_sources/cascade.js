@@ -156,7 +156,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     
     // if a dataSources array is defined, look for any strings and lookup 
     // the same on the data source.  Replace.

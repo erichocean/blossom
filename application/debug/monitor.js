@@ -14,7 +14,7 @@ SC.StatechartMonitor = SC.Object.extend({
   sequence: null,
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.reset();
   },
   

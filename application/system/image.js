@@ -28,7 +28,7 @@ SC.Image = SC.Object.extend({
   }.observes('source'),
 
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
 
     this.sourceDidChange();
   }

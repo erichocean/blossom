@@ -183,7 +183,7 @@ SC.Plugin = SC.Object.extend(
     this.append = this.focus;
     this.setPath("baseView._plugin", this);
     this.setPath("baseView._index", this.get("pluginIndex"));
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   }
 
 }) ;

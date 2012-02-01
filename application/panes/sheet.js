@@ -45,7 +45,7 @@ SC.SheetPane = SC.PanelPane.extend({
   _state: 'NO_VIEW', // no view
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     
     if (SC.Animatable) {
       SC.SheetPane.ANIMATABLE_AVAILABLE = YES;
@@ -83,7 +83,7 @@ SC.SheetPane = SC.PanelPane.extend({
     this.updateLayout();
     if (this.enableAnimation) this.enableAnimation();
     
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /**
@@ -105,7 +105,7 @@ SC.SheetPane = SC.PanelPane.extend({
     Once the pane has been rendered out to the DOM, begin the animation.
   */
   paneDidAttach: function() {
-    var ret = arguments.callee.base.apply(this, arguments);;
+    var ret = arguments.callee.base.apply(this, arguments);
     // this.invokeLast(this.slideDown, this);
     this.slideDown();
 

@@ -32,7 +32,7 @@ SC.MainPane = SC.Pane.extend({
 
   /** @private - extends SC.Pane's method */
   paneDidAttach: function() {
-    var ret = arguments.callee.base.apply(this, arguments);;
+    var ret = arguments.callee.base.apply(this, arguments);
     var responder = this.rootResponder;
     responder.makeMainPane(this);
     if (!responder.get('keyRootView')) responder.makeKeyPane(this);

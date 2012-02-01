@@ -202,7 +202,7 @@ SC.State = SC.Object.extend(
   }.property().idempotent(),
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
 
     this._registeredEventHandlers = {};
     this._registeredStringEventHandlers = {};
@@ -263,7 +263,7 @@ SC.State = SC.Object.extend(
     this._registeredSubstatePaths = null;
     this._registeredSubstates = null;
 
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
   },
 
   /**

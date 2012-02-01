@@ -114,7 +114,7 @@ SC.NestedStore = SC.Store.extend(
     if (query && query.isQuery && query.get('location') !== SC.Query.LOCAL) {
       throw "SC.Store#find() can only accept LOCAL queries in nested stores";
     }
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   /**
@@ -175,7 +175,7 @@ SC.NestedStore = SC.Store.extend(
     var parentStore = this.get('parentStore');
     if (parentStore) parentStore.willDestroyNestedStore(this);
     
-    arguments.callee.base.apply(this, arguments);;  
+    arguments.callee.base.apply(this, arguments);  
     return this ;
   },
 
@@ -316,7 +316,7 @@ SC.NestedStore = SC.Store.extend(
     // lock the data hash if needed
     this._lock(storeKey);
     
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   /** @private - adds chaining support - 
@@ -370,7 +370,7 @@ SC.NestedStore = SC.Store.extend(
     if (!locks) locks = this.locks = [];
     if (!locks[storeKey]) locks[storeKey] = this.revisions[storeKey] || 1;
 
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   /** @private - book-keeping for a single data hash. */
@@ -412,7 +412,7 @@ SC.NestedStore = SC.Store.extend(
   /** @private - adapt for nested store */
   commitChangesFromNestedStore: function(nestedStore, changes, force) {
 
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     
     // save a lock for each store key if it does not have one already
     // also add each storeKey to my own changes set.

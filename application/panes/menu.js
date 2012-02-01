@@ -285,7 +285,7 @@ SC.MenuPane = SC.PickerPane.extend(
       parentMenu.becomeMenuPane();
     }
 
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   // ..........................................................
@@ -511,7 +511,7 @@ SC.MenuPane = SC.PickerPane.extend(
         break;
     }
 
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /**
@@ -537,7 +537,7 @@ SC.MenuPane = SC.PickerPane.extend(
   render: function(context, firstTime) {
     context.addClass(this.get('controlSize'));
 
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /**
@@ -717,7 +717,7 @@ SC.MenuPane = SC.PickerPane.extend(
   */
   windowSizeDidChange: function(oldSize, newSize) {
     this.remove();
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /**

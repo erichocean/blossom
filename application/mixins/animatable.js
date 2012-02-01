@@ -364,7 +364,7 @@
 //     } else if ((topDuration || leftDuration) && !SC.platform.supportsCSSTransitions) {
 //       return NO;
 //     } else {
-//       return arguments.callee.base.apply(this, arguments);;
+//       return arguments.callee.base.apply(this, arguments);
 //     }
 //   }.property('wantsAcceleratedLayer', 'transitions'),
 // 

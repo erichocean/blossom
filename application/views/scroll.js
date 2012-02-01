@@ -539,7 +539,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   scrollToVisible: function(view) {
     
     // if no view is passed, do default
-    if (arguments.length === 0) return arguments.callee.base.apply(this, arguments);; 
+    if (arguments.length === 0) return arguments.callee.base.apply(this, arguments); 
     
     var contentView = this.get('contentView') ;
     if (!contentView) return NO; // nothing to do if no contentView.
@@ -1553,7 +1553,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   },
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     
     // start observing initial content view.  The content view's frame has
     // already been setup in prepareDisplay so we don't need to call 
@@ -1617,7 +1617,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     if (firstTime) {
       context.push('<div class="corner"></div>');
     }
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /** @private

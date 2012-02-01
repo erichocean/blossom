@@ -90,7 +90,7 @@ SC.ShapeLayer = SC.Layer.extend({
   },
 
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.shapes = []; // Give ourself a fresh shapes array.
   }
 

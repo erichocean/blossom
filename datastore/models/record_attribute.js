@@ -252,7 +252,7 @@ SC.RecordAttribute = SC.Object.extend(
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     // setup some internal properties needed for KVO - faking 'cacheable'
     this.cacheKey = "__cache__" + SC.guidFor(this) ;
     this.lastSetValueKey = "__lastValue__" + SC.guidFor(this) ;

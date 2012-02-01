@@ -86,7 +86,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
   /*
   FUTURE: DatePickerSupport.
   createChildViews: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     if (SC.browser.safari) {
       // ON MOZILLA DON'T WORK
       var view = Shared.DatePickerView.extend({
@@ -227,7 +227,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
       evt.stop();
       return YES;
     }
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   ctrl_a: function() {
@@ -292,7 +292,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
   },
 
   mouseUp: function(evt) {
-    var ret = arguments.callee.base.apply(this, arguments);;
+    var ret = arguments.callee.base.apply(this, arguments);
     var cs = this.get('selection');
     if (SC.none(cs)) {
       this.set('activeSelection', 0);

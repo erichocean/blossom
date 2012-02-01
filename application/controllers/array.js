@@ -312,7 +312,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this._scac_contentDidChange();
   },
   

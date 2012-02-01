@@ -59,7 +59,7 @@ SC.RootResponder = SC.Object.extend({
   panes: null,
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.panes = SC.Set.create();
   },
 

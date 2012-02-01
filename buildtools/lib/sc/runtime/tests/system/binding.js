@@ -260,7 +260,7 @@ test("two bindings to the same value should sync in the order they are initializ
     }),
     
     init: function() {
-      arguments.callee.base.apply(this, arguments);;
+      arguments.callee.base.apply(this, arguments);
       this.set('c', this.C.create({ owner: this }));
     }
     

@@ -75,7 +75,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     If necessary, adds the loading of the menu to the background task queue.
   */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this._setupMenu();
     if (this.get('shouldLoadInBackground')) {
       SC.backgroundTaskQueue.push(SC.PopupButtonMenuLoader.create({ popupButton: this }));
@@ -253,7 +253,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
 
     // Reset state.
     this._isMouseDown = NO;
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     return YES;
   },
 

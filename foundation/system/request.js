@@ -64,7 +64,7 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.header('X-Requested-With', 'XMLHttpRequest');
     //TODO: we need to have the SC version in a SC variable.
     //For now I'm harcoding the variable.

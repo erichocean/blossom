@@ -68,7 +68,7 @@ SC.WellView = SC.ContainerView.extend(
        "<div class='left-edge'></div>",
        "<div class='content-background'></div>");
      }    
-     arguments.callee.base.apply(this, arguments);;
+     arguments.callee.base.apply(this, arguments);
   },
   
   /**

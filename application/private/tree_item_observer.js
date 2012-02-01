@@ -677,7 +677,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
   // 
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     
     // begin all properties on item if there is one.  This will allow us to
     // track important property changes.
@@ -705,7 +705,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
         ro = this._childrenRangeObserver;
     if (children && ro) children.removeRangeObserver(ro);
     
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
   },
   
   /**

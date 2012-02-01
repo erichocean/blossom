@@ -27,7 +27,7 @@ test("calls createChildView() for each class or string in childViews array", fun
     createChildView: function(childView) {
       called.push(childView.prototype.key);
       ok(childView.isClass, "childView: %@ isClass".fmt(childView));
-      return arguments.callee.base.apply(this, arguments);;
+      return arguments.callee.base.apply(this, arguments);
     }
   });
   
@@ -56,7 +56,7 @@ test("should not error when there is a dud view name in childViews list.", funct
     createChildView: function(childView) {
       called.push(childView.prototype.key);
       ok(childView.isClass, "childView: %@ isClass".fmt(childView));
-      return arguments.callee.base.apply(this, arguments);;
+      return arguments.callee.base.apply(this, arguments);
     }
   });
   

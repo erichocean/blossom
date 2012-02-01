@@ -140,12 +140,12 @@ SC.PanelPane = SC.Pane.extend({
       this._isShowingModal = YES;
       pane.paneWillAppend(this);
     }
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   /** @private - when removing from screen, deal with modal pane as well. */
   remove: function() {
-    var pane, ret = arguments.callee.base.apply(this, arguments);;
+    var pane, ret = arguments.callee.base.apply(this, arguments);
     
     if (this._isShowingModal) {
       this._isShowingModal = NO ;
@@ -173,7 +173,7 @@ SC.PanelPane = SC.Pane.extend({
   
   /** @private - extends SC.Pane's method - make panel keyPane when shown */
   paneDidAttach: function() {
-    var ret = arguments.callee.base.apply(this, arguments);;
+    var ret = arguments.callee.base.apply(this, arguments);
     this.becomeKeyPane();
     return ret ;
   }

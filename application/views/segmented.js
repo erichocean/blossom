@@ -263,7 +263,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
   },
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.itemsDidChange() ;
   },
 

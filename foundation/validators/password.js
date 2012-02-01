@@ -20,7 +20,7 @@ SC.Validator.Password = SC.Validator.extend(
 /** @scope SC.Validator.Password.prototype */ {
 
   attachTo: function(form,field) {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     if (!this.fields) this.fields = [] ;
     this.fields.push(field) ;
   },

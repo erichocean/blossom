@@ -416,7 +416,7 @@ SC.imageCache = SC.Object.create(/** @scope SC.imageCache.prototype */ {
   },
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this._images = {};
     this._loading = [] ;
     this._foregroundQueue = [];

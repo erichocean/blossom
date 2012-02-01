@@ -130,7 +130,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   init: function() {
     var val = this.get('value');
     this.set('hintON', (!val || val && val.length === 0));
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /** isEditable maps to isEnabled with a TextField. */
@@ -244,7 +244,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   displayProperties: 'hint fieldValue isEditing leftAccessoryView rightAccessoryView isTextArea'.w(),
 
   createChildViews: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.accessoryViewObserver();
   },
 
@@ -531,7 +531,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   //
 
   didCreateLayer: function() {
-    arguments.callee.base.apply(this, arguments);; 
+    arguments.callee.base.apply(this, arguments); 
     // For some strange reason if we add focus/blur events to textarea
     // inmediately they won't work. However if I add them at the end of the
     // runLoop it works fine.
@@ -592,7 +592,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   */
   
   willDestroyLayer: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
 
     var input = this.$input();
     SC.Event.remove(input, 'focus',  this, this._textField_fieldDidFocus);
@@ -823,7 +823,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     if (SC.browser.mozilla) {
       this.invokeLast(this._applyFirefoxCursorFix);
     }
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
   },
 
   /** @private
@@ -890,7 +890,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       evt.stop();
       return YES;
     } else {
-      return arguments.callee.base.apply(this, arguments);;
+      return arguments.callee.base.apply(this, arguments);
     }
   },
 
@@ -905,7 +905,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       evt.stop();
       return YES;
     } 
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
   
   /**

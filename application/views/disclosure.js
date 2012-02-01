@@ -73,7 +73,7 @@ SC.DisclosureView = SC.ButtonView.extend(
       this.set('value', this.get('toggleOnValue')) ;
       return YES;
     }
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
   }
   
 });

@@ -775,7 +775,7 @@ SC.SplitView = SC.View.extend(
     @returns {void}
   */
   viewDidResize: function() {
-     arguments.callee.base.apply(this, arguments);;
+     arguments.callee.base.apply(this, arguments);
      this.notifyPropertyChange('topLeftThickness')
          .notifyPropertyChange('bottomRightThickness');
    }.observes('layout')

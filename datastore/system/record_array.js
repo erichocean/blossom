@@ -296,7 +296,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
   find: function(query, target) {
     if (query && query.isQuery) {
       return this.get('store').find(query.queryWithScope(this));
-    } else return arguments.callee.base.apply(this, arguments);;
+    } else return arguments.callee.base.apply(this, arguments);
   },
   
   /**
@@ -335,7 +335,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
       this.get('store').recordArrayWillDestroy(this);
     } 
     
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
   },
   
   // ..........................................................
@@ -640,7 +640,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this._storeKeysDidChange();
   }
   

@@ -338,7 +338,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     @private
   */
   render: function(context,firstTime) {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     var layoutWidth, objects, len, nameKey, iconKey, valueKey, checkboxEnabled,
       currentSelectedVal, shouldLocalize, separatorPostion, itemList, isChecked,
       idx, name, icon, value, item, itemEnabled, isEnabledKey ;
@@ -784,7 +784,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
       return YES;
     }
     else {
-      return arguments.callee.base.apply(this, arguments);;
+      return arguments.callee.base.apply(this, arguments);
     }
   },
 
@@ -802,7 +802,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
         this.resignFirstResponder() ;
       }
     }
-    return arguments.callee.base.apply(this, arguments);;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   /** Function overridden - tied to the isEnabled state */

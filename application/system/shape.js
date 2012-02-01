@@ -151,7 +151,7 @@ SC.Shape = SC.Object.extend({
   },
 
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
 
     // These properties need their own, per-instance hashes.
     this.scale = { x: 1, y: 1 };

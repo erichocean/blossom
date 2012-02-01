@@ -464,7 +464,7 @@ SC.Object.prototype = {
          
          init: function() {
            this.mixin(this.extraMixin);
-           arguments.callee.base.apply(this, arguments);;
+           arguments.callee.base.apply(this, arguments);
          }
       });
       
@@ -582,7 +582,7 @@ SC.Object.prototype = {
     any method.  This does not work in Safari 2 or earlier.  If you need to
     target these methods, you should use one of the alternatives below:
 
-    - *With Build Tools:* arguments.callee.base.apply(this, arguments);;
+    - *With Build Tools:* arguments.callee.base.apply(this, arguments);
     - *Without Build Tools:* arguments.callee.base.apply(this, arguments);
     
     h2. Example
@@ -600,7 +600,7 @@ SC.Object.prototype = {
         
         // REQUIRES SC-BUILD TOOLS
         method2: function() {
-          arguments.callee.base.apply(this, arguments);;
+          arguments.callee.base.apply(this, arguments);
         },
         
         // WORKS ANYTIME

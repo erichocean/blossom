@@ -2279,7 +2279,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     this.reset();
   },
   
@@ -2288,10 +2288,10 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // Include the name if the client has specified one.
     var name = this.get('name');
     if (!name) {
-      return arguments.callee.base.apply(this, arguments);;
+      return arguments.callee.base.apply(this, arguments);
     }
     else {
-      var ret = arguments.callee.base.apply(this, arguments);;
+      var ret = arguments.callee.base.apply(this, arguments);
       return "%@ (%@)".fmt(name, ret);
     }
   },

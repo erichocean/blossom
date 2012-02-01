@@ -75,7 +75,7 @@ SC.ControlTestPane = SC.Pane.extend(
   },
   
   init: function() {
-    arguments.callee.base.apply(this, arguments);;
+    arguments.callee.base.apply(this, arguments);
     if (!this._views) this._views = {};
     this.append(); // auto-add to screen
     
