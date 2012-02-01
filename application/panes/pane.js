@@ -648,6 +648,24 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
     //  
 
     /**
+      The layout property shadows the layout property on this view's root 
+      layer (aka the result of `this.get('layer')`).
+
+      As a special, non-standard capability, if you set this property to a hash 
+      when creating the view, the hash will be used as the initial `layout` of 
+      the root layer. The hash will then be deleted from the view, allowing the 
+      computed property below to shine through from the prototype.
+
+      Note: since `layer` is read only, we don't add the unnecessary observer 
+      on the `layer` key.
+    */
+    layout: function(key, value) {
+      var layer = this.get('layer');
+      if (value !== undefined) layer.set('layout', value);
+      else return layer.get('layout');
+    }.property(),
+
+    /**
       The SC.Layer subclass to instantiate to create this view's layer.
 
       @property {SC.Layer}
@@ -716,8 +734,23 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
         // Only delete layout if it is not a computed property. This allows 
         // the computed property on the prototype to shine through.
         if (typeof layout !== "function" || !layout.isProperty) {
+          console.log('deleting layout');
           delete this.layout;
         }
+      } else {
+        this._sc_layer = K.create({
+          // `layout` is whatever the default on SC.Layer is
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
+        this._sc_hitTestLayer = K.create({
+          // `layout` is whatever the default on SC.Layer is
+          isHitTestOnly: true,
+          owner: this, // TODO: Do we need owner here?
+          container: container,
+          delegate: this
+        });
       }
 
       this.notifyPropertyChange('layer');
@@ -747,32 +780,31 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
 
           // Make sure SproutCore can find this view.
           SC.View.views[this.get('containerId')] = this;
-
-          this.createLayersForContainer(element);
         }
       }
       return element ;
     }.property(),
 
     attach: function() {
-      if (BLOSSOM) {
-        var container = this.get('container'),
-            elem = document.body;
+      var container = this.get('container'),
+          elem = document.body;
 
-        if (this.get('isPaneAttached') && (container.parentNode === elem)) {
-          return this; // nothing to do
-        }
+      if (this.get('isPaneAttached') && (container.parentNode === elem)) {
+        return this; // nothing to do
+      }
 
-        this.render(this.getPath('layer.context'), true);
-        elem.insertBefore(container, null); // add to DOM
-        elem = container = null;
+      // Okay, the order here is very important; otherwise, the layers will 
+      // not know their correct size.
 
-        this.paneDidAttach();
-      } // BLOSSOM
-      if (SPROUTCORE) {
-        console.warn("SC.Pane#attach() is a Blossom API. Use SC.Pane#append() in SproutCore instead.");
-        this.append();
-      } // SPROUTCORE
+      elem.insertBefore(container, null); // add to DOM
+
+      this.createLayersForContainer(container);
+
+      this.render(this.getPath('layer.context'), true);
+
+      elem = container = null;
+
+      this.paneDidAttach();
     },
 
   render: function(context) {},

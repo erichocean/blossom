@@ -811,7 +811,7 @@ SC.View = SC.View.extend(
     call this method to notify the view that it's parentView has changed.
   */
   parentViewDidChange: function() {
-    console.log('SC.View#parentViewDidChange()');
+    // console.log('SC.View#parentViewDidChange()');
     this.recomputeIsVisibleInWindow() ;
     this.updateLayerLocation() ;
 
@@ -1012,7 +1012,7 @@ SC.View = SC.View.extend(
     loop.
   */
   updateLayerLocation: function() {
-    console.log("SC.View#updateLayerLocation()");
+    // console.log("SC.View#updateLayerLocation()");
 
     var parentView = this.get('parentView'),
         layer = this.get('layer'),
@@ -1242,7 +1242,7 @@ SC.View = SC.View.extend(
   init: function() {
     sc_super() ;
 
-    console.log('SC.View#init()');
+    // console.log('SC.View#init()');
 
     var parentView, path, root, idx, len, lp, dp, childViews ;
 

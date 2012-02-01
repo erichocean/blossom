@@ -30,9 +30,6 @@ sc_require('panes/pane');
 */
 SC.MainPane = SC.Pane.extend({
 
-  /** @private */
-  layout: { top: 0, left: 0, bottom: 0, right: 0, minHeight:200, minWidth:200 },
-  
   /** @private - extends SC.Pane's method */
   paneDidAttach: function() {
     var ret = sc_super();
