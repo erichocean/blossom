@@ -707,7 +707,17 @@ SC.Object.prototype = {
     @returns {SC.Object} receiver
   */
   invokeOnce: function(method) {
-    SC.RunLoop.currentRunLoop.invokeOnce(this, method) ;
+    if (SC.isNode) {
+      SC.RunLoop.begin();
+      SC.RunLoop.currentRunLoop.invokeOnce(this, method) ;
+      process.nextTick(function() {
+        try {
+          SC.RunLoop.end();
+        } catch (e) {
+          // debugger;
+        }
+      });
+    } else SC.RunLoop.currentRunLoop.invokeOnce(this, method) ;
     return this ;
   },
   

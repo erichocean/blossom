@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/set');
+
 /**
   Debug parameter you can turn on.  This will log all bindings that fire to
   the console.  This should be disabled in production code.  Note that you
