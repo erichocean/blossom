@@ -6,6 +6,7 @@
 // ==========================================================================
 /*globals CQ add*/
 
+sc_require('system/browser');
 sc_require('system/builder');
 
 /**

@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/run_loop');
-
 // Create anonymous subclass of SC.RunLoop to add support for processing 
 // view queues and Timers.
 SC.RunLoop = SC.RunLoop.extend(

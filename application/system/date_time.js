@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/binding');
-
 /**
   Adds a transform to format the DateTime value to a String value according
   to the passed format string. 

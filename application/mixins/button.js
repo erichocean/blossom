@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/binding');
-
 /** @namespace
 
   This mixin implements many of the basic state-handling attributes for 

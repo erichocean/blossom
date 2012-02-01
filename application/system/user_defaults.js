@@ -6,8 +6,6 @@
 // ==========================================================================
 /*globals ie7userdata openDatabase*/
 
-sc_require('system/browser');
-
 /**
   @class
   

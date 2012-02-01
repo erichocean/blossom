@@ -10,8 +10,6 @@
 // ==========================================================================
 /*globals SPROUTCORE BLOSSOM sc_assert */
 
-sc_require('system/browser');
-sc_require('system/event');
 sc_require('system/cursor');
 sc_require('system/responder') ;
 sc_require('layers/layer') ;

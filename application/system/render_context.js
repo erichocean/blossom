@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/browser');
-
 /** set update mode on context to replace content (preferred) */
 SC.MODE_REPLACE = 'replace';
 
