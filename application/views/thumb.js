@@ -52,14 +52,14 @@ SC.ThumbView = SC.View.extend(
   prepareContext: function(context, firstTime) {
     var splitView = this.get('splitView') ;
     if (splitView) this.set('cursor', splitView.get('thumbViewCursor')) ;
-    return sc_super() ;
+    return arguments.callee.base.apply(this, arguments); ;
   },
 
   mouseDown: function(evt) {
     if (!this.get('isEnabled')) return NO ;
 
     var splitView = this.get('splitView');
-    return (splitView) ? splitView.mouseDownInThumbView(evt, this) : sc_super();
+    return (splitView) ? splitView.mouseDownInThumbView(evt, this) : arguments.callee.base.apply(this, arguments);;
   },
 
   touchStart: function(evt) {

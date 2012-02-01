@@ -80,7 +80,7 @@ SC.ChildRecord = SC.Record.extend(
       this._parentRecord.recordDidChange();
     }
     else{
-      sc_super();
+      arguments.callee.base.apply(this, arguments);;
     }
   },
   
@@ -95,7 +95,7 @@ SC.ChildRecord = SC.Record.extend(
     if (myParent) {
       ret = myParent.createChildRecord(recordType, hash);
     } else {
-      ret = sc_super();
+      ret = arguments.callee.base.apply(this, arguments);;
     }
   
     return ret;

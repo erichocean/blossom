@@ -11,7 +11,7 @@ SC.PropertyAnimation = SC.Object.extend(
 
   // /** @private */
   // init: function() {
-  //   sc_super() ;
+  //   arguments.callee.base.apply(this, arguments); ;
   //   
   //   // create a unique style rule and add it to the shared cursor style sheet
   //   var property = this.get('property') || 'none' ,

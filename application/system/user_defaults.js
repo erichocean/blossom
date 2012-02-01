@@ -305,7 +305,7 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   }.observes('userDomain', 'appDomain'),
   
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     if(SC.userDefaults && SC.userDefaults.get('dataHash')){
       var dh = SC.userDefaults.get('dataHash');
       if (dh) this.dataHash=SC.userDefaults.get('dataHash')

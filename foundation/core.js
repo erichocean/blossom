@@ -4,6 +4,10 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global */
+
+// Makes us compatible with Node.js
+if (window.global === undefined) window.global = window;
 
 // These commands are used by the build tools to control load order.  On the
 // client side these are a no-op.
@@ -65,7 +69,7 @@ if (typeof console === 'undefined') {
   The core Base framework is based on the jQuery API with a number of 
   performance optimizations.
 */
-var SC = SC || {} ; 
+var SC = global.SC || {} ; 
 var SproutCore = SproutCore || SC ;
 
 SC.VERSION = '1.4.5';

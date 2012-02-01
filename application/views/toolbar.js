@@ -44,7 +44,7 @@ SC.ToolbarView = SC.View.extend(
     if (this.anchorLocation) {
       this.layout = SC.merge(this.layout, this.anchorLocation);
     }
-    sc_super(); 
+    arguments.callee.base.apply(this, arguments);; 
   }
 
 });

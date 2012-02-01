@@ -237,7 +237,7 @@ SC.mixin(SC.Object, /** @scope SC.Object */ {
 
     If you define an init() method, it will be called when you create 
     instances of your new class.  Since SproutCore uses the init() method to
-    do important setup, you must be sure to always call sc_super() somewhere
+    do important setup, you must be sure to always call arguments.callee.base.apply(this, arguments); somewhere
     in your init() to allow the normal setup to proceed.
 
     @params {Hash} props the methods of properties you want to add
@@ -486,7 +486,7 @@ SC.Object.prototype = {
     instantiated.  You can override this method as you like to setup your
     new object.  
 
-    Within your object, be sure to call sc_super() to ensure that the 
+    Within your object, be sure to call arguments.callee.base.apply(this, arguments); to ensure that the 
     built-in init method is also called or your observers and computed 
     properties may not be configured.
 
@@ -515,7 +515,7 @@ SC.Object.prototype = {
     consume immediately.
 
     If you would like to perform additional cleanup when an object is
-    finished, you may override this method.  Be sure to call sc_super().
+    finished, you may override this method.  Be sure to call arguments.callee.base.apply(this, arguments);.
     
     @returns {SC.Object} receiver
   */
@@ -569,7 +569,7 @@ SC.Object.prototype = {
     any method.  This does not work in Safari 2 or earlier.  If you need to
     target these methods, you should use one of the alternatives below:
 
-    - *With Build Tools:* sc_super();
+    - *With Build Tools:* arguments.callee.base.apply(this, arguments);;
     - *Without Build Tools:* arguments.callee.base.apply(this, arguments);
     
     h2. Example
@@ -587,7 +587,7 @@ SC.Object.prototype = {
         
         // REQUIRES SC-BUILD TOOLS
         method2: function() {
-          sc_super();
+          arguments.callee.base.apply(this, arguments);;
         },
         
         // WORKS ANYTIME

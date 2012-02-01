@@ -270,7 +270,7 @@ BlossomTest.ButtonPane = SC.Pane.extend(SC.Control, SC.Button, {
 
   /** @private - save keyEquivalent for later use */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     
     //cache the key equivalent
     if(this.get("keyEquivalent")) this._defaultKeyEquivalent = this.get("keyEquivalent"); 

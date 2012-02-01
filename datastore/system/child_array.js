@@ -235,7 +235,7 @@ SC.ChildArray = SC.Object.extend(SC.Enumerable, SC.Array,
   
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this.recordPropertyDidChange();
   }
   

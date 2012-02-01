@@ -392,7 +392,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
     //
     // (Any clients overriding this method will have their version called,
     // however.  That's why we'll keep this here; clients might want to
-    // override it and call sc_super()).
+    // override it and call arguments.callee.base.apply(this, arguments);).
 
     var result = 0, 
         propertyName, order, len, i;

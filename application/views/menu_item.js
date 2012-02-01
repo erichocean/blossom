@@ -121,7 +121,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     @private
   */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this.contentDidChange();
   },
 

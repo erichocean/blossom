@@ -85,7 +85,7 @@ SC.Cookie = SC.Object.extend({
     this.set('expires', -1);
     this.write();
     
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
   },
   
   /**

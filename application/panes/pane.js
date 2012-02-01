@@ -354,7 +354,7 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
     },
 
     performKeyEquivalent: function(keystring, evt) {
-      var ret = sc_super() ; // try normal view behavior first
+      var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
       if (!ret) {
         var defaultResponder = this.get('defaultResponder') ;
         if (defaultResponder) {
@@ -1075,7 +1075,7 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
   
   /** @private */
   init: function() {
-    sc_super() ;
+    arguments.callee.base.apply(this, arguments); ;
     this.pane = this; // Needed so that our childViews can get our "pane".
   }
 
@@ -1197,7 +1197,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {Rect} current window size 
   */
   computeParentDimensions: function() {
-    if(this.get('designer') && SC.suppressMain) return sc_super();
+    if(this.get('designer') && SC.suppressMain) return arguments.callee.base.apply(this, arguments);;
     
     var wframe = this.get('currentWindowSize'),
         wDim = {x: 0, y: 0, width: 1000, height: 1000},
@@ -1258,7 +1258,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     
   /** @private Disable caching due to an known bug in SC. */
   frame: function() {
-    if(this.get('designer') && SC.suppressMain) return sc_super();    
+    if(this.get('designer') && SC.suppressMain) return arguments.callee.base.apply(this, arguments);;    
     return this.computeFrameWithParentFrame(null) ;
   }.property(),
   
@@ -1327,7 +1327,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   },
 
   performKeyEquivalent: function(keystring, evt) {
-    var ret = sc_super() ; // try normal view behavior first
+    var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
     if (!ret) {
       var defaultResponder = this.get('defaultResponder') ;
       if (defaultResponder) {
@@ -1850,7 +1850,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
   /** @private */
   updateLayerLocation: function() {
-    if(this.get('designer') && SC.suppressMain) return sc_super();
+    if(this.get('designer') && SC.suppressMain) return arguments.callee.base.apply(this, arguments);;
     // note: the normal code here to update node location is removed 
     // because we don't need it for panes.
     return this ; 
@@ -1861,7 +1861,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     // if a layer was set manually then we will just attach to existing 
     // HTML.
     var hasLayer = !!this.get('layer') ;
-    sc_super() ;
+    arguments.callee.base.apply(this, arguments); ;
     if (hasLayer) this.paneDidAttach();
   },
 

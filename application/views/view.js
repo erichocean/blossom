@@ -1121,7 +1121,7 @@ SC.View = SC.View.extend(
     call sc_super to setup bindings and to call awake on childViews.
   */
   awake: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     var childViews = this.get('childViews');
 
     for (var idx=0, len=childViews.length; idx<len; ++idx) {
@@ -1181,7 +1181,7 @@ SC.View = SC.View.extend(
 
     // Do generic destroy. SC.Object takes care of mixins and sets 
     // isDestroyed to true.
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
   },
 
   // ..........................................................
@@ -1240,7 +1240,7 @@ SC.View = SC.View.extend(
       - set up scroll support
   */
   init: function() {
-    sc_super() ;
+    arguments.callee.base.apply(this, arguments); ;
 
     // console.log('SC.View#init()');
 
@@ -2343,7 +2343,7 @@ SC.View = SC.View.extend(
     @returns {void}
   */
   awake: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     var childViews = this.get('childViews'), len = childViews.length, idx ;
     for (idx=0; idx<len; ++idx) {
       if (!childViews[idx]) continue ;
@@ -2372,7 +2372,7 @@ SC.View = SC.View.extend(
     if (this.get('isScrollable')) SC.Drag.removeScrollableView(this) ;
 
     //Do generic destroy. It takes care of mixins and sets isDestroyed to YES.
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     return this; // done with cleanup
   },
 
@@ -2428,7 +2428,7 @@ SC.View = SC.View.extend(
     }
     if(key==='layout' || layoutChange) this.layoutDidChange();
     // Resume notification as usual.
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
   },
 
 
@@ -3603,7 +3603,7 @@ SC.View = SC.View.extend(
   init: function() {
     var parentView, path, root, idx, len, lp, dp ;
 
-    sc_super() ;
+    arguments.callee.base.apply(this, arguments); ;
 
     // Register this view for event handling
     SC.View.views[this.get('layerId')] = this ;

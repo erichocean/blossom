@@ -5,7 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-var SC = SC || { BUNDLE_INFO: {}, LAZY_INSTANTIATION: {} };
+var SC = global.SC || { BUNDLE_INFO: {}, LAZY_INSTANTIATION: {} };
 
 SC.browser = (function() {
   var userAgent = navigator.userAgent.toLowerCase(),

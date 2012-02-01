@@ -136,7 +136,7 @@ SC.ProgressView = SC.View.extend(SC.Control, {
   // here because we want this to make sure this function is called anytime 
   // the progress view is instantiated.
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this.animateProgressBar(); // start animating...  
   },
   

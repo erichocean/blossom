@@ -151,7 +151,7 @@ SC.ButtonRenderer = SC.Object.extend({
   },
 
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     SC.spriteLayer.registerDependentSprite(this);
   }
 

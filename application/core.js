@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+var SC = global.SC || {} ;
 
 /**
   If set to NO, then pressing backspace will NOT navigate to the previous 
@@ -67,9 +68,6 @@ SC.mixin(SC,
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
-// test
-var SC = SC || {} ;
 
 // Note:  We won't use SC.T_* here because those constants might not yet be
 //        defined.

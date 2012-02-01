@@ -5,7 +5,7 @@ module("object.SC.Locale()", {
 			
 			LocaleObject = SC.Locale.create({
 				init: function(){
-					sc_super();
+					arguments.callee.base.apply(this, arguments);;
 					//hash of new languages
 					var newLocales = { deflang: 'dl', empty: '' };
 					

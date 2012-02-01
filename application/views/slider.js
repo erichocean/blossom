@@ -87,7 +87,7 @@ SC.SliderView = SC.View.extend(SC.Control,
   displayProperties: 'value minimum maximum'.w(),
   
   render: function(context, firstTime) {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     
     var min = this.get('minimum'),
         max = this.get('maximum'),

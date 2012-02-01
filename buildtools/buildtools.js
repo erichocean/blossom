@@ -75,7 +75,7 @@ function log(kind) {
   return function(node, name, depth) {
     var sourceTree = node.get('sourceTree');
     console.log(spaces(depth)+"("+kind+") "+(name ? name : "")+(sourceTree? " ["+sourceTree+"]" : ""));
-    arguments.callee.base.apply(this, arguments); // sc_super()
+    arguments.callee.base.apply(this, arguments); // arguments.callee.base.apply(this, arguments);
   };
 }
 
@@ -263,7 +263,7 @@ BT.Target = BT.BuildNode.extend({
   }.property(),
 
   init: function() {
-    arguments.callee.base.apply(this, arguments); // sc_super()
+    arguments.callee.base.apply(this, arguments); // arguments.callee.base.apply(this, arguments);
     var sourceTree = this.get('sourceTree'),
         frameworks = this.get('frameworks');
 

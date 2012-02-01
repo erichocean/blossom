@@ -1017,7 +1017,7 @@ SC.CollectionView = SC.View.extend(
     context.setClass('disabled', !this.get('isEnabled'));
     context.setClass('active', this.get('isActive'));
 
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
     
 
@@ -3027,7 +3027,7 @@ SC.CollectionView = SC.View.extend(
   }.observes('nowShowing'),
   
   init: function() {
-     sc_super();
+     arguments.callee.base.apply(this, arguments);;
      if (this.useFastPath) this.mixin(SC.CollectionFastPath);
      if (this.get('canReorderContent')) this._cv_canReorderContentDidChange();
      this._sccv_lastNowShowing = this.get('nowShowing').clone();

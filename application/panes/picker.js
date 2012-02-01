@@ -606,7 +606,7 @@ SC.PickerPane = SC.PalettePane.extend({
   displayProperties: ["pointerPosY"],
 
   render: function(context, firstTime) {
-    var ret = sc_super();
+    var ret = arguments.callee.base.apply(this, arguments);;
     if (context.needsContent) {
       if (this.get('preferType') == SC.PICKER_POINTER || this.get('preferType') == SC.PICKER_MENU_POINTER) {
         context.push('<div class="sc-pointer '+this.get('pointerPos')+'" style="margin-top: '+this.get('pointerPosY')+'px"></div>');
@@ -653,7 +653,7 @@ SC.PickerPane = SC.PalettePane.extend({
   
   remove: function(){
     this._showOverflow();
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
   
   _hideOverflow: function(){

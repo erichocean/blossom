@@ -91,7 +91,7 @@ BlossomTest.stressExample = function(stage) {
     },
 
     init: function() {
-      sc_super();
+      arguments.callee.base.apply(this, arguments);;
 
       var color = colors[colorIndex++],
           randWidth = Math.random() * 100 + 20,

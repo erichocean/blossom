@@ -653,7 +653,7 @@ SC.Record = SC.Object.extend(
     if (func && func.isProperty && func.get && !func.get('isEditable')) {
       return this;
     }
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   /** @private

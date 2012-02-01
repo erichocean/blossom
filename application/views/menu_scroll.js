@@ -117,7 +117,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
         break;
     }
 
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
   
   render: function(context, firstTime) {
@@ -510,7 +510,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
   },
   
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     
     // start observing initial content view.  The content view's frame has
     // already been setup in prepareDisplay so we don't need to call 

@@ -90,12 +90,12 @@ SC.TabView = SC.View.extend(
     Restore userDefault key if set.
   */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this._tab_nowShowingDidChange()._tab_itemsDidChange();
   },
 
   awake: function() {
-    sc_super();  
+    arguments.callee.base.apply(this, arguments);;  
     var defaultKey = this.get('userDefaultKey');
     if (defaultKey) {
       defaultKey = [defaultKey,'nowShowing'].join(':');
@@ -156,7 +156,7 @@ SC.TabView = SC.View.extend(
         if (pv) {
           SC._TAB_ITEM_KEYS.forEach(function(k) { this[k] = pv.get(k); }, this);
         }
-        return sc_super();
+        return arguments.callee.base.apply(this, arguments);;
       }
     });
     

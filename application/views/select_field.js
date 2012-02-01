@@ -254,13 +254,13 @@ SC.SelectFieldView = SC.FieldView.extend(
     if (!this.get('isEnabled')) {
       evt.stop();
       return YES;
-    } else return sc_super();
+    } else return arguments.callee.base.apply(this, arguments);;
   },
    
   // when fetching the raw value, convert back to an object if needed...
   /** @private */
   getFieldValue: function() {
-    var value = sc_super(); // get raw value... 
+    var value = arguments.callee.base.apply(this, arguments);; // get raw value... 
     var valueKey = this.get('valueKey') ;
     var objects = this.get('objects') ;
     var found = null; // matching object goes here.
@@ -329,14 +329,14 @@ SC.SelectFieldView = SC.FieldView.extend(
     if (this.get('isEnabled') === false) this.$()[0].disabled = true;
     SC.Event.add(input, 'blur', this, this.fieldDidBlur);
     SC.Event.add(input, 'focus',this, this.fieldDidFocus);
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
   
   willDestroyLayer: function() {
     var input = this.$input();
     SC.Event.remove(input, 'focus', this, this.fieldDidFocus);
     SC.Event.remove(input, 'blur', this, this.fieldDidBlur);
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   }
  
 });

@@ -72,7 +72,7 @@ SC.TextSelection = SC.Object.extend(SC.Copyable, SC.Freezable,
   //
   
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this.freeze();
   },
   

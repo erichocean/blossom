@@ -82,7 +82,7 @@ SC.ContainerView = SC.View.extend(
     there is one, and set it as content if necessary.
   */
   awake: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     var nowShowing = this.get('nowShowing') ;
     if (nowShowing && nowShowing.length>0) this.nowShowingDidChange();
   },

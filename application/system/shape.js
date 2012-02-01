@@ -72,7 +72,7 @@ SC.Shape = SC.Object.extend({
   layer: null, // Set by the stage once added to the stage.
 
   // Override this method to actually draw your shape. You do not need to 
-  // call sc_super().
+  // call arguments.callee.base.apply(this, arguments);.
   draw: function(context) {},
 
   display: function(context) {
@@ -151,7 +151,7 @@ SC.Shape = SC.Object.extend({
   },
 
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
 
     // These properties need their own, per-instance hashes.
     this.scale = { x: 1, y: 1 };

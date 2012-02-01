@@ -285,7 +285,7 @@ SC.MenuPane = SC.PickerPane.extend(
       parentMenu.becomeMenuPane();
     }
 
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   // ..........................................................
@@ -511,7 +511,7 @@ SC.MenuPane = SC.PickerPane.extend(
         break;
     }
 
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   /**
@@ -537,7 +537,7 @@ SC.MenuPane = SC.PickerPane.extend(
   render: function(context, firstTime) {
     context.addClass(this.get('controlSize'));
 
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   /**
@@ -571,7 +571,7 @@ SC.MenuPane = SC.PickerPane.extend(
     When the pane is attached to a DOM element in the window, set up the
     view to be visible in the window and register with the RootResponder.
 
-    We don't call sc_super() here because PanelPane sets the current pane to
+    We don't call arguments.callee.base.apply(this, arguments); here because PanelPane sets the current pane to
     be the key pane when attached.
 
     @returns {SC.MenuPane} receiver
@@ -717,7 +717,7 @@ SC.MenuPane = SC.PickerPane.extend(
   */
   windowSizeDidChange: function(oldSize, newSize) {
     this.remove();
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   /**

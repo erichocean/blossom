@@ -59,7 +59,7 @@ SC.RootResponder = SC.Object.extend({
   panes: null,
   
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this.panes = SC.Set.create();
   },
 
@@ -619,7 +619,7 @@ SC.RootResponder = SC.Object.extend({
   /**
     Called when the document is ready to begin handling events.  Setup event
     listeners in this method that you are interested in observing for your
-    particular platform.  Be sure to call sc_super().
+    particular platform.  Be sure to call arguments.callee.base.apply(this, arguments);.
 
     @returns {void}
   */

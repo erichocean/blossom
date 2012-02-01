@@ -25,7 +25,7 @@ module("object.registerDependentKeys()", {
 
         // init to setup registerDependentKey...
         init: function() {
-          sc_super();
+          arguments.callee.base.apply(this, arguments);;
           this.registerDependentKey('fullName', 'firstName', 'lastName');
         },
 

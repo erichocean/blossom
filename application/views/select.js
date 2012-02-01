@@ -326,7 +326,7 @@ SC.SelectView = SC.ButtonView.extend(
     @private
   */
   render: function(context,firstTime) {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     var layoutWidth, items, len, nameKey, iconKey, valueKey, separatorKey, showCheckbox,
       currentSelectedVal, shouldLocalize, isSeparator, itemList, isChecked,
       idx, name, icon, value, item;

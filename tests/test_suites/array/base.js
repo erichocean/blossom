@@ -144,7 +144,7 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
       },
 
       init: function() {
-        sc_super() ;
+        arguments.callee.base.apply(this, arguments); ;
         this.resetObservers() ;
       },
       

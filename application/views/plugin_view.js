@@ -208,7 +208,7 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this._sc_childAnimationEvents = {};
     this._sc_collectAnimationEvents(this._sc_childAnimationEvents);
   }

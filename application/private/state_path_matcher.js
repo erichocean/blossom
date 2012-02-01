@@ -86,7 +86,7 @@ SC.StatePathMatcher = SC.Object.extend(
   tokens: null,
   
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this._parseExpression();
   },
   

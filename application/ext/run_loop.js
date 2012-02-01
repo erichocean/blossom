@@ -35,7 +35,7 @@ SC.RunLoop = SC.RunLoop.extend(
   */
   endRunLoop: function() {
     this.fireExpiredTimers(); // fire them timers!
-    var ret = sc_super(); // do everything else
+    var ret = arguments.callee.base.apply(this, arguments);; // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
     return ret; 
   },

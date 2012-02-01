@@ -246,7 +246,7 @@ SC.ObjectController = SC.Controller.extend(
 
   /** @private - setup observer on init if needed. */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     if (this.get('content')) this._scoc_contentDidChange();
     if (this.get('observableContent')) this._scoc_observableContentDidChange();
   },

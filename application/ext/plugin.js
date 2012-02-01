@@ -17,7 +17,7 @@ sc_require("pages/plugin_page");
 
 */
 SC.Plugin = SC.Object.extend(
-  /** @scope Plugin.Object.prototype */ {
+  /** @scope SC.Plugin.prototype */ {
   
   //..........................................
   // Public Properties
@@ -35,7 +35,7 @@ SC.Plugin = SC.Object.extend(
 
     @type {String}
   */
-  defaultView: Plugin.DEFEAULT_VIEW,
+  defaultView: 'defaultView',
 
   /** @property
     Each plugin needs a valid and unique index (integer). This
@@ -54,7 +54,7 @@ SC.Plugin = SC.Object.extend(
 
     @type {String}
   */
-  pluginName: Plugin.DEFAULT_NAME,
+  pluginName: 'defaultName',
 
   /** @property
     The page that houses the default content for the plugin.
@@ -62,9 +62,9 @@ SC.Plugin = SC.Object.extend(
     is a required page/content for the plugin to work
     successfully out of the box.
 
-    @type {Plugin.Page | String}
+    @type {SC.Plugin.Page | String}
   */
-  page: Plugin.Page,
+  page: SC.PluginPage,
 
   /** @property
     If the plugin has been loaded and the global plugin
@@ -183,7 +183,7 @@ SC.Plugin = SC.Object.extend(
     this.append = this.focus;
     this.setPath("baseView._plugin", this);
     this.setPath("baseView._index", this.get("pluginIndex"));
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   }
 
 }) ;

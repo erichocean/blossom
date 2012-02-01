@@ -400,7 +400,7 @@ SC.Layer = SC.Object.extend({
     if (SC.Layer.OBSERVABLE_STRUCTURES.indexOf(structureKey) >= 0) {
       // Get the internal structure directly, without using .get().
       return this['_sc_'+structureKey][member];
-    } else return sc_super();
+    } else return arguments.callee.base.apply(this, arguments);;
   },
 
   /* @private */
@@ -412,11 +412,11 @@ SC.Layer = SC.Object.extend({
     if (SC.Layer.OBSERVABLE_STRUCTURES.indexOf(structureKey) >= 0) {
       // Set the internal structure directly, without using .set().
       this['_sc_'+structureKey][member] = value;
-    } else sc_super();
+    } else arguments.callee.base.apply(this, arguments);;
   },
 
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
 
     // Allocate our own structures to modify in-place. For performance, we 
     // create a single ArrayBuffer up front and have all of the layer's 

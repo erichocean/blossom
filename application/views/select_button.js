@@ -338,7 +338,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     @private
   */
   render: function(context,firstTime) {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     var layoutWidth, objects, len, nameKey, iconKey, valueKey, checkboxEnabled,
       currentSelectedVal, shouldLocalize, separatorPostion, itemList, isChecked,
       idx, name, icon, value, item, itemEnabled, isEnabledKey ;
@@ -596,7 +596,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
           case 'shift_tab':
             return YES ;
           default:
-            return sc_super() ;
+            return arguments.callee.base.apply(this, arguments); ;
         }
       }
     }) ;
@@ -784,7 +784,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
       return YES;
     }
     else {
-      return sc_super();
+      return arguments.callee.base.apply(this, arguments);;
     }
   },
 
@@ -802,7 +802,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
         this.resignFirstResponder() ;
       }
     }
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   /** Function overridden - tied to the isEnabled state */

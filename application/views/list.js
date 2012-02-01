@@ -77,7 +77,7 @@ SC.ListView = SC.CollectionView.extend(
   render: function(context, firstTime) {
     context.setClass('alternating', this.get('showAlternatingRows'));
     
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);;
   },
 
   // ..........................................................
@@ -628,7 +628,7 @@ SC.ListView = SC.CollectionView.extend(
   // 
 
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this._sclv_rowDelegateDidChange();
   }  
   

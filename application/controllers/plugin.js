@@ -227,7 +227,7 @@ SC.PluginController = SC.Object.create(
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     this._info = SC.__LOADABLEINFO__;
     this._deferred = this._info.DEFERRED;
     this._prefetched = this._info.PREFETCHED;

@@ -77,7 +77,7 @@ SC.device = SC.Object.create({
     Initialize the object with some properties up front
   */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);;
     if(SC.platform.touch) this.orientationchange();
     
     if(navigator && navigator.onLine===false) {

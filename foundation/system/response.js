@@ -360,7 +360,7 @@ SC.Response = SC.Object.extend(
     String representation of the response object
   */
   toString: function() {
-    var ret = sc_super();
+    var ret = arguments.callee.base.apply(this, arguments);;
     return "%@<%@ %@, status=%@".fmt(ret, this.get('type'), this.get('address'), this.get('status'));
   }
   

@@ -52,17 +52,17 @@ SC.SplitDividerView = SC.View.extend(
   prepareContext: function(context, firstTime) {
     var splitView = this.get('splitView') ;
     if (splitView) this.set('cursor', splitView.get('thumbViewCursor')) ;
-    return sc_super() ;
+    return arguments.callee.base.apply(this, arguments); ;
   },
 
   mouseDown: function(evt) {
     var splitView = this.get('splitView');
-    return (splitView) ? splitView.mouseDownInThumbView(evt, this) : sc_super();
+    return (splitView) ? splitView.mouseDownInThumbView(evt, this) : arguments.callee.base.apply(this, arguments);;
   },
 
   doubleClick: function(evt) {
     var splitView = this.get('splitView');
-    return (splitView) ? splitView.doubleClickInThumbView(evt, this) : sc_super();
+    return (splitView) ? splitView.doubleClickInThumbView(evt, this) : arguments.callee.base.apply(this, arguments);;
   },
 
   touchStart: function(evt){
