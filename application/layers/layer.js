@@ -253,7 +253,7 @@ SC.Layer = SC.Object.extend({
   */
   superlayer: function(key, value) {
     if (value !== undefined) {
-      throw "No implementation for SC.Layer#set('superlayer', value)";
+      console.log("No implementation for SC.Layer#set('superlayer', value)");
     } else return this._sc_superlayer;
   }.property(),
 

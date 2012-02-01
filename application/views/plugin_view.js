@@ -16,7 +16,7 @@ sc_require("ext/common");
   @extends SC.View
   @inherits SC.Animatable
 */
-SC.PluginView = SC.View.extend(SC.Animatable,
+SC.PluginView = SC.View.extend( //SC.Animatable,
   /** @scope SC.PluginView.prototype */ {
 
   //..........................................
@@ -112,10 +112,10 @@ SC.PluginView = SC.View.extend(SC.Animatable,
   _basePaneFrame: null,
 
   /** @private */
-  transitions: {
-    left:   { duration: 0.25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-    right:  { duration: 0.25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
-  },
+  // transitions: {
+  //   left:   { duration: 0.25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  //   right:  { duration: 0.25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
+  // },
 
   /** @private */
   name: "Plugin.View",

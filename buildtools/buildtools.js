@@ -281,6 +281,12 @@ BT.Target = BT.BuildNode.extend({
         } else if (stat.isDirectory()) {
           // Skip directories named after embedded frameworks.
           if (frameworks.indexOf(filename) !== -1) return;
+
+          // Skip a directory named 'apps'
+          else if (filename === 'apps') return;
+
+          // Skip a directory named 'frameworks'
+          else if (filename === 'frameworks') return;
           else {
             var dir = BT.Directory.create();
             node.set(filename, dir);

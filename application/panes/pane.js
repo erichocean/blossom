@@ -221,6 +221,7 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
     Finds the layer that is hit by this event, and returns its view.
   */
   targetViewForEvent: function(evt) {
+    return this; // FIXME
     // console.log('SC.Pane#targetViewForEvent(', evt, ')');
     var context = this.getPath('hitTestLayer.context'),
         hitLayer = null, zIndex = -1,
@@ -773,6 +774,8 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
         this.append();
       } // SPROUTCORE
     },
+
+  render: function(context) {},
 
   // ...........................................
   // LAYOUT SUPPORT

@@ -1019,7 +1019,7 @@ SC.View = SC.View.extend(
         oldSuperlayer = layer.get('superlayer'),
         newSuperlayer;
 
-    debugger;
+    // debugger;
     if (oldSuperlayer) oldSuperlayer.removeSublayer(layer);
     sc_assert(!layer.get('superlayer'));
 
