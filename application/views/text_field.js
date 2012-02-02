@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/event');
 sc_require('views/field') ;
 sc_require('system/text_selection') ;
 sc_require('mixins/static_layout') ;

@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*global ActiveXObject */
+/*global ActiveXObject sc_assert */
 
 sc_require('system/object');
 
@@ -449,17 +449,18 @@ SC.XHRResponse = SC.Response.extend({
     // configure async callback - differs per browser...
     async = !!this.getPath('request.isAsynchronous') ;
     if (async) {
+      transport=this;
+      handleReadyStateChange = function() {
+        if (!transport) return null ;
+        var ret = transport.finishRequest(null, handleReadyStateChange);
+        if (ret) transport = null ; // cleanup memory
+        return ret ;
+      };
       if (!SC.browser.msie && !SC.browser.opera && !SC.isNode) {
-        SC.Event.add(rawRequest, 'readystatechange', this, 
-                     this.finishRequest, rawRequest) ;
+        rawRequest.addEventListener('readystatechange', handleReadyStateChange, NO);
+        // SC.Event.add(rawRequest, 'readystatechange', this, 
+        //              this.finishRequest, rawRequest) ;
       } else {
-        transport=this;
-        handleReadyStateChange = function() {
-          if (!transport) return null ;
-          var ret = transport.finishRequest();
-          if (ret) transport = null ; // cleanup memory
-          return ret ;
-        };
         rawRequest.onreadystatechange = handleReadyStateChange;
       }
     }
@@ -488,7 +489,7 @@ SC.XHRResponse = SC.Response.extend({
     @param {XMLHttpRequest} rawRequest the actual request
     @returns {SC.XHRRequestTransport} receiver
   */
-  finishRequest: function(evt) {
+  finishRequest: function(evt, listener) {
     var rawRequest = this.get('rawRequest'),
         readyState = rawRequest.readyState,
         error, status, msg;
@@ -525,8 +526,10 @@ SC.XHRResponse = SC.Response.extend({
       }, this);
 
       // Avoid memory leaks
-      if (!SC.browser.msie) {
-        SC.Event.remove(rawRequest, 'readystatechange', this, this.finishRequest);    
+      if (!SC.browser.msie && !SC.browser.opera && !SC.isNode) {
+        sc_assert(listener);
+        rawRequest.removeEventListener('readystatechange', listener, NO);
+        // SC.Event.remove(rawRequest, 'readystatechange', this, this.finishRequest);
       } else {
         rawRequest.onreadystatechange = null;
       }

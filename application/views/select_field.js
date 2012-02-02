@@ -4,6 +4,7 @@
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
 
+sc_require('system/event');
 sc_require('views/field');
 
 /**

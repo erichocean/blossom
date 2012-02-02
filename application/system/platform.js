@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/event');
+sc_require('system/core_query');
+
 /**
   This platform object allows you to conditionally support certain HTML5
   features.

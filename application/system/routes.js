@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/event');
+
 /**
   SC.routes manages the browser location. You can change the hash part of the
   current location. The following code

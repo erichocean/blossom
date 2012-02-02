@@ -6,6 +6,8 @@
 // ==========================================================================
 /*global main */
 
+sc_require('system/event');
+
 SC.BENCHMARK_LOG_READY = YES;
 
 SC.mixin({

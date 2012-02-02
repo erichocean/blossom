@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/platform');
 sc_require('system/ready');
 sc_require('system/root_responder');
 
