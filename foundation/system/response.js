@@ -332,7 +332,7 @@ SC.Response = SC.Object.extend(
     target = info.target;
     action = info.action;
     if (SC.typeOf(action) === SC.T_STRING) action = target[action];
-    
+
     return action.apply(target, params);
   },
   
@@ -449,7 +449,7 @@ SC.XHRResponse = SC.Response.extend({
     // configure async callback - differs per browser...
     async = !!this.getPath('request.isAsynchronous') ;
     if (async) {
-      if (!SC.browser.msie && !SC.browser.opera ) {
+      if (!SC.browser.msie && !SC.browser.opera && !SC.isNode) {
         SC.Event.add(rawRequest, 'readystatechange', this, 
                      this.finishRequest, rawRequest) ;
       } else {
