@@ -1090,11 +1090,13 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // any busy or ready state or destroyed dirty state is not allowed
     if ((status & K.BUSY)  || 
         (status & K.READY) || 
-        (status == K.DESTROYED_DIRTY)) { 
+        (status == K.DESTROYED_DIRTY)) {
+      if (SC.isNode) debugger;
       throw id ? K.RECORD_EXISTS_ERROR : K.BAD_STATE_ERROR;
       
     // allow error or destroyed state only with id
     } else if (!id && (status==SC.DESTROYED_CLEAN || status==SC.ERROR)) {
+      if (SC.isNode) debugger;
       throw K.BAD_STATE_ERROR;
     }
     
@@ -1481,6 +1483,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
         // K.DESTROY_DIRTY, bad state...
         } else if (status == K.DESTROYED_DIRTY) {
+          if (SC.isNode) debugger;
           throw K.BAD_STATE_ERROR ;
           
         // ignore K.BUSY_LOADING, K.BUSY_REFRESH_CLEAN, K.BUSY_REFRESH_DIRTY
@@ -1919,6 +1922,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
     // DESTROYED_DIRTY
     if (!(status & K.BUSY)) {
+      if (SC.isNode) debugger;
       throw K.BAD_STATE_ERROR; // should never be called in this state
       
     }
@@ -1950,6 +1954,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
         break;
         
       default:
+        if (SC.isNode) debugger;
         throw K.BAD_STATE_ERROR ;
     } 
     this.writeStatus(storeKey, status) ;
@@ -1974,11 +1979,13 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
     // DESTROYED_DIRTY
     if (!(status & K.BUSY)) {
+      if (SC.isNode) debugger;
       throw K.BAD_STATE_ERROR; // should never be called in this state
     }
     
     // otherwise, determine proper state transition
     if(status===K.BUSY_DESTROYING) {
+      if (SC.isNode) debugger;
       throw K.BAD_STATE_ERROR ;
     } else status = K.READY_CLEAN ;
 
@@ -2005,6 +2012,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
     // DESTROYED_DIRTY
     if (!(status & K.BUSY)) {
+      if (SC.isNode) debugger;
       throw K.BAD_STATE_ERROR; // should never be called in this state
     }
     // otherwise, determine proper state transition
@@ -2029,7 +2037,10 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
     // DESTROYED_DIRTY
-    if (!(status & K.BUSY)) throw K.BAD_STATE_ERROR; 
+    if (!(status & K.BUSY)) {
+      if (SC.isNode) debugger;
+      throw K.BAD_STATE_ERROR; 
+    }
 
     // otherwise, determine proper state transition
     else status = K.ERROR ;
