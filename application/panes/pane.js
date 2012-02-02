@@ -10,7 +10,6 @@
 // ==========================================================================
 /*globals SPROUTCORE BLOSSOM sc_assert */
 
-sc_require('system/responder');
 sc_require('mixins/responder_context');
 sc_require('views/view');
 sc_require('layers/layer');
@@ -20,7 +19,8 @@ if (BLOSSOM) {
 
 /** @class
   A pane is the onscreen container for views and their layers. Panes support 
-  implicit animation, just like layers, and can be
+  implicit animation, just like layers.  And like views, panes are responders 
+  and can handle events.
   
   A Pane is like a regular view except that it does not need to live within a 
   parent view.  You usually use a Pane to form the root of a view hierarchy in 
@@ -354,7 +354,7 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
   },
 
   performKeyEquivalent: function(keystring, evt) {
-    var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
+    var ret = arguments.callee.base.apply(this, arguments); // try normal view behavior first
     if (!ret) {
       var defaultResponder = this.get('defaultResponder') ;
       if (defaultResponder) {
@@ -1075,7 +1075,7 @@ SC.Pane = SC.Responder.extend(SC.ResponderContext, {
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
     this.pane = this; // Needed so that our childViews can get our "pane".
   }
 
@@ -1327,7 +1327,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   },
 
   performKeyEquivalent: function(keystring, evt) {
-    var ret = arguments.callee.base.apply(this, arguments); ; // try normal view behavior first
+    var ret = arguments.callee.base.apply(this, arguments); // try normal view behavior first
     if (!ret) {
       var defaultResponder = this.get('defaultResponder') ;
       if (defaultResponder) {
@@ -1861,7 +1861,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     // if a layer was set manually then we will just attach to existing 
     // HTML.
     var hasLayer = !!this.get('layer') ;
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
     if (hasLayer) this.paneDidAttach();
   },
 

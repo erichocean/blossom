@@ -52,7 +52,7 @@ SC.ThumbView = SC.View.extend(
   prepareContext: function(context, firstTime) {
     var splitView = this.get('splitView') ;
     if (splitView) this.set('cursor', splitView.get('thumbViewCursor')) ;
-    return arguments.callee.base.apply(this, arguments); ;
+    return arguments.callee.base.apply(this, arguments);
   },
 
   mouseDown: function(evt) {

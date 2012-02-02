@@ -1238,7 +1238,7 @@ SC.View = SC.View.extend(
       - set up scroll support
   */
   init: function() {
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
 
     // console.log('SC.View#init()');
 
@@ -3601,7 +3601,7 @@ SC.View = SC.View.extend(
   init: function() {
     var parentView, path, root, idx, len, lp, dp ;
 
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
 
     // Register this view for event handling
     SC.View.views[this.get('layerId')] = this ;

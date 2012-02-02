@@ -331,11 +331,11 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
         }
       }
     }
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
   },
 
   render: function(context, firstTime) {
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
     var v, accessoryViewWidths, leftAdjustment, rightAdjustment;
 
     // always have at least an empty string

@@ -420,12 +420,12 @@ SC.SplitView = SC.View.extend(
       // actually set layout for our child views
       this.updateChildLayout() ;
     }
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
   },
   
   /** @private */
   render: function(context, firstTime) {
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
     
     if (this._inLiveResize) this._setCursorStyle() ;
     

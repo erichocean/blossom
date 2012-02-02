@@ -46,7 +46,7 @@ SC.Cursor = SC.Object.extend(
   
   /** @private */
   init: function() {
-    arguments.callee.base.apply(this, arguments); ;
+    arguments.callee.base.apply(this, arguments);
     
     // create a unique style rule and add it to the shared cursor style sheet
     var cursorStyle = this.get('cursorStyle') || SC.DEFAULT_CURSOR ,

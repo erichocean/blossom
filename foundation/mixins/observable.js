@@ -117,7 +117,7 @@ SC.LOG_OBSERVERS = NO ;
   {{{
     
     automaticallyNotifiesObserversFor: function(key) {
-      return (key === 'balance') ? NO : arguments.callee.base.apply(this, arguments); ;
+      return (key === 'balance') ? NO : arguments.callee.base.apply(this, arguments);
     },
     
     balance: function(key, value) {

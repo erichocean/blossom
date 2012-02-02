@@ -596,7 +596,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
           case 'shift_tab':
             return YES ;
           default:
-            return arguments.callee.base.apply(this, arguments); ;
+            return arguments.callee.base.apply(this, arguments);
         }
       }
     }) ;
