@@ -288,6 +288,7 @@ SC.run = function(callback, target, useExistingRunLoop) {
       // can deal with it (and potentially use it for debugging).
       // (We don't throw it in IE because the user will see two errors)
       if (!SC.browser.msie) {
+        if (SC.isNode) debugger;
         throw e;
       }
     }

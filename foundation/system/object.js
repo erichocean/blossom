@@ -714,6 +714,7 @@ SC.Object.prototype = {
         try {
           SC.RunLoop.end();
         } catch (e) {
+          console.log('caught an exception: ',e);
           // debugger;
         }
       });
