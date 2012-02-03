@@ -245,7 +245,7 @@ SC.Benchmark = {
   timelineReport: function(appName) 
   {
     appName = (appName) ? 'SproutCore Application' : appName;
-    var ret = [appName, 'User-Agent: %@'.fmt(navigator.userAgent), 'Report Generated: %@ (%@)'.fmt(new Date().toString(), Date.now()), ''] ;
+    var ret = [appName, 'User-Agent: %@'.fmt(navigator? navigator.userAgent : 'unknown'), 'Report Generated: %@ (%@)'.fmt(new Date().toString(), Date.now()), ''] ;
 
     var chart = this._compileChartData(true);
     for(var i=0; i<chart.length; i++)

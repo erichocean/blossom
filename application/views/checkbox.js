@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/browser');
 sc_require('views/button');
 sc_require('mixins/button');
 sc_require('mixins/static_layout');

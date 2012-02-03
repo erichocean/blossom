@@ -5,6 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/browser');
 sc_require('views/collection');
 sc_require('mixins/collection_row_delegate');
 

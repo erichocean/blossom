@@ -456,7 +456,7 @@ SC.XHRResponse = SC.Response.extend({
         if (ret) transport = null ; // cleanup memory
         return ret ;
       };
-      if (!SC.browser.msie && !SC.browser.opera && !SC.isNode) {
+      if (!SC.isNode && (SC.browser && !SC.browser.msie && !SC.browser.opera)) {
         rawRequest.addEventListener('readystatechange', handleReadyStateChange, NO);
         // SC.Event.add(rawRequest, 'readystatechange', this, 
         //              this.finishRequest, rawRequest) ;
@@ -526,7 +526,7 @@ SC.XHRResponse = SC.Response.extend({
       }, this);
 
       // Avoid memory leaks
-      if (!SC.browser.msie && !SC.browser.opera && !SC.isNode) {
+      if (!SC.isNode && (SC.browser && !SC.browser.msie && !SC.browser.opera)) {
         sc_assert(listener);
         rawRequest.removeEventListener('readystatechange', listener, NO);
         // SC.Event.remove(rawRequest, 'readystatechange', this, this.finishRequest);

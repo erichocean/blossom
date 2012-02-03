@@ -6,6 +6,8 @@
 // ==========================================================================
 /*globals CQ add*/
 
+sc_require('system/browser');
+
 /**
   CoreQuery is a simplified DOM manipulation library used internally by 
   SproutCore to find and edit DOM elements.  Outside of SproutCore, you 

@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/browser');
+
 /**
   The Locale defined information about a specific locale, including date and
   number formatting conventions, and localization strings.  You can define

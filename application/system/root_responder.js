@@ -10,6 +10,7 @@
 // ==========================================================================
 /*globals SPROUTCORE BLOSSOM */
 
+sc_require('system/browser');
 sc_require('system/event');
 sc_require('system/ready');
 

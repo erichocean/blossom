@@ -3,6 +3,7 @@
 // copyright 2006-2011 Strobe Inc.
 // ========================================================================
 
+sc_require('system/browser');
 sc_require('views/text_field') ;
 
 /**

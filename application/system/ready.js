@@ -6,6 +6,7 @@
 // ==========================================================================
 /*global main */
 
+sc_require('system/browser');
 sc_require('system/event');
 
 SC.mixin({

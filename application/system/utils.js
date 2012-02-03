@@ -5,6 +5,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/browser');
+
 // These are helpful utility functions for calculating range and rect values
 
 SC.mixin( /** @scope SC */ {
