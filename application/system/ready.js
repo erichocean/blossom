@@ -8,8 +8,6 @@
 
 sc_require('system/event');
 
-SC.BENCHMARK_LOG_READY = YES;
-
 SC.mixin({
   _isReadyBound: NO,
   
@@ -21,7 +19,7 @@ SC.mixin({
     // Mozilla, Opera (see further below for it) and webkit nightlies 
     // currently support this event.  Use the handy event callback
     if ( document.addEventListener && !SC.browser.opera) {
-      document.addEventListener( "DOMContentLoaded", SC._didBecomeReady, NO );
+      document.addEventListener( "DOMContentLoaded", SC.didBecomeReady, NO );
     }
 
     // If IE is used and is not in a frame
@@ -38,7 +36,7 @@ SC.mixin({
           return;
         }
         // and execute any waiting functions
-        SC._didBecomeReady();
+        SC.didBecomeReady();
       })();
     }
 
@@ -52,7 +50,7 @@ SC.mixin({
           }
         }
         // and execute any waiting functions
-        SC._didBecomeReady();
+        SC.didBecomeReady();
       }, NO);
     }
 
@@ -78,18 +76,11 @@ SC.mixin({
     }
 
     // A fallback to window.onload, that will always work
-    SC.Event.add( window, "load", SC._didBecomeReady);
+    SC.Event.add( window, "load", SC.didBecomeReady);
   },
 
-  /** @private handlers scheduled to execute on ready. */
-  _readyQueue: [],
-  
-  _afterReadyQueue: [],
-
-  isReady: NO,
-  
   /** @private invoked when the document becomes ready. */
-  _didBecomeReady: function() {
+  didBecomeReady: function() {
     // Only call once
     if (SC.isReady) return ;
     if (typeof SC.mapDisplayNames === SC.T_FUNCTION) SC.mapDisplayNames();
@@ -149,45 +140,11 @@ SC.mixin({
     
     SC.Benchmark.end('ready') ;
     if (SC.BENCHMARK_LOG_READY) SC.Benchmark.log();
-  },
-  
-  /** 
-    Add the passed target and method to the queue of methods to invoke when
-    the document is ready.  These methods will be called after the document
-    has loaded and parsed, but before the main() function is called.
-    
-    Methods are called in the order they are added.
-  
-    If you add a ready handler when the main document is already ready, then
-    your handler will be called immediately.
-    
-    @param target {Object} optional target object
-    @param method {Function} method name or function to execute
-    @returns {SC}
-  */
-  ready: function(target, method) {
-    var queue = this._readyQueue;
-    
-    // normalize
-    if (method === undefined) {
-      method = target; target = null ;
-    } else if (SC.typeOf(method) === SC.T_STRING) {
-      method = target[method] ;
-    }
-    
-    if (!method) return this; // nothing to do.
-    
-    // if isReady, execute now.
-    if (this.isReady) return method.call(target || document) ;
-    
-    // otherwise, add to queue.
-    queue.push([target, method]) ;
-    return this ; 
   }
-  
-}) ;
 
-SC._bindReady() ;
+});
+
+SC._bindReady();
 SC.removeLoading = YES;
 
 // default to app mode.  When loading unit tests, this will run in test mode
