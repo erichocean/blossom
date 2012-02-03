@@ -5,8 +5,6 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-sc_require('system/object');
-
 SC.VALIDATE_OK = YES;
 SC.VALIDATE_NO_CHANGE = NO;
 
