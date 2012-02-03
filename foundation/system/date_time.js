@@ -6,6 +6,7 @@
 // ==========================================================================
 
 sc_require('system/object');
+sc_require('system/binding');
 
 var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
                     // when loaded by the buildtools.
@@ -1093,3 +1094,21 @@ SC.DateTime.mixin(SC.Comparable,
   }
   
 });
+
+/**
+  Adds a transform to format the DateTime value to a String value according
+  to the passed format string. 
+  
+  {{
+    valueBinding: SC.Binding.dateTime('%Y-%m-%d %H:%M:%S')
+                  .from('MyApp.myController.myDateTime');
+  }}
+
+  @param {String} format format string
+  @returns {SC.Binding} this
+*/
+SC.Binding.dateTime = function(format) {
+  return this.transform(function(value, binding) {
+    return value ? value.toFormattedString(format) : null;
+  });
+};
