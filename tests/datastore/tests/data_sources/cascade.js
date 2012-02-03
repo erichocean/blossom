@@ -7,7 +7,7 @@
 
 var store;
 
-module("SC.CascadeDataSource", {
+suite("SC.CascadeDataSource", {
   setup: function () {
     SC.RunLoop.begin();
 

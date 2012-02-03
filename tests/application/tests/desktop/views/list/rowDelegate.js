@@ -6,7 +6,7 @@
 // ==========================================================================
 
 var view, del, content;
-module("SC.ListView.rowDelegate", {
+suite("SC.ListView.rowDelegate", {
   setup: function() {
     del = SC.Object.create(SC.CollectionRowDelegate);
     

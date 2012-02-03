@@ -104,7 +104,7 @@ pane.verifyLabels = function verifyLabels(view, items) {
 // ..........................................................
 // TEST VIEWS
 // 
-module('SC.RadioView UI');
+suite('SC.RadioView UI');
 
 test("basic", function() {
   

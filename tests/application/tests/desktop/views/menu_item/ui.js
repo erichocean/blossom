@@ -8,7 +8,7 @@
 /*global module test htmlbody ok equals same stop start */
 var pane, menu, callCount = 0;
 
-module("SC.MenuItemView", {
+suite("SC.MenuItemView", {
   setup: function() {
    pane = SC.MainPane.create({
      layout: { width: 100, height: 20, centerX: 0, centerY: 0 },

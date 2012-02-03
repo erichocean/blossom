@@ -36,7 +36,7 @@ var initModels = function(){
 // ..........................................................
 // Basic SC.ParentRecord with an Array of Children
 // 
-module("Complex SC.ChildRecord: Parent > Array of Children > Array of Children", {
+suite("Complex SC.ChildRecord: Parent > Array of Children > Array of Children", {
 
   setup: function() {
     NestedRecord = SC.Object.create({

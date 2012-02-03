@@ -11,7 +11,7 @@ sc_require('debug/test_suites/array/base');
 
 SC.ArraySuite.define(function(T) {
   
-  T.module("indexOf");
+  T.suite("indexOf");
   
   test("should return index of object", function() {
     var expected = T.expected(3), 

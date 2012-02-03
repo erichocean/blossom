@@ -56,7 +56,7 @@ function queryEquals(q, location, recordType, conditions, extra, desc) {
 // location
 function performBasicTests(methodName, loc) {
 
-  module("SC.Query.%@()".fmt(methodName), {
+  suite("SC.Query.%@()".fmt(methodName), {
     setup: function() {
       window.TestRecord = TestRecord;
       window.TestRecord2 = TestRecord2;

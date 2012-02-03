@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, Application;
-module("SC.RecordArray Error Methods", {
+suite("SC.RecordArray Error Methods", {
   setup: function() {
 
     Application = {};

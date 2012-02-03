@@ -19,7 +19,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
   });   
   pane.show(); 
 
-module("TODO: Test SC.Separator UI", pane.standardSetup());
+suite("TODO: Test SC.Separator UI", pane.standardSetup());
 
   test("basic", function() {
     var view = pane.view('horizontal');

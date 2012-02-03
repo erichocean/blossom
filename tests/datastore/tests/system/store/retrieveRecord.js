@@ -10,7 +10,7 @@ var store, storeKey1, storeKey2, storeKey3, storeKey4, storeKey5, storeKey6;
 var storeKey7, storeKey8, json, json1, json2, json3, json4, json5, json6 ;
 var json7, json8;
 
-module("SC.Store#retrieveRecord", {
+suite("SC.Store#retrieveRecord", {
   setup: function() {
     
     store = SC.Store.create();

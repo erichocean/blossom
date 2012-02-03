@@ -23,7 +23,7 @@
 		});
 	pane.show();
 	
-	module("TODO: Test SC.DisclosureView UI", pane.standardSetup());
+	suite("TODO: Test SC.DisclosureView UI", pane.standardSetup());
 	
 	test("basic", function() {
 		var view = pane.view('diclosure');

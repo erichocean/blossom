@@ -7,7 +7,7 @@
 
 var store, nestedStore, Application, dataSource;
 
-module("SC.NestedStore Core Methods", {
+suite("SC.NestedStore Core Methods", {
   setup: function() {
     dataSource = SC.DataSource.create();
     

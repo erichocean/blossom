@@ -27,7 +27,7 @@ var Rec = SC.Record.extend({
 // ..........................................................
 // SC.Store#chain - init
 // 
-module("SC.Store#chain - init");
+suite("SC.Store#chain - init");
 
 test("initial setup for chained store", function() {
   var parent = SC.Store.create();

@@ -9,7 +9,7 @@ var store, storeKey1,storeKey2;
 var json1, json2;
 var storeKey6, storeKey7;
 
-module("SC.Store#cancelRecord", {
+suite("SC.Store#cancelRecord", {
   setup: function() {
     
     store = SC.Store.create();

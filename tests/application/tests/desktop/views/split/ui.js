@@ -28,7 +28,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
   // ..........................................................
   // TEST VIEWS
   // 
-  module('SC.SplitView ui', pane.standardSetup());
+  suite('SC.SplitView ui', pane.standardSetup());
 
   test("Horizontal and Vertical SplitView", function() {
   	var view = pane.view('horizontal');

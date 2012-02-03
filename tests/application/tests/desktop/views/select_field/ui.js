@@ -79,7 +79,7 @@ var pane = SC.ControlTestPane.design()
 // TEST VIEWS
 // 
 
-module('SC.SelectFieldView ui', pane.standardSetup());
+suite('SC.SelectFieldView ui', pane.standardSetup());
 
 test("basic", function() {
   var view = pane.view('basic');

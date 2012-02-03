@@ -9,7 +9,7 @@
 // the "remove" event in the Store portion of the diagram.
 
 var store, child, storeKey, json;
-module("SC.Store#removeDataHash", {
+suite("SC.Store#removeDataHash", {
   setup: function() {
     store = SC.Store.create();
     

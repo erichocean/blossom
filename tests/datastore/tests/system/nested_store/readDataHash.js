@@ -9,7 +9,7 @@
 // the "read" event in the NestedStore portion of the diagram.
 
 var parent, store, child, storeKey, json;
-module("SC.NestedStore#readDataHash", {
+suite("SC.NestedStore#readDataHash", {
   setup: function() {
     parent = SC.Store.create();
     

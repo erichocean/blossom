@@ -7,7 +7,7 @@
 
 var view, sel, beforeLen, afterLen, content ;
 
-module("SC.CollectionView.deleteSelection", {
+suite("SC.CollectionView.deleteSelection", {
   setup: function() {
 
     content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {

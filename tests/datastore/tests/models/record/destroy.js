@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var MyFoo = null, callInfo ;
-module("SC.Record#destroy", {
+suite("SC.Record#destroy", {
   setup: function() {
     SC.RunLoop.begin();
     MyApp = SC.Object.create({

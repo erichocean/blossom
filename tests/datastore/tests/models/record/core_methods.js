@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var MyApp, dataSource;
-module("SC.Record core methods", {
+suite("SC.Record core methods", {
   setup: function() {
     dataSource = SC.DataSource.create({ 
       

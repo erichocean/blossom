@@ -128,7 +128,7 @@ window.pane = pane ;
 // ..........................................................
 // BASIC TESTS
 // 
-module("Basic Tests", pane.standardSetup());
+suite("Basic Tests", pane.standardSetup());
 
 test("removing an item should delete childView and adjust height", function() {
   var view = pane.view('basic'),

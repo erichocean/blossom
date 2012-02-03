@@ -9,7 +9,7 @@
 
 var pane, view , view1, view2, view3, view4 ;
 
-module("SC.SelectButtonView",{
+suite("SC.SelectButtonView",{
 
   //setup
   setup: function() {

@@ -10,7 +10,7 @@
 // possibly move Validator support to TextFieldView specifically.
 var pane, view0, view1, view2;
 
-module("SC.DateFieldView", {
+suite("SC.DateFieldView", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

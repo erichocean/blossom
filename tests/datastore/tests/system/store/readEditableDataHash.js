@@ -9,7 +9,7 @@
 // the "read_editable" event in the Store portion of the diagram.
 
 var store, storeKey, json;
-module("SC.Store#readEditableDataHash", {
+suite("SC.Store#readEditableDataHash", {
   setup: function() {
     store = SC.Store.create();
     

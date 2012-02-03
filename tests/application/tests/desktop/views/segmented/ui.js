@@ -117,7 +117,7 @@ var pane;
   // ..........................................................
   // TEST VIEWS
   // 
-  module('SC.SegmentedView ui', pane.standardSetup());
+  suite('SC.SegmentedView ui', pane.standardSetup());
   
   test("Check that all segmentedViews are visible", function() {
     ok(pane.view('3_empty').get('isVisibleInWindow'), '3_empty.isVisibleInWindow should be YES');

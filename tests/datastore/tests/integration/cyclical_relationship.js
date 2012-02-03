@@ -6,7 +6,7 @@
 // ==========================================================================
 /*globals module test ok equals same AB */
 
-module("Cyclical relationships", { 
+suite("Cyclical relationships", { 
   setup: function() {
 
     // define the application space

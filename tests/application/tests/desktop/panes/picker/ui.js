@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module("SC.PickerPane UI");
+suite("SC.PickerPane UI");
 
 htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 

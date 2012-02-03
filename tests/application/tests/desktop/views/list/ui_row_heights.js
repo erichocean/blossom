@@ -109,7 +109,7 @@ function verifyChildViewsMatch(views, set) {
   }
 }
 
-module("SC.ListView - ui_row_heights", pane.standardSetup());
+suite("SC.ListView - ui_row_heights", pane.standardSetup());
 
 // ..........................................................
 // BASIC RENDER TESTS

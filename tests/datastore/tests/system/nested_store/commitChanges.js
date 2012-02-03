@@ -9,7 +9,7 @@
 // the "commit" event in the NestedStore portion of the diagram.
 
 var parent, store, child, storeKey, json, args;
-module("SC.NestedStore#commitChanges", {
+suite("SC.NestedStore#commitChanges", {
   setup: function() {
     
     parent = SC.Store.create();

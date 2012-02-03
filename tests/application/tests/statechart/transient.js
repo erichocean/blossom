@@ -14,7 +14,7 @@ var sequence;
 // CONTENT CHANGING
 // 
 
-module("SC.Statechart Mixin: Transient States", {
+suite("SC.Statechart Mixin: Transient States", {
   setup: function() { 
     sequence = [];
     

@@ -7,7 +7,7 @@
 
 var store, fds, storeKey1,storeKey2;
 
-module("SC.FixturesDataSource", {
+suite("SC.FixturesDataSource", {
   setup: function() {
     SC.RunLoop.begin();
     

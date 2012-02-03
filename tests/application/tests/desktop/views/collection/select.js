@@ -10,7 +10,7 @@ var content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {
   return SC.Object.create({ title: x });
 });
 
-module("SC.CollectionView.select", {
+suite("SC.CollectionView.select", {
   setup: function() {
     view = SC.CollectionView.create({
       content: content
@@ -93,7 +93,7 @@ test("calling select(indexes=null)", function() {
 
 var del;
 
-module("SC.CollectionView.select - delegate support", {
+suite("SC.CollectionView.select - delegate support", {
   setup: function() {
     del  = SC.Object.create(SC.CollectionViewDelegate);
     view = SC.CollectionView.create({

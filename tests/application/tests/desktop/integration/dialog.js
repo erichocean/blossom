@@ -7,7 +7,7 @@
 
 /*global module test equals context ok same htmlbody */
 
-module("A dialog with some basic controls and buttons");
+suite("A dialog with some basic controls and buttons");
 
 var pane ;
 test("adding dialog to screen", function() {

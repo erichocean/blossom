@@ -7,4 +7,4 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module("TODO: Test SC.PickerPane Methods");
+suite("TODO: Test SC.PickerPane Methods");

@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, storeKey, json;
-module("SC.Store#dataSourceCallbacks", {
+suite("SC.Store#dataSourceCallbacks", {
   setup: function() {
     
     store = SC.Store.create();

@@ -7,7 +7,7 @@
 /*globals module test ok equals same */
 
 var TestRunner;
-module("Sample Model from TestRunner Application", { 
+suite("Sample Model from TestRunner Application", { 
   setup: function() {
 
     // namespace

@@ -11,7 +11,7 @@
 var MyApp = {};
 
 var store, child, storeKey, json;
-module("SC.Store#dataHashDidChange", {
+suite("SC.Store#dataHashDidChange", {
   setup: function() {
     store = SC.Store.create();
     

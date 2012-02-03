@@ -8,7 +8,7 @@
 /*global module test htmlbody ok equals same stop start Q$*/
 
 var pane, view ;
-module("SC.RadioView Logic", {
+suite("SC.RadioView Logic", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

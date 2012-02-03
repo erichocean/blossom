@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, child, storeKey, json;
-module("SC.Store#commitChangesFromNestedStore", {
+suite("SC.Store#commitChangesFromNestedStore", {
   setup: function() {
     store = SC.Store.create();
     

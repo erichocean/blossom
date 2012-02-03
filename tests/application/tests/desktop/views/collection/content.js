@@ -7,7 +7,7 @@
 
 var view, content1, content2 ;
 
-module("SC.CollectionView.content", {
+suite("SC.CollectionView.content", {
   setup: function() {
     
     // stub in collection view to verify that proper method are called

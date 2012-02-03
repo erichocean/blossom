@@ -7,7 +7,7 @@
 
 // test parsing of query string
 var rec, q;
-module("SC.Query comparison of record types", {
+suite("SC.Query comparison of record types", {
   setup: function() {
     // setup dummy app and store
     window.MyApp = SC.Object.create({

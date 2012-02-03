@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, child, Foo, json, foo ;
-module("SC.Record#storeDidChangeProperties", {
+suite("SC.Record#storeDidChangeProperties", {
   setup: function() {
     SC.RunLoop.begin();
     

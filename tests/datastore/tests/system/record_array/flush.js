@@ -7,7 +7,7 @@
 
 // test core array-mapping methods for RecordArray
 var store, storeKey, json, rec, storeKeys, recs, query;
-module("SC.RecordArray core methods", {
+suite("SC.RecordArray core methods", {
   setup: function() {
     // setup dummy store
     store = SC.Store.create();
@@ -135,7 +135,7 @@ test("calling storeDidChangeStoreKeys() to remove a record", function() {
 
 var json2, foo, bar ;
 
-module("SC.RecordArray core methods", {
+suite("SC.RecordArray core methods", {
   setup: function() {
     // setup dummy store
     store = SC.Store.create();

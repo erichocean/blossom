@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module("SC.PanelPane UI");
+suite("SC.PanelPane UI");
 
 var pane ;
 

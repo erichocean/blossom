@@ -7,7 +7,7 @@
 
 // test core array-mapping methods for ManyArray
 var store, storeKey, storeId, rec, storeIds, recs, arrayRec;
-module("SC.ManyArray core methods", {
+suite("SC.ManyArray core methods", {
   setup: function() {
     
     // setup dummy app and store

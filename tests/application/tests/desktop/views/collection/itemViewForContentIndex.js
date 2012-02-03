@@ -7,7 +7,7 @@
 
 var view, del, content ;
 
-module("SC.CollectionView.itemViewForContentIndex", {
+suite("SC.CollectionView.itemViewForContentIndex", {
   setup: function() {
     content = "a b c".w().map(function(x) { 
       return SC.Object.create({ title: x });

@@ -10,7 +10,7 @@ var nested, exitTotal, enterTotal;
 // CONTENT CHANGING
 // 
 
-module("SC.Statechart Mixin History Statechart", {
+suite("SC.Statechart Mixin History Statechart", {
   setup: function() {
     enterTotal = exitTotal = 0;
     nested = SC.Object.create(SC.Statechart,{

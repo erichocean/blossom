@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, Foo, json, foo ;
-module("SC.Record#readAttribute", {
+suite("SC.Record#readAttribute", {
   setup: function() {
     SC.RunLoop.begin();
     store = SC.Store.create();

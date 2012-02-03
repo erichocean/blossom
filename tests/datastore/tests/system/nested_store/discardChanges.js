@@ -9,7 +9,7 @@
 // the "discard" event in the NestedStore portion of the diagram.
 
 var parent, store, child, storeKey, json, args;
-module("SC.NestedStore#discardChanges", {
+suite("SC.NestedStore#discardChanges", {
   setup: function() {
     parent = SC.Store.create();
     

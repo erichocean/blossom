@@ -9,7 +9,7 @@
 // the "did_change" event in the NestedStore portion of the diagram.
 
 var parent, store, child, storeKey, json;
-module("SC.NestedStore#dataHashDidChange", {
+suite("SC.NestedStore#dataHashDidChange", {
   setup: function() {
     parent = SC.Store.create();
     

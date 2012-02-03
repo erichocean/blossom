@@ -36,7 +36,7 @@ var initModels = function(){
 // ..........................................................
 // Basic SC.Record Stuff
 // 
-module("Basic SC.Record Functions w/ a Parent > Child > Child", {
+suite("Basic SC.Record Functions w/ a Parent > Child > Child", {
 
   setup: function() {
     NestedRecord = SC.Object.create({

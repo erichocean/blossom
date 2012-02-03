@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var MyFoo = null, callInfo ;
-module("SC.Record#refresh", {
+suite("SC.Record#refresh", {
   setup: function() {
     SC.RunLoop.begin();
     MyApp = SC.Object.create({

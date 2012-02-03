@@ -44,7 +44,7 @@
   // ..........................................................
   // TEST VIEWS
   // 
-  module('SC.ScrollView UI', pane.standardSetup());
+  suite('SC.ScrollView UI', pane.standardSetup());
   
   test("basic", function() {
     var view = pane.view('basic');

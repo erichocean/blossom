@@ -6,7 +6,7 @@
 
 
 var view ;
-module("SC.CollectionView#displayProperties", {
+suite("SC.CollectionView#displayProperties", {
   setup: function() {
     view = SC.CollectionView.create({
         isVisibleInWindow: YES

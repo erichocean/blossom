@@ -5,7 +5,7 @@
 // ==========================================================================
 var b, counter;
 
-module("SC.ButtonView#actions", {
+suite("SC.ButtonView#actions", {
 	setup: function() {
 	  b = SC.ButtonView.create();
 	}
@@ -43,7 +43,7 @@ test("Test different moused states", function() {
 });
 
 
-module("SC.ButtonView#actions - SC.HOLD_BEHAVIOR", {
+suite("SC.ButtonView#actions - SC.HOLD_BEHAVIOR", {
   setup: function() {
     counter = SC.Object.create({
       value: 0,

@@ -9,7 +9,7 @@ var store, storeKey1, storeKey2, storeKey3, storeKey4, storeKey5, storeKey6;
 var storeKey7, json, json1, json2, json3, json4, json5, json6, json7;
 var ds ;
 
-module("SC.Store#commitRecord", {
+suite("SC.Store#commitRecord", {
   setup: function() {
 
     ds = SC.DataSource.create({

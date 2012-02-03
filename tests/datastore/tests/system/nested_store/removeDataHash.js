@@ -9,7 +9,7 @@
 // the "remove" event in the NestedStore portion of the diagram.
 
 var parent, store, child, storeKey, json;
-module("SC.NestedStore#removeDataHash", {
+suite("SC.NestedStore#removeDataHash", {
   setup: function() {
     parent = SC.Store.create();
     

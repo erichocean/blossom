@@ -6,7 +6,7 @@
 
 var store, TestRecord;
 
-module("SC.Store#unloadRecords", {
+suite("SC.Store#unloadRecords", {
   setup: function() {
     TestRecord = SC.Record.extend({
       name: SC.Record.attr(String)

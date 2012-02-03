@@ -8,7 +8,7 @@
 // test core array-mapping methods for RecordArray with RecordAttribute
 var storeKeys, rec, rec2, bar, MyApp;
 
-module("SC.RecordAttribute core methods", {
+suite("SC.RecordAttribute core methods", {
   setup: function() {
 
     MyApp = SC.Object.create({

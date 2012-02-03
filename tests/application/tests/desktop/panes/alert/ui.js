@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module("SC.AlertPane UI");
+suite("SC.AlertPane UI");
 
 var pane ;
 

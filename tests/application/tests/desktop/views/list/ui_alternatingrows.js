@@ -9,7 +9,7 @@
   This test evaluates the creation of list item views with alternating rows
 */
 
-module("SC.ListView - alternating rows");
+suite("SC.ListView - alternating rows");
 
 // create a fake content array.  Generates a list with whatever length you
 // want of objects with a title based on the index.  Cannot mutate.

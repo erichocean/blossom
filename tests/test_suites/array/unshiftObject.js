@@ -13,7 +13,7 @@ SC.ArraySuite.define(function(T) {
   
   var observer, obj ;
   
-  module(T.desc("unshiftObject"), {
+  suite(T.desc("unshiftObject"), {
     setup: function() {
       obj = T.newObject();
       observer = T.observer(obj);

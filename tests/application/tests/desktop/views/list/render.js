@@ -13,7 +13,7 @@ var renderFunc = CoreTest.stub("render", function() {
   SC.ListItemView.prototype.render.apply(this, arguments) ;
 });
 
-module("SC.ListView.render", {
+suite("SC.ListView.render", {
   
   setup: function() {
     SC.RunLoop.begin();

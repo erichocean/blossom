@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 // test querying through find() on the store
-module("SC.Query querying find() on a store", {
+suite("SC.Query querying find() on a store", {
   setup: function() {
     SC.RunLoop.begin();
     // setup dummy app and store
@@ -499,7 +499,7 @@ test("Chaining find() queries and loading more records", function() {
 });
 
 
-module("create record");
+suite("create record");
  
 test("creating record appears in future find()", function() {
   var Rec, store, r;

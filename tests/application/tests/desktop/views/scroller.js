@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 var pane, view, view1, view2 ;
-module("SC.ScrollerView",{
+suite("SC.ScrollerView",{
   setup: function() {
     SC.RunLoop.begin();
 	pane = SC.MainPane.create({

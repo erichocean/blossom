@@ -9,7 +9,7 @@
 var storeKeys, rec, rec2, rec3, rec4;
 var foo1, foo2, foo3, bar1, bar2, bar3;
 
-module("SC.ManyAttribute core methods", {
+suite("SC.ManyAttribute core methods", {
   setup: function() {
     SC.RunLoop.begin();
     MyApp = SC.Object.create({

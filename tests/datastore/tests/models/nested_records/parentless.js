@@ -30,7 +30,7 @@ var initModels = function(){
 // ..........................................................
 // Basic SC.Record Stuff
 // 
-module("Parentless SC.ChildRecord", {
+suite("Parentless SC.ChildRecord", {
 
   setup: function() {
     NestedRecord = SC.Object.create({

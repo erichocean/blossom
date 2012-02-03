@@ -63,7 +63,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
   // ..........................................................
   // TEST VIEWS
   // 
-  module('SC.TabView ui', pane.standardSetup());
+  suite('SC.TabView ui', pane.standardSetup());
   
   test("Check that all tabViews are visible", function() {
     ok(pane.view('tabView1').get('isVisibleInWindow'), 'tabView1.isVisibleInWindow should be YES');

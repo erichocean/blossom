@@ -5,7 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-module('SC.StaticContentView - Basic UI');
+suite('SC.StaticContentView - Basic UI');
 
 test("Frame Recalculation", function() {
   var callCount = 0, baseCount, content;

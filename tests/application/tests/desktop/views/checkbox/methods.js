@@ -8,7 +8,7 @@
 /*global module test equals context ok same htmlbody Q$ */
 
 var pane, view ;
-module("SC.Checkbox", {
+suite("SC.Checkbox", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

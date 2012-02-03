@@ -8,7 +8,7 @@
 var store, storeKey1,storeKey2,storeKey3,storeKey4,storeKey5, storeKey6, json;
 var json1, json2, json3, json4, json5, json6;
 
-module("SC.Store#destroyRecord", {
+suite("SC.Store#destroyRecord", {
   setup: function() {
     
     store = SC.Store.create();

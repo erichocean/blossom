@@ -186,7 +186,7 @@ function branch(view, visible) {
 // Test Basic Setup
 // 
 
-module("SC.ListItemView UI", pane.standardSetup());
+suite("SC.ListItemView UI", pane.standardSetup());
 
 test("basic", function() {
   var view = pane.view('basic');

@@ -7,7 +7,7 @@
  
 // test parsing of query string
 var store, storeKey, foo1, foo2, bar1, bar2, baz, barChild, MyApp, q;
-module("SC.Query comparison of records", {
+suite("SC.Query comparison of records", {
   setup: function() {
     
     SC.RunLoop.begin();

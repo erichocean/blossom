@@ -9,7 +9,7 @@
 
 var pane, view , view2;
 var appleURL='http://photos4.meetupstatic.com/photos/event/4/6/9/9/600_4518073.jpeg';
-module("SC.ScrollView",{
+suite("SC.ScrollView",{
 	setup: function() {
 	  SC.RunLoop.begin();
 	    pane = SC.MainPane.create({

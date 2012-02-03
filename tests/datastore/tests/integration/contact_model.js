@@ -7,7 +7,7 @@
 /*globals module test ok equals same AB */
 
 var AB;
-module("Sample Model from an address book app", { 
+suite("Sample Model from an address book app", { 
   setup: function() {
 
     // define the application space

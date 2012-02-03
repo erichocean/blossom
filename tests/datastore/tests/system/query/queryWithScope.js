@@ -7,7 +7,7 @@
  
 // test parsing of query string
 var q, scope1, scope2;
-module("SC.Query#queryWithScope", {
+suite("SC.Query#queryWithScope", {
   setup: function() {
     q = SC.Query.create({
       conditions: "foo = bar",

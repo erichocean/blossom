@@ -9,7 +9,7 @@
 
 var iconURL= "http://www.freeiconsweb.com/Icons/16x16_people_icons/People_046.gif";
 var pane, view;
-module("SC.TabView", {
+suite("SC.TabView", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

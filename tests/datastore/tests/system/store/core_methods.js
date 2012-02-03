@@ -7,7 +7,7 @@
 
 var store, Application, dataSource;
 
-module("SC.Store Core Methods", {
+suite("SC.Store Core Methods", {
   setup: function() {
     dataSource = SC.DataSource.create({ 
       

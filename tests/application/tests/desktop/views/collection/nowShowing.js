@@ -7,7 +7,7 @@
 
 var view, content1, content2 ;
 
-module("SC.CollectionView.nowShowing", {
+suite("SC.CollectionView.nowShowing", {
   setup: function() {
 
     content1 = "a b c".w();

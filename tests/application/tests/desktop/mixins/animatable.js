@@ -4,7 +4,7 @@
 
 /*globals module test ok isObj equals expects */
 var view, base, inherited, pane, computed;
-module("Animatable", {
+suite("Animatable", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.Pane.create({

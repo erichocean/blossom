@@ -8,7 +8,7 @@
 // This file tests the initial state of the store when it is first created
 // either independently or as a chained store.
 
-module("SC.Store#init");
+suite("SC.Store#init");
 
 test("initial setup for root store", function() {
   var store = SC.Store.create();

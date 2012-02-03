@@ -41,7 +41,7 @@
   // ..........................................................
   // TEST VIEWS
   // 
-  module('SC.WebView UI');
+  suite('SC.WebView UI');
 
   test("attributes tests",
   function() {

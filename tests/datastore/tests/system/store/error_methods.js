@@ -7,7 +7,7 @@
 
 var store, Application;
 
-module("SC.Store Error Methods", {
+suite("SC.Store Error Methods", {
   setup: function() {
 
     Application = {};

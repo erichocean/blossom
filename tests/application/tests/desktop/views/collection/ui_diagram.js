@@ -166,7 +166,7 @@ window.pane = pane ;
 // ..........................................................
 // BASIC TESTS
 // 
-module("Basic Tests", pane.standardSetup());
+suite("Basic Tests", pane.standardSetup());
 
 
 

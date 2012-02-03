@@ -9,7 +9,7 @@
 // the "read_editable" event in the NestedStore portion of the diagram.
 
 var parent, store, storeKey, json;
-module("SC.NestedStore#readEditableDataHash", {
+suite("SC.NestedStore#readEditableDataHash", {
   setup: function() {
     parent = SC.Store.create();
     

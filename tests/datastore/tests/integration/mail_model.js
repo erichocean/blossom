@@ -7,7 +7,7 @@
 /*globals module test ok equals same */
 
 var Mail;
-module("Sample Model from a webmail app", { 
+suite("Sample Model from a webmail app", { 
   setup: function() {
 
     // namespace

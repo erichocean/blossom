@@ -8,7 +8,7 @@
 /*global module test htmlbody ok equals same stop start Q$*/
 
 var pane, view , view1, view2, view3;
-module("SC.SelectFieldView",{
+suite("SC.SelectFieldView",{
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

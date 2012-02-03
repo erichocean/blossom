@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
  
 // test parsing of query string
-module("SC.Query#copy");
+suite("SC.Query#copy");
 
 test("basic copy", function() {
   var q=  SC.Query.create({

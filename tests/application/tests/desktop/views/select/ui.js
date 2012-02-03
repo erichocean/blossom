@@ -92,7 +92,7 @@ var pane = SC.ControlTestPane.design()
 // TEST VIEWS
 //
 
-module('SC.SelectView ui', pane.standardSetup()) ;
+suite('SC.SelectView ui', pane.standardSetup()) ;
 
 //test1
 test("Check the visiblity of the selectButtons", function() {

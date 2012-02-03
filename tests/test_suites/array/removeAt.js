@@ -13,7 +13,7 @@ SC.ArraySuite.define(function(T) {
   
   var observer, obj ;
   
-  module(T.desc("removeAt"), {
+  suite(T.desc("removeAt"), {
     setup: function() {
       obj = T.newObject();
       observer = T.observer(obj);

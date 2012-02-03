@@ -7,7 +7,7 @@
 
 // test normalize method for SC.Record
 var storeKeys, rec, rec2, rec3, rec4;
-module("SC.Record normalize method", {
+suite("SC.Record normalize method", {
   setup: function() {
 
     SC.RunLoop.begin();

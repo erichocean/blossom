@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var store, storeKey, json;
-module("SC.Store#pushChanges", {
+suite("SC.Store#pushChanges", {
   setup: function() {
     SC.RunLoop.begin();
     store = SC.Store.create();

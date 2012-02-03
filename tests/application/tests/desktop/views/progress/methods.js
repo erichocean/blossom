@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 /*
-module("SC.ProgressView Methods", {
+suite("SC.ProgressView Methods", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({
@@ -60,7 +60,7 @@ test("changing value of a disabled progress view", function() {
 // SC.SliderView
 //
 
-module("SC.SliderView Methods", {
+suite("SC.SliderView Methods", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create({

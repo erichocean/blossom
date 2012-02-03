@@ -24,7 +24,7 @@ var items = [
 
 var menu, anchor;
 
-module('SC.MenuPane Methods', {
+suite('SC.MenuPane Methods', {
   setup: function() {
     menu = SC.MenuPane.create({
       layout: { width: 206 },

@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module("SC.SheetPane UI");
+suite("SC.SheetPane UI");
 
 var slidePane;
 

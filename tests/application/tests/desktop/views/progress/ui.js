@@ -76,7 +76,7 @@ pane.show(); // add a test to show the test pane
 // ..........................................................
 // TEST VIEWS
 // 
-module("SC.ProgressView UI");
+suite("SC.ProgressView UI");
 
 test("basic", function() {
   
@@ -247,7 +247,7 @@ test("changing value to a string", function() {
 // SC.SliderView
 //
 
-module("SC.SliderView UI");
+suite("SC.SliderView UI");
 
 test("basic", function() {
   var view = pane.view('slider basic');

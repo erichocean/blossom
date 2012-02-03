@@ -8,7 +8,7 @@
 var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
                     // when loaded by the buildtools.
 
-SC.BENCHMARK_LOG_READY = YES;
+SC.BENCHMARK_LOG_READY = NO;
 
 SC.mixin({
   /** @private handlers scheduled to execute on ready. */

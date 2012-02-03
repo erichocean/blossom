@@ -7,7 +7,7 @@
 
 var view ;
 
-module("SC.CollectionView.layerIdFor, contentIndexForLayerId", {
+suite("SC.CollectionView.layerIdFor, contentIndexForLayerId", {
   setup: function() {
     view = SC.CollectionView.create();
   }

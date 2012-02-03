@@ -10,7 +10,7 @@
   group views or any other non-standard behavior.
 */
 
-module("SC.ListView - simple list");
+suite("SC.ListView - simple list");
 
 // create a fake content array.  Generates a list with whatever length you
 // want of objects with a title based on the index.  Cannot mutate.

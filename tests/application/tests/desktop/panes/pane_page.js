@@ -7,7 +7,7 @@
 
 /*global module test htmlbody ok equals same stop start */
 
-module('SC.Pane-SC.Page') ;
+suite('SC.Pane-SC.Page') ;
 
 test("isVisible changes should update views that are instantiated in a page", function() {
   var page = SC.Page.design({

@@ -43,7 +43,7 @@ pane.show(); // add a test to show the test pane
 // ..........................................................
 // TEST VIEWS
 // 
-module('SC.CheckboxView ui', pane.standardSetup());
+suite('SC.CheckboxView ui', pane.standardSetup());
 
 test("basic", function() {
   var view = pane.view('basic');

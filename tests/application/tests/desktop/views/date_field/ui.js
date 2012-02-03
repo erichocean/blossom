@@ -124,7 +124,7 @@ pane.verifyDisabled = function verifyDisabled(view, isDisabled) {
 // TEST INITIAL STATES
 // 
 
-module('SC.DateFieldView ui', pane.standardSetup());
+suite('SC.DateFieldView ui', pane.standardSetup());
 
 test("empty", function() {
    var view = pane.view('empty');

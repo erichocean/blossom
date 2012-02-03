@@ -9,7 +9,7 @@
 
 var pane, view ;
 
-module("SC.SplitView",{
+suite("SC.SplitView",{
   setup: function() {
     SC.RunLoop.begin();
 	pane = SC.MainPane.create({
@@ -56,5 +56,5 @@ test("Layout direction is Vertical",function() {
 // });
 
 // 	
-// module("TODO: Test SC.SplitDividerView Methods");
-// module("TODO: Test SC.ThumbView Methods");
+// suite("TODO: Test SC.SplitDividerView Methods");
+// suite("TODO: Test SC.ThumbView Methods");

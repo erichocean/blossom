@@ -7,7 +7,7 @@
 
 // test parsing of query string
 var q;
-module("SC.Query evaluation", {
+suite("SC.Query evaluation", {
   setup: function() {  
     q = SC.Query.create();
   }

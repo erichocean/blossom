@@ -10,7 +10,7 @@
   group views or any other non-standard behavior.
 */
 
-module("SC.ListView - outline list");
+suite("SC.ListView - outline list");
 
 var TreeItem = SC.Object.extend(SC.TreeItemContent, {
 

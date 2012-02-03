@@ -33,7 +33,7 @@
   
   {{{
     SC.ArrayTests.define(function(T) {
-      T.module("length");
+      T.suite("length");
       
       test("verify length", function() {
         var ary = T.newObject();
@@ -224,7 +224,7 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
 
 // Simple verfication of length
 SC.ArraySuite.define(function(T) {
-  T.module("length");
+  T.suite("length");
   
   test("should return 0 on empty array", function() {
     equals(T.object.get('length'), 0, 'should have empty length');

@@ -9,7 +9,7 @@
 
 var pane;
 
-module("SC.Border", {
+suite("SC.Border", {
   setup: function() {
     SC.RunLoop.begin();
     pane = SC.MainPane.create();

@@ -26,7 +26,7 @@ var Delegate = SC.Object.extend(SC.CollectionRowDelegate, {
   }
 });
 
-module("SC.ListView.rowOffsetForContentIndex", {
+suite("SC.ListView.rowOffsetForContentIndex", {
   setup: function() {
     content = "1 2 3 4 5 6 7 8 9 0".w().map(function(x) {
       return SC.Object.create({ value: x });

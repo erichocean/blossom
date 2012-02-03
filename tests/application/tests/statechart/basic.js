@@ -10,7 +10,7 @@ var basic;
 // CONTENT CHANGING
 // 
 
-module("SC.Statechart Mixin: Basic Unit test", {
+suite("SC.Statechart Mixin: Basic Unit test", {
   setup: function() {
     basic = SC.Object.create(SC.Statechart,{
       startStates: {'default': 'bar'},

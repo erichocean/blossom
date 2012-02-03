@@ -7,7 +7,7 @@
 
 var view, sel, content ;
 
-module("SC.CollectionView.deselect", {
+suite("SC.CollectionView.deselect", {
   setup: function() {
     
     content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {
@@ -66,7 +66,7 @@ test("deselect() with empty selection", function() {
 
 var del;
 
-module("SC.CollectionView.deselect - delegate support", {
+suite("SC.CollectionView.deselect - delegate support", {
   setup: function() {
 
     content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {

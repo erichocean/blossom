@@ -7,7 +7,7 @@
 
 var view, content ;
 
-module("SC.CollectionView.reload", {
+suite("SC.CollectionView.reload", {
   setup: function() {
     content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {
       return SC.Object.create({ value: x });

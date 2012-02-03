@@ -7,7 +7,7 @@
 
 var view, content, contentController, pane ;
 
-module("SC.CollectionView Mouse Events", {
+suite("SC.CollectionView Mouse Events", {
   setup: function() {
     
     SC.RunLoop.begin();

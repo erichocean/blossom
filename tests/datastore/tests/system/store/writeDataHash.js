@@ -9,7 +9,7 @@
 // the "write" event in the NestedStore portion of the diagram.
 
 var store, child, storeKey, json;
-module("SC.Store#writeDataHash", {
+suite("SC.Store#writeDataHash", {
   setup: function() {
     store = SC.Store.create();
     

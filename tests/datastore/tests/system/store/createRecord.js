@@ -7,7 +7,7 @@
 
 var store, storeKey, json, hash, hash2;
 
-module("SC.Store#createRecord", {
+suite("SC.Store#createRecord", {
   setup: function() {
     
     MyRecordType = SC.Record.extend({

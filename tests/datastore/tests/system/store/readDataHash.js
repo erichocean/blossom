@@ -9,7 +9,7 @@
 // the "read" event in the Store portion of the diagram.
 
 var store, storeKey, json;
-module("SC.Store#readDataHash", {
+suite("SC.Store#readDataHash", {
   setup: function() {
     store = SC.Store.create();
     

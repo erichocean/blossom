@@ -12,7 +12,7 @@
 
 var sprocket, nullSprocket, d1, d2;
 
-module('SC.DateTime transform', {
+suite('SC.DateTime transform', {
 
   setup: function() {
     

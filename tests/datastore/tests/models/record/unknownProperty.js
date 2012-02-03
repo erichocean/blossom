@@ -6,7 +6,7 @@
 /*globals module ok equals same test MyApp */
 
 var MyFoo = null ;
-module("SC.Record#unknownProperty", {
+suite("SC.Record#unknownProperty", {
   setup: function() {
     SC.RunLoop.begin();
     MyApp = SC.Object.create({
