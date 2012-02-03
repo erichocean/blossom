@@ -132,7 +132,7 @@ global.equals = function(actual, expected, message) {
 };
 
 global.same = function(actual, expected, message) {
-  assert.deepEqual(actual, expected, message);
+  assert.ok(CoreTest.equiv(actual, expected), message);
 };
 
 global.expect = function(amt) {
