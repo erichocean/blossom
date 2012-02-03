@@ -7,7 +7,9 @@
   "keywords"      : ["blossom", "sproutcore"],
   "author"        : "Erich Ocean <eocean@fohr.com>",
   "contributors"  : [],
-  "dependencies"  : {},
+  "dependencies"  : {
+	  "vows": "0.6.1"
+  },
   "main"          : "./node/buildfile",
   "version"       : "0.1.0",
   "scripts"       : {},
