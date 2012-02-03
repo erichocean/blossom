@@ -105,7 +105,7 @@ global.sc_assert = function(assertion, msg) {
 // And we're ready to require the files in the correct order.
 orderedFiles.forEach(function(path) { require(path); });
 
-// Finally, we undo the SC namepsace and instate the BT namespace.
+// Finally, we undo the SC namespace and create the BT namespace.
 global.BT = { foundationSourcePath: sourceTree };
 for (var key in SC) {
   if (!SC.hasOwnProperty(key)) continue;
