@@ -7,6 +7,9 @@
 
 sc_require('private/observer_set') ;
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /*globals logChange */
 
 /**

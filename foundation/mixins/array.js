@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 // note: SC.Observable also enhances array.  make sure we are called after
 // SC.Observable so our version of unknownProperty wins.
 sc_require('mixins/observable');

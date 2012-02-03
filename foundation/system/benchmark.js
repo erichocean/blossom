@@ -8,6 +8,9 @@
 
 sc_require('core') ;
  
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /** @namespace
 
   This bit of meta-programming magic can install a benchmark handler on any

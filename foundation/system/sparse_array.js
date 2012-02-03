@@ -11,6 +11,9 @@ sc_require('mixins/observable') ;
 sc_require('mixins/delegate_support') ;
 sc_require('system/object');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   @class
 

@@ -7,6 +7,9 @@
 
 sc_require('system/set');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   Debug parameter you can turn on.  This will log all bindings that fire to
   the console.  This should be disabled in production code.  Note that you

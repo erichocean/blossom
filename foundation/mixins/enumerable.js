@@ -8,6 +8,9 @@
 sc_require('core') ;
 sc_require('system/enumerator');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /*globals Prototype */
 
 /**

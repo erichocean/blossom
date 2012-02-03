@@ -3,21 +3,14 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the MIT license (see BUILDTOOLS-LICENSE).
 // ==========================================================================
-/*globals global require __dirname */
+/*globals global require __dirname BT */
 
 var fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    Graph = require('./utils/graph'); // needed for topological sorting
 
-if (!global.SC) {
-  require('./lib/sc/runtime/core');
-  require('./lib/sc/foundation/core');
-}
-
-var Graph = require('./utils/graph'); // needed for topological sorting
-
-var BT = {} ;
-module.exports = BT ;
-global.BT = BT ;
+// Bootstrap the BT namespace with blossom/foundation.
+require('./bootstrap');
 
 function acceptBuilder(visitorMethod) {
   return function(visitor, key, depth) {
@@ -54,7 +47,7 @@ function traverse(kind) {
   };
 }
 
-BT.Visitor = SC.Object.extend({
+BT.Visitor = BT.Object.extend({
   visitTarget:       traverse("Target"),
   visitProject:      traverse("Project"),
   visitDirectory:    traverse("Directory"),
@@ -90,7 +83,7 @@ BT.LoggingVisitor = BT.Visitor.extend({
   visitFramework:    log("framework")
 });
 
-BT.BuildNode = SC.Object.extend({
+BT.BuildNode = BT.Object.extend({
 
   canVisit: true,
   isBuildNode: true,
@@ -185,8 +178,8 @@ BT.Target = BT.BuildNode.extend({
       visitFramework: function(node, name, depth) {
         if (node === that) arguments.callee.base.apply(this, arguments);
       },
-      visitApp: SC.K,
-      visitTarget: SC.K,
+      visitApp: BT.K,
+      visitTarget: BT.K,
       visitFile: function(node, name, depth) {
         ret.push(node);
         arguments.callee.base.apply(this, arguments);
@@ -446,11 +439,11 @@ BT.App = BT.Target.extend({
 
     this.accept(BT.Visitor.create({
       // only visit our own app, not any other (embedded) targets
-      visitFramework: SC.K,
+      visitFramework: BT.K,
       visitApp: function(node, name, depth) {
         if (node === that) arguments.callee.base.apply(this, arguments);
       },
-      visitTarget: SC.K,
+      visitTarget: BT.K,
       visitFile: function(node, name, depth) {
         ret.push(node);
         arguments.callee.base.apply(this, arguments);

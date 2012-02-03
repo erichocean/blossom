@@ -8,6 +8,9 @@
 sc_require('mixins/observable');
 sc_require('system/set');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 // ........................................................................
 // OBSERVER QUEUE
 //

@@ -8,6 +8,9 @@
 
 sc_require('system/object');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   A response represents a single response from a server request.  An instance
   of this class is returned whenever you call SC.Request.send().

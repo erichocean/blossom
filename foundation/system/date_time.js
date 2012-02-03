@@ -7,6 +7,9 @@
 
 sc_require('system/object');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   Standard error thrown by SC.Scanner when it runs out of bounds
   

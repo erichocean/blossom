@@ -10,6 +10,9 @@ sc_require('mixins/observable') ;
 sc_require('mixins/freezable');
 sc_require('mixins/copyable');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 // IMPORTANT NOTE:  This file actually defines two classes: 
 // SC.Set is a fully observable set class documented below. 
 // SC._CoreSet is just like SC.Set but is not observable.  This is required

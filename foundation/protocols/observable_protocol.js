@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   The SC.ObservableProtocol defines optional methods you can implement on your
   objects.  They will be used if defined but are not required for observing to

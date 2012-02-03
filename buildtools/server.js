@@ -34,7 +34,7 @@ function replaceScSuperCalls(str) {
 
 BT.LOG_SERVING = false;
 
-BT.Server = SC.Object.extend({
+BT.Server = BT.Object.extend({
   
   hostname: '127.0.0.1',
   port: 4020,

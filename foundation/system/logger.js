@@ -4,6 +4,9 @@
 
 sc_require('system/object');
 
+var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
+                    // when loaded by the buildtools.
+
 /**
   If {@link SC.Logger.format} is true, this delimiter will be put between arguments.
 
