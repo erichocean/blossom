@@ -1,4 +1,4 @@
-/*globals global require __dirname BT XM process */
+/*globals global require __dirname BT process CoreTest */
 
 require('blossom/buildtools'); // adds the BT namespace as a global
 
@@ -137,7 +137,25 @@ global.same = function(actual, expected, message) {
 
 global.expect = function(amt) {
   testsuite.expect = amt;
-}
+};
+
+global.should_throw = function(callback, expected, msg) {
+  var actual = false ;
+
+  try {
+    callback();
+  } catch(e) {
+    actual = (typeof expected === "string") ? e.message : e;
+  }
+
+  if (expected===false) {
+    ok(actual===false, CoreTest.fmt("%@ expected no exception, actual %@", msg, actual));
+  } else if (expected===Error || expected===null || expected===true) {
+    ok(!!actual, CoreTest.fmt("%@ expected exception, actual %@", msg, actual));
+  } else {
+    equals(actual, expected, msg);
+  }
+};
 
 function buildVowsSuite() {
   var suite = vows.describe("QUnit");
