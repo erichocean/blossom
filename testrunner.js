@@ -99,11 +99,16 @@ if (suites === 0) {
 }
 
 var testsuite;
+var testsuites;
 
 global.suite = function(name, options) {
   // console.log('suite', name);
+  if (testsuite.name) {
+    testsuites.push(testsuite);
+    testsuite = { tests: [] };
+  }
   testsuite.name = name;
-  testsuite.options = options;
+  testsuite.options = options || {};
 };
 
 global.test = function(name, testfunction) {
@@ -127,18 +132,25 @@ global.same = function(actual, expected, message) {
 };
 
 function buildVowsSuite() {
-  var suite = vows.describe(testsuite.name),
-      tests = { topic: true };
+  var suite = vows.describe("QUnit");
 
-  testsuite.tests.forEach(function(test) {
-    tests[test.name] = function() {
-      if (testsuite.options.setup) testsuite.options.setup();
-      test.test();
-      if (testsuite.options.teardown) testsuite.options.teardown();
-    }
+  testsuites.push(testsuite);
+  testsuites.forEach(function(ts) {
+    var tests = { topic: true };
+
+    testsuite.tests.forEach(function(test) {
+      tests[test.name] = function() {
+        if (testsuite.options.setup) testsuite.options.setup();
+        test.test();
+        if (testsuite.options.teardown) testsuite.options.teardown();
+      };
+    });
+
+    var batch = {};
+    batch[testsuite.name] = tests;
+    suite.addBatch(batch);
   });
 
-  suite.addBatch({ "QUnit": tests });
   return suite;
 }
 
@@ -147,6 +159,7 @@ function runVowsTest(aPath) {
     if (aPath.indexOf('qunit') !== -1) {
       // Capture qunit test.
       testsuite = { tests: [] };
+      testsuites = [];
       require(aPath);
       // console.log(testsuite);
       buildVowsSuite().run(null, function(results) {
