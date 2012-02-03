@@ -8,7 +8,10 @@
   "author"        : "Erich Ocean <eocean@fohr.com>",
   "contributors"  : [],
   "dependencies"  : {
-	  "vows": "0.6.1"
+	  "xmlhttprequest": "1.3.0"
+  },
+  "devDependencies": {
+    "vows": "0.6.x"
   },
   "main"          : "./node/buildfile",
   "version"       : "0.1.0",
