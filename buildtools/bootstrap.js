@@ -111,5 +111,4 @@ for (var key in SC) {
   if (!SC.hasOwnProperty(key)) continue;
   else global.BT[key] = SC[key];
 }
-global.__SC__ = SC; // Cache, in case we need to actually use it as SC later.
 delete global.SC;
