@@ -98,6 +98,8 @@ if (suites === 0) {
   // server.close(); // nothing to test
 }
 
+require('./arraytests');
+
 var testsuite;
 var testsuites;
 
@@ -118,6 +120,8 @@ global.test = function(name, testfunction) {
     test: testfunction
   });
 };
+
+global.notest = function(name, callback, nowait) {};
 
 global.ok = function(value, message) {
   assert.ok(value, message);
@@ -188,6 +192,7 @@ function processPath(aPath) {
       if (stat.isFile() && testpath.slice(-3) === '.js') {
         runVowsTest(testpath);
       } else if (stat.isDirectory()) {
+        if (testpath.indexOf('test_suites') >= 0) return;
         processPath(testpath);
       } else {
         // console.log("the file is something strange");
@@ -195,6 +200,7 @@ function processPath(aPath) {
     });
   }
 }
+
 // console.log(tests);
 tests.forEach(function(testpath) {
   if (testpath) processPath(path.join(__dirname, testpath));
