@@ -10,9 +10,9 @@ var fs = require('fs'),
 
 var datastore = require('blossom/datastore');
 
-// var jsFiles = foundation.get('orderedJavaScriptFiles').map(function(file) {
-//   return file.get('sourcePath');
-// });
+var jsFiles = datastore.get('orderedJavaScriptFiles').map(function(file) {
+  return file.get('sourcePath');
+});
 
 // Don't include the app itself.
 
@@ -24,7 +24,7 @@ global.SC = global.SproutCore; // Already loaded by the buildtools
 
 // Load the code we want to test.
 // console.log(jsFiles);
-// jsFiles.forEach(function(path) { require(path); });
+jsFiles.forEach(function(path) { require(path); });
 
 // Simulate becoming "ready"
 SC.didBecomeReady();
