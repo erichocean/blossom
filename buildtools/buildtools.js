@@ -37,11 +37,11 @@ function traverse(kind) {
       if (obj && obj.get && typeof obj.get === "function" &&
           obj.get(conditionKey) &&
           key !== 'project' && key !== 'parentNode') {
-            // HACK: Make sure nodes know their parent and their name.
-            if (!obj.get('nodeName')) obj.set('nodeName', key);
-            if (!obj.get('parentNode')) obj.set('parentNode', node);
+        // HACK: Make sure nodes know their parent and their name.
+        if (!obj.get('nodeName')) obj.set('nodeName', key);
+        if (!obj.get('parentNode')) obj.set('parentNode', node);
 
-            obj.accept(this, key, depth);
+        obj.accept(this, key, depth);
       }
     }
   };
