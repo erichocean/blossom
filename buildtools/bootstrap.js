@@ -92,9 +92,6 @@ global.SC = {};
 global.SproutCore = SC;
 global.SC.isNode = true;
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-global.BLOSSOM = true;
-global.SPROUTCORE = false;
-global.FAST_LAYOUT_FUNCTION = false;
 global.sc_assert = function(assertion, msg) {
   if (!assertion) {
     debugger;
