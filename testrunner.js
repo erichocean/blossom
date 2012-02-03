@@ -135,6 +135,10 @@ global.same = function(actual, expected, message) {
   assert.deepEqual(actual, expected, message);
 };
 
+global.expect = function(amt) {
+  testsuite.expect = amt;
+}
+
 function buildVowsSuite() {
   var suite = vows.describe("QUnit");
 
@@ -142,16 +146,16 @@ function buildVowsSuite() {
   testsuites.forEach(function(ts) {
     var tests = { topic: true };
 
-    testsuite.tests.forEach(function(test) {
+    ts.tests.forEach(function(test) {
       tests[test.name] = function() {
-        if (testsuite.options.setup) testsuite.options.setup();
+        if (ts.options.setup) ts.options.setup();
         test.test();
-        if (testsuite.options.teardown) testsuite.options.teardown();
+        if (ts.options.teardown) ts.options.teardown();
       };
     });
 
     var batch = {};
-    batch[testsuite.name] = tests;
+    batch[ts.name] = tests;
     suite.addBatch(batch);
   });
 
