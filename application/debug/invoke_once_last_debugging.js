@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global */
 
 // When in debug mode, it’s useful for our observer sets (which are used by
 // invokeOnce and invokeLast) to record which code scheduled the
@@ -140,7 +141,7 @@ SC.addInvokeOnceLastDebuggingInfo = function() {
   
   
   SC.Object.prototype.invokeOnce = function(method) {
-    var originatingTarget = this ;
+    var originatingTarget = this, originatingStack, originatingMethod ;
     if (SC.LOG_RUNLOOP_INVOCATIONS) {
       originatingStack  = SC.getRecentStack();
       originatingMethod = originatingStack[0];
