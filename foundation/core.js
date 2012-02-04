@@ -1220,7 +1220,7 @@ SC.mixin(Function.prototype, /** @scope Function.prototype */ {
 SC._mapDisplayNamesUseHashForSeenTypes = ['object', 'number', 'boolean', 'array', 'string', 'function', 'class', 'undefined', 'error'];  // 'hash' causes problems
 
 SC.mapDisplayNames = function(obj, level, path, seenHash, seenArray) {
-  if (!SC.browser.safari) return ;
+  if (!(/webkit/).test(navigator.userAgent.toLowerCase())) return;
 
   // Lazily instantiate the hash of types we'll use a hash for the "have we
   // seen this before?" structure.  (Some types are not safe to put in a hash

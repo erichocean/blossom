@@ -2,8 +2,13 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion 
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals SPROUTCORE BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/view');
@@ -249,7 +254,7 @@ SC.ButtonView = SC.View.extend(SC.Control, SC.Button, SC.StaticLayout,
     var href, toolTip, classes, theme;
     if (this.get('tagName') === 'a') {
       href = this.get('href');
-      if (!href || (href.length === 0)) href = "javascript:;";
+      if (!href || (href.length === 0)) href = "java"+"script:;"; // Fake JSLint
       context.attr('href', href);
     }
 
@@ -611,6 +616,22 @@ SC.TOGGLE_ON_BEHAVIOR = 'on';
 SC.TOGGLE_OFF_BEHAVIOR = 'off';
 SC.HOLD_BEHAVIOR = 'hold';
 
+if (BLOSSOM) {
+
+/**
+  The delay after which "click" behavior should transition to "click and hold"
+  behavior. This is used by subclasses such as PopupButtonView and
+  SelectButtonView.
+
+  @constant
+  @type Number
+*/
+SC.ButtonView.CLICK_AND_HOLD_DELAY = 300;
+
+} // BLOSSOM
+
+if (SPROUTCORE) {
+
 /**
   The delay after which "click" behavior should transition to "click and hold"
   behavior. This is used by subclasses such as PopupButtonView and
@@ -620,6 +641,8 @@ SC.HOLD_BEHAVIOR = 'hold';
   @type Number
 */
 SC.ButtonView.CLICK_AND_HOLD_DELAY = SC.browser.msie ? 600 : 300;
+
+} // SPROUTCORE
 
 SC.REGULAR_BUTTON_HEIGHT=24;
 

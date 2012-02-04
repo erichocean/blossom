@@ -4,10 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals CQ add*/
+/*globals SPROUTCORE CQ add */
 
 sc_require('system/browser');
 sc_require('system/builder');
+
+if (SPROUTCORE) {
 
 /**
   CoreQuery is a simplified DOM manipulation library used internally by 
@@ -1619,7 +1621,7 @@ SC.CoreQuery = (function() {
         // Everyone else use document.documentElement or document.body 
         // depending on Quirks vs Standards mode
         } else if (document.compatMode) {
-          ret = documentElement['client' + name];
+          ret = document.documentElement['client' + name];
         } else ret = document.body['client' + name];
         
       // get document width or height
@@ -2047,4 +2049,4 @@ SC.mixin(SC.$, {
   
 }) ;
 
-
+} // SPROUTCORE

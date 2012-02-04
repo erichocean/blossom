@@ -2,8 +2,28 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion 
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals SPROUTCORE BLOSSOM */
+
+if (BLOSSOM) {
+
+SC.isMozilla = function() {
+  var isMozilla = this._sc_isMozilla, userAgent;
+  if (isMozilla === undefined) {
+    userAgent = navigator.userAgent.toLowerCase();
+    isMozilla = this._sc_isMozilla = (/mozilla/).test(userAgent) && !(/(compatible|webkit)/).test(userAgent);
+  }
+  return isMozilla;
+};
+
+} // BLOSSOM
+
+if (SPROUTCORE) {
 
 SC.browser = (function() {
   var userAgent = navigator.userAgent.toLowerCase(),
@@ -25,13 +45,6 @@ SC.browser = (function() {
     browser.current = browser.msie ? 'msie' : browser.mozilla ? 'mozilla' : browser.safari ? 'safari' : browser.opera ? 'opera' : 'unknown' ;
   return browser ;
 })();
-
-// ==========================================================================
-// Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2011 Strobe Inc. and contributors.
-//            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
-// ==========================================================================
 
 /** Detects the current browser type. Borrowed from jQuery + prototype */
 SC.mixin(SC.browser, (function() {
@@ -85,3 +98,4 @@ SC.mixin(SC.browser, (function() {
 
 })() );
 
+} // SPROUTCORE

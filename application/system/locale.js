@@ -123,7 +123,8 @@ SC.Locale.mixin(/** @scope SC.Locale */ {
     var preferred = (String.preferredLanguage !== undefined) ? String.preferredLanguage : this.preferredLanguage ;
 
     // determine the language
-    var lang = ((autodetect) ? SC.browser.language : null) || preferred || SC.browser.language || 'en';
+    var browserLanguage = (navigator.language || navigator.browserLanguage).split('-', 1)[0];
+    var lang = ((autodetect) ? browserLanguage : null) || preferred || browserLanguage || 'en';
     lang = SC.Locale.normalizeLanguage(lang) ;
 
     // get the locale class.  If a class cannot be found, fall back to generic

@@ -6,6 +6,9 @@
 // ==========================================================================
 
 sc_require('system/browser');
+sc_require('system/builder');
+
+if (SPROUTCORE) {
 
 /** set update mode on context to replace content (preferred) */
 SC.MODE_REPLACE = 'replace';
@@ -986,3 +989,5 @@ SC.RenderContext.escapeHTML = function(text) {
   node = elem = null;
   return ret ;
 };
+
+} // SPROUTCORE
