@@ -42,7 +42,7 @@ SC.mixin(SC.browser, (function() {
       standalone = navigator.standalone;
   
   // Add more SC-like descriptions...
-  SC.extend(browser, /** @scope SC.browser */ {
+  SC.mixin(browser, /** @scope SC.browser */ {
     
     isOpera: !!browser.opera,
     isIe: !!browser.msie,

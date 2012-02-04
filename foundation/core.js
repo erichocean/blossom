@@ -152,12 +152,6 @@ SC.supplement = function() {
   return SC._baseMixin.apply(this, args);
 } ;
 
-/** 
-  Alternative to mixin.  Provided for compatibility with jQuery.
-  @function 
-*/
-SC.extend = SC.mixin ;
-
 // ..........................................................
 // CORE FUNCTIONS
 // 
