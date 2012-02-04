@@ -58,21 +58,21 @@ SC.mixin({
 
       // correctly handle queueing new SC.ready() calls
       do {
-        ary = SC._readyQueue ;
-        SC._readyQueue = [] ; // reset
+        ary = SC._sc_readyQueue ;
+        SC._sc_readyQueue = [] ; // reset
         for (idx=0, len=ary.length; idx<len; idx++) {
           handler = ary[idx] ;
           var target = handler[0] || document ;
           var method = handler[1] ;
           if (method) method.call(target) ;
         }
-      } while (SC._readyQueue.length > 0) ;
+      } while (SC._sc_readyQueue.length > 0) ;
 
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
       SC.isReady = YES ;
 
       // clear the queue
-      SC._readyQueue = null ;
+      SC._sc_readyQueue = null ;
 
       // trigger any bound ready events
       SC.Event.trigger(document, "ready", null, NO);
@@ -194,21 +194,21 @@ SC.mixin({
 
       // correctly handle queueing new SC.ready() calls
       do {
-        ary = SC._readyQueue ;
-        SC._readyQueue = [] ; // reset
+        ary = SC._sc_readyQueue ;
+        SC._sc_readyQueue = [] ; // reset
         for (idx=0, len=ary.length; idx<len; idx++) {
           handler = ary[idx] ;
           var target = handler[0] || document ;
           var method = handler[1] ;
           if (method) method.call(target) ;
         }
-      } while (SC._readyQueue.length > 0) ;
+      } while (SC._sc_readyQueue.length > 0) ;
 
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
       SC.isReady = YES ;
 
       // clear the queue
-      SC._readyQueue = null ;
+      SC._sc_readyQueue = null ;
 
       // trigger any bound ready events
       SC.Event.trigger(document, "ready", null, NO);
