@@ -9,9 +9,6 @@
 // invokeOnce and invokeLast) to record which code scheduled the
 // invokeOnce/invokeLast targets/methods.
 
-var SC = global.SC || {} ;
-
-
 // Declaring the variable will make it easier for people who want to enter it
 // inside consoles that auto-complete.
 if (!SC.LOG_RUNLOOP_INVOCATIONS) SC.LOG_RUNLOOP_INVOCATIONS = false;
