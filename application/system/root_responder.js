@@ -183,15 +183,14 @@ SC.RootResponder = SC.Object.extend({
   */
   makeKeyPane: function(pane) {
     // Was a pane specified?
-    var newKeyPane, previousKeyPane, previousKeyPanes ;
+    var newKeyPane, previousKeyPane, previousKeyPanes;
 
     if (pane) {
       // Does the specified pane accept being the key pane?  If not, there's
       // nothing to do.
       if (!pane.get('acceptsKeyPane')) {
         return this ;
-      }
-      else {
+      } else {
         // It does accept key pane status?  Then push the current keyPane to
         // the top of the stack and make the specified pane the new keyPane.
         // First, though, do a sanity-check to make sure it's not already the
@@ -199,8 +198,7 @@ SC.RootResponder = SC.Object.extend({
         previousKeyPane = this.get('keyPane') ;
         if (previousKeyPane === pane) {
           return this ;
-        }
-        else {
+        } else {
           if (previousKeyPane) {
             previousKeyPanes = this.get('previousKeyPanes') ;
             previousKeyPanes.push(previousKeyPane) ;
@@ -209,10 +207,9 @@ SC.RootResponder = SC.Object.extend({
           newKeyPane = pane ;
         }
       }
-    }
-    else {
-      // No pane was specified?  Then pop the previous key pane off the top of
-      // the stack and make it the new key pane, assuming that it's still
+    } else {
+      // No pane was specified?  Then pop the previous key pane off the top 
+      // of the stack and make it the new key pane, assuming that it's still
       // attached and accepts key pane (its value for acceptsKeyPane might
       // have changed in the meantime).  Otherwise, we'll keep going up the
       // stack.
@@ -222,29 +219,28 @@ SC.RootResponder = SC.Object.extend({
       newKeyPane = null ;
       while (previousKeyPanes.length > 0) {
         var candidate = previousKeyPanes.pop();
-        if (candidate.get('isPaneAttached')  &&  candidate.get('acceptsKeyPane')) {
+        if (candidate.get('isPaneAttached') && candidate.get('acceptsKeyPane')) {
           newKeyPane = candidate ;
           break ;
         }
       }
     }
 
-
     // If we found an appropriate candidate, make it the new key pane.
     // Otherwise, make the main pane the key pane (if it accepts it).
     if (!newKeyPane) {
       var mainPane = this.get('mainPane') ;
-      if (mainPane && mainPane.get('acceptsKeyPane')) newKeyPane = mainPane ;
+      if (mainPane && mainPane.get('acceptsKeyPane')) newKeyPane = mainPane;
     }
 
-    // now notify old and new key views of change after edit
-    if (previousKeyPane) previousKeyPane.willLoseKeyPaneTo(newKeyPane) ;
-    if (newKeyPane) newKeyPane.willBecomeKeyPaneFrom(previousKeyPane) ;
+    // Now notify old and new key views of change after edit.
+    if (previousKeyPane) previousKeyPane.willLoseKeyPaneTo(newKeyPane);
+    if (newKeyPane) newKeyPane.willBecomeKeyPaneFrom(previousKeyPane);
 
     this.set('keyPane', newKeyPane) ;
 
-    if (newKeyPane) newKeyPane.didBecomeKeyPaneFrom(previousKeyPane) ;
-    if (previousKeyPane) previousKeyPane.didLoseKeyPaneTo(newKeyPane) ;
+    if (newKeyPane) newKeyPane.didBecomeKeyPaneFrom(previousKeyPane);
+    if (previousKeyPane) previousKeyPane.didLoseKeyPaneTo(newKeyPane);
 
     return this ;
   },
@@ -265,77 +261,17 @@ SC.RootResponder = SC.Object.extend({
 
     @returns Rect
   */
-    computeWindowSize: function() {
-      var size, bod, docElement;
-      if(!this._bod || !this._docElement){
-        bod = document.body;
-        docElement = document.documentElement;
-        this._bod=bod;
-        this._docElement=docElement;
-      }else{
-        bod = this._bod;
-        docElement = this._docElement;
-      }
-      if (window.innerHeight) {
-        size = {
-          width: window.innerWidth,
-          height: window.innerHeight
-        } ;
-      } else if (docElement && docElement.clientHeight) {
-        size = {
-          width: docElement.clientWidth,
-          height: docElement.clientHeight
-        };
-      } else if (bod) {
-        size = {
-          width: bod.clientWidth,
-          height: bod.clientHeight
-        } ;
-      }
-      return size;
-    },
-
-  /**
-    On window resize, notifies panes of the change.
-
-    @returns {Boolean}
-  */
-  resize: function() {
-    this._resize();
-    //this.invokeLater(this._resize, 10);
-    return YES; //always allow normal processing to continue.
-  },
-
-  _resize: function() {
-    // calculate new window size...
-    var newSize = this.computeWindowSize(), oldSize = this.get('currentWindowSize');
-    this.set('currentWindowSize', newSize); // update size
-    
-    if (!SC.rectsEqual(newSize, oldSize)) {
-      //Notify orientation change. This is faster than waiting for the orientation
-      //change event.
-      if(SC.platform.touch){
-        var body = SC.$(document.body);    
-        if(newSize.height>= newSize.width) {
-          SC.device.set('orientation', 'portrait');
-        }
-        else {
-          SC.device.set('orientation', 'landscape');
-        }
-      }
-      // notify panes
-      if (this.panes) {
-        SC.run(function() {
-          this.panes.invoke('windowSizeDidChange', oldSize, newSize) ;
-        }, this);
-      }
-    }
+  computeWindowSize: function() {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
   },
 
   /**
     Indicates whether or not the window currently has focus.  If you need
     to do something based on whether or not the window is in focus, you can
-    setup a binding or observer to this property.  Note that the SproutCore
+    setup a binding or observer to this property.  Note that SproutCore
     automatically adds an sc-focus or sc-blur CSS class to the body tag as
     appropriate.  If you only care about changing the appearance of your
     controls, you should use those classes in your CSS rules instead.
@@ -343,8 +279,8 @@ SC.RootResponder = SC.Object.extend({
   hasFocus: NO,
 
   dragDidStart: function(drag) {
-    this._mouseDownView = drag ;
-    this._drag = drag ;
+    this._sc_mouseDownView = drag ;
+    this._sc_drag = drag ;
   },
 
   // .......................................................
@@ -389,7 +325,7 @@ SC.RootResponder = SC.Object.extend({
     } else return target && target.tryToPerform(action, sender);
   },
 
-  _responderFor: function(target, methodName) {
+  _sc_responderFor: function(target, methodName) {
     var defaultResponder = target ? target.get('defaultResponder') : null;
 
     if (target) {
@@ -435,22 +371,22 @@ SC.RootResponder = SC.Object.extend({
   targetForAction: function(methodName, target, sender, pane) {
 
     // 1. no action, no target...
-    if (!methodName || (SC.typeOf(methodName) !== SC.T_STRING)) {
-      return null ;
+    if (!methodName || typeof methodName !== "string") {
+      return null;
     }
 
     // 2. an explicit target was passed...
     if (target) {
-      if (SC.typeOf(target) === SC.T_STRING) {
-        target =  SC.objectForPropertyPath(target) || 
-                  SC.objectForPropertyPath(target, sender);
+      if (typeof target === 'string') {
+        target = SC.objectForPropertyPath(target) || 
+                 SC.objectForPropertyPath(target, sender);
       }
 
       if (target && !target.isResponderContext) {
-        if (target.respondsTo && !target.respondsTo(methodName)) {
-          target = null ;
-        } else if (SC.typeOf(target[methodName]) !== SC.T_FUNCTION) {
-          target = null ;
+        if (typeof target.respondsTo === 'function' && !target.respondsTo(methodName)) {
+          target = null;
+        } else if (typeof target[methodName] !== 'function') {
+          target = null;
         }
       }
 
@@ -458,34 +394,31 @@ SC.RootResponder = SC.Object.extend({
     }
 
     // 3. an explicit pane was passed...
-    if (pane) {
-      target = this._responderFor(pane, methodName); 
-      if (target) return target;
-    }
+    if (pane) return this._sc_responderFor(pane, methodName);
 
     // 4. no target or pane passed... try to find target in the active panes
     // and the defaultResponder
     var keyPane = this.get('keyPane'), mainPane = this.get('mainPane') ;
 
     // ...check key and main panes first
-    if (keyPane && (keyPane !== pane)) {
-      target = this._responderFor(keyPane, methodName) ;
+    if (keyPane) {
+      target = this._sc_responderFor(keyPane, methodName);
     }
     if (!target && mainPane && (mainPane !== keyPane)) {
-      target = this._responderFor(mainPane, methodName) ;
+      target = this._sc_responderFor(mainPane, methodName);
     }
 
     // ...still no target? check the defaultResponder...
     if (!target && (target = this.get('defaultResponder'))) {
-      if (SC.typeOf(target) === SC.T_STRING) {
+      if (typeof target === 'string') {
         target = SC.objectForPropertyPath(target) ;
         if (target) this.set('defaultResponder', target) ; // cache if found
       }
       if (target && !target.isResponderContext) {
         if (target.respondsTo && !target.respondsTo(methodName)) {
-          target = null ;
+          target = null;
         } else if (SC.typeOf(target[methodName]) !== SC.T_FUNCTION) {
-          target = null ;
+          target = null;
         }
       }
     }
@@ -508,7 +441,7 @@ SC.RootResponder = SC.Object.extend({
     @returns {Object} object that handled the event or null if not handled
   */
   sendEvent: function(action, evt, target) {
-    var pane, ret ;
+    var pane, ret;
 
     SC.run(function() {
       // get the target pane
@@ -540,12 +473,12 @@ SC.RootResponder = SC.Object.extend({
   */
   listenFor: function(keyNames, target, receiver) {
     receiver = receiver ? receiver : this;
-    keyNames.forEach( function(keyName) {
+    keyNames.forEach(function(keyName) {
       var method = receiver[keyName] ;
-      if (method) SC.Event.add(target, keyName, receiver, method) ;
-    },this) ;
-    target = null ;
-    return receiver ;
+      if (method) SC.Event.add(target, keyName, receiver, method);
+    }, this);
+    target = null; // avoid memory leak
+    return receiver;
   },
 
   // ..........................................................
@@ -554,20 +487,23 @@ SC.RootResponder = SC.Object.extend({
 
   keyup: function(evt) {
     // to end the simulation of keypress in firefox set the _ffevt to null
-    if(this._ffevt) this._ffevt=null;
-    // modifier keys are handled separately by the 'flagsChanged' event
-    // send event for modifier key changes, but only stop processing if this is only a modifier change
-    var ret = this._handleModifierChanges(evt);
-    if (this._isModifierKey(evt)) return ret;
-    // Fix for IME input (japanese, mandarin).
-    // If the KeyCode is 229 wait for the keyup and
-    // trigger a keyDown if it is is enter onKeyup.
-    if (this._IMEInputON && evt.keyCode===13){
+    if (this._ffevt) this._ffevt = null;
+
+    // Modifier keys are handled separately by the 'flagsChanged' event.
+    // Send event for modifier key changes, but stop processing if this is 
+    // only a modifier change.
+    var ret = this._sc_handleModifierChanges(evt);
+    if (this._sc_isModifierKey(evt)) return ret;
+
+    // Fix for IME input (japanese, mandarin). If the KeyCode is 229 wait for 
+    // the keyup and trigger a keyDown if it is enter onKeyup.
+    if (this._IMEInputON && evt.keyCode === 13) {
       evt.isIMEInput = YES;
       this.sendEvent('keyDown', evt);
-      this._IMEInputON = NO;
+      this._IMEInputON = false;
     }
-    return this.sendEvent('keyUp', evt) ? evt.hasCustomEventHandling:YES;
+
+    return this.sendEvent('keyUp', evt) ? evt.hasCustomEventHandling : true ;
   },
 
   /**
@@ -581,12 +517,12 @@ SC.RootResponder = SC.Object.extend({
   attemptKeyEquivalent: function(evt) {
     var ret = null ;
 
-    // keystring is a method name representing the keys pressed (i.e
+    // `keystring` is a method name representing the keys pressed (i.e
     // 'alt_shift_escape')
     var keystring = evt.commandCodes()[0];
 
-    // couldn't build a keystring for this key event, nothing to do
-    if (!keystring) return NO;
+    // Couldn't build a keystring for this key event, nothing to do.
+    if (!keystring) return false;
 
     var menuPane = this.get('menuPane'),
         keyPane  = this.get('keyPane'),
@@ -613,17 +549,17 @@ SC.RootResponder = SC.Object.extend({
     return ret ;
   },
 
-  _lastModifiers: null,
+  _sc_lastModifiers: null,
 
   /** @private
     Modifier key changes are notified with a keydown event in most browsers.
     We turn this into a flagsChanged keyboard event.  Normally this does not
     stop the normal browser behavior.
   */
-  _handleModifierChanges: function(evt) {
+  _sc_handleModifierChanges: function(evt) {
     // if the modifier keys have changed, then notify the first responder.
     var m;
-    m = this._lastModifiers = (this._lastModifiers || { alt: false, ctrl: false, shift: false });
+    m = this._sc_lastModifiers = (this._sc_lastModifiers || { alt: false, ctrl: false, shift: false });
 
     var changed = false;
     if (evt.altKey !== m.alt) { m.alt = evt.altKey; changed=true; }
@@ -639,7 +575,7 @@ SC.RootResponder = SC.Object.extend({
     kinds of events are processed as keyboard shortcuts.  If no shortcut
     handles the event, then it will be sent as a regular keyDown event.
   */
-  _isFunctionOrNonPrintableKey: function(evt) {
+  _sc_isFunctionOrNonPrintableKey: function(evt) {
     return !!(evt.altKey || evt.ctrlKey || evt.metaKey || ((evt.charCode !== evt.which) && SC.FUNCTION_KEYS[evt.which]));
   },
 
@@ -647,83 +583,13 @@ SC.RootResponder = SC.Object.extend({
     Determines if the event simply reflects a modifier key change.  These
     events may generate a flagsChanged event, but are otherwise ignored.
   */
-  _isModifierKey: function(evt) {
+  _sc_isModifierKey: function(evt) {
     return !!SC.MODIFIER_KEYS[evt.charCode];
   },
 
   // ..........................................................
   // MOUSE HANDLING
   //
-
-  /**
-    mouseUp only gets delivered to the view that handled the mouseDown evt.
-    we also handle click and double click notifications through here to
-    ensure consistant delivery.  Note that if mouseDownView is not
-    implemented, then no mouseUp event will be sent, but a click will be
-    sent.
-  */
-  mouseup: function(evt) {
-    if (SC.platform.touch) {
-      evt.allowDefault();
-      return YES;
-    }
-    
-    this.targetViewForEvent(evt);
-    
-    if (this._drag) {
-      this._drag.tryToPerform('mouseUp', evt) ;
-      this._drag = null ;
-    }
-
-    var handler = null, view = this._mouseDownView,
-        targetView = this.targetViewForEvent(evt);
-    this._lastMouseUpAt = Date.now() ;
-
-    // record click count.
-    evt.clickCount = this._clickCount ;
-
-    // attempt the mouseup call only if there's a target.
-    // don't want a mouseup going to anyone unless they handled the mousedown...
-    if (view) {
-      handler = this.sendEvent('mouseUp', evt, view) ;
-      // try doubleClick
-      if (!handler && (this._clickCount === 2)) {
-        handler = this.sendEvent('doubleClick', evt, view) ;
-      }
-
-      // try single click
-      if (!handler) {
-        handler = this.sendEvent('click', evt, view) ;
-      }
-    }
-
-    // try whoever's under the mouse if we haven't handle the mouse up yet
-    if (!handler) {
-
-      // try doubleClick
-      if (this._clickCount === 2) {
-        handler = this.sendEvent('doubleClick', evt, targetView);
-      }
-
-      // try singleClick
-      if (!handler) {
-        handler = this.sendEvent('click', evt, targetView) ;
-      }
-    }
-
-    // cleanup
-    this._mouseCanDrag = NO; this._mouseDownView = null ;
-  
-    return (handler) ? evt.hasCustomEventHandling : YES ;
-  },
-
-  dblclick: function(evt){
-    if (SC.browser.isIE) {
-      this._clickCount = 2;
-      // this._onmouseup(evt);
-      this.mouseup(evt);
-    }
-  },
 
   mousewheel: function(evt) {
     var view = this.targetViewForEvent(evt) ,
@@ -732,106 +598,14 @@ SC.RootResponder = SC.Object.extend({
     return (handler) ? evt.hasCustomEventHandling : YES ;
   },
 
-  _lastHovered: null,
-
-  /**
-   This will send mouseEntered, mouseExited, mousedDragged and mouseMoved
-   to the views you hover over.  To receive these events, you must implement
-   the method. If any subviews implement them and return true, then you won't
-   receive any notices.
-
-   If there is a target mouseDown view, then mouse moved events will also
-   trigger calls to mouseDragged.
-  */
-  mousemove: function(evt) {
-    if (SC.platform.touch) {
-      evt.allowDefault();
-      return YES;
-    }
-    
-    if (SC.browser.msie) {
-      if (this._lastMoveX === evt.clientX && this._lastMoveY === evt.clientY) return;
-    }
-
-    // We'll record the last positions in all browsers, in case a special pane
-    // or some such UI absolutely needs this information.
-    this._lastMoveX = evt.clientX;
-    this._lastMoveY = evt.clientY;
-
-    SC.run(function() {
-       // make sure the view gets focus no matter what.  FF is inconsistant
-       // about this.
-      // this.focus();
-       // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
-       // drags send their own events, e.g. drag[Moved|Entered|Exited]
-       if (this._drag) {
-         //IE triggers mousemove at the same time as mousedown
-         if(SC.browser.msie){
-           if (this._lastMouseDownX !== evt.clientX || this._lastMouseDownY !== evt.clientY) {
-             this._drag.tryToPerform('mouseDragged', evt);
-           }
-         }
-         else {
-           this._drag.tryToPerform('mouseDragged', evt);
-         }
-       } else {
-         var lh = this._lastHovered || [] , nh = [] , exited, loc, len,
-             view = this.targetViewForEvent(evt) ;
-         
-         // first collect all the responding view starting with the 
-         // target view from the given mouse move event
-         while (view && (view !== this)) {
-           nh.push(view);
-           view = view.get('nextResponder');
-         }
-        
-         // next exit views that are no longer part of the 
-         // responding chain
-         for (loc=0, len=lh.length; loc < len; loc++) {
-           view = lh[loc] ;
-           exited = view.respondsTo('mouseExited');
-           if (exited && nh.indexOf(view) === -1) {
-             view.tryToPerform('mouseExited', evt);
-           }
-         }
-         
-         // finally, either perform mouse moved or mouse entered depending on
-         // whether a responding view was or was not part of the last
-         // hovered views
-         for (loc=0, len=nh.length; loc < len; loc++) {
-           view = nh[loc];
-           if (lh.indexOf(view) !== -1) {
-             view.tryToPerform('mouseMoved', evt);
-           } else {
-             view.tryToPerform('mouseEntered', evt);
-           }
-         }
-
-         // Keep track of the view that were last hovered
-         this._lastHovered = nh;
-
-         // also, if a mouseDownView exists, call the mouseDragged action, if
-         // it exists.
-         if (this._mouseDownView) {
-           if(SC.browser.msie){
-             if (this._lastMouseDownX !== evt.clientX && this._lastMouseDownY !== evt.clientY) {
-               this._mouseDownView.tryToPerform('mouseDragged', evt);
-             }
-           }
-           else {
-             this._mouseDownView.tryToPerform('mouseDragged', evt);
-           }
-         }
-       }
-    }, this);
-  },
+  _sc_lastHovered: null,
 
   // these methods are used to prevent unnecessary text-selection in IE,
   // there could be some more work to improve this behavior and make it
   // a bit more useful; right now it's just to prevent bugs when dragging
   // and dropping.
 
-  _mouseCanDrag: YES,
+  _sc_mouseCanDrag: YES,
 
   selectstart: function(evt) {
     var targetView = this.targetViewForEvent(evt),
@@ -840,7 +614,7 @@ SC.RootResponder = SC.Object.extend({
     // If the target view implements mouseDragged, then we want to ignore the
     // 'selectstart' event.
     if (targetView && targetView.respondsTo('mouseDragged')) {
-      return (result !==null ? YES: NO) && !this._mouseCanDrag;
+      return (result !==null ? YES: NO) && !this._sc_mouseCanDrag;
     }
     else {
       return (result !==null ? YES: NO);
@@ -911,8 +685,8 @@ SC.RootResponder = SC.RootResponder.extend({
     this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
 
     // handle basic events
-    this.listenFor('keydown keyup beforedeactivate mousedown mouseup click dblclick mousemove selectstart contextmenu'.w(), document)
-        .listenFor('resize'.w(), window);
+    this.listenFor('keydown keyup beforedeactivate mousedown mouseup click mousemove selectstart contextmenu'.w(), document);
+    this.listenFor('resize'.w(), window);
         
     // if ((/msie/).test(navigator.userAgent.toLowerCase())) this.listenFor('focusin focusout'.w(), document);
     // else {
@@ -1007,6 +781,24 @@ SC.RootResponder = SC.RootResponder.extend({
     return ret;
   },
 
+  /**
+    On window resize, notifies panes of the change.
+
+    @returns {Boolean}
+  */
+  resize: function() {
+    var oldSize = this.get('currentWindowSize'),
+        newSize = this.computeWindowSize();
+
+    this.set('currentWindowSize', newSize);
+
+    if (!SC.rectsEqual(newSize, oldSize)) {
+      this.panes.invoke('windowSizeDidChange', oldSize, newSize);
+    }
+
+    return YES; // Allow normal processing to continue.
+  },
+
   // ..........................................................
   // KEYBOARD HANDLING
   //
@@ -1035,10 +827,10 @@ SC.RootResponder = SC.RootResponder.extend({
 
     // If user presses the escape key while we are in the middle of a
     // drag operation, cancel the drag operation and handle the event.
-    if (keyCode === 27 && this._drag) {
-      this._drag.cancelDrag();
-      this._drag = null;
-      this._mouseDownView = null;
+    if (keyCode === 27 && this._sc_drag) {
+      this._sc_drag.cancelDrag();
+      this._sc_drag = null;
+      this._sc_mouseDownView = null;
       return YES;
     }
 
@@ -1048,17 +840,17 @@ SC.RootResponder = SC.RootResponder.extend({
     // modifier keys are handled separately by the 'flagsChanged' event
     // send event for modifier key changes, but only stop processing if this
     // is only a modifier change
-    var ret = this._handleModifierChanges(evt),
+    var ret = this._sc_handleModifierChanges(evt),
         target = evt.target || evt.srcElement,
         forceBlock = (evt.which === 8) && !SC.allowsBackspaceToPreviousPage && (target === document.body);
 
-    if (this._isModifierKey(evt)) return (forceBlock ? NO : ret);
+    if (this._sc_isModifierKey(evt)) return (forceBlock ? NO : ret);
 
     // if this is a function or non-printable key, try to use this as a key
     // equivalent.  Otherwise, send as a keyDown event so that the focused
     // responder can do something useful with the event.
     ret = YES ;
-    if (this._isFunctionOrNonPrintableKey(evt)) {
+    if (this._sc_isFunctionOrNonPrintableKey(evt)) {
       // Otherwise, send as keyDown event.  If no one was interested in this
       // keyDown event (probably the case), just let the browser do its own
       // processing.
@@ -1136,57 +928,103 @@ SC.RootResponder = SC.RootResponder.extend({
   // MOUSE HANDLING
   //
 
-  mousedown: function(evt) {
-    if (SC.platform.touch) {
-      evt.allowDefault();
-      return YES;
+  /**
+    mouseUp only gets delivered to the view that handled the mouseDown evt.
+    we also handle click and double click notifications through here to
+    ensure consistant delivery.  Note that if mouseDownView is not
+    implemented, then no mouseUp event will be sent, but a click will be
+    sent.
+  */
+  mouseup: function(evt) {
+    if (this._sc_drag) {
+      this._sc_drag.tryToPerform('mouseUp', evt);
+      this._sc_drag = null;
+      // FIXME: Shouldn't we return at this point?
     }
-    
+
+    var handler = null, view = this._sc_mouseDownView,
+        targetView = this.targetViewForEvent(evt);
+
+    this._sc_lastMouseUpAt = Date.now(); // Why not evt.timeStamp?
+
+    // record click count.
+    evt.clickCount = this._sc_clickCount;
+
+    // Attempt a mouseup call only when there is a target. We don't want a 
+    // mouseup going to anyone unless they also handled the mousedown.
+    if (view) {
+      handler = this.sendEvent('mouseUp', evt, view);
+
+      // Didn't handle it, try doubleClick.
+      if (!handler && (this._sc_clickCount === 2)) {
+        handler = this.sendEvent('doubleClick', evt, view);
+      }
+
+      // Hmm. Try single click.
+      if (!handler) {
+        handler = this.sendEvent('click', evt, view);
+      }
+    }
+
+    // Try whoever's under the mouse if we haven't handle the mouse up yet.
+    if (!handler) {
+
+      // Try doubleClick.
+      if (this._sc_clickCount === 2) {
+        handler = this.sendEvent('doubleClick', evt, targetView);
+      }
+
+      // No handler, try singleClick.
+      if (!handler) {
+        handler = this.sendEvent('click', evt, targetView);
+      }
+    }
+
+    // cleanup
+    this._sc_mouseCanDrag = false;
+    this._sc_mouseDownView = null;
+
+    return (handler) ? evt.hasCustomEventHandling : true ;
+  },
+
+  mousedown: function(evt) {
     // if(!SC.browser.msie) window.focus();
     window.focus();
     
     // First, save the click count. The click count resets if the mouse down
     // event occurs more than 200 ms later than the mouse up event or more
     // than 8 pixels away from the mouse down event.
-    this._clickCount += 1 ;
-    if (!this._lastMouseUpAt || ((Date.now()-this._lastMouseUpAt) > 200)) {
-      this._clickCount = 1 ;
+    this._sc_clickCount++;
+    if (!this._sc_lastMouseUpAt || ((Date.now()-this._sc_lastMouseUpAt) > 200)) {
+      this._sc_clickCount = 1;
     } else {
-      var deltaX = this._lastMouseDownX - evt.clientX,
-          deltaY = this._lastMouseDownY - evt.clientY,
-          distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY) ;
-      if (distance > 8.0) this._clickCount = 1 ;
+      var deltaX = this._sc_lastMouseDownX - evt.clientX,
+          deltaY = this._sc_lastMouseDownY - evt.clientY,
+          distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      if (distance > 8.0) this._sc_clickCount = 1;
     }
-    evt.clickCount = this._clickCount ;
 
-    this._lastMouseDownX = evt.clientX ;
-    this._lastMouseDownY = evt.clientY ;
+    evt.clickCount = this._sc_clickCount;
 
-    var fr, view = this.targetViewForEvent(evt) ;
+    this._sc_lastMouseDownX = evt.clientX;
+    this._sc_lastMouseDownY = evt.clientY;
 
-    // InlineTextField needs to loose firstResponder whenever you click outside
-    // the view. This is a special case as textfields are not supposed to loose
-    // focus unless you click on a list, another textfield or an special
-    // view/control.
+    var fr, view = this.targetViewForEvent(evt);
 
-    if(view) fr=view.getPath('pane.firstResponder');
-
-    if(fr && fr.kindOf(SC.InlineTextFieldView) && fr!==view){
+    // HACK: InlineTextField needs to loose firstResponder whenever you click 
+    // outside the view.  This is a special case as textfields are not 
+    // supposed to loose focus unless you click on a list, another textfield 
+    // or on a special view/control.
+    if (view) fr = view.getPath('pane.firstResponder');
+    if (fr && fr.kindOf(SC.InlineTextFieldView) && fr !== view) {
       fr.resignFirstResponder();
     }
 
-    view = this._mouseDownView = this.sendEvent('mouseDown', evt, view) ;
-    if (view && view.respondsTo('mouseDragged')) this._mouseCanDrag = YES ;
+    view = this._sc_mouseDownView = this.sendEvent('mouseDown', evt, view);
+    if (view && view.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
 
-    return view ? evt.hasCustomEventHandling : YES;
-  },
-
-  dblclick: function(evt){
-    // if (SC.browser.isIE) {
-    //   this._clickCount = 2;
-    //   // this._onmouseup(evt);
-    //   this.mouseup(evt);
-    // }
+    return view ? evt.hasCustomEventHandling : true ;
   },
 
   /**
@@ -1199,86 +1037,56 @@ SC.RootResponder = SC.RootResponder.extend({
    trigger calls to mouseDragged.
   */
   mousemove: function(evt) {
-    // if (SC.platform.touch) {
-    //   evt.allowDefault();
-    //   return YES;
-    // }
-    // 
-    // if (SC.browser.msie) {
-    //   if (this._lastMoveX === evt.clientX && this._lastMoveY === evt.clientY) return;
-    // }
-
     // We'll record the last positions in all browsers, in case a special pane
     // or some such UI absolutely needs this information.
-    this._lastMoveX = evt.clientX;
-    this._lastMoveY = evt.clientY;
+    this._sc_lastMoveX = evt.clientX;
+    this._sc_lastMoveY = evt.clientY;
 
-    SC.run(function() {
-       // make sure the view gets focus no matter what.  FF is inconsistant
-       // about this.
-      // this.focus();
-       // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
-       // drags send their own events, e.g. drag[Moved|Entered|Exited]
-       if (this._drag) {
-         //IE triggers mousemove at the same time as mousedown
-         // if(SC.browser.msie){
-         //   if (this._lastMouseDownX !== evt.clientX || this._lastMouseDownY !== evt.clientY) {
-         //     this._drag.tryToPerform('mouseDragged', evt);
-         //   }
-         // }
-         // else {
-           this._drag.tryToPerform('mouseDragged', evt);
-         // }
-       } else {
-         var lh = this._lastHovered || [] , nh = [] , exited, loc, len,
-             view = this.targetViewForEvent(evt) ;
-         
-         // first collect all the responding view starting with the 
-         // target view from the given mouse move event
-         while (view && (view !== this)) {
-           nh.push(view);
-           view = view.get('nextResponder');
-         }
-        
-         // next exit views that are no longer part of the 
-         // responding chain
-         for (loc=0, len=lh.length; loc < len; loc++) {
-           view = lh[loc] ;
-           exited = view.respondsTo('mouseExited');
-           if (exited && nh.indexOf(view) === -1) {
-             view.tryToPerform('mouseExited', evt);
-           }
-         }
-         
-         // finally, either perform mouse moved or mouse entered depending on
-         // whether a responding view was or was not part of the last
-         // hovered views
-         for (loc=0, len=nh.length; loc < len; loc++) {
-           view = nh[loc];
-           if (lh.indexOf(view) !== -1) {
-             view.tryToPerform('mouseMoved', evt);
-           } else {
-             view.tryToPerform('mouseEntered', evt);
-           }
-         }
+    // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
+    // drags send their own events, e.g. drag[Moved|Entered|Exited]
+    if (this._sc_drag) {
+        this._sc_drag.tryToPerform('mouseDragged', evt);
+    } else {
+      var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
+          view = this.targetViewForEvent(evt);
 
-         // Keep track of the view that were last hovered
-         this._lastHovered = nh;
+      // First, collect all the responding view starting with the target view 
+      // from the given mouse move event.
+      while (view && (view !== this)) {
+        nh.push(view);
+        view = view.get('nextResponder');
+      }
 
-         // also, if a mouseDownView exists, call the mouseDragged action, if
-         // it exists.
-         if (this._mouseDownView) {
-           // if(SC.browser.msie){
-           //   if (this._lastMouseDownX !== evt.clientX && this._lastMouseDownY !== evt.clientY) {
-           //     this._mouseDownView.tryToPerform('mouseDragged', evt);
-           //   }
-           // }
-           // else {
-             this._mouseDownView.tryToPerform('mouseDragged', evt);
-           // }
-         }
-       }
-    }, this);
+      // Next, exit views that are no longer part of the responding chain.
+      for (loc=0, len=lh.length; loc<len; ++loc) {
+        view = lh[loc];
+        exited = view.respondsTo('mouseExited');
+        if (exited && nh.indexOf(view) === -1) {
+          view.tryToPerform('mouseExited', evt);
+        }
+      }
+
+      // Finally, either perform mouse moved or mouse entered depending on
+      // whether a responding view was or was not part of the last hovered 
+      // views.
+      for (loc=0, len=nh.length; loc < len; loc++) {
+        view = nh[loc];
+        if (lh.indexOf(view) !== -1) {
+          view.tryToPerform('mouseMoved', evt);
+        } else {
+          view.tryToPerform('mouseEntered', evt);
+        }
+      }
+
+      // Keep track of the view that were last hovered.
+      this._sc_lastHovered = nh;
+
+      // Also, if a mouseDownView exists, call the mouseDragged action, if
+      // it exists.
+      if (this._sc_mouseDownView) {
+        this._sc_mouseDownView.tryToPerform('mouseDragged', evt);
+      }
+    }
   }
 
 });
@@ -1518,6 +1326,43 @@ SC.RootResponder = SC.RootResponder.extend({
   */
   targetViewForEvent: function(evt) {
     return evt.target ? SC.$(evt.target).view()[0] : null ;
+  },
+
+  /**
+    On window resize, notifies panes of the change.
+
+    @returns {Boolean}
+  */
+  resize: function() {
+    this._sc_resize();
+    //this.invokeLater(this._resize, 10);
+    return YES; //always allow normal processing to continue.
+  },
+
+  _sc_resize: function() {
+    // calculate new window size...
+    var newSize = this.computeWindowSize(), oldSize = this.get('currentWindowSize');
+    this.set('currentWindowSize', newSize); // update size
+    
+    if (!SC.rectsEqual(newSize, oldSize)) {
+      //Notify orientation change. This is faster than waiting for the orientation
+      //change event.
+      if(SC.platform.touch){
+        var body = SC.$(document.body);    
+        if(newSize.height>= newSize.width) {
+          SC.device.set('orientation', 'portrait');
+        }
+        else {
+          SC.device.set('orientation', 'landscape');
+        }
+      }
+      // notify panes
+      if (this.panes) {
+        SC.run(function() {
+          this.panes.invoke('windowSizeDidChange', oldSize, newSize) ;
+        }, this);
+      }
+    }
   },
 
   // ................................................................................
@@ -2022,9 +1867,9 @@ SC.RootResponder = SC.RootResponder.extend({
           idx, len = touches.length, view, changedTouches, viewTouches, firstTouch,
           changedViews = {}, loc, guid, hidingTouchIntercept = NO;
 
-      if (this._drag) {
+      if (this._sc_drag) {
         touch = SC.Touch.create(evt.changedTouches[0], this);
-        this._drag.tryToPerform('mouseDragged', touch);
+        this._sc_drag.tryToPerform('mouseDragged', touch);
       }
 
       // figure out what views had touches changed, and update our internal touch objects
@@ -2131,9 +1976,9 @@ SC.RootResponder = SC.RootResponder.extend({
           hidesTouchIntercept = YES;
         }
 
-        if (this._drag) {
-          this._drag.tryToPerform('mouseUp', touch) ;
-          this._drag = null ;
+        if (this._sc_drag) {
+          this._sc_drag.tryToPerform('mouseUp', touch) ;
+          this._sc_drag = null ;
         }
 
         // unassign
@@ -2187,10 +2032,10 @@ SC.RootResponder = SC.RootResponder.extend({
 
     // If user presses the escape key while we are in the middle of a
     // drag operation, cancel the drag operation and handle the event.
-    if (keyCode === 27 && this._drag) {
-      this._drag.cancelDrag();
-      this._drag = null;
-      this._mouseDownView = null;
+    if (keyCode === 27 && this._sc_drag) {
+      this._sc_drag.cancelDrag();
+      this._sc_drag = null;
+      this._sc_mouseDownView = null;
       return YES;
     }
 
@@ -2200,17 +2045,17 @@ SC.RootResponder = SC.RootResponder.extend({
     // modifier keys are handled separately by the 'flagsChanged' event
     // send event for modifier key changes, but only stop processing if this
     // is only a modifier change
-    var ret = this._handleModifierChanges(evt),
+    var ret = this._sc_handleModifierChanges(evt),
         target = evt.target || evt.srcElement,
         forceBlock = (evt.which === 8) && !SC.allowsBackspaceToPreviousPage && (target === document.body);
 
-    if (this._isModifierKey(evt)) return (forceBlock ? NO : ret);
+    if (this._sc_isModifierKey(evt)) return (forceBlock ? NO : ret);
 
     // if this is a function or non-printable key, try to use this as a key
     // equivalent.  Otherwise, send as a keyDown event so that the focused
     // responder can do something useful with the event.
     ret = YES ;
-    if (this._isFunctionOrNonPrintableKey(evt)) {
+    if (this._sc_isFunctionOrNonPrintableKey(evt)) {
       // otherwise, send as keyDown event.  If no one was interested in this
       // keyDown event (probably the case), just let the browser do its own
       // processing.
@@ -2288,6 +2133,68 @@ SC.RootResponder = SC.RootResponder.extend({
   // MOUSE HANDLING
   //
 
+  /**
+    mouseUp only gets delivered to the view that handled the mouseDown evt.
+    we also handle click and double click notifications through here to
+    ensure consistant delivery.  Note that if mouseDownView is not
+    implemented, then no mouseUp event will be sent, but a click will be
+    sent.
+  */
+  mouseup: function(evt) {
+    if (SC.platform.touch) {
+      evt.allowDefault();
+      return YES;
+    }
+    
+    this.targetViewForEvent(evt);
+    
+    if (this._sc_drag) {
+      this._sc_drag.tryToPerform('mouseUp', evt) ;
+      this._sc_drag = null ;
+    }
+
+    var handler = null, view = this._sc_mouseDownView,
+        targetView = this.targetViewForEvent(evt);
+    this._sc_lastMouseUpAt = Date.now() ;
+
+    // record click count.
+    evt.clickCount = this._sc_clickCount ;
+
+    // attempt the mouseup call only if there's a target.
+    // don't want a mouseup going to anyone unless they handled the mousedown...
+    if (view) {
+      handler = this.sendEvent('mouseUp', evt, view) ;
+      // try doubleClick
+      if (!handler && (this._sc_clickCount === 2)) {
+        handler = this.sendEvent('doubleClick', evt, view) ;
+      }
+
+      // try single click
+      if (!handler) {
+        handler = this.sendEvent('click', evt, view) ;
+      }
+    }
+
+    // try whoever's under the mouse if we haven't handle the mouse up yet
+    if (!handler) {
+
+      // try doubleClick
+      if (this._sc_clickCount === 2) {
+        handler = this.sendEvent('doubleClick', evt, targetView);
+      }
+
+      // try singleClick
+      if (!handler) {
+        handler = this.sendEvent('click', evt, targetView) ;
+      }
+    }
+
+    // cleanup
+    this._sc_mouseCanDrag = NO; this._sc_mouseDownView = null ;
+  
+    return (handler) ? evt.hasCustomEventHandling : YES ;
+  },
+
   mousedown: function(evt) {
     if (SC.platform.touch) {
       evt.allowDefault();
@@ -2299,19 +2206,19 @@ SC.RootResponder = SC.RootResponder.extend({
     // First, save the click count. The click count resets if the mouse down
     // event occurs more than 200 ms later than the mouse up event or more
     // than 8 pixels away from the mouse down event.
-    this._clickCount += 1 ;
-    if (!this._lastMouseUpAt || ((Date.now()-this._lastMouseUpAt) > 200)) {
-      this._clickCount = 1 ;
+    this._sc_clickCount += 1 ;
+    if (!this._sc_lastMouseUpAt || ((Date.now()-this._sc_lastMouseUpAt) > 200)) {
+      this._sc_clickCount = 1 ;
     } else {
-      var deltaX = this._lastMouseDownX - evt.clientX,
-          deltaY = this._lastMouseDownY - evt.clientY,
+      var deltaX = this._sc_lastMouseDownX - evt.clientX,
+          deltaY = this._sc_lastMouseDownY - evt.clientY,
           distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY) ;
-      if (distance > 8.0) this._clickCount = 1 ;
+      if (distance > 8.0) this._sc_clickCount = 1 ;
     }
-    evt.clickCount = this._clickCount ;
+    evt.clickCount = this._sc_clickCount ;
 
-    this._lastMouseDownX = evt.clientX ;
-    this._lastMouseDownY = evt.clientY ;
+    this._sc_lastMouseDownX = evt.clientX ;
+    this._sc_lastMouseDownY = evt.clientY ;
 
     var fr, view = this.targetViewForEvent(evt) ;
 
@@ -2326,15 +2233,15 @@ SC.RootResponder = SC.RootResponder.extend({
       fr.resignFirstResponder();
     }
 
-    view = this._mouseDownView = this.sendEvent('mouseDown', evt, view) ;
-    if (view && view.respondsTo('mouseDragged')) this._mouseCanDrag = YES ;
+    view = this._sc_mouseDownView = this.sendEvent('mouseDown', evt, view) ;
+    if (view && view.respondsTo('mouseDragged')) this._sc_mouseCanDrag = YES ;
 
     return view ? evt.hasCustomEventHandling : YES;
   },
 
   dblclick: function(evt){
     if (SC.browser.isIE) {
-      this._clickCount = 2;
+      this._sc_clickCount = 2;
       // this._onmouseup(evt);
       this.mouseup(evt);
     }
@@ -2356,13 +2263,13 @@ SC.RootResponder = SC.RootResponder.extend({
     }
     
     if (SC.browser.msie) {
-      if (this._lastMoveX === evt.clientX && this._lastMoveY === evt.clientY) return;
+      if (this._sc_lastMoveX === evt.clientX && this._sc_lastMoveY === evt.clientY) return;
     }
 
     // We'll record the last positions in all browsers, in case a special pane
     // or some such UI absolutely needs this information.
-    this._lastMoveX = evt.clientX;
-    this._lastMoveY = evt.clientY;
+    this._sc_lastMoveX = evt.clientX;
+    this._sc_lastMoveY = evt.clientY;
 
     SC.run(function() {
        // make sure the view gets focus no matter what.  FF is inconsistant
@@ -2370,18 +2277,18 @@ SC.RootResponder = SC.RootResponder.extend({
       // this.focus();
        // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
        // drags send their own events, e.g. drag[Moved|Entered|Exited]
-       if (this._drag) {
+       if (this._sc_drag) {
          //IE triggers mousemove at the same time as mousedown
          if(SC.browser.msie){
-           if (this._lastMouseDownX !== evt.clientX || this._lastMouseDownY !== evt.clientY) {
-             this._drag.tryToPerform('mouseDragged', evt);
+           if (this._sc_lastMouseDownX !== evt.clientX || this._sc_lastMouseDownY !== evt.clientY) {
+             this._sc_drag.tryToPerform('mouseDragged', evt);
            }
          }
          else {
-           this._drag.tryToPerform('mouseDragged', evt);
+           this._sc_drag.tryToPerform('mouseDragged', evt);
          }
        } else {
-         var lh = this._lastHovered || [] , nh = [] , exited, loc, len,
+         var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
              view = this.targetViewForEvent(evt) ;
          
          // first collect all the responding view starting with the 
@@ -2414,18 +2321,18 @@ SC.RootResponder = SC.RootResponder.extend({
          }
 
          // Keep track of the view that were last hovered
-         this._lastHovered = nh;
+         this._sc_lastHovered = nh;
 
          // also, if a mouseDownView exists, call the mouseDragged action, if
          // it exists.
-         if (this._mouseDownView) {
+         if (this._sc_mouseDownView) {
            if(SC.browser.msie){
-             if (this._lastMouseDownX !== evt.clientX && this._lastMouseDownY !== evt.clientY) {
-               this._mouseDownView.tryToPerform('mouseDragged', evt);
+             if (this._sc_lastMouseDownX !== evt.clientX && this._sc_lastMouseDownY !== evt.clientY) {
+               this._sc_mouseDownView.tryToPerform('mouseDragged', evt);
              }
            }
            else {
-             this._mouseDownView.tryToPerform('mouseDragged', evt);
+             this._sc_mouseDownView.tryToPerform('mouseDragged', evt);
            }
          }
        }
