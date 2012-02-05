@@ -150,8 +150,47 @@ function main() {
     })
   });
 
+  var pane2 = SC.Pane.create({
+    layout: { top: 10, left: 10, width: w, height: h },
+    render: function(ctx) {
+      // Draw background.
+      ctx.fillStyle = base03;
+      ctx.fillRect(0, 0, ctx.width, ctx.height);
+      ctx.strokeStyle = base00;
+      ctx.lineWidth = 2; // overlap of 1 on the inside
+      ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+      // Draw lines overlay.
+      ctx.beginPath();
+      ctx.moveTo(0, h/2);
+      ctx.lineTo(w, h/2);
+      ctx.moveTo(w/2, 0);
+      ctx.lineTo(w/2, h);
+      ctx.strokeStyle = green;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+      ctx.fillStyle = green;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  });
+
   SC.Application.create();
   SC.app.set('ui', pane);
+  setTimeout(function() {
+    SC.app.set('ui', pane2);
+  }, 2000);
+  setTimeout(function() {
+    SC.app.set('ui', pane);
+  }, 4000);
+  setTimeout(function() {
+    SC.app.set('ui', null);
+  }, 6000);
 }
 
 // function main() {
