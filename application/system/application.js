@@ -36,9 +36,10 @@ if (BLOSSOM) {
     view is found that handles it.
 
   @extends SC.Responder
+  @extends SC.DelegateSupport
   @since Blossom 1.0
 */
-SC.Application = SC.Responder.extend(
+SC.Application = SC.Responder.extend(SC.DelegateSupport,
 /** SC.Application.prototype */ {
 
   isResponderContext: true, // We can dispatch events and actions.
