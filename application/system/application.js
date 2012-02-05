@@ -15,10 +15,8 @@ sc_require('mixins/responder_context');
 if (BLOSSOM) {
 
 /** @class
-  The root object for a SproutCore application.  Usually you will create a 
-  single SC.Application instance as your root namespace.
-
-  h1. Event Types
+  The root object for a SproutCore application.  You must create exactly one 
+  instance of SC.Application. It will be available at `SC.app`.
 
   Applications can route four types of events:
 
