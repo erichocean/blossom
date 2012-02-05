@@ -157,6 +157,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         ui.insertBefore(container, null); // add to DOM
+        ui.style.opacity = '1';
         ui.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
         cur.didAttach();
       }

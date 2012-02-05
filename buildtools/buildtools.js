@@ -493,7 +493,7 @@ BT.App = BT.Target.extend({
     ret += '  </head>\n';
     
     ret += '  <body style="background: black; margin: 0; overflow: hidden;">\n';
-    ret += '    <div id="ui" style="width: 100%; height: 100%; position: absolute; -webkit-transform-style: preserve-3d; -webkit-transition: -webkit-transform 1.5s; -webkit-transform-origin: right center;"></div>\n';
+    ret += '    <div id="ui" style="width: 100%; height: 100%; position: absolute; opacity: 0; -webkit-transform-style: preserve-3d; -webkit-transition-property: -webkit-transform, opacity; -webkit-transition-duration: 2s, 1s; -webkit-transition-delay: 0s, 1s; -webkit-transform-origin: right center;"></div>\n';
     ret += '  </body>\n';
     ret += '</html>';
     
