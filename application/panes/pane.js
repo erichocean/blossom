@@ -93,6 +93,8 @@ if (BLOSSOM) {
 */
 SC.Pane = SC.Responder.extend({
 
+  isResponderContext: true, // We can dispatch events and actions.
+
   transitions: {},
 
   transitionsStyle: function() {

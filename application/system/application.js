@@ -43,6 +43,8 @@ if (BLOSSOM) {
 SC.Application = SC.Responder.extend(
 /** SC.Application.prototype */ {
 
+  isResponderContext: true, // We can dispatch events and actions.
+
   /**
     Contains a list of all panes currently visible on screen.  Everytime a
     pane attaches or detaches, it will update itself in this array.
