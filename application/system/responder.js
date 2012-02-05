@@ -2,8 +2,85 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion 
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals SPROUTCORE BLOSSOM sc_assert */
+
+/** @class
+
+  Provides common methods for sending events down a responder chain.
+  Responder chains are used most often to deliver events to user interface
+  elements in your application, but you can also use them to deliver generic
+  events to any part of your application, including controllers.
+
+  @extends SC.Object
+  @since SproutCore 1.0
+*/
+SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
+
+  isResponder: YES,
+  
+  /** @property
+    The pane this responder belongs to.  This is used to determine where you 
+    belong to in the responder chain.  Normally you should leave this property
+    set to null.
+  */
+  pane: null,
+  
+  /** @property 
+    YES if the responder is currently the first responder.  This property is 
+    always updated by a pane during its makeFirstResponder() method.
+
+    @type {Boolean}
+  */
+  isFirstResponder: NO,
+
+  /** @property
+    Set to YES if your responder is willing to accept first responder status.
+    This is used when calculcating the key responder loop.
+  */
+  acceptsFirstResponder: YES
+
+});
+
+if (BLOSSOM) {
+
+SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
+
+  /** 
+    Call this method on your view or responder to make it become first 
+    responder.
+  */
+  becomeFirstResponder: function() {  
+    var pane = this.get('pane');
+    if (pane && this.get('acceptsFirstResponder')) {
+      if (pane.get('firstResponder') !== this) {
+        pane.makeFirstResponder(this);
+      }
+    } 
+  },
+
+  /**
+    Call this method on your view or responder to resign your first responder 
+    status. Normally this is not necessary since you will lose first responder 
+    status automatically when another view becomes first responder.
+  */
+  resignFirstResponder: function(evt) {
+    var pane = this.get('pane');
+    if (pane && pane.get('firstResponder') === this) {
+      pane.makeFirstResponder(null, evt);
+    }
+  }
+
+});
+
+}
+
+if (SPROUTCORE) {
 
 /** @class
 
@@ -122,3 +199,5 @@ SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
   didBecomeFirstResponder: function(responder) {}
 
 });
+
+} // SPROUTCORE

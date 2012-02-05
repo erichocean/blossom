@@ -89,10 +89,9 @@ if (BLOSSOM) {
   that should not steal keyboard control from another view.
 
   @extends SC.Responder
-  @extends SC.ResponderContext
   @since Blossom 1.0
 */
-SC.Pane = SC.Responder.extend(SC.ResponderContext, {
+SC.Pane = SC.Responder.extend({
 
   transitions: {},
 

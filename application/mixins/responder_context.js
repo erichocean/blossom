@@ -4,8 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('system/responder');
+
+if (SPROUTCORE) {
 
 /** @namespace
 
@@ -86,12 +89,12 @@ SC.ResponderContext = {
     
     // none found, let's go hunting...look three levels deep
     var n = this.NAMESPACE;
-    this._findResponderNamesFor(this, 3, n ? [this.NAMESPACE] : []);
+    this._sc_findResponderNamesFor(this, 3, n ? [this.NAMESPACE] : []);
     
     return responder._scrc_name || responder.toString(); // try again
   },
   
-  _findResponderNamesFor: function(responder, level, path) {
+  _sc_findResponderNamesFor: function(responder, level, path) {
     var key, value;
     
     for(key in responder) {
@@ -101,7 +104,7 @@ SC.ResponderContext = {
         if (value._scrc_name) continue ;
         path.push(key);
         value._scrc_name = path.join('.');
-        if (level>0) this._findResponderNamesFor(value, level-1, path);
+        if (level>0) this._sc_findResponderNamesFor(value, level-1, path);
         path.pop();
       }
     }
@@ -267,3 +270,6 @@ SC.ResponderContext = {
   }
 
 };
+
+} // SPROUTCORE
+
