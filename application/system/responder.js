@@ -51,6 +51,13 @@ if (BLOSSOM) {
 
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
+  /** @property
+    This is the nextResponder in the responder chain.  If the receiver does 
+    not implement a particular event handler, it will bubble to the next 
+    responder.
+  */
+  nextResponder: null,
+  
   /** 
     Call this method on your view or responder to make it become first 
     responder.
@@ -92,17 +99,8 @@ if (SPROUTCORE) {
   @extends SC.Object
   @since SproutCore 1.0
 */
-SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
+SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
-  isResponder: YES,
-  
-  /** @property
-    The pane this responder belongs to.  This is used to determine where you 
-    belong to in the responder chain.  Normally you should leave this property
-    set to null.
-  */
-  pane: null,
-  
   /** @property
     The app this responder belongs to.  For non-user-interface responder 
     chains, this is used to determine the context.  Usually this
@@ -120,12 +118,6 @@ SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
   */
   nextResponder: null,
   
-  /** @property 
-    YES if the view is currently first responder.  This property is always 
-    edited by the pane during its makeFirstResponder() method.
-  */
-  isFirstResponder: NO,
-  
   /** @property
   
     YES the responder is somewhere in the responder chain.  This currently
@@ -134,11 +126,6 @@ SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
     @type {Boolean}
   */
   hasFirstResponder: NO,    
-  
-  /** @property
-    Set to YES if your view is willing to accept first responder status.  This is used when calculcating key responder loop.
-  */
-  acceptsFirstResponder: YES,
   
   becomingFirstResponder: NO,
   

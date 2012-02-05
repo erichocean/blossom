@@ -209,40 +209,6 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   */
   isKeyResponder: NO,
 
-  /**
-    This method is invoked just before you lost the key responder status.
-    The passed view is the view that is about to gain keyResponder status.
-    This gives you a chance to do any early setup. Remember that you can
-    gain/lose key responder status either because another view in the same
-    pane is becoming first responder or because another pane is about to
-    become key.
-
-    @param {SC.Responder} responder
-  */
-  willLoseKeyResponderTo: function(responder) {},
-
-  /**
-    This method is invoked just before you become the key responder.  The
-    passed view is the view that is about to lose keyResponder status.  You
-    can use this to do any setup before the view changes.
-    Remember that you can gain/lose key responder status either because
-    another view in the same pane is becoming first responder or because
-    another pane is about to become key.
-
-    @param {SC.Responder} responder
-  */
-  willBecomeKeyResponderFrom: function(responder) {},
-
-  /**
-    Invokved just after the responder loses key responder status.
-  */
-  didLoseKeyResponderTo: function(responder) {},
-
-  /**
-    Invoked just after the responder gains key responder status.
-  */
-  didBecomeKeyResponderFrom: function(responder) {},
-
   // ..........................................................
   // TEXT HANDLING AND KEYBOARD SUPPORT
   //
@@ -2396,6 +2362,44 @@ SC.View = SC.View.extend(
 
     return this ;
   },
+
+  // ..........................................................
+  // KEY RESPONDER
+  //
+
+  /**
+    This method is invoked just before you lost the key responder status.
+    The passed view is the view that is about to gain keyResponder status.
+    This gives you a chance to do any early setup. Remember that you can
+    gain/lose key responder status either because another view in the same
+    pane is becoming first responder or because another pane is about to
+    become key.
+
+    @param {SC.Responder} responder
+  */
+  willLoseKeyResponderTo: function(responder) {},
+
+  /**
+    This method is invoked just before you become the key responder.  The
+    passed view is the view that is about to lose keyResponder status.  You
+    can use this to do any setup before the view changes.
+    Remember that you can gain/lose key responder status either because
+    another view in the same pane is becoming first responder or because
+    another pane is about to become key.
+
+    @param {SC.Responder} responder
+  */
+  willBecomeKeyResponderFrom: function(responder) {},
+
+  /**
+    Invokved just after the responder loses key responder status.
+  */
+  didLoseKeyResponderTo: function(responder) {},
+
+  /**
+    Invoked just after the responder gains key responder status.
+  */
+  didBecomeKeyResponderFrom: function(responder) {},
 
   // ...........................................
   // LAYOUT SUPPORT

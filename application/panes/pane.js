@@ -454,12 +454,18 @@ SC.Pane = SC.Responder.extend({
     if (SC.platform.touch && view && view.kindOf(SC.TextFieldView) && !view.get('focused')) return this;
 
     // notify current of firstResponder change
-    if (current) current.willLoseFirstResponder(current, evt);
+    if (current && current.willLoseFirstResponder) {
+      current.willLoseFirstResponder(current, evt);
+    }
 
     // if we are currently key pane, then notify key views of change also
     if (isKeyPane) {
-      if (current) current.willLoseKeyResponderTo(view) ;
-      if (view) view.willBecomeKeyResponderFrom(current) ;
+      if (current && current.willLoseKeyResponderTo) {
+        current.willLoseKeyResponderTo(view);
+      }
+      if (view && view.willBecomeKeyResponderFrom) {
+        view.willBecomeKeyResponderFrom(current);
+      }
     }
 
     // change setting
@@ -479,11 +485,17 @@ SC.Pane = SC.Responder.extend({
 
     // and notify again if needed.
     if (isKeyPane) {
-      if (view) view.didBecomeKeyResponderFrom(current) ; 
-      if (current) current.didLoseKeyResponderTo(view) ;
+      if (view && view.didBecomeKeyResponderFrom) {
+        view.didBecomeKeyResponderFrom(current);
+      }
+      if (current && current.didLoseKeyResponderTo) {
+        current.didLoseKeyResponderTo(view);
+      }
     }
 
-    if (view) view.didBecomeFirstResponder(view);
+    if (view && view.didBecomeFirstResponder) {
+      view.didBecomeFirstResponder(view);
+    }
     return this ;
   },
 
@@ -1427,12 +1439,18 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     if (SC.platform.touch && view && view.kindOf(SC.TextFieldView) && !view.get('focused')) return this;
     
     // notify current of firstResponder change
-    if (current) current.willLoseFirstResponder(current, evt);
-    
+    if (current && current.willLoseFirstResponder) {
+      current.willLoseFirstResponder(current, evt);
+    }
+
     // if we are currently key pane, then notify key views of change also
     if (isKeyPane) {
-      if (current) current.willLoseKeyResponderTo(view) ;
-      if (view) view.willBecomeKeyResponderFrom(current) ;
+      if (current && current.willLoseKeyResponderTo) {
+        current.willLoseKeyResponderTo(view);
+      }
+      if (view && view.willBecomeKeyResponderFrom) {
+        view.willBecomeKeyResponderFrom(current);
+      }
     }
     
     // change setting
@@ -1452,11 +1470,17 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     
     // and notify again if needed.
     if (isKeyPane) {
-      if (view) view.didBecomeKeyResponderFrom(current) ; 
-      if (current) current.didLoseKeyResponderTo(view) ;
+      if (view && view.didBecomeKeyResponderFrom) {
+        view.didBecomeKeyResponderFrom(current); 
+      }
+      if (current && current.didLoseKeyResponderTo) {
+        current.didLoseKeyResponderTo(view);
+      }
     }
     
-    if (view) view.didBecomeFirstResponder(view);
+    if (view && view.didBecomeFirstResponder) {
+      view.didBecomeFirstResponder(view);
+    }
     return this ;
   },
 
