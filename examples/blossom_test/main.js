@@ -186,15 +186,15 @@ function main() {
 
   SC.Application.create();
   SC.app.set('ui', pane);
-  setTimeout(function() {
-    SC.app.set('ui', pane2);
-  }, 2000);
-  setTimeout(function() {
-    SC.app.set('ui', pane);
-  }, 4000);
-  setTimeout(function() {
-    SC.app.set('ui', null);
-  }, 6000);
+  // setTimeout(function() {
+  //   SC.app.set('ui', pane2);
+  // }, 2000);
+  // setTimeout(function() {
+  //   SC.app.set('ui', pane);
+  // }, 4000);
+  // setTimeout(function() {
+  //   SC.app.set('ui', null);
+  // }, 6000);
   setTimeout(function() {
     window.location.reload();
   }, 8000);

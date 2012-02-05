@@ -112,8 +112,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_uiDidChange: function() {
     var old = this._sc_ui,
         cur = this.get('ui'),
+        ui = document.getElementById('ui'),
         transition, container, style;
 
+    sc_assert(ui);
     sc_assert(cur === null || cur.kindOf(SC.Pane), "SC.Application@ui must be null or an SC.Pane instance.");
 
     if (old === cur) return; // Nothing to do.
@@ -132,10 +134,32 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     else if (old && !cur) transition = this.get('uiOrderOutTransition');
     else sc_assert(false);
 
-    transition = null; // force no transition
-    // if (old) transition = null;
+    // transition = null; // force no transition
+    if (old) transition = null;
     if (transition) {
       
+      // order in
+      if (!old && cur) {
+        container = cur.get('container');
+        sc_assert(container);
+        sc_assert(!document.getElementById(container.id));
+
+        style = container.style;
+        style.display  = 'block';
+        style.position = 'absolute';
+        style.top      = '0px';
+        style.left     = '0px';
+        style.width    = '100%';
+        style.height   = '100%';
+        style.webkitBackfaceVisibility = 'hidden';
+        style.webkitTransform = 'rotateY(180deg)';
+
+        // The order is important here, otherwise the layers won't have the 
+        // correct size.
+        ui.insertBefore(container, null); // add to DOM
+        ui.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
+        cur.didAttach();
+      }
 
     // Update the UI without any 3D transition.
     } else {
@@ -144,6 +168,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       if (!old && cur) {
         container = cur.get('container');
         sc_assert(container);
+        sc_assert(!document.getElementById(container.id));
 
         style = container.style;
         style.position = 'absolute';
@@ -154,13 +179,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        document.body.insertBefore(container, null); // add to DOM
+        ui.insertBefore(container, null); // add to DOM
         cur.didAttach();
 
       // replace
       } else if (old && cur) {
         container = cur.get('container');
         sc_assert(container);
+        sc_assert(!document.getElementById(container.id));
+        sc_assert(document.getElementById(old.get('container').id));
 
         style = container.style;
         style.position = 'absolute';
@@ -171,13 +198,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        document.body.replaceChild(container, old.get('container'));
+        ui.replaceChild(container, old.get('container'));
         cur.didAttach();
         old.didDetach();
 
       // order out
       } else if (old && !cur) {
-        document.body.removeChild(old.get('container'));
+        sc_assert(document.getElementById(old.get('container').id));
+
+        ui.removeChild(old.get('container'));
         old.didDetach();
       }
     }
