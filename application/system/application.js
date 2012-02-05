@@ -54,6 +54,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   panes: null,
   
+  perspective: 1000,
+
+  _sc_perspectiveDidChange: function() {
+    var perspective = this.get('perspective')+0;
+    sc_assert(!isNaN(perspective));
+    document.body.style.webkitPerspective = this.get('perspective')+'px';
+  }.observes('perspective'),
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
 
@@ -64,7 +72,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // FIXME: Use SC.app, not SC.RootResponder.responder throughout Blossom.
     SC.RootResponder = { responder: this };
 
-    SC.ready(function() { SC.app.awake(); SC.app._sc_uiDidChange(); });
+    SC.ready(this, function() {
+      this.awake();
+      this._sc_perspectiveDidChange();
+      this._sc_uiDidChange();
+    });
   },
 
   // .......................................................
@@ -102,7 +114,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         cur = this.get('ui'),
         transition, container;
 
-    sc_assert(cur === null || cur.kindOf(SC.Pane));
+    sc_assert(cur === null || cur.kindOf(SC.Pane), "SC.Application@ui must be null or an SC.Pane instance.");
 
     if (old === cur) return; // Nothing to do.
 
@@ -118,6 +130,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (!old && cur)      transition = this.get('uiOrderInTransition');
     else if (old && cur)  transition = this.get('uiReplaceTransition');
     else if (old && !cur) transition = this.get('uiOrderOutTransition');
+    else sc_assert(false);
 
     transition = null; // force no transition
     if (transition) {
@@ -133,6 +146,19 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         // correct size.
         document.body.insertBefore(container, null); // add to DOM
         cur.didAttach();
+      } else if (old && cur) {
+        // replace
+        container = cur.get('container');
+        sc_assert(container);
+
+        // The order is important here, otherwise the layers won't have the 
+        // correct size.
+        document.body.replaceChild(container, old.get('container'));
+        cur.didAttach();
+        old.didDetach();
+      } else if (old && !cur) {
+        document.body.removeChild(old.get('container'));
+        old.didDetach();
       }
     }
 

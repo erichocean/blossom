@@ -780,7 +780,8 @@ SC.Pane = SC.Responder.extend({
         element.id = this.get('containerId');
         element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
 //        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
-        element.style.webkitTransform = "translateZ(0)";
+        // element.style.webkitTransform = "translateZ(0)";
+        element.style.webkitTransform = "rotateY(45deg)";
 
         // apply the layout style manually for now...
         var layoutStyle = this.get('layoutStyle');
@@ -809,6 +810,10 @@ SC.Pane = SC.Responder.extend({
     this.paneDidAttach();
 
     container = null; // avoid memory leak
+  },
+
+  didDetach: function() {
+    console.log('Implement me! Destroy layers...');
   },
 
   render: function(context) {},
