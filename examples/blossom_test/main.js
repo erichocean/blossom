@@ -191,6 +191,9 @@ function main() {
   setTimeout(function() {
     SC.app.set('ui', null);
   }, 6000);
+  setTimeout(function() {
+    window.location.reload();
+  }, 8000);
 }
 
 // function main() {
