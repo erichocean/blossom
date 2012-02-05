@@ -120,7 +120,10 @@ SC.Layer = SC.Object.extend({
         if (container) {
           sc_assert(!superlayer);
           // Use the container's bounds as the parents bounds.
-          pbounds = container.getBoundingClientRect();
+          pbounds = {
+            width: container.offsetWidth,
+            height: container.offsetHeight
+          };
          } else if (superlayer) {
           // Use our superlayer's bounds.
           pbounds = superlayer.get('bounds');

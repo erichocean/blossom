@@ -87,10 +87,9 @@ function drawButton(ctx, pressed) {
 }
 
 function main() {
-  var w = 853, h = 553;
-
   var pane = SC.Pane.create({
-    layout: { top: 10, left: 10, width: w, height: h },
+    layout: { top: 0, right: 0, bottom: 0, left: 0 },
+    // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
     childViews: "test".w(),
     render: function(ctx) {
       // Draw background.
@@ -99,6 +98,8 @@ function main() {
       ctx.strokeStyle = base0;
       ctx.lineWidth = 2; // overlap of 1 on the inside
       ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+      var w = ctx.width, h = ctx.height;
 
       // Draw lines overlay.
       ctx.beginPath();
@@ -151,7 +152,8 @@ function main() {
   });
 
   var pane2 = SC.Pane.create({
-    layout: { top: 10, left: 10, width: w, height: h },
+    layout: { top: 0, right: 0, bottom: 0, left: 0 },
+    // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
     render: function(ctx) {
       // Draw background.
       ctx.fillStyle = base03;
@@ -159,6 +161,8 @@ function main() {
       ctx.strokeStyle = base00;
       ctx.lineWidth = 2; // overlap of 1 on the inside
       ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+      var w = ctx.width, h = ctx.height;
 
       // Draw lines overlay.
       ctx.beginPath();

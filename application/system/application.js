@@ -98,7 +98,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     - order out (defaults to SC.EXIT_RIGHT)
 
     You can change the type of transition for each of these situations, and 
-    that transitions will be used whenever `ui` is updated.
+    that transition will be used whenever your app's UI is changed.
 
     @type SC.Pane
   */
@@ -112,7 +112,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_uiDidChange: function() {
     var old = this._sc_ui,
         cur = this.get('ui'),
-        transition, container;
+        transition, container, style;
 
     sc_assert(cur === null || cur.kindOf(SC.Pane), "SC.Application@ui must be null or an SC.Pane instance.");
 
@@ -133,29 +133,49 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     else sc_assert(false);
 
     transition = null; // force no transition
+    // if (old) transition = null;
     if (transition) {
       
+
+    // Update the UI without any 3D transition.
     } else {
-      // Update the UI without any 3D transition.
+
+      // order in
       if (!old && cur) {
-        // order in
         container = cur.get('container');
         sc_assert(container);
+
+        style = container.style;
+        style.position = 'absolute';
+        style.top      = '0px';
+        style.left     = '0px';
+        style.width    = '100%';
+        style.height   = '100%';
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         document.body.insertBefore(container, null); // add to DOM
         cur.didAttach();
+
+      // replace
       } else if (old && cur) {
-        // replace
         container = cur.get('container');
         sc_assert(container);
+
+        style = container.style;
+        style.position = 'absolute';
+        style.top      = '0px';
+        style.left     = '0px';
+        style.width    = '100%';
+        style.height   = '100%';
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         document.body.replaceChild(container, old.get('container'));
         cur.didAttach();
         old.didDetach();
+
+      // order out
       } else if (old && !cur) {
         document.body.removeChild(old.get('container'));
         old.didDetach();

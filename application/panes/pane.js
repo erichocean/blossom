@@ -702,6 +702,9 @@ SC.Pane = SC.Responder.extend({
   }.property().cacheable(),
 
   createLayersForContainer: function(container, width, height) {
+    if (this._sc_didCreateLayers) return;
+    this._sc_didCreateLayers = true;
+
     // SC.Pane only has two layers `layer` and `hitTestLayer`.
     var K = this.get('layerClass');
     sc_assert(K && K.kindOf(SC.Layer));
@@ -784,13 +787,13 @@ SC.Pane = SC.Responder.extend({
         element.style.webkitTransform = "rotateY(45deg)";
 
         // apply the layout style manually for now...
-        var layoutStyle = this.get('layoutStyle');
-        for (key in layoutStyle) {
-          if (!layoutStyle.hasOwnProperty(key)) continue;
-          if (layoutStyle[key] !== null) {
-            element.style[key] = layoutStyle[key];
-          }
-        }
+        // var layoutStyle = this.get('layoutStyle');
+        // for (key in layoutStyle) {
+        //   if (!layoutStyle.hasOwnProperty(key)) continue;
+        //   if (layoutStyle[key] !== null) {
+        //     element.style[key] = layoutStyle[key];
+        //   }
+        // }
 
         // Make sure SproutCore can find this view.
         SC.View.views[this.get('containerId')] = this;
