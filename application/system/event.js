@@ -51,33 +51,32 @@ if (BLOSSOM) {
   @since SproutCore 1.0
 */
 SC.Event = function(originalEvent) { 
-
-  // copy properties from original event, if passed in.
+  // Copy properties from original event, if passed in.
   if (originalEvent) {
     this.originalEvent = originalEvent ;
-    var props = SC.Event._sc_props, len = props.length, idx = len , key;
+    var props = SC.Event._sc_props, idx = props.length, key;
     while(--idx >= 0) {
       key = props[idx] ;
       this[key] = originalEvent[key] ;
     }
   }
 
-  // Fix timeStamp
+  // Fix timeStamp property, if necessary.
   this.timeStamp = this.timeStamp || Date.now();
 
-  // Fix target property, if necessary
+  // Fix target property, if necessary.
   // Fixes #1925 where srcElement might not be defined either
   if (!this.target) this.target = this.srcElement || document; 
 
-  // check if target is a textnode (safari)
+  // Check if target is a textnode (Safari fix).
   if (this.target.nodeType === 3 ) this.target = this.target.parentNode;
 
-  // Add relatedTarget, if necessary
+  // Add relatedTarget, if necessary.
   if (!this.relatedTarget && this.fromElement) {
     this.relatedTarget = (this.fromElement === this.target) ? this.toElement : this.fromElement;
   }
 
-  // Calculate pageX/Y if missing and clientX/Y available
+  // Calculate pageX/Y if missing and clientX/Y available.
   if (SC.none(this.pageX) && !SC.none(this.clientX)) {
     sc_assert(false, 'SC.Event@pageX should always be defined in a Blossom-supported browser.');
     // var doc = document.documentElement, body = document.body;
@@ -85,21 +84,21 @@ SC.Event = function(originalEvent) {
     // this.pageY = this.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc.clientTop || 0);
   }
 
-  // Add which for key events
+  // Add which property for key events.
   if (!this.which && ((this.charCode || originalEvent.charCode === 0) ? this.charCode : this.keyCode)) {
     this.which = this.charCode || this.keyCode;
   }
 
-  // Add metaKey to non-Mac browsers (use ctrl for PC's and Meta for Macs)
+  // Add metaKey to non-Mac browsers (use ctrl for PC's and Meta for Macs).
   if (!this.metaKey && this.ctrlKey) this.metaKey = this.ctrlKey;
 
-  // Add which for click: 1 == left; 2 == middle; 3 == right
-  // Note: button is not normalized, so don't use it
+  // Add which for click: 1 == left; 2 == middle; 3 == right.
+  // Note: button is not normalized, so don't use it.
   if (!this.which && this.button) {
     this.which = ((this.button & 1) ? 1 : ((this.button & 2) ? 3 : ( (this.button & 4) ? 2 : 0 ) ));
   }
   
-  // Normalize wheel delta values for mousewheel events
+  // Normalize wheel delta values for mousewheel events.
   // if (this.type === 'mousewheel' || this.type === 'DOMMouseScroll') {
   //   var deltaMultiplier = 1,
   //       version = parseFloat(SC.browser.version);
@@ -166,7 +165,9 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     Simple Function Handlers
     ------------------------
 
-        SC.Event.add(anElement, "click", myClickHandler) ;
+    Example:
+
+        SC.Event.add(anElement, 'click', myClickHandler);
 
     The most basic type of handler you can pass is a function.  This function
     will be executed everytime an event of the type you specify occurs on the
@@ -222,12 +223,12 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // causing it to be cloned in the process
     // if (SC.browser.msie && elem.setInterval) elem = window;
 
-    // if target is a function, treat it as the method, with optional context
+    // If target is a function, treat it as the method, with optional context.
     if (typeof target === 'function') {
       sc_assert(!target.isClass);
       context = method; method = target; target = null;
 
-    // handle case where passed method is a key on the target.
+    // Handle case where passed method is a key on the target.
     } else if (target && typeof method === 'string') {
       method = target[method];
     }
@@ -243,11 +244,11 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       this._sc_addEventListener(elem, eventType) ;
     }
 
-    // Build the handler array and add to queue
+    // Build the handler array and add to queue.
     handlers[SC.hashFor(target, method)] = [target, method, context];
     SC.Event._sc_global[eventType] = YES ; // optimization for global triggers
 
-    // Nullify elem to prevent memory leaks in IE
+    // Nullify elem to prevent memory leaks in IE.
     // elem = events = handlers = null ;
   },
 
@@ -276,7 +277,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     sc_assert(elem.nodeType !== 3 && elem.nodeType !== 8);
 
     // For whatever reason, IE has trouble passing the window object around, 
-    // causing it to be cloned in the process
+    // causing it to be cloned in the process.
     // if (SC.browser.msie && elem.setInterval) elem = window;
 
     var handlers, key, events = SC.data(elem, "events");
