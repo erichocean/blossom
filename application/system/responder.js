@@ -85,7 +85,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
 });
 
-}
+} // BLOSSOM
 
 if (SPROUTCORE) {
 
@@ -157,7 +157,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     if (pane && (pane.get('firstResponder') === this)) {
       pane.makeFirstResponder(null, evt);
     }
-    return YES;  
+    return YES;
   },
 
   /**

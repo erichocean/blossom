@@ -2,8 +2,13 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion 
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals BLOSSOM SPROUTCORE */
 
 sc_require('system/platform');
 sc_require('system/ready');
@@ -32,7 +37,7 @@ sc_require('system/root_responder');
   property, which is available on most modern browsers.
   
 */
-SC.device = SC.Object.create({
+SC.Device = SC.Object.extend({
   
   /**
     Sets the orientation for touch devices, either 'landscape' or 'portrait'. 
@@ -88,16 +93,6 @@ SC.device = SC.Object.create({
     this.panes = SC.Set.create();
   },
   
-  /**
-    As soon as the DOM is up and running, make sure we attach necessary
-    event handlers
-  */
-  setup: function() {
-    var responder = SC.RootResponder.responder;
-    responder.listenFor('orientationchange'.w(), window, this);
-    responder.listenFor('online offline'.w(), document, this);
-  },
-  
   // ..........................................................
   // EVENT HANDLING
   //
@@ -134,6 +129,39 @@ SC.device = SC.Object.create({
 
 });
 
+if (BLOSSOM) {
+
+SC.Device = SC.Device.extend({
+
+  /**
+    As soon as the DOM is up and running, make sure we attach necessary
+    event handlers
+  */
+  setup: function() {
+    SC.app.listenFor('orientationchange'.w(), window, this);
+    SC.app.listenFor('online offline'.w(), document, this);
+  }
+
+});
+
+}
+
+if (SPROUTCORE) {
+
+SC.Device = SC.Device.extend({
+
+  /**
+    As soon as the DOM is up and running, make sure we attach necessary
+    event handlers
+  */
+  setup: function() {
+    var responder = SC.RootResponder.responder;
+    responder.listenFor('orientationchange'.w(), window, this);
+    responder.listenFor('online offline'.w(), document, this);
+  }
+
+});
+
 /*
   Invoked when the document is ready, but before main is called.  Creates
   an instance and sets up event listeners as needed.
@@ -141,3 +169,7 @@ SC.device = SC.Object.create({
 SC.ready(function() {
   SC.device.setup() ;
 });
+
+}
+
+SC.device = SC.Device.create();

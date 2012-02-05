@@ -798,26 +798,17 @@ SC.Pane = SC.Responder.extend({
     return element ;
   }.property(),
 
-  attach: function() {
-    var container = this.get('container'),
-        elem = document.body;
-
-    if (this.get('isPaneAttached') && (container.parentNode === elem)) {
-      return this; // nothing to do
-    }
+  didAttach: function() {
+    var container = this.get('container');
 
     // Okay, the order here is very important; otherwise, the layers will 
     // not know their correct size.
 
-    elem.insertBefore(container, null); // add to DOM
-
     this.createLayersForContainer(container);
-
     this.render(this.getPath('layer.context'), true);
-
-    elem = container = null;
-
     this.paneDidAttach();
+
+    container = null; // avoid memory leak
   },
 
   render: function(context) {},

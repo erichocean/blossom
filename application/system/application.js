@@ -14,6 +14,10 @@ sc_require('mixins/responder_context');
 
 if (BLOSSOM) {
 
+SC.ENTER_LEFT = 'enter-left';
+SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
+SC.EXIT_RIGHT = 'exit-right';
+
 /** @class
   The root object for a SproutCore application.  You must create exactly one 
   instance of SC.Application. It will be available at `SC.app`.
@@ -52,6 +56,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   
   init: function() {
     arguments.callee.base.apply(this, arguments);
+
     this.panes = SC.Set.create();
     sc_assert(SC.app === undefined, "You can only create one instance of SC.Application");
     SC.app = this;
@@ -59,23 +64,86 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // FIXME: Use SC.app, not SC.RootResponder.responder throughout Blossom.
     SC.RootResponder = { responder: this };
 
-    SC.ready(function() { SC.app.setup(); });
+    SC.ready(function() { SC.app.awake(); SC.app._sc_uiDidChange(); });
   },
 
   // .......................................................
-  // MAIN PANE
+  // USER INTERFACE
   //
 
   /** @property
-    The main pane.  This pane receives shortcuts and actions if the
-    focusedPane does not respond to them.  There can be only one main pane.
-    You can swap main panes by calling makeMainPane() here.
+    The app's user interface.  This pane receives shortcuts and actions if 
+    the `menuPane` does not respond to them.  By default, it is also the 
+    `keyPane` so it will also receive keyboard events.
 
-    Usually you will not need to edit the main pane directly.  Instead, you
-    should use a MainPane subclass, which will automatically make itself main
-    when you append it to the document.
+    The pane expands to fill the entire screen.
+
+    A number of animated, hardware-accelerated 3D transitions are available.  
+    There are three possible transitions:
+    
+    - order in (defaults to SC.ENTER_LEFT)
+    - replace (defaults to SC.SLIDE_FLIP_LEFT)
+    - order out (defaults to SC.EXIT_RIGHT)
+
+    You can change the type of transition for each of these situations, and 
+    that transitions will be used whenever `ui` is updated.
+
+    @type SC.Pane
   */
-  mainPane: null,
+  ui: null,
+  _sc_ui: null,
+
+  uiOrderInTransition:  SC.ENTER_LEFT,
+  uiReplaceTransition:  SC.SLIDE_FLIP_LEFT,
+  uiOrderOutTransition: SC.EXIT_RIGHT,
+
+  _sc_uiDidChange: function() {
+    var old = this._sc_ui,
+        cur = this.get('ui'),
+        transition, container;
+
+    sc_assert(cur === null || cur.kindOf(SC.Pane));
+
+    if (old === cur) return; // Nothing to do.
+
+    if (old && old.willLoseUserInterfaceTo) {
+      old.willLoseUserInterfaceTo(cur);
+    }
+
+    if (cur && cur.willBecomeUserInterfaceFrom) {
+      cur.willBecomeUserInterfaceFrom(old);
+    }
+    this._sc_ui = cur;
+
+    if (!old && cur)      transition = this.get('uiOrderInTransition');
+    else if (old && cur)  transition = this.get('uiReplaceTransition');
+    else if (old && !cur) transition = this.get('uiOrderOutTransition');
+
+    transition = null; // force no transition
+    if (transition) {
+      
+    } else {
+      // Update the UI without any 3D transition.
+      if (!old && cur) {
+        // order in
+        container = cur.get('container');
+        sc_assert(container);
+
+        // The order is important here, otherwise the layers won't have the 
+        // correct size.
+        document.body.insertBefore(container, null); // add to DOM
+        cur.didAttach();
+      }
+    }
+
+    if (old && old.didLoseUserInterfaceTo) {
+      old.didLoseUserInterfaceTo(cur);
+    }
+
+    if (cur && cur.didBecomeUserInterfaceFrom) {
+      cur.didBecomeUserInterfaceFrom(old);
+    }
+  }.observes('ui'),
 
   /**
     Swaps the main pane.  If the current main pane is also the key pane, then
@@ -87,26 +155,24 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     document body.  That will be handled by the Pane itself.
 
     @param {SC.Pane} pane
-    @returns {SC.RootResponder} receiver
   */
   makeMainPane: function(pane) {
     var currentMain = this.get('mainPane') ;
-    if (currentMain === pane) return this ; // nothing to do
+    if (currentMain === pane) return; // nothing to do
 
-    this.beginPropertyChanges() ;
+    this.beginPropertyChanges();
 
-    // change key focus if needed.
-    if (this.get('keyPane') === currentMain) this.makeKeyPane(pane) ;
+    // Change key focus if needed.
+    if (this.get('keyPane') === currentMain) this.makeKeyPane(pane);
 
-    // change setting
-    this.set('mainPane', pane) ;
+    // Change setting
+    this.set('mainPane', pane);
 
-    // notify panes.  This will allow them to remove themselves.
-    if (currentMain) currentMain.blurMainTo(pane) ;
-    if (pane) pane.focusMainFrom(currentMain) ;
+    // Notify panes.  This will allow them to remove themselves.
+    if (currentMain) currentMain.blurMainTo(pane);
+    if (pane) pane.focusMainFrom(currentMain);
 
-    this.endPropertyChanges() ;
-    return this ;
+    this.endPropertyChanges();
   },
 
   // ..........................................................
@@ -671,7 +737,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     @returns {void}
   */
-  setup: function() {
+  awake: function() {
     // handle touch events
     this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
 
@@ -736,6 +802,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // do some initial set
     this.set('currentWindowSize', this.computeWindowSize()) ;
     this.focus(); // assume the window is focused when you load.
+
+    SC.device.setup();
   },
 
   /**
