@@ -116,8 +116,18 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   /** @property
-    Contains a list of all surfaces currently visible on screen.  Everytime 
-    a surface attaches or detaches, it will update itself in this array.
+    Contains the set of all surfaces currently present in the viewport.  
+    You can add surfaces to this set directly, or use the `addSurface` and 
+    `removeSurface` helpers, which do the same thing with less typing.
+
+    You can also replace this set with an entirely new set of surfaces.  If 
+    you do, the current `ui` surface will be automatically added to the set 
+    if not already present.  For the `menuSurface` and `inputSurface`, these 
+    properties will be set to `null` if the surface is *not* part of the new 
+    surface set.
+
+    When a surface is added, its `isPresentInViewport` property is set to 
+    true, and when removed, it is set to false.
 
     @type SC.Set<SC.Surface>
   */
@@ -126,8 +136,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   addSurface: function(surface) {
     var surfaces = this.get('surfaces');
 
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(!surfaces.contains(surface));
+    sc_assert(surface && surface.kindOf(SC.Surface));
+    // sc_assert(!surfaces.contains(surface));
 
     surfaces.add(surface);
   },
@@ -135,39 +145,65 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   removeSurface: function(surface) {
     var surfaces = this.get('surfaces');
 
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(surfaces.contains(surface));
+    sc_assert(surface && surface.kindOf(SC.Surface));
+    // sc_assert(surfaces.contains(surface));
 
     surfaces.remove(surface);
   },
 
-  // When the surfaces property changes, we need to observe it's members
-  // for changes.
+  /** @private */
+  didAddItem: function(set, surface) {
+    sc_assert(set === this.get('surfaces'));
+    sc_assert(surface.kindOf(SC.Surface));
+    surface.set('isPresentInViewport', true);
+  },
+
+  /** @private */
+  didRemoveItem: function(set, surface) {
+    sc_assert(set === this.get('surfaces'));
+    sc_assert(surface.kindOf(SC.Surface));
+    surface.set('isPresentInViewport', false);
+  },
+
+  // When the surfaces property changes, we need to observe the new set for 
+  // additions and removals.
   _sc_surfacesDidChange: function() {
-    // console.log("SC.Layer#_sc_sublayersDidChange()");
+    // console.log("SC.Surface#_sc_surfacesDidChange()");
     var cur  = this.get('surfaces'),
-        last = this._sc_surfaces,
-        func = this._sc_surfacesMembersDidChange;
+        last = this._sc_surfaces;
         
     if (last === cur) return this; // nothing to do
 
-    // teardown old observer
-    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
-    
-    // save new cached values 
-    this._sc_surfaces = cur ;
-    
-    // setup new observers
-    if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
+    sc_assert(cur && cur.isSet);
 
-    // process the changes
-    this._sc_surfacesMembersDidChange();
+    // Tear down old set observer and update surface status.
+    if (last) {
+      last.removeSetObserver(this);
+      last.forEach(function(surface) {
+        this.didRemoveItem(surface);
+      }, this);
+    }
+
+    // Save new set.
+    this._sc_surfaces = cur;
+
+    // Set up new set observer and update surface status.
+    if (cur) {
+      cur.addSetObserver(this);
+      cur.forEach(function(surface) {
+        this.didAddItem(surface);
+      }, this);
+
+      // Our ui should also be in surfaces, but the `menuSurface` and 
+      // `inputSurface` should be set to null if they are no longer present.
+      var ui = this.get('ui');
+      if (!cur.contains(ui)) cur.add(ui);
+
+      'menuSurface inputSurface'.w().forEach(function(key) {
+        if (!cur.contains(this.get(key))) this.set(key, null);
+      }, this);
+    }
   }.observes('surfaces'),
-
-  _sc_surfacesMembersDidChange: function() {
-    console.log("SC.Application#_sc_surfacesMembersDidChange()");
-    sc_assert(this.get('surfaces').every(function(surface) { return surface.kindOf(SC.Surface); }));
-  },
 
   /** @property
     The 3D persective property for the app's UI. You can override this on 

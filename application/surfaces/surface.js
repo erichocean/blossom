@@ -11,58 +11,47 @@ sc_require('system/property_animation');
 if (BLOSSOM) {
 
 /** @class
-  A pane is the onscreen container for views and their layers. Panes support 
-  implicit animation, just like layers.  And like views, panes are responders 
-  and can handle events.
-  
-  A Pane is like a regular view except that it does not need to live within a 
-  parent view.  You usually use a Pane to form the root of a view hierarchy in 
-  your application, such as your main application view or for floating 
-  palettes, popups, menus, etc.
+  `SC.Surface` is used to display content within the application's viewport. 
+  Each surface lives on the GPU and supports implicit, hardware-accelerated 
+  3D animation and transitions. Surfaces are responders, and will be 
+  forwarded events that occur to them by the application.
 
-  Usually you will not work directly with the SC.Pane class, but with one of 
-  its subclasses such as SC.MainPane, SC.Panel, or SC.PopupPane.
+  Usually you will not work directly with the `SC.Surface` class, but with one 
+  of its subclasses.  Subclasses of `SC.ContainerSurface` arrange surfaces in 
+  a hierarchy, allowing their layout to depend on their parent's position and 
+  size, rather than the application's viewport.
 
-  h1. Showing a Pane
+  Showing a Surface
+  -----------------
 
-  To make a pane visible, you need to add it to your HTML document.  The 
-  simplest way to do this is to call the append() method:
+  To make a surface visible within the viewport, you need to add it to your 
+  app:
 
-  {{{
-     myPane = SC.Pane.create();
-     myPane.append(); // adds the pane to the document
-  }}}
+     mySurface = SC.ImageSurface.create();
+     SC.app.addSurface(mySurface);
 
-  This will insert your pane into the end of your HTML document body, causing 
-  it to display on screen.  It will also register your pane with the 
-  SC.RootResponder for the document so you can start to receive keyboard, 
-  mouse, and touch events.
+  Once a surface has been added to the app, it will be sized and positioned 
+  according to the layout you have specified relative to the application's 
+  viewport.  It will then automatically resize when the application's 
+  viewport changes size.  The surface's `isPresentInViewport` property will 
+  also be set to true.
 
-  If you need more specific control for where you pane appears in the 
-  document, you can use several other insertion methods such as appendTo(), 
-  prependTo(), before() and after().  These methods all take a an element to 
-  indicate where in your HTML document you would like you pane to be inserted.
+  Removing a Surface
+  ------------------
 
-  Once a pane is inserted into the document, it will be sized and positioned 
-  according to the layout you have specified.  It will then automatically 
-  resize with the window if needed, relaying resize notifications to children 
-  as well.
+  To remove a surface, do:
 
-  h1. Hiding a Pane
+      SC.app.removeSurface(mySurface);
 
-  When you are finished with a pane, you can hide the pane by calling the 
-  remove() method.  This method will actually remove the Pane from the 
-  document body, as well as deregistering it from the RootResponder so that it 
-  no longer receives events.
+  The surface's `isPresentInViewport` property will also change to false.
 
-  The isVisibleInWindow method will also change to NO for the Pane and all of 
-  its childViews and the views will no longer have their updateDisplay methods 
-  called.  
+  A surface's underlying graphics resources are released when it is no longer 
+  part of the application.  This occurs at the end of the run loop, so it is 
+  okay to remove a surface temporarily and move it somewhere else – it's 
+  resources will remain untouched.
 
-  You can readd a pane to the document again any time in the future by using 
-  any of the insertion methods defined in the previous section.
-
-  h1. Receiving Events
+  Receiving Events
+  ----------------
 
   Your pane and its child views will automatically receive any mouse or touch 
   events as long as it is on the screen.  To receive keyboard events, however, 
