@@ -20,23 +20,68 @@ SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
 SC.EXIT_RIGHT = 'exit-right';
 
 /** @class
-  The root object for a SproutCore application.  You must create exactly one 
-  instance of SC.Application.  This instance will be available at `SC.app`.
+  This class is the brains behind a Blossom application.  You must create 
+  exactly one instance of `SC.Application` somewhere in your code.  
+  This instance will be available to you at `SC.app` automatically:
 
-  Applications can route four types of events:
+      SC.Application.create(); // instance is stored at `SC.app`
 
-  - Mouse events.  These are routed to the surface the event occured on.
-  - Keyboard events.  These are sent to the `keySurface`.
-  - Resize events. When the viewport resizes, these events will be sent to 
-    all surfaces.
-  - Keyboard shortcuts.  Shortcuts are first sent to the `menuSurface`, if 
-    one exists.  If unhandled, the `keySurface` is a given a chance to act on 
-    the shortcut.  Finally, if  still unhandled, the `ui` surface will be 
-    given a chance.
-  - Actions.  Actions are generic messages that your application can send in
-    response to user action or other events. You can either specify an
-    explicit `target` surface, or allow the action to traverse a surface 
-    container hierarchy until a surface is found that handles it.
+  You can also store it there explicitly:
+
+      SC.app = SC.Application.create(); // also okay
+
+  Managing Surfaces
+  -----------------
+
+  `SC.Application` manages the surfaces that are active in your app at any 
+  given time.  To add a surface, do:
+
+      SC.app.get('surfaces').add(aSurface);
+
+  To remove a surface from the app, do:
+
+      SC.app.get('surfaces').remove(aSurface);
+
+  Surfaces added in this manner play no special role in the application.  You 
+  can also add surfaces for particular roles, the most common of which is the 
+  'ui' role:
+
+      SC.app.set('ui', aSurface);
+
+  The surface representing the app's user interface ("ui") has its size set 
+  to the viewport automatically.  The surface is also added to the app's 
+  `surfaces` if it is not already present.
+
+  You can also assign a `keyboardSurface`:
+
+      SC.app.set('keyboardSurface', aSurface);
+
+  and a `menuSurface`:
+
+      SC.app.set('menuurface', aSurface);
+
+  See "Dispatching Events" below for more information on how these surfaces 
+  are used by `SC.Application`.
+
+  Dispatching Events
+  ------------------
+
+  `SC.Application` routes five kinds of events to surfaces:
+
+  - **Mouse events.**  These are routed to the surface the event occured on.
+  - **Keyboard events.**  These are sent to the `keyboardSurface`.
+  - **Viewport events.** When the viewport resizes, each surface will have 
+    its `viewportSizeDidChange` method called, if it implements it.
+  - **Keyboard shortcuts.**  Shortcuts are first sent to the `menuSurface`, 
+    if it exists.  If unhandled, the `keyboardSurface` is a given a chance to 
+    act on the shortcut.  Finally, if the shortcut is still unhandled, the 
+    `ui` surface will be given a chance to handle it.
+  - **Actions.**  Actions are generic messages that your application can send 
+    in response to user action or other events. You can either specify a 
+    responder to target, or if not specified, the ui surface's 
+    `firstResponder` is made the target.  The target is then given the chance 
+    to handle the action, and if not handled, the action moves up the 
+    responder chain until a responder is found that handles it.
 
   @extends SC.Responder
   @extends SC.DelegateSupport
