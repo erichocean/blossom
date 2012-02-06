@@ -34,12 +34,17 @@ SC.EXIT_RIGHT = 'exit-right';
   -----------------
 
   `SC.Application` manages the surfaces that are active in your app at any 
-  given time.  To add a surface, do:
+  given time.  To add a surface to the viewport, do:
+
+      SC.app.addSurface(aSurface);
+
+  To remove a surface from the viewport, do:
+
+      SC.app.removeSurface(aSurface);
+
+  You can also modify the `surfaces` property directly:
 
       SC.app.get('surfaces').add(aSurface);
-
-  To remove a surface from the app, do:
-
       SC.app.get('surfaces').remove(aSurface);
 
   Surfaces added in this manner play no special role in the application.  You 
@@ -50,7 +55,7 @@ SC.EXIT_RIGHT = 'exit-right';
 
   The surface representing the app's user interface ("ui") has its size set 
   to the viewport automatically.  The surface is also added to the app's 
-  `surfaces` if it is not already present.
+  `surfaces` set if it is not already present.
 
   You can also assign a `keyboardSurface`:
 
@@ -117,6 +122,24 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @type SC.Set<SC.Surface>
   */
   surfaces: null,
+
+  addSurface: function(surface) {
+    var surfaces = this.get('surfaces');
+
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(!surfaces.contains(surface));
+
+    surfaces.add(surface);
+  },
+
+  removeSurface: function(surface) {
+    var surfaces = this.get('surfaces');
+
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surfaces.contains(surface));
+
+    surfaces.remove(surface);
+  },
 
   // When the surfaces property changes, we need to observe it's members
   // for changes.

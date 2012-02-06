@@ -22,13 +22,13 @@
 */
 SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
 
-  isResponder: YES,
+  isResponder: YES, // Walk like a duck.
   
   /** @property
     Set to YES if your responder is willing to accept first responder status.
     This is used when calculcating the key responder loop.
   */
-  acceptsFirstResponder: YES
+  acceptsFirstResponder: true
 
 });
 
@@ -42,7 +42,15 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
     @type {Boolean}
   */
-  isFirstResponder: NO,
+  isFirstResponder: false,
+
+  /** @property 
+    YES if the responder is currently the first responder.  This property is 
+    always updated by a pane during its makeFirstResponder() method.
+
+    @type {Boolean}
+  */
+  isKeyboardResponder: false,
 
   /** @property
     The surface this responder belongs to.  This is used to determine where 
@@ -55,14 +63,15 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   
   /** @property
     This is the nextResponder in the responder chain.  If the receiver does 
-    not implement a particular event handler, it will bubble to the next 
+    not implement a particular event handler, it will bubble up to the next 
     responder.
   */
   nextResponder: null,
   
   /** 
-    Call this method on your view or responder to make it become first 
-    responder.
+    Call this method on your responder to make it become the first responder 
+    in its surface.  If the surface is also the app's keyboard surface, the 
+    responder will have its `isKeyboardResponder` property set to true.
   */
   becomeFirstResponder: function() {  
     var surface = this.get('surface');
@@ -74,14 +83,14 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   },
 
   /**
-    Call this method on your view or responder to resign your first responder 
-    status. Normally this is not necessary since you will lose first responder 
-    status automatically when another view becomes first responder.
+    Call this method on your responder to resign your first responder status. 
+    Normally this is not necessary since you will lose first responder status 
+    automatically when another responder becomes first responder.
   */
-  resignFirstResponder: function(evt) {
+  resignFirstResponder: function() {
     var surface = this.get('surface');
     if (surface && surface.get('firstResponder') === this) {
-      surface.makeFirstResponder(null, evt);
+      surface.makeFirstResponder(null);
     }
   }
 

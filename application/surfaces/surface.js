@@ -367,69 +367,70 @@ SC.Surface = SC.Responder.extend({
     action events.  Whenever you click on a responder, it will usually become 
     `firstResponder`.
 
+    If this surface is also the `SC.app@keyboardSurface`, the `firstResponder` 
+    will have it's `isKeyboardResponder` property set to true.
+
     @property {SC.Responder}
+    @isReadOnly
   */
   firstResponder: null,
 
   /**
-    Makes the passed view (or any object that implements SC.Responder) into 
-    the new firstResponder for this pane.  This will cause the current first
-    responder to lose its responder status and possibly keyResponder status as
-    well.
+    Makes the passed responder into the new `firstResponder` for this 
+    surface.  This will cause the current `firstResponder` to lose its 
+    `firstResponder` status and possibly `keyboardResponder` status as well.
 
-    @param {SC.View} view
-    @param {Event} evt that cause this to become first responder
-    @returns {SC.Pane} receiver
+    @param {SC.Responder} responder
   */
-  makeFirstResponder: function(view, evt) {
-    var current=this.get('firstResponder'), isKeyPane=this.get('isKeyPane');
-    if (current === view) return this ; // nothing to do
-    if (SC.platform.touch && view && view.kindOf(SC.TextFieldView) && !view.get('focused')) return this;
+  makeFirstResponder: function(responder) {
+    var current = this.get('firstResponder'),
+        isKeyboardSurface = SC.app.get('keyboardSurface') === this;
 
-    // notify current of firstResponder change
-    if (current && current.willLoseFirstResponder) {
-      current.willLoseFirstResponder(current, evt);
+    if (current === responder) return; // nothing to do
+
+    sc_assert(responder? responder.kindOf('SC.Responder') : true);
+
+    if (current && current.willLoseFirstResponderTo) {
+      current.willLoseFirstResponderTo(responder);
     }
 
-    // if we are currently key pane, then notify key views of change also
-    if (isKeyPane) {
-      if (current && current.willLoseKeyResponderTo) {
-        current.willLoseKeyResponderTo(view);
+    if (isKeyboardSurface) {
+      if (current && current.willLoseKeyboardResponderTo) {
+        current.willLoseKeyboardResponderTo(responder);
       }
-      if (view && view.willBecomeKeyResponderFrom) {
-        view.willBecomeKeyResponderFrom(current);
+      if (responder && responder.willBecomeKeyboardResponderFrom) {
+        responder.willBecomeKeyboardResponderFrom(current);
       }
     }
 
-    // change setting
     if (current) {
-      current.beginPropertyChanges()
-        .set('isFirstResponder', NO).set('isKeyResponder', NO)
-      .endPropertyChanges();
+      current.beginPropertyChanges();
+      current.set('isFirstResponder', false);
+      current.set('isKeyboardResponder', false);
+      current.endPropertyChanges();
     }
 
-    this.set('firstResponder', view) ;
+    this.set('firstResponder', responder);
 
-    if (view) {
-      view.beginPropertyChanges()
-        .set('isFirstResponder', YES).set('isKeyResponder', isKeyPane)
-      .endPropertyChanges();
+    if (responder) {
+      responder.beginPropertyChanges();
+      responder.set('isKeyboardResponder', isKeyboardSurface);
+      responder.set('isFirstResponder', true);
+      responder.endPropertyChanges();
     }
 
-    // and notify again if needed.
-    if (isKeyPane) {
-      if (view && view.didBecomeKeyResponderFrom) {
-        view.didBecomeKeyResponderFrom(current);
+    if (isKeyboardSurface) {
+      if (responder && responder.didBecomeKeyboardResponderFrom) {
+        responder.didBecomeKeyboardResponderFrom(current);
       }
-      if (current && current.didLoseKeyResponderTo) {
-        current.didLoseKeyResponderTo(view);
+      if (current && current.didLoseKeyboardResponderTo) {
+        current.didLoseKeyboardResponderTo(responder);
       }
     }
 
-    if (view && view.didBecomeFirstResponder) {
-      view.didBecomeFirstResponder(view);
+    if (responder && responder.didBecomeFirstResponderFrom) {
+      responder.didBecomeFirstResponderFrom(current);
     }
-    return this ;
   },
 
   /** @private
