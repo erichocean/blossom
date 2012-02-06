@@ -84,6 +84,7 @@ sortedVertices.forEach(function(vertex) {
 
 // Now we need to set up global for compatibility with Blossom
 global.window = global;
+global.navigator = { userAgent: 'node' };
 global.sc_require = function do_nothing(){};
 global.sc_resource = function sc_resource(){};
 global.YES = true ;
