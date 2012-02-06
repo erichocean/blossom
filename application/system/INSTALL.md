@@ -2,24 +2,24 @@ You need to install Node 0.6.5 or higher:
 
     http://nodejs.org/
 
-This automatically includes npm, the Node Package Manager.
+This automatically includes `npm`, the Node Package Manager.
 
-Next you'll need to get a copy of blossom itself. The easiest way is to use 
+Next you'll need to get a copy of Blossom itself. The easiest way is to use 
 `git` and clone the Blossom repository on GitHub:
 
     cd /directory/where/you/want/your/blossom/install/
-    https://github.com/fohr/blossom.git
-    cd blossom
+    git clone https://github.com/fohr/blossom.git
 
 Next, install the following Node packages:
 
-    sudo npm install vows xmlhttprequest
+    cd blossom
+    npm install vows xmlhttprequest
 
 To view Blossom's current testing app, do:
 
     node projectfile.js
 
-and then open up http://localhost:4020/blossom_test.
+and then open up [http://localhost:4020/blossom_test](http://localhost:4020/blossom_test).
 
 To run the foundation framework tests, do:
 
