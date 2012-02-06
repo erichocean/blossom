@@ -11,6 +11,7 @@
 /*globals SPROUTCORE BLOSSOM sc_assert */
 
 sc_require('mixins/responder_context');
+sc_require('ext/float32');
 
 if (BLOSSOM) {
 
@@ -20,24 +21,22 @@ SC.EXIT_RIGHT = 'exit-right';
 
 /** @class
   The root object for a SproutCore application.  You must create exactly one 
-  instance of SC.Application. It will be available at `SC.app`.
+  instance of SC.Application.  This instance will be available at `SC.app`.
 
   Applications can route four types of events:
 
-  - Direct events, such as mouse and touch events.  These are routed to the
-    nearest view managing the target DOM elment. RootResponder also handles
-    multitouch events so that they are delegated to the correct views.
-  - Keyboard events. These are sent to the keyPane, which will then send the
-    event to the current firstResponder and up the responder chain.
-  - Resize events. When the viewport resizes, these events will be sent to all
-    panes.
-  - Keyboard shortcuts. Shortcuts are sent to the keyPane first, which
-    will go down its view hierarchy. Then they go to the mainPane, which will
-    go down its view hierarchy.
-  - Actions. Actions are generic messages that your application can send in
+  - Mouse events.  These are routed to the surface the event occured on.
+  - Keyboard events.  These are sent to the `keySurface`.
+  - Resize events. When the viewport resizes, these events will be sent to 
+    all surfaces.
+  - Keyboard shortcuts.  Shortcuts are first sent to the `menuSurface`, if 
+    one exists.  If unhandled, the `keySurface` is a given a chance to act on 
+    the shortcut.  Finally, if  still unhandled, the `ui` surface will be 
+    given a chance.
+  - Actions.  Actions are generic messages that your application can send in
     response to user action or other events. You can either specify an
-    explicit target, or allow the action to traverse the hierarchy until a
-    view is found that handles it.
+    explicit `target` surface, or allow the action to traverse a surface 
+    container hierarchy until a surface is found that handles it.
 
   @extends SC.Responder
   @extends SC.DelegateSupport
@@ -46,27 +45,14 @@ SC.EXIT_RIGHT = 'exit-right';
 SC.Application = SC.Responder.extend(SC.DelegateSupport,
 /** SC.Application.prototype */ {
 
+  isApp: true, // Walk like a duck.
   isResponderContext: true, // We can dispatch events and actions.
-
-  /**
-    Contains a list of all panes currently visible on screen.  Everytime a
-    pane attaches or detaches, it will update itself in this array.
-  */
-  panes: null,
-  
-  perspective: 1000,
-
-  _sc_perspectiveDidChange: function() {
-    var perspective = this.get('perspective')+0;
-    sc_assert(!isNaN(perspective));
-    document.body.style.webkitPerspective = this.get('perspective')+'px';
-  }.observes('perspective'),
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
 
-    this.panes = SC.Set.create();
-    sc_assert(SC.app === undefined, "You can only create one instance of SC.Application");
+    this.set('surfaces', SC.Set.create());
+    sc_assert(SC.app === undefined, "You can only create one instance of SC.Application.");
     SC.app = this;
 
     // FIXME: Use SC.app, not SC.RootResponder.responder throughout Blossom.
@@ -79,31 +65,84 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     });
   },
 
+  /** @property
+    Contains a list of all surfaces currently visible on screen.  Everytime 
+    a surface attaches or detaches, it will update itself in this array.
+
+    @type SC.Set<SC.Surface>
+  */
+  surfaces: null,
+
+  // When the surfaces property changes, we need to observe it's members
+  // for changes.
+  _sc_surfacesDidChange: function() {
+    // console.log("SC.Layer#_sc_sublayersDidChange()");
+    var cur  = this.get('surfaces'),
+        last = this._sc_surfaces,
+        func = this._sc_surfacesMembersDidChange;
+        
+    if (last === cur) return this; // nothing to do
+
+    // teardown old observer
+    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
+    
+    // save new cached values 
+    this._sc_surfaces = cur ;
+    
+    // setup new observers
+    if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
+
+    // process the changes
+    this._sc_surfacesMembersDidChange();
+  }.observes('surfaces'),
+
+  _sc_surfacesMembersDidChange: function() {
+    console.log("SC.Application#_sc_surfacesMembersDidChange()");
+    sc_assert(this.get('surfaces').every(function(surface) { return surface.kindOf(SC.Surface); }));
+  },
+
+  /** @property
+    The 3D persective property for the app's UI. You can override this on 
+    individual surfaces if you want; otherwise, the surface will exist in 
+    the same 3D space as the `ui` surface.
+
+    @type Integer
+  */
+  perspective: 1000,
+
+  _sc_perspectiveDidChange: function() {
+    var perspective = this.get('perspective')+0;
+    sc_assert(!isNaN(perspective));   // Must be a number.
+    sc_assert(perspective % 1 === 0); // Must be an Integer.
+    document.body.style.webkitPerspective = this.get('perspective')+'px';
+  }.observes('perspective'),
+
   // .......................................................
-  // USER INTERFACE
+  // USER INTERFACE SURFACE
   //
 
   /** @property
-    The app's user interface.  This pane receives shortcuts and actions if 
-    the `menuPane` does not respond to them.  By default, it is also the 
-    `keyPane` so it will also receive keyboard events.
+    The app's user interface.  This surface receives shortcuts and actions if 
+    the `menuSurface` does not respond to them, and the `keySurface` does not 
+    respond to them.  By default, it is also the `keySurface` so it will also 
+    receive keyboard events if a `keySurface` is not defined.
 
-    The pane expands to fill the entire screen.
+    The ui surface expands to fill the entire viewport.
 
-    A number of animated, hardware-accelerated 3D transitions are available.  
-    There are three possible transitions:
-    
+    A number of animated, hardware-accelerated 3D transitions are available 
+    when changing the 'ui' surface.  There are three possible transitions:
+
     - order in (defaults to SC.ENTER_LEFT)
     - replace (defaults to SC.SLIDE_FLIP_LEFT)
     - order out (defaults to SC.EXIT_RIGHT)
 
     You can change the type of transition for each of these situations, and 
-    that transition will be used whenever your app's UI is changed.
+    that transition will be used whenever your app's 'ui' surface is changed.
 
-    @type SC.Surface
+    @type SC.Surface or null
   */
   ui: null,
-  _sc_ui: null,
+  _sc_ui: null, // Note: Required, we're strict about null checking.
 
   uiOrderInTransition:  SC.ENTER_LEFT,
   uiReplaceTransition:  SC.SLIDE_FLIP_LEFT,
@@ -112,10 +151,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_uiDidChange: function() {
     var old = this._sc_ui,
         cur = this.get('ui'),
-        ui = document.getElementById('ui'),
+        uiElement = document.getElementById('ui'),
         transition, container, style;
 
-    sc_assert(ui);
+    sc_assert(uiElement);
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_ui is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@ui must either be null or an SC.Surface instance.");
 
     if (old === cur) return; // Nothing to do.
@@ -156,9 +196,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        ui.insertBefore(container, null); // add to DOM
-        ui.style.opacity = '1';
-        ui.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
+        uiElement.insertBefore(container, null); // add to DOM
+        uiElement.style.opacity = '1';
+        uiElement.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
         cur.didAttach();
       }
 
@@ -180,7 +220,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        ui.insertBefore(container, null); // add to DOM
+        uiElement.insertBefore(container, null); // add to DOM
         cur.didAttach();
 
       // replace
@@ -199,7 +239,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        ui.replaceChild(container, old.get('container'));
+        uiElement.replaceChild(container, old.get('container'));
         cur.didAttach();
         old.didDetach();
 
@@ -207,7 +247,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       } else if (old && !cur) {
         sc_assert(document.getElementById(old.get('container').id));
 
-        ui.removeChild(old.get('container'));
+        uiElement.removeChild(old.get('container'));
         old.didDetach();
       }
     }
@@ -222,175 +262,68 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   }.observes('ui'),
 
   // ..........................................................
-  // MENU PANE
+  // MENU SURFACE
   //
 
   /**
-    The current menu pane. This pane receives keyboard events before all other
-    panes, but tends to be transient, as it is only set when a pane is open.
+    The current menu surface. This surface receives keyboard events before 
+    all other surfaces, but tends to be transient, as it is only set when a 
+    menu is open.
 
-    @type SC.MenuPane
+    @type SC.Surface
   */
-  menuPane: null,
-
-  /**
-    Sets a pane as the menu pane. All key events will be directed to this
-    pane, but the current key pane will not lose focus.
-
-    Usually you would not call this method directly, but allow instances of
-    SC.MenuPane to manage the menu pane for you. If your pane does need to
-    become menu pane, you should relinquish control by calling this method
-    with a null parameter. Otherwise, key events will always be delivered to
-    that pane.
-
-    @param {SC.MenuPane} pane
-    @returns {SC.RootResponder} receiver
-  */
-  makeMenuPane: function(pane) {
-    // Does the specified pane accept being the menu pane?  If not, there's
-    // nothing to do.
-    if (pane  &&  !pane.get('acceptsMenuPane')) {
-      return this;
-    } else {
-      var currentMenu = this.get('menuPane');
-      if (currentMenu === pane) return this; // nothing to do
-
-      this.set('menuPane', pane);
-    }
-
-    return this;
-  },
+  menuSurface: null,
 
   // .......................................................
-  // KEY PANE
+  // KEYBOARD SURFACE
   //
 
   /**
-    The current key pane. This pane receives keyboard events, shortcuts, and
-    actions first, unless a menu is open. This pane is usually the highest
-    ordered pane or the mainPane.
+    The current keyboard surface. This surface receives keyboard events, 
+    shortcuts, and actions first, unless `menuSurface` is set, in which case 
+    it only receives those events if the `menuSurface` does not handle them.  
+    This surface is usually the highest ordered surface, or the `ui` surface.
 
-    @type SC.Pane
+    @type SC.Surface
   */
-  keyPane: null,
-
-  /** @property
-    A stack of the previous key panes.
-
-    *IMPORTANT: Property is not observable*
-  */
-  previousKeyPanes: [],
-
-  /**
-    Makes the passed pane the new key pane.  If you pass null or if the pane
-    does not accept key focus, then key focus will transfer to the previous
-    key pane (if it is still attached), and so on down the stack.  This will
-    notify both the old pane and the new root View that key focus has changed.
-
-    @param {SC.Pane} pane
-    @returns {SC.RootResponder} receiver
-  */
-  makeKeyPane: function(pane) {
-    // Was a pane specified?
-    var newKeyPane, previousKeyPane, previousKeyPanes;
-
-    if (pane) {
-      // Does the specified pane accept being the key pane?  If not, there's
-      // nothing to do.
-      if (!pane.get('acceptsKeyPane')) {
-        return this ;
-      } else {
-        // It does accept key pane status?  Then push the current keyPane to
-        // the top of the stack and make the specified pane the new keyPane.
-        // First, though, do a sanity-check to make sure it's not already the
-        // key pane, in which case we have nothing to do.
-        previousKeyPane = this.get('keyPane') ;
-        if (previousKeyPane === pane) {
-          return this ;
-        } else {
-          if (previousKeyPane) {
-            previousKeyPanes = this.get('previousKeyPanes') ;
-            previousKeyPanes.push(previousKeyPane) ;
-          }
-
-          newKeyPane = pane ;
-        }
-      }
-    } else {
-      // No pane was specified?  Then pop the previous key pane off the top 
-      // of the stack and make it the new key pane, assuming that it's still
-      // attached and accepts key pane (its value for acceptsKeyPane might
-      // have changed in the meantime).  Otherwise, we'll keep going up the
-      // stack.
-      previousKeyPane = this.get('keyPane') ;
-      previousKeyPanes = this.get('previousKeyPanes') ;
-
-      newKeyPane = null ;
-      while (previousKeyPanes.length > 0) {
-        var candidate = previousKeyPanes.pop();
-        if (candidate.get('isPaneAttached') && candidate.get('acceptsKeyPane')) {
-          newKeyPane = candidate ;
-          break ;
-        }
-      }
-    }
-
-    // If we found an appropriate candidate, make it the new key pane.
-    // Otherwise, make the main pane the key pane (if it accepts it).
-    if (!newKeyPane) {
-      var mainPane = this.get('mainPane') ;
-      if (mainPane && mainPane.get('acceptsKeyPane')) newKeyPane = mainPane;
-    }
-
-    // Now notify old and new key views of change after edit.
-    if (previousKeyPane) previousKeyPane.willLoseKeyPaneTo(newKeyPane);
-    if (newKeyPane) newKeyPane.willBecomeKeyPaneFrom(previousKeyPane);
-
-    this.set('keyPane', newKeyPane) ;
-
-    if (newKeyPane) newKeyPane.didBecomeKeyPaneFrom(previousKeyPane);
-    if (previousKeyPane) previousKeyPane.didLoseKeyPaneTo(newKeyPane);
-
-    return this ;
-  },
+  keyboardSurface: null,
 
   // ..........................................................
   // VIEWPORT STATE
   //
 
   /**
-    The last known window size.
-    @type Rect
+    The most-recently computed viewport size.  Calling `computeViewportSize` 
+    updates this value, and Blossom will also update the value whenever a 
+    viewport change is detected.
+
+    @type SC.Size
     @isReadOnly
   */
-  currentWindowSize: null,
+  viewportSize: SC.MakeSize(0,0),
 
   /**
     Computes the window size from the DOM.
 
     @returns Rect
   */
-  computeWindowSize: function() {
-    return {
-      width: window.innerWidth,
-      height: window.innerHeight
-    };
+  computeViewportSize: function() {
+    // TODO: Move to a shared buffer.
+    var old = this.get('viewportSize'),
+        cur = SC.MakeSize(window.innerWidth, window.innerHeight);
+
+    if (!SC.EqualSize(old, cur)) this.set('viewportSize', cur);
+    return cur;
   },
 
   /**
-    Indicates whether or not the window currently has focus.  If you need
-    to do something based on whether or not the window is in focus, you can
-    setup a binding or observer to this property.  Note that SproutCore
-    automatically adds an sc-focus or sc-blur CSS class to the body tag as
-    appropriate.  If you only care about changing the appearance of your
-    controls, you should use those classes in your CSS rules instead.
-  */
-  hasFocus: NO,
+    Indicates whether or not the application currently has focus.  If you 
+    need to do something based on whether or not the application has focus, 
+    you can set up a binding or observer on this property.
 
-  dragDidStart: function(drag) {
-    this._sc_mouseDownView = drag ;
-    this._sc_drag = drag ;
-  },
+    @type Boolean
+  */
+  hasFocus: false,
 
   // .......................................................
   // ACTIONS
@@ -845,11 +778,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   SC.platform.simulateTouchEvents();
     // }
 
-    // do some initial set
-    this.set('currentWindowSize', this.computeWindowSize()) ;
-    this.focus(); // assume the window is focused when you load.
-
-    SC.device.setup();
+    // Do some initial set up.
+    this.computeViewportSize();
+    SC.device.setup(); // HACK
+    this.focus();
   },
 
   /**
@@ -887,21 +819,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   /**
-    On window resize, notifies panes of the change.
+    On viewport resize, notifies surfaces of the change.
 
     @returns {Boolean}
   */
   resize: function() {
-    var oldSize = this.get('currentWindowSize'),
-        newSize = this.computeWindowSize();
-
-    this.set('currentWindowSize', newSize);
-
-    if (!SC.rectsEqual(newSize, oldSize)) {
-      this.panes.invoke('windowSizeDidChange', oldSize, newSize);
-    }
-
-    return YES; // Allow normal processing to continue.
+    var sz = this.computeViewportSize();
+    this.get('surfaces').invoke('viewportSizeDidChange', sz);
+    return YES; // Allow normal processing to continue. FIXME: Is this correct?
   },
 
   // ..........................................................

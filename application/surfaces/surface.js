@@ -217,91 +217,81 @@ SC.Surface = SC.Responder.extend({
   targetViewForEvent: function(evt) {
     return this; // FIXME
     // console.log('SC.Pane#targetViewForEvent(', evt, ')');
-    var context = this.getPath('hitTestLayer.context'),
-        hitLayer = null, zIndex = -1,
-        mousePosition, x, y;
-
-    mousePosition = this.updateMousePositionWithEvent(evt);
-    x = mousePosition.x;
-    y = mousePosition.y;
-
-    function hitTestSublayer(sublayer) {
-      if (sublayer.get('isHidden')) return;
-      context.save();
-
-      // Prevent this layer and any sublayer from drawing paths outside our 
-      // bounds.
-      sublayer.renderBoundsPath(context);
-      context.clip();
-
-      // Make sure the layer's transform is current.
-      if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
-        sublayer._sc_computeTransformFromSuperlayerToLayer();
-      }
-
-      // Apply the sublayer's transform from our layer (it's superlayer).
-      var t = sublayer._sc_transformFromSuperlayerToLayer;
-      context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
-
-      // First, test our sublayers.
-      sublayer.get('sublayers').forEach(hitTestSublayer);
-
-      // Only test ourself if (a) no hit has been found, or (b) our zIndex is 
-      // higher than whatever hit has been found so far.
-      var sublayerZ = sublayer.get('zIndex');
-      if (!hitLayer || zIndex < sublayerZ) {
-        // See if we actually hit something. Start by beginning a new path.
-        context.beginPath();
-
-        // Next, draw the path(s) we'll test.
-        sublayer.renderHitTestPath(context);
-
-        // Finally, test the point for intersection with the path(s).
-        if (context.isPointInPath(x, y)) {
-          hitLayer = sublayer;
-          zIndex = sublayerZ;
-        }
-      }
-
-      context.restore();
-    }
-
-    context.save();
-
-    // First, clip the context to the pane's layer's bounds.
-    context.beginPath();
-    this.get('layer').renderBoundsPath(context);
-    context.clip();
-
-    // Next, begin the hit testing process. When this completes, hitLayer 
-    // will contain the layer that was hit with the highest zIndex.
-    this.getPath('layer.sublayers').forEach(hitTestSublayer);
-
-    context.restore();
-
-    // We don't need to test `layer`, because we already know it was hit when 
-    // this method is called by SC.RootResponder.
-    return hitLayer? hitLayer.get('view') : this ;
+    // var context = this.getPath('hitTestLayer.context'),
+    //     hitLayer = null, zIndex = -1,
+    //     mousePosition, x, y;
+    // 
+    // mousePosition = this.updateMousePositionWithEvent(evt);
+    // x = mousePosition.x;
+    // y = mousePosition.y;
+    // 
+    // function hitTestSublayer(sublayer) {
+    //   if (sublayer.get('isHidden')) return;
+    //   context.save();
+    // 
+    //   // Prevent this layer and any sublayer from drawing paths outside our 
+    //   // bounds.
+    //   sublayer.renderBoundsPath(context);
+    //   context.clip();
+    // 
+    //   // Make sure the layer's transform is current.
+    //   if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
+    //     sublayer._sc_computeTransformFromSuperlayerToLayer();
+    //   }
+    // 
+    //   // Apply the sublayer's transform from our layer (it's superlayer).
+    //   var t = sublayer._sc_transformFromSuperlayerToLayer;
+    //   context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    // 
+    //   // First, test our sublayers.
+    //   sublayer.get('sublayers').forEach(hitTestSublayer);
+    // 
+    //   // Only test ourself if (a) no hit has been found, or (b) our zIndex is 
+    //   // higher than whatever hit has been found so far.
+    //   var sublayerZ = sublayer.get('zIndex');
+    //   if (!hitLayer || zIndex < sublayerZ) {
+    //     // See if we actually hit something. Start by beginning a new path.
+    //     context.beginPath();
+    // 
+    //     // Next, draw the path(s) we'll test.
+    //     sublayer.renderHitTestPath(context);
+    // 
+    //     // Finally, test the point for intersection with the path(s).
+    //     if (context.isPointInPath(x, y)) {
+    //       hitLayer = sublayer;
+    //       zIndex = sublayerZ;
+    //     }
+    //   }
+    // 
+    //   context.restore();
+    // }
+    // 
+    // context.save();
+    // 
+    // // First, clip the context to the pane's layer's bounds.
+    // context.beginPath();
+    // this.get('layer').renderBoundsPath(context);
+    // context.clip();
+    // 
+    // // Next, begin the hit testing process. When this completes, hitLayer 
+    // // will contain the layer that was hit with the highest zIndex.
+    // this.getPath('layer.sublayers').forEach(hitTestSublayer);
+    // 
+    // context.restore();
+    // 
+    // // We don't need to test `layer`, because we already know it was hit when 
+    // // this method is called by SC.RootResponder.
+    // return hitLayer? hitLayer.get('view') : this ;
   },
 
   /**
-    Invoked by the root responder whenever the window resizes.  This should
-    simply begin the process of notifying children that the view size has
-    changed, if needed.
+    Invoked by the application whenever the viewport resizes, and the surface 
+    is part of the application.  This should simply begin the process of 
+    notifying children that the viewport size has changed.
 
-    @param {Rect} oldSize the old window size
-    @param {Rect} newSize the new window size
-    @returns {SC.Pane} receiver
+    @param {SC.Size} size the new viewport size
   */
-  windowSizeDidChange: function(oldSize, newSize) {
-    this.set('currentWindowSize', newSize) ;
-    return this ;
-  },
-
-  /** @private */
-  paneLayoutDidChange: function() {
-    this.invokeOnce(this.updateLayout);
-  }.observes('layout'),
+  // viewportSizeDidChange: function(size) {},
 
   /**
     Attempts to send the event down the responder chain for this pane.  If you 
@@ -373,63 +363,13 @@ SC.Surface = SC.Responder.extend({
   //
 
   /**
-    Pane's never have a next responder.
-
-    @property {SC.Responder}
-    @readOnly
-  */
-  nextResponder: function() {
-    return null;
-  }.property().cacheable(),
-
-  /**
-    The first responder.  This is the first view that should receive action 
-    events.  Whenever you click on a view, it will usually become 
-    firstResponder. 
+    The first responder.  This is the first responder that should receive 
+    action events.  Whenever you click on a responder, it will usually become 
+    `firstResponder`.
 
     @property {SC.Responder}
   */
   firstResponder: null,
-
-  /** 
-    If YES, this pane can become the key pane.  You may want to set this to NO 
-    for certain types of panes.  For example, a palette may never want to 
-    become key.  The default value is YES.
-
-    @property {Boolean}
-  */
-  acceptsKeyPane: YES,
-
-  /**
-    This is set to YES when your pane is currently the target of key events. 
-
-    @property {Boolean}
-  */
-  isKeyPane: NO,
-
-  /**
-    Make the pane receive key events.  Until you call this method, the 
-    keyView set for this pane will not receive key events. 
-
-    @returns {SC.Pane} receiver
-  */
-  becomeKeyPane: function() {
-    if (this.get('isKeyPane')) return this ;
-    if (this.rootResponder) this.rootResponder.makeKeyPane(this) ;
-    return this ;
-  },
-
-  /**
-    Remove the pane view status from the pane.  This will simply set the 
-    keyPane on the rootResponder to null.
-
-    @returns {SC.Pane} receiver
-  */
-  resignKeyPane: function() {
-    if (!this.get('isKeyPane')) return this ;
-    if (this.rootResponder) this.rootResponder.makeKeyPane(null);
-    return this ;
-  },
 
   /**
     Makes the passed view (or any object that implements SC.Responder) into 
@@ -803,7 +743,7 @@ SC.Surface = SC.Responder.extend({
 
     this.createLayersForContainer(container);
     this.render(this.getPath('layer.context'), true);
-    this.paneDidAttach();
+    this.surfaceDidActivate();
 
     container = null; // avoid memory leak
   },
@@ -818,23 +758,25 @@ SC.Surface = SC.Responder.extend({
   // LAYOUT SUPPORT
   //
 
+  /**
+    True when the surface is currently part of the application (i.e. present 
+    in `SC.app@surfaces`).  Read only.
+    
+    @property {Boolean}
+    @readOnly
+  */
+  isSurfaceActive: false,
+  
   /** @private
     Called when the pane is attached to a DOM element in a window, this will 
     change the view status to be visible in the window and also register 
     with the rootResponder.
   */
-  paneDidAttach: function() {
+  surfaceDidActivate: function() {
     // hook into root responder
-    var responder = (this.rootResponder = SC.RootResponder.responder);
-    responder.panes.add(this);
-  
-    // set currentWindowSize
-    this.set('currentWindowSize', responder.computeWindowSize()) ;
-    
-    // update my own location
-    this.set('isPaneAttached', YES) ;
-
-    return this ;
+    var app = (this.rootResponder = SC.app);
+    app.surfaces.add(this);
+    this.set('isSurfaceActive', YES);
   },
 
   /** FIXME: Remove this method.
@@ -1070,14 +1012,6 @@ SC.Surface = SC.Responder.extend({
     return ret ;
   }.property().cacheable(),
 
-  /**
-    YES when the pane is currently attached to a document DOM.  Read only.
-    
-    @property {Boolean}
-    @readOnly
-  */
-  isPaneAttached: NO,
-  
   /** @private */
   init: function() {
     arguments.callee.base.apply(this, arguments);

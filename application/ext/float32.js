@@ -134,6 +134,15 @@ SC.IsSize = function(size) {
   return (size.length === 2 && size.constructor === Float32Array);
 };
 
+SC.EqualSize = function(size, size2) {
+  sc_assert(size.length === 2 && size.constructor === Float32Array);
+  sc_assert(size2.length === 2 && size2.constructor === Float32Array);
+
+  if (size === size2) return true;
+  else if (size[0] === size2[0] && size[1] === size2[1]) return true;
+  else return false;
+};
+
 SC.MakeRect = function(rect, y, width, height) {
   var ret, x = rect;
 

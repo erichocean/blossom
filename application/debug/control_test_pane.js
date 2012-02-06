@@ -4,8 +4,11 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/pane');
+
+if (SPROUTCORE) {
 
 /*global test */
 
@@ -191,3 +194,6 @@ SC.ControlTestPane.show = function() {
     SC.RunLoop.end();
   });
 };
+
+} // SPROUTCORE
+

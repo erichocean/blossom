@@ -25,21 +25,6 @@ SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
   isResponder: YES,
   
   /** @property
-    The pane this responder belongs to.  This is used to determine where you 
-    belong to in the responder chain.  Normally you should leave this property
-    set to null.
-  */
-  pane: null,
-  
-  /** @property 
-    YES if the responder is currently the first responder.  This property is 
-    always updated by a pane during its makeFirstResponder() method.
-
-    @type {Boolean}
-  */
-  isFirstResponder: NO,
-
-  /** @property
     Set to YES if your responder is willing to accept first responder status.
     This is used when calculcating the key responder loop.
   */
@@ -51,6 +36,23 @@ if (BLOSSOM) {
 
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
+  /** @property 
+    YES if the responder is currently the first responder.  This property is 
+    always updated by a pane during its makeFirstResponder() method.
+
+    @type {Boolean}
+  */
+  isFirstResponder: NO,
+
+  /** @property
+    The surface this responder belongs to.  This is used to determine where 
+    you belong to in the responder chain.  Normally you should leave this 
+    property set to null.
+
+    @type SC.Surface
+  */
+  surface: null,
+  
   /** @property
     This is the nextResponder in the responder chain.  If the receiver does 
     not implement a particular event handler, it will bubble to the next 
@@ -63,10 +65,10 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     responder.
   */
   becomeFirstResponder: function() {  
-    var pane = this.get('pane');
-    if (pane && this.get('acceptsFirstResponder')) {
-      if (pane.get('firstResponder') !== this) {
-        pane.makeFirstResponder(this);
+    var surface = this.get('surface');
+    if (surface && this.get('acceptsFirstResponder')) {
+      if (surface.get('firstResponder') !== this) {
+        surface.makeFirstResponder(this);
       }
     } 
   },
@@ -77,9 +79,9 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     status automatically when another view becomes first responder.
   */
   resignFirstResponder: function(evt) {
-    var pane = this.get('pane');
-    if (pane && pane.get('firstResponder') === this) {
-      pane.makeFirstResponder(null, evt);
+    var surface = this.get('surface');
+    if (surface && surface.get('firstResponder') === this) {
+      surface.makeFirstResponder(null, evt);
     }
   }
 
@@ -102,6 +104,13 @@ if (SPROUTCORE) {
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
   /** @property
+    The pane this responder belongs to.  This is used to determine where you 
+    belong to in the responder chain.  Normally you should leave this property
+    set to null.
+  */
+  pane: null,
+  
+  /** @property
     The app this responder belongs to.  For non-user-interface responder 
     chains, this is used to determine the context.  Usually this
     is the property you will want to work with.
@@ -118,6 +127,14 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   */
   nextResponder: null,
   
+  /** @property 
+    YES if the responder is currently the first responder.  This property is 
+    always updated by a pane during its makeFirstResponder() method.
+
+    @type {Boolean}
+  */
+  isFirstResponder: NO,
+
   /** @property
   
     YES the responder is somewhere in the responder chain.  This currently
