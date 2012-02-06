@@ -37,20 +37,20 @@ if (BLOSSOM) {
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
   /** @property 
-    YES if the responder is currently the first responder.  This property is 
-    always updated by a pane during its makeFirstResponder() method.
+    True when the responder is currently the first responder.  This property 
+    is always updated by a surface during its makeFirstResponder() method.
 
     @type {Boolean}
   */
   isFirstResponder: false,
 
   /** @property 
-    YES if the responder is currently the first responder.  This property is 
-    always updated by a pane during its makeFirstResponder() method.
+    True when the responder is currently the input responder.  This property 
+    is always updated by a surface during its makeFirstResponder() method.
 
     @type {Boolean}
   */
-  isKeyboardResponder: false,
+  isInputResponder: false,
 
   /** @property
     The surface this responder belongs to.  This is used to determine where 

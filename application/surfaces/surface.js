@@ -359,16 +359,18 @@ SC.Surface = SC.Responder.extend({
   },
 
   // .......................................................
-  // RESPONDER CONTEXT
+  // RESPONDER MANAGEMENT
   //
 
   /**
     The first responder.  This is the first responder that should receive 
     action events.  Whenever you click on a responder, it will usually become 
-    `firstResponder`.
+    `firstResponder`.  You can also make a responder first with code:
 
-    If this surface is also the `SC.app@keyboardSurface`, the `firstResponder` 
-    will have it's `isKeyboardResponder` property set to true.
+        theResponder.becomeFirstResponder();
+
+    If this surface is also assigned as the `SC.app@inputSurface`, the 
+    `firstResponder` will have it's `isInputResponder` property set to true.
 
     @property {SC.Responder}
     @isReadOnly
@@ -378,13 +380,13 @@ SC.Surface = SC.Responder.extend({
   /**
     Makes the passed responder into the new `firstResponder` for this 
     surface.  This will cause the current `firstResponder` to lose its 
-    `firstResponder` status and possibly `keyboardResponder` status as well.
+    first responder status and possibly its input responder status as well.
 
     @param {SC.Responder} responder
   */
   makeFirstResponder: function(responder) {
     var current = this.get('firstResponder'),
-        isKeyboardSurface = SC.app.get('keyboardSurface') === this;
+        isInputSurface = SC.app.get('inputSurface') === this;
 
     if (current === responder) return; // nothing to do
 
@@ -394,19 +396,19 @@ SC.Surface = SC.Responder.extend({
       current.willLoseFirstResponderTo(responder);
     }
 
-    if (isKeyboardSurface) {
-      if (current && current.willLoseKeyboardResponderTo) {
-        current.willLoseKeyboardResponderTo(responder);
+    if (isInputSurface) {
+      if (current && current.willLoseInputResponderTo) {
+        current.willLoseInputResponderTo(responder);
       }
-      if (responder && responder.willBecomeKeyboardResponderFrom) {
-        responder.willBecomeKeyboardResponderFrom(current);
+      if (responder && responder.willBecomeInputResponderFrom) {
+        responder.willBecomeInputResponderFrom(current);
       }
     }
 
     if (current) {
       current.beginPropertyChanges();
       current.set('isFirstResponder', false);
-      current.set('isKeyboardResponder', false);
+      current.set('isInputResponder', false);
       current.endPropertyChanges();
     }
 
@@ -414,17 +416,17 @@ SC.Surface = SC.Responder.extend({
 
     if (responder) {
       responder.beginPropertyChanges();
-      responder.set('isKeyboardResponder', isKeyboardSurface);
+      responder.set('isInputResponder', isInputSurface);
       responder.set('isFirstResponder', true);
       responder.endPropertyChanges();
     }
 
-    if (isKeyboardSurface) {
-      if (responder && responder.didBecomeKeyboardResponderFrom) {
-        responder.didBecomeKeyboardResponderFrom(current);
+    if (isInputSurface) {
+      if (responder && responder.didBecomeInputResponderFrom) {
+        responder.didBecomeInputResponderFrom(current);
       }
-      if (current && current.didLoseKeyboardResponderTo) {
-        current.didLoseKeyboardResponderTo(responder);
+      if (current && current.didLoseInputResponderTo) {
+        current.didLoseInputResponderTo(responder);
       }
     }
 

@@ -98,7 +98,7 @@ SC.ResponderProtocol = {
   // .......................................................................
   // Event Handlers
   //
-  // These methods are called by the input manager in response to keyboard
+  // These methods are called by the input manager in response to text input
   // events.  Most of these methods are defined here for you, but not actually
   // implemented in code.
   

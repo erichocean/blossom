@@ -74,19 +74,19 @@ SC.EXIT_RIGHT = 'exit-right';
   `SC.Application` routes five kinds of events to surfaces:
 
   - **Mouse events.**  These are routed to the surface the event occured on.
-  - **Keyboard events.**  These are sent to the `keyboardSurface`.
+  - **Input events.**  These are sent to the `inputSurface`.
   - **Viewport events.** When the viewport resizes, each surface will have 
     its `viewportSizeDidChange` method called, if it implements it.
   - **Keyboard shortcuts.**  Shortcuts are first sent to the `menuSurface`, 
-    if it exists.  If unhandled, the `keyboardSurface` is a given a chance to 
+    if it exists.  If unhandled, the `inputSurface` is a given a chance to 
     act on the shortcut.  Finally, if the shortcut is still unhandled, the 
     `ui` surface will be given a chance to handle it.
   - **Actions.**  Actions are generic messages that your application can send 
     in response to user action or other events. You can either specify a 
-    responder to target, or if not specified, the ui surface's 
+    responder to target, or if not specified, the `ui` surface's 
     `firstResponder` is made the target.  The target is then given the chance 
     to handle the action, and if not handled, the action moves up the 
-    responder chain until a responder is found that handles it.
+    responder chain until a responder is found that does handle it.
 
   @extends SC.Responder
   @extends SC.DelegateSupport
@@ -186,16 +186,17 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   }.observes('perspective'),
 
   // .......................................................
-  // USER INTERFACE SURFACE
+  // UI SURFACE
   //
 
   /** @property
     The app's user interface.  This surface receives shortcuts and actions if 
-    the `menuSurface` does not respond to them, and the `keySurface` does not 
-    respond to them.  By default, it is also the `keySurface` so it will also 
-    receive keyboard events if a `keySurface` is not defined.
+    the `menuSurface` does not respond to them, and the `inputSurface` does 
+    not respond to them.  By default, it is also the `inputSurface` so it 
+    will receive text input events if a separate `inputSurface` has not been 
+    defined.
 
-    The ui surface expands to fill the entire viewport.
+    The `ui` surface expands automatically to fill the entire viewport.
 
     A number of animated, hardware-accelerated 3D transitions are available 
     when changing the 'ui' surface.  There are three possible transitions:
@@ -343,18 +344,19 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   menuSurface: null,
 
   // .......................................................
-  // KEYBOARD SURFACE
+  // INPUT SURFACE
   //
 
   /**
-    The current keyboard surface. This surface receives keyboard events, 
+    The current text input surface. This surface receives text input events, 
     shortcuts, and actions first, unless `menuSurface` is set, in which case 
     it only receives those events if the `menuSurface` does not handle them.  
-    This surface is usually the highest ordered surface, or the `ui` surface.
+    This surface is usually the highest ordered surface, or if not defined, 
+    the `ui` surface assumes the input surface role automatically.
 
     @type SC.Surface
   */
-  keyboardSurface: null,
+  inputSurface: null,
 
   // ..........................................................
   // VIEWPORT STATE
@@ -362,8 +364,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     The most-recently computed viewport size.  Calling `computeViewportSize` 
-    updates this value, and Blossom will also update the value whenever a 
-    viewport change is detected.
+    updates this value, and `SC.Application` will also update this value 
+    whenever a viewport change is detected.
 
     @type SC.Size
     @isReadOnly
