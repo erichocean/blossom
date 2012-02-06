@@ -4,9 +4,13 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/panel');
 sc_require('views/button');
+
+if (SPROUTCORE) {
+
 /** 
   button1 : 1st button from the right. default:OK
   button2 : 2nd button from the right. Optional. Could be Cancel or 2nd action.
@@ -408,3 +412,5 @@ SC.AlertPane.plain = function(message, description, caption, button1Title, butto
   args[6] = 'blank';
   return this.show.apply(this, args);
 };
+
+} // SPROUTCORE

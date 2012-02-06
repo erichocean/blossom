@@ -3,8 +3,11 @@
 // Copyright ©2006-2011, Strobe Inc. and contributors.
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/pane');
+
+if (SPROUTCORE) {
 
 /** @class
 
@@ -71,3 +74,5 @@ SC.ModalPane = SC.Pane.extend({
     this.mouseDown(evt);
   }
 });
+
+} // SPROUTCORE

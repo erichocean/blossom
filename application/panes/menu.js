@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/picker');
 sc_require('views/menu_item');
+
+if (SPROUTCORE) {
 
 /**
   @class
@@ -1114,3 +1117,5 @@ SC.MenuPane.HUGE_SUBMENU_OFFSET_X = 0;
 // be truncated to fit. This value determines the amount by which
 // the menu will be offset from the top and bottom of the viewport.
 SC.MenuPane.VERTICAL_OFFSET = 23;
+
+} // SPROUTCORE

@@ -3,8 +3,11 @@
 // Copyright ©2006-2011, Strobe Inc. and contributors.
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/modal');
+
+if (SPROUTCORE) {
 
 /** 
   Shadow views from top-left corner clockwise
@@ -178,3 +181,5 @@ SC.PanelPane = SC.Pane.extend({
     return ret ;
   }
 });
+
+} // SPROUTCORE

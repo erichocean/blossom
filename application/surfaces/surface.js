@@ -84,7 +84,7 @@ if (BLOSSOM) {
   @extends SC.Responder
   @since Blossom 1.0
 */
-SC.Pane = SC.Responder.extend({
+SC.Surface = SC.Responder.extend({
 
   isResponderContext: true, // We can dispatch events and actions.
 

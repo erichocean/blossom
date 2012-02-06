@@ -4,8 +4,11 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('panes/panel');
+
+if (SPROUTCORE) {
 
 /**
   Displays a non-modal, default positioned, drag&drop-able palette pane.
@@ -72,3 +75,5 @@ SC.PalettePane = SC.PanelPane.extend({
   
  
 });
+
+} // SPROUTCORE
