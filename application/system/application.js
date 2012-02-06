@@ -100,7 +100,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     You can change the type of transition for each of these situations, and 
     that transition will be used whenever your app's UI is changed.
 
-    @type SC.Pane
+    @type SC.Surface
   */
   ui: null,
   _sc_ui: null,
@@ -116,7 +116,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         transition, container, style;
 
     sc_assert(ui);
-    sc_assert(cur === null || cur.kindOf(SC.Pane), "SC.Application@ui must be null or an SC.Pane instance.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@ui must either be null or an SC.Surface instance.");
 
     if (old === cur) return; // Nothing to do.
 
@@ -220,36 +220,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       cur.didBecomeUserInterfaceFrom(old);
     }
   }.observes('ui'),
-
-  /**
-    Swaps the main pane.  If the current main pane is also the key pane, then
-    the new main pane will also be made key view automatically.  In addition
-    to simply updating the mainPane property, this method will also notify the
-    panes themselves that they will lose/gain their mainView status.
-
-    Note that this method does not actually change the Pane's place in the
-    document body.  That will be handled by the Pane itself.
-
-    @param {SC.Pane} pane
-  */
-  makeMainPane: function(pane) {
-    var currentMain = this.get('mainPane') ;
-    if (currentMain === pane) return; // nothing to do
-
-    this.beginPropertyChanges();
-
-    // Change key focus if needed.
-    if (this.get('keyPane') === currentMain) this.makeKeyPane(pane);
-
-    // Change setting
-    this.set('mainPane', pane);
-
-    // Notify panes.  This will allow them to remove themselves.
-    if (currentMain) currentMain.blurMainTo(pane);
-    if (pane) pane.focusMainFrom(currentMain);
-
-    this.endPropertyChanges();
-  },
 
   // ..........................................................
   // MENU PANE
