@@ -515,6 +515,18 @@ SC.Surface = SC.Responder.extend({
   },
 
   // .......................................................
+  // APPLICATION FOCUS & BLUR SUPPORT
+  //
+
+  /**
+    This property is maintained by SC.Application.  You can monitor it for 
+    changes if your surface needs to react to application focus/blur events.
+
+    @type Boolean
+  */
+  applicationHasFocus: false,
+
+  // .......................................................
   // LAYOUT SUPPORT
   //
 

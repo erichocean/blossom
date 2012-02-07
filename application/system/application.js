@@ -253,7 +253,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var perspective = this.get('perspective')+0;
     sc_assert(!isNaN(perspective));   // Must be a number.
     sc_assert(perspective % 1 === 0); // Must be an Integer.
-    document.body.style.webkitPerspective = this.get('perspective')+'px';
+    document.body.style.webkitPerspective = perspective+'px';
   }.observes('perspective'),
 
   // .......................................................
@@ -263,14 +263,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   /** @property
     The app's user interface.  This surface receives shortcuts and actions if 
     the `menuSurface` does not respond to them, and the `inputSurface` does 
-    not respond to them.  By default, it is also the `inputSurface` so it 
-    will receive text input events if a separate `inputSurface` has not been 
-    defined.
+    not respond to them.  If will also receive text input events if a 
+    separate `inputSurface` has not been defined; otherwise, it does not 
+    receive text input events.
 
-    The `ui` surface expands automatically to fill the entire viewport.
+    The `ui` surface's parent layout is the size of the viewport.
 
-    A number of animated, hardware-accelerated 3D transitions are available 
-    when changing the 'ui' surface.  There are three possible transitions:
+    Animated, hardware-accelerated 3D transitions are available when changing 
+    the 'ui' surface.  There are three possible transitions:
 
     - order in (defaults to SC.ENTER_LEFT)
     - replace (defaults to SC.SLIDE_FLIP_LEFT)
@@ -308,6 +308,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       cur.willBecomeUserInterfaceFrom(old);
     }
     this._sc_ui = cur;
+    cur.set('applicationHasFocus', this.get('hasFocus'));
 
     if (!old && cur)      transition = this.get('uiOrderInTransition');
     else if (old && cur)  transition = this.get('uiReplaceTransition');
@@ -406,11 +407,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   /**
-    The current menu surface. This surface receives keyboard events before 
-    all other surfaces, but tends to be transient, as it is only set when a 
-    menu is open.
+    The current menu surface. This surface receives text input events before 
+    any other surface, but tends to be transient, as it is usually only set 
+    when a surface representing a "menu" is open.
 
-    @type SC.Surface
+    @type SC.Surface or null
   */
   menuSurface: null,
 
@@ -442,9 +443,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     shortcuts, and actions first, unless `menuSurface` is set, in which case 
     it only receives those events if the `menuSurface` does not handle them.  
     This surface is usually the highest ordered surface, or if not defined, 
-    the `ui` surface assumes the input surface role automatically.
+    the `ui` surface will assume the input surface role automatically.
 
-    @type SC.Surface
+    @type SC.Surface or null
   */
   inputSurface: null,
 
@@ -498,11 +499,32 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   /**
     Indicates whether or not the application currently has focus.  If you 
     need to do something based on whether or not the application has focus, 
-    you can set up a binding or observer on this property.
+    you can set up a binding or observer to this property.
+
+    Surfaces will automatically have their `applicationHasFocus` property set 
+    to this value when they are added, and whenever it changes.
 
     @type Boolean
   */
   hasFocus: false,
+
+  /** @private
+    Handles window focus events.  Also notifies surfaces.
+  */
+  focus: function() { 
+    if (!this.get('hasFocus')) this.set('hasFocus', true);
+    this.get('surfaces').invoke('set', 'applicationHasFocus', true);
+    return true; // allow default
+  },
+  
+  /** @private
+    Handles window blur events.  Also notifies surfaces.
+  */
+  blur: function() {
+    if (this.get('hasFocus')) this.set('hasFocus', false);
+    this.get('surfaces').invoke('set', 'applicationHasFocus', false);
+    return false; // allow default
+  },
 
   // .......................................................
   // ACTIONS
@@ -961,24 +983,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this.computeViewportSize();
     SC.device.setup(); // HACK
     this.focus();
-  },
-
-  /**
-    Handle window focus.  Change hasFocus and add sc-focus CSS class
-    (removing sc-blur).  Also notify panes.
-  */
-  focus: function() { 
-    if (!this.get('hasFocus')) this.set('hasFocus', true);
-    return true; // allow default
-  },
-  
-  /**
-    Handle window focus.  Change hasFocus and add sc-focus CSS class (removing
-    sc-blur).  Also notify panes.
-  */
-  blur: function() {
-    if (this.get('hasFocus')) this.set('hasFocus', false);
-    return false; // allow default
   },
 
   /**
