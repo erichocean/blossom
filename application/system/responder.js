@@ -52,6 +52,14 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   */
   isInputResponder: false,
 
+  /** @property 
+    True when the responder is currently the menu responder.  This property 
+    is always updated by a surface during its makeFirstResponder() method.
+
+    @type {Boolean}
+  */
+  isMenuResponder: false,
+
   /** @property
     The surface this responder belongs to.  This is used to determine where 
     you belong to in the responder chain.  Normally you should leave this 

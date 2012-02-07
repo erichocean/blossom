@@ -271,12 +271,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @type SC.Surface or null
   */
   ui: null,
-  _sc_ui: null, // Note: Required, we're strict about null checking.
 
   uiOrderInTransition:  SC.ENTER_LEFT,
   uiReplaceTransition:  SC.SLIDE_FLIP_LEFT,
   uiOrderOutTransition: SC.EXIT_RIGHT,
 
+  _sc_ui: null, // Note: Required, we're strict about null checking.
   _sc_uiDidChange: function() {
     var old = this._sc_ui,
         cur = this.get('ui'),
@@ -403,6 +403,25 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   menuSurface: null,
 
+  _sc_menuSurface : null, // Note: Required, we're strict about null checking.
+  _sc_menuSurfaceDidChange: function() {
+    var old = this._sc_menuSurface,
+        cur = this.get('menuSurface');
+
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_menuSurface is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@menuSurface must either be null or an SC.Surface instance.");
+
+    if (old === cur) return; // Nothing to do.
+
+    if (old) old.willLoseMenuSurfaceTo(cur);
+    if (cur) cur.willBecomeMenuSurfaceFrom(old);
+
+    this._sc_menuSurface = cur;
+
+    if (old) old.didLoseMenuSurfaceTo(cur);
+    if (cur) cur.didBecomeMenuSurfaceFrom(old);
+   }.observes('menuSurface'),
+
   // .......................................................
   // INPUT SURFACE
   //
@@ -417,6 +436,25 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @type SC.Surface
   */
   inputSurface: null,
+
+  _sc_inputSurface : null, // Note: Required, we're strict about null checking.
+  _sc_inputSurfaceDidChange: function() {
+    var old = this._sc_inputSurface,
+        cur = this.get('menuSurface');
+
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_inputSurface is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@inputSurface must either be null or an SC.Surface instance.");
+
+    if (old === cur) return; // Nothing to do.
+
+    if (old) old.willLoseInputSurfaceTo(cur);
+    if (cur) cur.willBecomeInputSurfaceFrom(old);
+
+    this._sc_inputSurface = cur;
+
+    if (old) old.didLoseInputTo(cur);
+    if (cur) cur.didBecomeInputFrom(old);
+  }.observes('inputSurface'),
 
   // ..........................................................
   // VIEWPORT STATE

@@ -382,7 +382,8 @@ SC.Surface = SC.Responder.extend({
   */
   makeFirstResponder: function(responder) {
     var current = this.get('firstResponder'),
-        isInputSurface = SC.app.get('inputSurface') === this;
+        isInputSurface = SC.app.get('inputSurface') === this,
+        isMenuSurface = SC.app.get('menuSurface') === this;
 
     if (current === responder) return; // nothing to do
 
@@ -401,10 +402,20 @@ SC.Surface = SC.Responder.extend({
       }
     }
 
+    if (isMenuSurface) {
+      if (current && current.willLoseMenuResponderTo) {
+        current.willLoseMenuResponderTo(responder);
+      }
+      if (responder && responder.willBecomeMenuResponderFrom) {
+        responder.willBecomeMenuResponderFrom(current);
+      }
+    }
+
     if (current) {
       current.beginPropertyChanges();
       current.set('isFirstResponder', false);
       current.set('isInputResponder', false);
+      current.set('isMenuResponder',  false);
       current.endPropertyChanges();
     }
 
@@ -412,9 +423,19 @@ SC.Surface = SC.Responder.extend({
 
     if (responder) {
       responder.beginPropertyChanges();
+      responder.set('isMenuResponder',  isMenuSurface);
       responder.set('isInputResponder', isInputSurface);
       responder.set('isFirstResponder', true);
       responder.endPropertyChanges();
+    }
+
+    if (isMenuSurface) {
+      if (responder && responder.didBecomeMenuResponderFrom) {
+        responder.didBecomeMenuResponderFrom(current);
+      }
+      if (current && current.didLoseMenuResponderTo) {
+        current.didLoseMenuResponderTo(responder);
+      }
     }
 
     if (isInputSurface) {
@@ -428,6 +449,70 @@ SC.Surface = SC.Responder.extend({
 
     if (responder && responder.didBecomeFirstResponderFrom) {
       responder.didBecomeFirstResponderFrom(current);
+    }
+  },
+
+  didBecomeInputSurfaceFrom: function(surface) {
+    sc_assert(SC.app.get('inputSurface') === this);
+    var firstResponder = this.get('firstResponder');
+    if (firstResponder) {
+      if (firstResponder.willBecomeInputResponderFrom) {
+        firstResponder.willBecomeInputResponderFrom(null);
+      }
+
+      firstResponder.set('isInputResponder', true);
+
+      if (firstResponder.didBecomeInputResponderFrom) {
+        firstResponder.didBecomeInputResponderFrom(null);
+      }
+    }
+  },
+
+  didLoseInputSurfaceTo: function(surface) {
+    sc_assert(SC.app.get('inputSurface') !== this);
+    var firstResponder = this.get('firstResponder');
+    if (firstResponder) {
+      if (firstResponder.willLoseInputResponderTo) {
+        firstResponder.willLoseInputResponderTo(null);
+      }
+
+      firstResponder.set('isInputResponder', false);
+
+      if (firstResponder.didLoseInputResponderTo) {
+        firstResponder.didLoseInputResponderTo(null);
+      }
+    }
+  },
+
+  didBecomeMenuSurfaceFrom: function(surface) {
+    sc_assert(SC.app.get('menuSurface') === this);
+    var firstResponder = this.get('firstResponder');
+    if (firstResponder) {
+      if (firstResponder.willBecomeMenuResponderFrom) {
+        firstResponder.willBecomeMenuResponderFrom(null);
+      }
+
+      firstResponder.set('isMenuResponder', true);
+
+      if (firstResponder.didBecomeMenuResponderFrom) {
+        firstResponder.didBecomeMenuResponderFrom(null);
+      }
+    }
+  },
+
+  didLoseMenuSurfaceTo: function(surface) {
+    sc_assert(SC.app.get('menuSurface') !== this);
+    var firstResponder = this.get('firstResponder');
+    if (firstResponder) {
+      if (firstResponder.willLoseMenuResponderTo) {
+        firstResponder.willLoseMenuResponderTo(null);
+      }
+
+      firstResponder.set('isMenuResponder', false);
+
+      if (firstResponder.didLoseMenuResponderTo) {
+        firstResponder.didLoseMenuResponderTo(null);
+      }
     }
   },
 
