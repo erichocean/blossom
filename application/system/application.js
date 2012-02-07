@@ -172,6 +172,16 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(set === this.get('surfaces'));
     sc_assert(surface.kindOf(SC.Surface));
     surface.set('isPresentInViewport', true);
+
+    // Some surfaces are created before the application is created, and the 
+    // _sc_firstResponderDidChange() method access the SC.app instance. To 
+    // handle this, surfaces that are created before SC.app exists set their 
+    // `__sc_needFirstResponderInit__` to true, leaving us responsible for 
+    // triggering the surface's _sc_firstResponderDidChange() method.
+    if (surface.__sc_needFirstResponderInit__) {
+      delete surface.__sc_needFirstResponderInit__;
+      surface._sc_firstResponderDidChange();
+    }
   },
 
   /** @private */
