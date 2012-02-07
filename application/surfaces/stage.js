@@ -44,8 +44,8 @@ if (BLOSSOM) {
   This class implements a "stage" where interactive shapes can be placed. 
   You can use these shapes to create complicated, interactive widgets.
 
-  @extends SC.Pane
-  @since SproutCore 1.9
+  @extends SC.Surface
+  @since Blossom 1.0
 */
 SC.StageSurface = SC.Surface.extend({
 

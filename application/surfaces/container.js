@@ -5,21 +5,14 @@
 // ==========================================================================
 /*globals BLOSSOM sc_assert */
 
+sc_require('surfaces/surface');
+sc_require('surfaces/transitions/surface_transition');
+
 if (BLOSSOM) {
 
-SC.SurfaceTransition = SC.Object.extend({
+SC.ContainerSurface = SC.Surface.extend({
 
-  kind: null, // one of 'order-in', 'order-out', or 'replace'
-
-  // a surface
-  from: null,
-
-  // a surface
-  to: null,
-
-  beginTransition: function() {},
-
-  endTransition: function() {}
+  
 
 });
 
