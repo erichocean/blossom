@@ -55,26 +55,26 @@ SC.EXIT_RIGHT = 'exit-right';
 
   The surface representing the app's user interface ("ui") has its size set 
   to the viewport automatically.  The surface is also added to the app's 
-  `surfaces` set if it is not already present.
+  `surfaces` set if it is not already present.  (You should not remove the 
+  `ui` surface from the `surfaces` set; doing so will result in an assertion 
+  failure.  Set the `ui` property to another surface, or null, instead.)
 
-  You can also assign a `keyboardSurface`:
+  You can also assign an `inputSurface` that recieves text input events 
+  before the `ui` surface is given a chance to respond:
 
-      SC.app.set('keyboardSurface', aSurface);
+      SC.app.set('inputSurface', aSurface);
 
-  and a `menuSurface`:
+  A `menuSurface` receives text input and keyboard shortcuts before both the 
+  `inputSurface` and `ui` surface have had a chance to respond:
 
-      SC.app.set('menuurface', aSurface);
+      SC.app.set('menuSurface', aSurface);
 
-  See "Dispatching Events" below for more information on how these surfaces 
-  are used by `SC.Application`.
+  See "Dispatching Events" below for detailed documentation on how these 
+  surfaces are used by `SC.Application`.
 
-  You should only remove a 'ui' surface by setting the 'ui' property to null, 
-  or to another surface. Do not remove it from the `surfaces` set or call 
-  `removeSurface`; both will result in an assertion failure.
-
-  If you remove a surface that is currently either the `menuPane` or the 
-  `inputPane`, the surface will be removed and the corresponding property set 
-  to null.
+  If you remove a surface that is currently either the `menuSurface` or the 
+  `inputSurface`, that surface will be removed and the corresponding property 
+  set to null.
 
   Dispatching Events
   ------------------
@@ -95,6 +95,13 @@ SC.EXIT_RIGHT = 'exit-right';
     `firstResponder` is made the target.  The target is then given the chance 
     to handle the action, and if not handled, the action moves up the 
     responder chain until a responder is found that does handle it.
+
+  Animated UI Transitions
+  -----------------------
+
+  When the `ui` property is set, one of three animated transitions will 
+  apply. See the documentation for the `ui` property for more information on 
+  how to configure these animations, or turn them off completely.
 
   @extends SC.Responder
   @extends SC.DelegateSupport
