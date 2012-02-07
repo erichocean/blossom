@@ -30,37 +30,6 @@ if (BLOSSOM) {
 */
 SC.ContainerSurface = SC.Surface.extend({
 
-  __sc_element__: null,
-
-  /**
-    The ID to use when building CSS rules for this container surface.
-
-    @property {String}
-    @readOnly
-  */
-  id: function(key, value) {
-    if (value) this._sc_id = value;
-    if (this._sc_id) return this._sc_id;
-    return SC.guidFor(this) ;
-  }.property().cacheable(),
-
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-
-    // SC.app gives us our transition element; otherwise, create one.
-    var el = this.__sc_element__;
-    if (!el) {
-      el = this.__sc_element__ = document.createElement('div');
-      el.id = this.get('id');
-    } else {
-      var id = el.id;
-      if (id) this.set('id', id);
-      else el.id = this.get('id')
-    }
-
-    // TODO: Do initial `el` setup here.
-  },
-
   /** @property
     The surface displayed by this container.
 

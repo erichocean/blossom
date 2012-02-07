@@ -70,7 +70,7 @@ if (BLOSSOM) {
 
       SC.app.set('ui', aSurface);
 
-  Or, you can set the surface as the app's `inputPane`: 
+  Or, you can set the surface as the app's `inputSurface`: 
 
       SC.app.set('inputPane', aSurface);
 
@@ -83,6 +83,39 @@ if (BLOSSOM) {
 SC.Surface = SC.Responder.extend({
 
   isResponderContext: true, // We can dispatch events and actions.
+
+  __sc_element__: null,
+
+  /** @private
+    The ID to use when building CSS rules for this container surface.
+  */
+  id: function(key, value) {
+    if (value) this._sc_id = value;
+    if (this._sc_id) return this._sc_id;
+    return SC.guidFor(this) ;
+  }.property().cacheable(),
+
+  /** @private Overriden by subclasses as needed. */
+  initElement: function() {
+    // Use the element we're given; otherwise, create one.
+    var el = this.__sc_element__;
+    if (!el) {
+      el = this.__sc_element__ = document.createElement('div');
+      el.id = this.get('id');
+    } else {
+      var id = el.id;
+      if (id) this.set('id', id);
+      else el.id = this.get('id')
+    }
+  },
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    this.initElement();
+
+    // TODO: Do initial `el` setup here.
+  },
 
   transitions: {},
 
