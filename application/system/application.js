@@ -65,10 +65,10 @@ if (BLOSSOM) {
       SC.app.set('ui', aSurface);
 
   The surface representing the app's user interface ("ui") has its layout set 
-  to the viewport automatically.  This surface is also added to the app's 
-  `surfaces` set if it is not already present.  (You should not remove the 
-  `ui` surface from the `surfaces` set; doing so will result in an assertion 
-  failure.  Instead, set the `ui` property to another surface, or null.)
+  to the viewport automatically.  (This surface is *not* added to the app's 
+  `surfaces` set, and it is removed if it's there.)  (You should not add the 
+  `ui` surface to the `surfaces` set later; doing so will result in an 
+  assertion failure.)
 
   You can also assign an `inputSurface` that receives text input events 
   before the `ui` surface is given a chance to respond:
@@ -167,61 +167,42 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   surfaces: null,
 
   /**
-    Adds a surface to the viewport, optionally using a specific transition to 
-    do so.  If you do not provide a transition, a default transitions will be 
-    used.  To prevent a transition, pass `false` explicitly.
+    Adds a surface to the viewport.
 
     @param {SC.Surface} surface
     @param {SC.SurfaceTransition} transition (optional)
   */
-  addSurface: function(surface, transition) {
-    this.replaceSurface(null, surface, transition);
-  },
-
-  /**
-    Removes a surface from the viewport, optionally using a specific 
-    transition to do so.  If you do not provide a transition, a default 
-    transitions will be used.  To prevent a transition, pass `false` 
-    explicitly.
-
-    @param {SC.Surface} surface
-    @param {SC.SurfaceTransition} transition (optional)
-  */
-  removeSurface: function(surface, transition) {
-    this.replaceSurface(surface, null, transition);
-  },
-
-  /**
-    Replaces a surface in the viewport with another surface, optionally using 
-    a specific transition to do so.  If you do not provide a transition, a 
-    default transitions will be used.  To prevent a transition, pass `false` 
-    explicitly.
-
-    If you pass null for `from`, this acts like addSurface with a transition.
-    If you pass null for `to`, this acts like removeSurface with a transition.
-    If you pass `transition`, that transition will be used.  Otherwise, the 
-    swap is performed immediately.
-
-    @param {SC.Surface} from the existing surface to replace, or null
-    @param {SC.Surface} to the new surface to replace with, or null
-    @param {SC.SurfaceTransition} transition (optional)
-  */
-  replaceSurface: function(from, to, transition) {
+  addSurface: function(surface) {
     var surfaces = this.get('surfaces');
 
-    sc_assert(from || to); // At least one must be provided.
-    sc_assert(from? from.kindOf(SC.Surface) : true);
-    sc_assert(to? to.kindOf(SC.Surface) : true);
-    sc_assert(transition? transition.kindOf(SC.SurfaceTransition) : true);
+    sc_assert(surface && surface.kindOf(SC.Surface));
+    sc_assert(surface !== this.get('ui'), "Don't add SC.app@ui to the SC.app@surfaces set.");
+    // sc_assert(!surfaces.contains(surface));
 
-    if (from) surfaces.remove(from);
-    if (to)   surfaces.add(to);
+    surfaces.add(surface);
+  },
+
+  /**
+    Removes a surface from the viewport.
+
+    @param {SC.Surface} surface
+    @param {SC.SurfaceTransition} transition (optional)
+  */
+  removeSurface: function(surface) {
+    var surfaces = this.get('surfaces');
+
+    sc_assert(surface && surface.kindOf(SC.Surface));
+    // sc_assert(surfaces.contains(surface));
+
+    surfaces.remove(surface);
   },
 
   /** @private */
   didAddItem: function(set, surface) {
     sc_assert(set === this.get('surfaces'));
     sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface !== this.get('ui'), "Don't add SC.app@ui to the SC.app@surfaces set.");
+
     surface.setIfChanged('isPresentInViewport', true);
     surface.setIfChanged('applicationHasFocus', this.get('hasFocus'));
 
@@ -257,7 +238,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_surfacesDidChange: function() {
     // console.log("SC.Surface#_sc_surfacesDidChange()");
     var cur  = this.get('surfaces'),
-        last = this._sc_surfaces;
+        last = this._sc_surfaces,
+        ui = this.get('ui');
         
     if (last === cur) return this; // nothing to do
 
@@ -274,18 +256,18 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // Save new set.
     this._sc_surfaces = cur;
 
-    // Set up new set observer and update surface status.
+    // `ui` should never be part of the `surfaces` set.
+    if (ui && cur.contains(ui)) cur.remove(ui);
+
+    // Set up new set observer and update their surface status.
     if (cur) {
       cur.addSetObserver(this);
       cur.forEach(function(surface) {
         this.didAddItem(surface);
       }, this);
 
-      // Our ui should also be in surfaces, but the `menuSurface` and 
-      // `inputSurface` should be set to null if they are no longer present.
-      var ui = this.get('ui');
-      if (!cur.contains(ui)) cur.add(ui);
-
+      // `menuSurface` and `inputSurface` should be set to null if they are 
+      // no longer present.
       SC.Application.TRANSIENT_SURFACES.forEach(function(key) {
         if (!cur.contains(this.get(key))) this.set(key, null);
       }, this);
@@ -339,12 +321,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   uiReplaceTransition:  SC.SLIDE_FLIP_LEFT,
   uiOrderOutTransition: SC.EXIT_RIGHT,
 
-  _sc_ui: null, // Note: Required, we're strict about null checking.
-  _sc_uiDidChange: function() {
-    var old = this._sc_ui,
-        cur = this.get('ui'),
-        uiContainer = this._sc_uiContainer;
-
+  /** @private */
+  uiContainer: function(key, value) {
+    sc_assert(value === undefined); // We're read only.
+    var uiContainer = this._sc_uiContainer;
     if (!uiContainer) {
       var uiElement = document.getElementById('ui');
       sc_assert(uiElement);
@@ -358,6 +338,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
       });
     }
+    return uiContainer;
+  }.property(),
+
+  _sc_ui: null, // Note: Required, we're strict about null checking.
+  _sc_uiDidChange: function() {
+    var old = this._sc_ui,
+        cur = this.get('ui'),
+        uiContainer = this.get('uiContainer');
 
     sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_ui is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@ui must either be null or an SC.Surface instance.");
@@ -373,6 +361,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
 
     this._sc_ui = cur;
+    if (cur) this.removeSurface(cur);
     uiContainer.set('surface', cur);
 
     if (old && old.didLoseUserInterfaceTo) {
@@ -478,6 +467,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (!SC.EqualSize(old, cur)) {
       this.set('viewportSize', cur);
       this.get('surfaces').invoke('viewportSizeDidChange', cur);
+      this.get('uiContainer').viewportSizeDidChange(cur);
     }
     return cur;
   },
@@ -514,6 +504,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   focus: function() { 
     if (!this.get('hasFocus')) this.set('hasFocus', true);
     this.get('surfaces').invoke('set', 'applicationHasFocus', true);
+    this.get('uiContainer').set('applicationHasFocus', true);
     return true; // allow default
   },
   
@@ -523,6 +514,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   blur: function() {
     if (this.get('hasFocus')) this.set('hasFocus', false);
     this.get('surfaces').invoke('set', 'applicationHasFocus', false);
+    this.get('uiContainer').set('applicationHasFocus', false);
     return false; // allow default
   },
 

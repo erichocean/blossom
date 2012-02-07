@@ -98,9 +98,11 @@ SC.ContainerSurface = SC.Surface.extend({
 
     if (old === cur) return; // Nothing to do.
 
-    this._sc_ui = cur;
-    if (cur && !cur.get('isPresentInViewport')) SC.app.addSurface(cur);
-    // Don't remove old from surfaces until we're done with our transition...
+    this._sc_surface = cur;
+    if (cur) {
+      cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
+      cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
+    }
 
     if (!old && cur)      transition = this.get('orderInTransition');
     else if (old && cur)  transition = this.get('replaceTransition');
@@ -173,7 +175,6 @@ SC.ContainerSurface = SC.Surface.extend({
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         element.replaceChild(container, old.get('container'));
-        this.removeSurface(old);
         cur.didAttach();
         old.didDetach();
 
@@ -182,11 +183,14 @@ SC.ContainerSurface = SC.Surface.extend({
         sc_assert(document.getElementById(old.get('container').id));
 
         element.removeChild(old.get('container'));
-        this.removeSurface(old);
         old.didDetach();
       }
     }
-  }.observes('surface')
+  }.observes('surface'),
+
+  viewportSizeDidChange: function(size) {
+    console.log('SC.ContainerSurface#viewportSizeDidChange()');
+  }
 
 });
 

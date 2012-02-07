@@ -198,13 +198,13 @@ function main() {
   // }, 500);
   // setTimeout(function() {
   //   SC.app.set('ui', surface2);
-  // }, 2000);
+  // }, 3500);
   // setTimeout(function() {
   //   SC.app.set('ui', surface);
-  // }, 4000);
+  // }, 5000);
   // setTimeout(function() {
   //   SC.app.set('ui', null);
-  // }, 6000);
+  // }, 7000);
   // setTimeout(function() {
   //   window.location.reload();
   // }, 8000);

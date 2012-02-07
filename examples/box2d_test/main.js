@@ -177,7 +177,7 @@ function init(stage) {
 }
 
 function main() {
-  var stage = SC.StagePane.create({
+  var stage = SC.StageSurface.create({
     layout: { top: 20, left: 20, width: 600, height: 600 },
     containerId: 'container'
   });
