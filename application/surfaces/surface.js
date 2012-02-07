@@ -475,12 +475,12 @@ SC.Surface = SC.Responder.extend({
   _sc_triggerFirstResponderNotificationsFor: function(type, property) {
     var firstResponder = this.get('firstResponder'), key;
     if (firstResponder) {
-      key = 'willLose'+property+'ResponderTo';
+      key = 'will'+type+property+'ResponderTo';
       if (firstResponder[key]) firstResponder[key](null);
 
       firstResponder.set('is'+property+'Responder', type === 'Become'? true : false);
 
-      key = 'didLose'+property+'ResponderTo';
+      key = 'did'+type+property+'ResponderTo';
       if (firstResponder[key]) firstResponder[key](null);
     }
   },
