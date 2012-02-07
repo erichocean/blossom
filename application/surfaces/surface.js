@@ -454,65 +454,34 @@ SC.Surface = SC.Responder.extend({
 
   didBecomeInputSurfaceFrom: function(surface) {
     sc_assert(SC.app.get('inputSurface') === this);
-    var firstResponder = this.get('firstResponder');
-    if (firstResponder) {
-      if (firstResponder.willBecomeInputResponderFrom) {
-        firstResponder.willBecomeInputResponderFrom(null);
-      }
-
-      firstResponder.set('isInputResponder', true);
-
-      if (firstResponder.didBecomeInputResponderFrom) {
-        firstResponder.didBecomeInputResponderFrom(null);
-      }
-    }
+    this._sc_triggerFirstResponderNotificationsFor('Become', 'Input');
   },
 
   didLoseInputSurfaceTo: function(surface) {
     sc_assert(SC.app.get('inputSurface') !== this);
-    var firstResponder = this.get('firstResponder');
-    if (firstResponder) {
-      if (firstResponder.willLoseInputResponderTo) {
-        firstResponder.willLoseInputResponderTo(null);
-      }
-
-      firstResponder.set('isInputResponder', false);
-
-      if (firstResponder.didLoseInputResponderTo) {
-        firstResponder.didLoseInputResponderTo(null);
-      }
-    }
+    this._sc_triggerFirstResponderNotificationsFor('Lose', 'Input');
   },
 
   didBecomeMenuSurfaceFrom: function(surface) {
     sc_assert(SC.app.get('menuSurface') === this);
-    var firstResponder = this.get('firstResponder');
-    if (firstResponder) {
-      if (firstResponder.willBecomeMenuResponderFrom) {
-        firstResponder.willBecomeMenuResponderFrom(null);
-      }
-
-      firstResponder.set('isMenuResponder', true);
-
-      if (firstResponder.didBecomeMenuResponderFrom) {
-        firstResponder.didBecomeMenuResponderFrom(null);
-      }
-    }
+    this._sc_triggerFirstResponderNotificationsFor('Become', 'Menu');
   },
 
   didLoseMenuSurfaceTo: function(surface) {
     sc_assert(SC.app.get('menuSurface') !== this);
-    var firstResponder = this.get('firstResponder');
+    this._sc_triggerFirstResponderNotificationsFor('Lose', 'Menu');
+  },
+
+  _sc_triggerFirstResponderNotificationsFor: function(type, property) {
+    var firstResponder = this.get('firstResponder'), key;
     if (firstResponder) {
-      if (firstResponder.willLoseMenuResponderTo) {
-        firstResponder.willLoseMenuResponderTo(null);
-      }
+      key = 'willLose'+property+'ResponderTo';
+      if (firstResponder[key]) firstResponder[key](null);
 
-      firstResponder.set('isMenuResponder', false);
+      firstResponder.set('is'+property+'Responder', type === 'Become'? true : false);
 
-      if (firstResponder.didLoseMenuResponderTo) {
-        firstResponder.didLoseMenuResponderTo(null);
-      }
+      key = 'didLose'+property+'ResponderTo';
+      if (firstResponder[key]) firstResponder[key](null);
     }
   },
 
