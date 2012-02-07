@@ -12,6 +12,8 @@
 
 sc_require('mixins/responder_context');
 sc_require('ext/float32');
+sc_require('surfaces/surface');
+sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 
@@ -42,24 +44,36 @@ SC.EXIT_RIGHT = 'exit-right';
 
       SC.app.removeSurface(aSurface);
 
-  You can also modify the `surfaces` property directly:
+  In both cases, a default transitions is used.  Pass `false` explicitly to 
+  prevent this default transition:
+
+      SC.app.addSurface(aSurface, false); // no transition will be used
+
+  You can also specify a specific transition:
+
+      var myTransition = SC.SurfaceTransition.create(...);
+      SC.app.addSurface(aSurface, myTransition);
+
+  You can also modify the `surfaces` property directly, but doing so will 
+  *not* cause any transitions to occur (this is equivalent to passing `false` 
+  to `addSurface` and `removeSurface` as the `transition`):
 
       SC.app.get('surfaces').add(aSurface);
       SC.app.get('surfaces').remove(aSurface);
 
-  Surfaces added in this manner play no special role in the application.  You 
-  can also add surfaces for particular roles, the most common of which is the 
-  'ui' role:
+  Surfaces added to the `surfaces` set, or using `add|removeSurface` play no 
+  special role in the application.  You can also add surfaces for particular 
+  roles, the most common of which is the `ui` role:
 
       SC.app.set('ui', aSurface);
 
-  The surface representing the app's user interface ("ui") has its size set 
-  to the viewport automatically.  The surface is also added to the app's 
+  The surface representing the app's user interface ("ui") has its layout set 
+  to the viewport automatically.  This surface is also added to the app's 
   `surfaces` set if it is not already present.  (You should not remove the 
   `ui` surface from the `surfaces` set; doing so will result in an assertion 
-  failure.  Set the `ui` property to another surface, or null, instead.)
+  failure.  Instead, set the `ui` property to another surface, or null.)
 
-  You can also assign an `inputSurface` that recieves text input events 
+  You can also assign an `inputSurface` that receives text input events 
   before the `ui` surface is given a chance to respond:
 
       SC.app.set('inputSurface', aSurface);
@@ -130,16 +144,23 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     });
   },
 
+  // .......................................................
+  // SURFACE HANDLING
+  //
+
   /** @property
-    Contains the set of all surfaces currently present in the viewport.  
+    Contains the set of all surfaces currently present in the viewport, and 
+    that are not in the process of being added or removed from the viewport.  
     You can add surfaces to this set directly, or use the `addSurface` and 
-    `removeSurface` helpers, which do the same thing with less typing.
+    `removeSurface` helpers, which do the same thing but also allow a surface 
+    transition to be specified.
 
     You can also replace this set with an entirely new set of surfaces.  If 
     you do, the current `ui` surface will be automatically added to the set 
     if not already present.  For the `menuSurface` and `inputSurface`, these 
     properties will be set to `null` if the surface is *not* part of the new 
-    surface set.
+    surface set.  Any surfaces currently transitioning in or out of the 
+    viewport will be removed immediately.
 
     When a surface is added, its `isPresentInViewport` property is set to 
     true, and when removed, it is set to false.
@@ -148,30 +169,64 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   surfaces: null,
 
-  addSurface: function(surface) {
-    var surfaces = this.get('surfaces');
+  /**
+    Adds a surface to the viewport, optionally using a specific transition to 
+    do so.  If you do not provide a transition, a default transitions will be 
+    used.  To prevent a transition, pass `false` explicitly.
 
-    sc_assert(surface && surface.kindOf(SC.Surface));
-    // sc_assert(!surfaces.contains(surface));
-
-    surfaces.add(surface);
+    @param {SC.Surface} surface
+    @param {SC.SurfaceTransition} transition (optional)
+  */
+  addSurface: function(surface, transition) {
+    this.replaceSurface(null, surface, transition);
   },
 
-  removeSurface: function(surface) {
+  /**
+    Removes a surface from the viewport, optionally using a specific 
+    transition to do so.  If you do not provide a transition, a default 
+    transitions will be used.  To prevent a transition, pass `false` 
+    explicitly.
+
+    @param {SC.Surface} surface
+    @param {SC.SurfaceTransition} transition (optional)
+  */
+  removeSurface: function(surface, transition) {
+    this.replaceSurface(surface, null, transition);
+  },
+
+  /**
+    Replaces a surface in the viewport with another surface, optionally using 
+    a specific transition to do so.  If you do not provide a transition, a 
+    default transitions will be used.  To prevent a transition, pass `false` 
+    explicitly.
+
+    If you pass null for `from`, this acts like addSurface with a transition.
+    If you pass null for `to`, this acts like removeSurface with a transition.
+    If you pass `transition`, that transition will be used.  Otherwise, the 
+    swap is performed immediately.
+
+    @param {SC.Surface} from the existing surface to replace, or null
+    @param {SC.Surface} to the new surface to replace with, or null
+    @param {SC.SurfaceTransition} transition (optional)
+  */
+  replaceSurface: function(from, to, transition) {
     var surfaces = this.get('surfaces');
 
-    sc_assert(surface && surface.kindOf(SC.Surface));
-    sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
-    // sc_assert(surfaces.contains(surface));
+    sc_assert(from || to); // At least one must be provided.
+    sc_assert(from? from.kindOf(SC.Surface) : true);
+    sc_assert(to? to.kindOf(SC.Surface) : true);
+    sc_assert(transition? transition.kindOf(SC.SurfaceTransition) : true);
 
-    surfaces.remove(surface);
+    if (from) surfaces.remove(from);
+    if (to)   surfaces.add(to);
   },
 
   /** @private */
   didAddItem: function(set, surface) {
     sc_assert(set === this.get('surfaces'));
     sc_assert(surface.kindOf(SC.Surface));
-    surface.set('isPresentInViewport', true);
+    surface.setIfChanged('isPresentInViewport', true);
+    surface.setIfChanged('applicationHasFocus', this.get('hasFocus'));
 
     // Some surfaces are created before the application is created, and the 
     // _sc_firstResponderDidChange() method accesses the SC.app instance. To 
@@ -307,8 +362,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (cur && cur.willBecomeUserInterfaceFrom) {
       cur.willBecomeUserInterfaceFrom(old);
     }
+
     this._sc_ui = cur;
-    cur.set('applicationHasFocus', this.get('hasFocus'));
+    if (cur) this.addSurface(cur);
+    // Don't remove old from surfaces until we're done with our transition...
 
     if (!old && cur)      transition = this.get('uiOrderInTransition');
     else if (old && cur)  transition = this.get('uiReplaceTransition');
@@ -381,6 +438,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         uiElement.replaceChild(container, old.get('container'));
+        this.removeSurface(old);
         cur.didAttach();
         old.didDetach();
 
@@ -389,6 +447,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         sc_assert(document.getElementById(old.get('container').id));
 
         uiElement.removeChild(old.get('container'));
+        this.removeSurface(old);
         old.didDetach();
       }
     }
@@ -401,38 +460,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       cur.didBecomeUserInterfaceFrom(old);
     }
   }.observes('ui'),
-
-  // ..........................................................
-  // MENU SURFACE
-  //
-
-  /**
-    The current menu surface. This surface receives text input events before 
-    any other surface, but tends to be transient, as it is usually only set 
-    when a surface representing a "menu" is open.
-
-    @type SC.Surface or null
-  */
-  menuSurface: null,
-
-  _sc_menuSurface : null, // Note: Required, we're strict about null checking.
-  _sc_menuSurfaceDidChange: function() {
-    var old = this._sc_menuSurface,
-        cur = this.get('menuSurface');
-
-    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_menuSurface is invalid.");
-    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@menuSurface must either be null or an SC.Surface instance.");
-
-    if (old === cur) return; // Nothing to do.
-
-    if (old) old.willLoseMenuSurfaceTo(cur);
-    if (cur) cur.willBecomeMenuSurfaceFrom(old);
-
-    this._sc_menuSurface = cur;
-
-    if (old) old.didLoseMenuSurfaceTo(cur);
-    if (cur) cur.didBecomeMenuSurfaceFrom(old);
-   }.observes('menuSurface'),
 
   // .......................................................
   // INPUT SURFACE
@@ -469,6 +496,38 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   }.observes('inputSurface'),
 
   // ..........................................................
+  // MENU SURFACE
+  //
+
+  /**
+    The current menu surface. This surface receives text input events before 
+    any other surface, but tends to be transient, as it is usually only set 
+    when a surface representing a "menu" is open.
+
+    @type SC.Surface or null
+  */
+  menuSurface: null,
+
+  _sc_menuSurface : null, // Note: Required, we're strict about null checking.
+  _sc_menuSurfaceDidChange: function() {
+    var old = this._sc_menuSurface,
+        cur = this.get('menuSurface');
+
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_menuSurface is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@menuSurface must either be null or an SC.Surface instance.");
+
+    if (old === cur) return; // Nothing to do.
+
+    if (old) old.willLoseMenuSurfaceTo(cur);
+    if (cur) cur.willBecomeMenuSurfaceFrom(old);
+
+    this._sc_menuSurface = cur;
+
+    if (old) old.didLoseMenuSurfaceTo(cur);
+    if (cur) cur.didBecomeMenuSurfaceFrom(old);
+  }.observes('menuSurface'),
+
+  // ..........................................................
   // VIEWPORT STATE
   //
 
@@ -483,18 +542,36 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   viewportSize: SC.MakeSize(0,0),
 
   /**
-    Computes the window size from the DOM.
+    Computes the viewport size. Also notifies surfaces if the computed value 
+    has changed.
 
-    @returns Rect
+    @returns SC.Size
   */
   computeViewportSize: function() {
     // TODO: Move to a shared buffer.
     var old = this.get('viewportSize'),
         cur = SC.MakeSize(window.innerWidth, window.innerHeight);
 
-    if (!SC.EqualSize(old, cur)) this.set('viewportSize', cur);
+    if (!SC.EqualSize(old, cur)) {
+      this.set('viewportSize', cur);
+      this.get('surfaces').invoke('viewportSizeDidChange', cur);
+    }
     return cur;
   },
+
+  /** @private
+    On viewport resize, notifies surfaces of the change.
+
+    @returns {Boolean}
+  */
+  resize: function() {
+    this.computeViewportSize();
+    return YES; // Allow normal processing to continue. FIXME: Is this correct?
+  },
+
+  // .......................................................
+  // FOCUS & BLUR SUPPORT
+  //
 
   /**
     Indicates whether or not the application currently has focus.  If you 
@@ -527,7 +604,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   // .......................................................
-  // ACTIONS
+  // ACTION HANDLING
   //
 
   /**
@@ -725,7 +802,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   // ..........................................................
-  // KEYBOARD HANDLING
+  // TEXT INPUT & KEYBOARD HANDLING
   //
 
   keyup: function(evt) {
@@ -874,6 +951,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // ..........................................................
   // ANIMATION HANDLING
   //
+
   webkitAnimationStart: function(evt) {
     try {
       var view = this.targetViewForEvent(evt) ;
@@ -999,17 +1077,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     
     // console.log('target', ret);
     return ret;
-  },
-
-  /**
-    On viewport resize, notifies surfaces of the change.
-
-    @returns {Boolean}
-  */
-  resize: function() {
-    var sz = this.computeViewportSize();
-    this.get('surfaces').invoke('viewportSizeDidChange', sz);
-    return YES; // Allow normal processing to continue. FIXME: Is this correct?
   },
 
   // ..........................................................
