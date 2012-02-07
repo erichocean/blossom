@@ -941,8 +941,10 @@ SC.Surface = SC.Responder.extend({
   init: function() {
     arguments.callee.base.apply(this, arguments);
     this.pane = this; // Needed so that our childViews can get our "pane".
-    if (SC.app) this._sc_firstResponderDidChange();
-    else {
+    if (SC.app) {
+      this.__sc_needFirstResponderInit__ = false;
+      this._sc_firstResponderDidChange();
+    } else {
       // This flag instructs SC.app to execute our 
       // `_sc_firstResponderDidChange` method when we are first added to the 
       // app's set of surfaces.
