@@ -45,7 +45,7 @@ if (BLOSSOM) {
   viewport.  It will then automatically resize when the application's 
   viewport changes size.
 
-  The surface's `isPresentInViewport` property will be set to true.
+  The surface's `isPresentInViewport` property will also be set to true.
 
   Removing a Surface from the Viewport
   ------------------------------------

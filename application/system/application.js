@@ -163,6 +163,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(set === this.get('surfaces'));
     sc_assert(surface.kindOf(SC.Surface));
     surface.set('isPresentInViewport', false);
+
+    // If we remove a surface that is currently the menuSurface or 
+    // inputSurface, set the correspoding property to null.
+    SC.Application.TRANSIENT_SURFACES.forEach(function(key) {
+      if (this.get(key) === surface) this.set(key, null);
+    }, this);
+
+    sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
   },
 
   // When the surfaces property changes, we need to observe the new set for 
@@ -199,7 +207,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       var ui = this.get('ui');
       if (!cur.contains(ui)) cur.add(ui);
 
-      'menuSurface inputSurface'.w().forEach(function(key) {
+      SC.Application.TRANSIENT_SURFACES.forEach(function(key) {
         if (!cur.contains(this.get(key))) this.set(key, null);
       }, this);
     }
@@ -1226,6 +1234,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   }
 
 });
+
+SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
 
 } // BLOSSOM
 
