@@ -21,11 +21,21 @@ if (BLOSSOM) {
   a hierarchy, allowing their layout to depend on their parent's position and 
   size, rather than the application's viewport.
 
-  Showing a Surface
-  -----------------
+  A surface should only consume resources when it is present in the viewport. 
+  You can observe the `isPresentInViewport` property for changes; it will be 
+  set to true when the surface is added to the viewport, and false when the 
+  surface is removed.
 
-  To make a surface visible within the viewport, you need to add it to your 
-  app:
+  Mere presence in the viewport does not imply the surface is visibile. The 
+  surface may well be positioned off screen, or have its opacity set to zero, 
+  or be occluded by another surface.  On the other hand, a surface that is 
+  not present in the viewport is *never* visible.
+
+  Adding a Surface to the Viewport
+  --------------------------------
+
+  To add a surface to the viewport, you add the surface to your app, which 
+  manages the viewport:
 
      mySurface = SC.ImageSurface.create();
      SC.app.addSurface(mySurface);
@@ -33,42 +43,39 @@ if (BLOSSOM) {
   Once a surface has been added to the app, it will be sized and positioned 
   according to the layout you have specified relative to the application's 
   viewport.  It will then automatically resize when the application's 
-  viewport changes size.  The surface's `isPresentInViewport` property will 
-  also be set to true.
+  viewport changes size.
 
-  Removing a Surface
-  ------------------
+  The surface's `isPresentInViewport` property will be set to true.
 
-  To remove a surface, do:
+  Removing a Surface from the Viewport
+  ------------------------------------
+
+  To remove a surface from the viewport, do:
 
       SC.app.removeSurface(mySurface);
 
   The surface's `isPresentInViewport` property will also change to false.
 
   A surface's underlying graphics resources are released when it is no longer 
-  part of the application.  This occurs at the end of the run loop, so it is 
+  present in the viewport.  This occurs at the end of the run loop, so it is 
   okay to remove a surface temporarily and move it somewhere else – it's 
   resources will remain untouched.
 
   Receiving Events
   ----------------
 
-  Your pane and its child views will automatically receive any mouse or touch 
-  events as long as it is on the screen.  To receive keyboard events, however, 
-  you must focus the keyboard on your pane by calling makeKeyPane() on the 
-  pane itself.  This will cause the RootResponder to route keyboard events to 
-  your pane.  The pane, in turn, will route those events to its current 
-  keyView, if there is any.
+  A surface will automatically receive any mouse events that occur on it for 
+  as long as it is present in the viewport.  To receive keyboard events, 
+  however, you must either set the surface as the app's `ui`:
 
-  Note that all SC.Views (anything that implements SC.ClassicResponder, 
-  really) will be notified when it is about or gain or lose keyboard focus.  
-  These notifications are sent both when the view is made keyView of a 
-  particular pane and when the pane is made keyPane for the entire 
-  application.
+      SC.app.set('ui', aSurface);
 
-  You can prevent your Pane from becoming key by setting the acceptsKeyPane 
-  to NO on the pane.  This is useful when creating palettes and other popups 
-  that should not steal keyboard control from another view.
+  Or, you can set the surface as the app's `inputPane`: 
+
+      SC.app.set('inputPane', aSurface);
+
+  For surfaces that manage other responders, such as `SC.ViewSurface`, the 
+  events will be forwarded on to the appropriate responder within the surface.
 
   @extends SC.Responder
   @since Blossom 1.0
