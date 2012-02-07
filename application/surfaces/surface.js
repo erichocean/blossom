@@ -354,6 +354,34 @@ SC.Surface = SC.Responder.extend({
     return ret ;
   },
 
+  /** @private
+    If the user presses the tab key and the pane does not have a first
+    responder, try to give it to the next eligible responder.
+
+    If the keyDown event reaches the pane, we can assume that no responders in
+    the responder chain, nor the default responder, handled the event.
+  */
+  keyDown: function(evt) {
+    var nextValidKeyView;
+
+    // Handle tab key presses if we don't have a first responder already
+    if (evt.which === 9 && !this.get('firstResponder')) {
+      // Cycle forwards by default, backwards if the shift key is held
+      if (evt.shiftKey) {
+        nextValidKeyView = this.get('previousValidKeyView');
+      } else {
+        nextValidKeyView = this.get('nextValidKeyView');
+      }
+
+      if (nextValidKeyView) {
+        this.set('firstResponder', nextValidKeyView);
+        return YES;
+      }
+    }
+
+    return NO;
+  },
+
   // .......................................................
   // RESPONDER MANAGEMENT
   //
@@ -380,77 +408,78 @@ SC.Surface = SC.Responder.extend({
 
     @param {SC.Responder} responder
   */
-  makeFirstResponder: function(responder) {
-    var current = this.get('firstResponder'),
+  _sc_firstResponder: null, // Note: Required, we're strict about null checking.
+  _sc_firstResponderDidChange: function(responder) {
+    var old = this._sc_firstResponder,
+        cur = this.get('firstResponder'),
         isInputSurface = SC.app.get('inputSurface') === this,
         isMenuSurface = SC.app.get('menuSurface') === this;
 
-    if (current === responder) return; // nothing to do
+    sc_assert(old === null || old.kindOf(SC.Responder), "Blossom internal error: SC.Application^_sc_firstResponder is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Responder), "SC.Surface@firstResponder must either be null or an SC.Responder instance.");
 
-    sc_assert(responder? responder.kindOf('SC.Responder') : true);
+    if (old === cur) return; // Nothing to do.
 
-    if (current && current.willLoseFirstResponderTo) {
-      current.willLoseFirstResponderTo(responder);
+    if (old && old.willLoseFirstResponderTo) {
+      old.willLoseFirstResponderTo(responder);
     }
 
     if (isInputSurface) {
-      if (current && current.willLoseInputResponderTo) {
-        current.willLoseInputResponderTo(responder);
+      if (old && old.willLoseInputResponderTo) {
+        old.willLoseInputResponderTo(cur);
       }
-      if (responder && responder.willBecomeInputResponderFrom) {
-        responder.willBecomeInputResponderFrom(current);
+      if (cur && cur.willBecomeInputResponderFrom) {
+        cur.willBecomeInputResponderFrom(old);
       }
     }
 
     if (isMenuSurface) {
-      if (current && current.willLoseMenuResponderTo) {
-        current.willLoseMenuResponderTo(responder);
+      if (old && old.willLoseMenuResponderTo) {
+        old.willLoseMenuResponderTo(cur);
       }
-      if (responder && responder.willBecomeMenuResponderFrom) {
-        responder.willBecomeMenuResponderFrom(current);
+      if (cur && cur.willBecomeMenuResponderFrom) {
+        cur.willBecomeMenuResponderFrom(old);
       }
     }
 
-    if (current) {
-      current.beginPropertyChanges();
-      current.set('isFirstResponder', false);
-      current.set('isInputResponder', false);
-      current.set('isMenuResponder',  false);
-      current.endPropertyChanges();
+    if (old) {
+      old.beginPropertyChanges();
+      old.set('isFirstResponder', false);
+      old.set('isInputResponder', false);
+      old.set('isMenuResponder',  false);
+      old.endPropertyChanges();
     }
 
-    this.set('firstResponder', responder);
-
-    if (responder) {
-      responder.beginPropertyChanges();
-      responder.set('isMenuResponder',  isMenuSurface);
-      responder.set('isInputResponder', isInputSurface);
-      responder.set('isFirstResponder', true);
-      responder.endPropertyChanges();
+    if (cur) {
+      cur.beginPropertyChanges();
+      cur.set('isMenuResponder',  isMenuSurface);
+      cur.set('isInputResponder', isInputSurface);
+      cur.set('isFirstResponder', true);
+      cur.endPropertyChanges();
     }
 
     if (isMenuSurface) {
-      if (responder && responder.didBecomeMenuResponderFrom) {
-        responder.didBecomeMenuResponderFrom(current);
+      if (cur && cur.didBecomeMenuResponderFrom) {
+        cur.didBecomeMenuResponderFrom(old);
       }
-      if (current && current.didLoseMenuResponderTo) {
-        current.didLoseMenuResponderTo(responder);
+      if (old && old.didLoseMenuResponderTo) {
+        old.didLoseMenuResponderTo(cur);
       }
     }
 
     if (isInputSurface) {
-      if (responder && responder.didBecomeInputResponderFrom) {
-        responder.didBecomeInputResponderFrom(current);
+      if (cur && cur.didBecomeInputResponderFrom) {
+        cur.didBecomeInputResponderFrom(old);
       }
-      if (current && current.didLoseInputResponderTo) {
-        current.didLoseInputResponderTo(responder);
+      if (old && old.didLoseInputResponderTo) {
+        old.didLoseInputResponderTo(cur);
       }
     }
 
-    if (responder && responder.didBecomeFirstResponderFrom) {
-      responder.didBecomeFirstResponderFrom(current);
+    if (cur && cur.didBecomeFirstResponderFrom) {
+      cur.didBecomeFirstResponderFrom(old);
     }
-  },
+  }.observes('firstResponder'),
 
   didBecomeInputSurfaceFrom: function(surface) {
     sc_assert(SC.app.get('inputSurface') === this);
@@ -485,166 +514,9 @@ SC.Surface = SC.Responder.extend({
     }
   },
 
-  /** @private
-    If the user presses the tab key and the pane does not have a first
-    responder, try to give it to the next eligible responder.
-
-    If the keyDown event reaches the pane, we can assume that no responders in
-    the responder chain, nor the default responder, handled the event.
-  */
-  keyDown: function(evt) {
-    var nextValidKeyView;
-
-    // Handle tab key presses if we don't have a first responder already
-    if (evt.which === 9 && !this.get('firstResponder')) {
-      // Cycle forwards by default, backwards if the shift key is held
-      if (evt.shiftKey) {
-        nextValidKeyView = this.get('previousValidKeyView');
-      } else {
-        nextValidKeyView = this.get('nextValidKeyView');
-      }
-
-      if (nextValidKeyView) {
-        this.makeFirstResponder(nextValidKeyView);
-        return YES;
-      }
-    }
-
-    return NO;
-  },
-
-  /** @private method forwards status changes in a generic way. */
-  _forwardKeyChange: function(shouldForward, methodName, pane, isKey) {
-    var keyView, responder, newKeyView;
-    if (shouldForward && (responder = this.get('firstResponder'))) {
-      newKeyView = (pane) ? pane.get('firstResponder') : null ;
-      keyView = this.get('firstResponder') ;
-      if (keyView) keyView[methodName](newKeyView);
-
-      if ((isKey !== undefined) && responder) {
-        responder.set('isKeyResponder', isKey);
-      }
-    } 
-  },
-
-  /**
-    Called just before the pane loses it's keyPane status.  This will notify 
-    the current keyView, if there is one, that it is about to lose focus, 
-    giving it one last opportunity to save its state. 
-
-    @param {SC.Pane} pane
-    @returns {SC.Pane} reciever
-  */
-  willLoseKeyPaneTo: function(pane) {
-    this._forwardKeyChange(this.get('isKeyPane'), 'willLoseKeyResponderTo', pane, NO);
-    return this ;
-  },
-
-  /**
-    Called just before the pane becomes keyPane.  Notifies the current keyView 
-    that it is about to gain focus.  The keyView can use this opportunity to 
-    prepare itself, possibly stealing any value it might need to steal from 
-    the current key view.
-
-    @param {SC.Pane} pane
-    @returns {SC.Pane} receiver
-  */
-  willBecomeKeyPaneFrom: function(pane) {
-    this._forwardKeyChange(!this.get('isKeyPane'), 'willBecomeKeyResponderFrom', pane, YES);
-    return this ;
-  },
-
-
-  /**
-    Called just after the pane has lost its keyPane status.  Notifies the 
-    current keyView of the change.  The keyView can use this method to do any 
-    final cleanup and changes its own display value if needed.
-
-    @param {SC.Pane} pane
-    @returns {SC.Pane} reciever
-  */
-  didLoseKeyPaneTo: function(pane) {
-    var isKeyPane = this.get('isKeyPane');
-    this.set('isKeyPane', NO);
-    this._forwardKeyChange(isKeyPane, 'didLoseKeyResponderTo', pane);
-    return this ;
-  },
-
-  /**
-    Called just after the keyPane focus has changed to the receiver.  Notifies 
-    the keyView of its new status.  The keyView should use this method to 
-    update its display and actually set focus on itself at the browser level 
-    if needed.
-
-    @param {SC.Pane} pane
-    @returns {SC.Pane} receiver
-
-  */
-  didBecomeKeyPaneFrom: function(pane) {
-    var isKeyPane = this.get('isKeyPane');
-    this.set('isKeyPane', YES);
-    this._forwardKeyChange(!isKeyPane, 'didBecomeKeyResponderFrom', pane, YES);
-    return this ;
-  },
-
   // .......................................................
-  // MAIN PANE SUPPORT
+  // LAYOUT SUPPORT
   //
-
-  /**
-    Returns YES whenever the pane has been set as the main pane for the 
-    application.
-
-    @property {Boolean}
-  */
-  isMainPane: NO,
-
-  /**
-    Invoked when the pane is about to become the focused pane.  Override to
-    implement your own custom handling.
-
-    @param {SC.Pane} pane the pane that currently have focus
-    @returns {void}
-  */
-  focusFrom: function(pane) {},
-
-  /**
-    Invoked when the the pane is about to lose its focused pane status.  
-    Override to implement your own custom handling
-
-    @param {SC.Pane} pane the pane that will receive focus next
-    @returns {void}
-  */
-  blurTo: function(pane) {},
-
-  /**
-    Invoked when the view is about to lose its mainPane status.  The default 
-    implementation will also remove the pane from the document since you can't 
-    have more than one mainPane in the document at a time.
-
-    @param {SC.Pane} pane
-    @returns {void}
-  */
-  blurMainTo: function(pane) {
-    this.set('isMainPane', NO) ;
-  },
-
-  /** 
-    Invokes when the view is about to become the new mainPane.  The default 
-    implementation simply updates the isMainPane property.  In your subclass, 
-    you should make sure your pane has been added to the document before 
-    trying to make it the mainPane.  See SC.MainPane for more information.
-
-    @param {SC.Pane} pane
-    @returns {void}
-  */
-  focusMainFrom: function(pane) {
-    this.set('isMainPane', YES);
-  },
-
-  // .......................................................
-  // ADDING/REMOVE PANES TO SCREEN
-  //  
 
   /**
     The layout property shadows the layout property on this view's root 
@@ -1069,6 +941,7 @@ SC.Surface = SC.Responder.extend({
   init: function() {
     arguments.callee.base.apply(this, arguments);
     this.pane = this; // Needed so that our childViews can get our "pane".
+    if (SC.app) this._sc_firstResponderDidChange();
   }
 
 });

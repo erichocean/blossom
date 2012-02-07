@@ -36,30 +36,6 @@ if (BLOSSOM) {
 
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
-  /** @property 
-    True when the responder is currently the first responder.  This property 
-    is always updated by a surface during its makeFirstResponder() method.
-
-    @type {Boolean}
-  */
-  isFirstResponder: false,
-
-  /** @property 
-    True when the responder is currently the input responder.  This property 
-    is always updated by a surface during its makeFirstResponder() method.
-
-    @type {Boolean}
-  */
-  isInputResponder: false,
-
-  /** @property 
-    True when the responder is currently the menu responder.  This property 
-    is always updated by a surface during its makeFirstResponder() method.
-
-    @type {Boolean}
-  */
-  isMenuResponder: false,
-
   /** @property
     The surface this responder belongs to.  This is used to determine where 
     you belong to in the responder chain.  Normally you should leave this 
@@ -68,7 +44,31 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     @type SC.Surface
   */
   surface: null,
-  
+
+  /** @property 
+    True when the responder is currently the first responder.  This property 
+    is always updated by a surface when its `firstResponder` property is set.
+
+    @type {Boolean}
+  */
+  isFirstResponder: false,
+
+  /** @property 
+    True when the responder is currently the input responder.  This property 
+    is always updated by a surface when its `firstResponder` property is set.
+
+    @type {Boolean}
+  */
+  isInputResponder: false,
+
+  /** @property 
+    True when the responder is currently the menu responder.  This property 
+    is always updated by a surface when its `firstResponder` property is set.
+
+    @type {Boolean}
+  */
+  isMenuResponder: false,
+
   /** @property
     This is the nextResponder in the responder chain.  If the receiver does 
     not implement a particular event handler, it will bubble up to the next 
@@ -85,7 +85,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     var surface = this.get('surface');
     if (surface && this.get('acceptsFirstResponder')) {
       if (surface.get('firstResponder') !== this) {
-        surface.makeFirstResponder(this);
+        surface.set('firstResponder', this);
       }
     } 
   },
@@ -98,7 +98,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   resignFirstResponder: function() {
     var surface = this.get('surface');
     if (surface && surface.get('firstResponder') === this) {
-      surface.makeFirstResponder(null);
+      surface.set('firstResponder', null);
     }
   }
 
