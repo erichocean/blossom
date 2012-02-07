@@ -680,7 +680,6 @@ SC.Surface = SC.Responder.extend({
 
     this.createLayersForContainer(container);
     this.render(this.getPath('layer.context'), true);
-    this.surfaceDidActivate();
 
     container = null; // avoid memory leak
   },
@@ -694,27 +693,6 @@ SC.Surface = SC.Responder.extend({
   // ...........................................
   // LAYOUT SUPPORT
   //
-
-  /**
-    True when the surface is currently part of the application (i.e. present 
-    in `SC.app@surfaces`).  Read only.
-    
-    @property {Boolean}
-    @readOnly
-  */
-  isSurfaceActive: false,
-  
-  /** @private
-    Called when the pane is attached to a DOM element in a window, this will 
-    change the view status to be visible in the window and also register 
-    with the rootResponder.
-  */
-  surfaceDidActivate: function() {
-    // hook into root responder
-    var app = (this.rootResponder = SC.app);
-    app.surfaces.add(this);
-    this.set('isSurfaceActive', YES);
-  },
 
   /** FIXME: Remove this method.
     layoutStyle describes the current styles to be written to your element
