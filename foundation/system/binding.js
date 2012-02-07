@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global */
 
 sc_require('system/set');
 
@@ -276,7 +277,15 @@ SC.EMPTY_PLACEHOLDER = '@@EMPTY@@' ;
   @since SproutCore 1.0
 */
 SC.Binding = {
-  
+
+  /**
+    Setting this property to true will ensure the binding 'fires' immediately 
+    instead of being buffered in the run loop.
+
+    @type Boolean
+  */
+  noDelay: false,
+
   /**
     This is the core method you use to create a new binding instance.  The
     binding instance will have the receiver instance as its parent which means
@@ -468,8 +477,12 @@ SC.Binding = {
     if (v !== this._bindingValue || key === '[]') {
 
       this._setBindingValue(target, key) ;
-      this._changePending = YES ;
-      SC.Binding._changeQueue.add(this) ; // save for later.  
+      if (this.noDelay) {
+        this.applyBindingValue();
+      } else {
+        this._changePending = YES ;
+        SC.Binding._changeQueue.add(this) ; // save for later.
+      }
     }
   },
 
@@ -492,8 +505,12 @@ SC.Binding = {
     // schedule to register an update.
     if (v !== this._transformedBindingValue) {
       this._setBindingValue(target, key) ;
-      this._changePending = YES ;
-      SC.Binding._changeQueue.add(this) ; // save for later.  
+      if (this.noDelay) {
+        this.applyBindingValue();
+      } else {
+        this._changePending = YES ;
+        SC.Binding._changeQueue.add(this) ; // save for later.
+      }
     }
   },
   
@@ -658,8 +675,12 @@ SC.Binding = {
       // schedule to register an update.
       if (v !== this._bindingValue || key === '[]') {
         this._setBindingValue(target, key) ;
-        this._changePending = YES ;
-        SC.Binding._changeQueue.add(this) ; // save for later.  
+        if (this.noDelay) {
+          this.applyBindingValue();
+        } else {
+          this._changePending = YES ;
+          SC.Binding._changeQueue.add(this) ; // save for later.  
+        }
       }
     }
     
@@ -777,7 +798,17 @@ SC.Binding = {
     var binding = (this === SC.Binding) ? this.beget() : this ;
     binding._transforms = null ; return binding ;
   },
-  
+
+  /**
+    Set the noDelay property to true.  After calling this method, the binding 
+    will fire immediately from now on, just like an observer.
+  */
+  noDelay: function() {
+    var binding = (this === SC.Binding) ? this.beget() : this ;
+    binding.noDelay = true;
+    return binding;
+  },
+
   /**
     Specifies that the binding should not return error objects.  If the value
     of a binding is an Error object, it will be transformed to a null value
