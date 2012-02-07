@@ -146,6 +146,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var surfaces = this.get('surfaces');
 
     sc_assert(surface && surface.kindOf(SC.Surface));
+    sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
     // sc_assert(surfaces.contains(surface));
 
     surfaces.remove(surface);
@@ -162,6 +163,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   didRemoveItem: function(set, surface) {
     sc_assert(set === this.get('surfaces'));
     sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
+
     surface.set('isPresentInViewport', false);
 
     // If we remove a surface that is currently the menuSurface or 
@@ -169,8 +172,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.Application.TRANSIENT_SURFACES.forEach(function(key) {
       if (this.get(key) === surface) this.set(key, null);
     }, this);
-
-    sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
   },
 
   // When the surfaces property changes, we need to observe the new set for 
