@@ -13,7 +13,7 @@ Next you'll need to get a copy of Blossom itself. The easiest way is to use
 Next, install the following Node packages:
 
     cd blossom
-    npm install vows xmlhttprequest
+    npm install
 
 To view Blossom's current testing app, do:
 
