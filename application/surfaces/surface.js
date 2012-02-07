@@ -27,23 +27,23 @@ if (BLOSSOM) {
   surface is removed.
 
   Mere presence in the viewport does not imply the surface is visibile. The 
-  surface may well be positioned off screen, or have its opacity set to zero, 
+  surface could be positioned off screen, or have its opacity set to zero, 
   or be occluded by another surface.  On the other hand, a surface that is 
-  not present in the viewport is *never* visible.
+  *not* present in the viewport is *never* visible.
 
   Adding a Surface to the Viewport
   --------------------------------
 
   To add a surface to the viewport, you add the surface to your app, which 
-  manages the viewport:
+  manages the viewport for you:
 
-     mySurface = SC.ImageSurface.create();
+     mySurface = SC.ImageSurface.create(...);
      SC.app.addSurface(mySurface);
 
   Once a surface has been added to the app, it will be sized and positioned 
   according to the layout you have specified relative to the application's 
-  viewport.  It will then automatically resize when the application's 
-  viewport changes size.
+  viewport.  It will then automatically resize if necessary when the 
+  application's viewport changes size.
 
   The surface's `isPresentInViewport` property will also be set to true.
 
@@ -54,12 +54,12 @@ if (BLOSSOM) {
 
       SC.app.removeSurface(mySurface);
 
-  The surface's `isPresentInViewport` property will also change to false.
+  The surface's `isPresentInViewport` property will also be set to false.
 
   A surface's underlying graphics resources are released when it is no longer 
   present in the viewport.  This occurs at the end of the run loop, so it is 
   okay to remove a surface temporarily and move it somewhere else – it's 
-  resources will remain untouched.
+  resources will remain untouched during that time.
 
   Receiving Events
   ----------------
