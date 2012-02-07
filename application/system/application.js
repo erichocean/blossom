@@ -33,8 +33,8 @@ SC.EXIT_RIGHT = 'exit-right';
   Managing Surfaces
   -----------------
 
-  `SC.Application` manages the surfaces that are active in your app at any 
-  given time.  To add a surface to the viewport, do:
+  `SC.Application` manages the surfaces that are present in your app's 
+  viewport at any given time.  To add a surface to the viewport, do:
 
       SC.app.addSurface(aSurface);
 
@@ -67,6 +67,14 @@ SC.EXIT_RIGHT = 'exit-right';
 
   See "Dispatching Events" below for more information on how these surfaces 
   are used by `SC.Application`.
+
+  You should only remove a 'ui' surface by setting the 'ui' property to null, 
+  or to another surface. Do not remove it from the `surfaces` set or call 
+  `removeSurface`; both will result in an assertion failure.
+
+  If you remove a surface that is currently either the `menuPane` or the 
+  `inputPane`, the surface will be removed and the corresponding property set 
+  to null.
 
   Dispatching Events
   ------------------
