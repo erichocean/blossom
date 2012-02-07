@@ -7,6 +7,10 @@
 
 if (BLOSSOM) {
 
+SC.ENTER_LEFT = 'enter-left';
+SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
+SC.EXIT_RIGHT = 'exit-right';
+
 SC.SurfaceTransition = SC.Object.extend({
 
   kind: null, // one of 'order-in', 'order-out', or 'replace'

@@ -18,10 +18,6 @@ sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 
-SC.ENTER_LEFT = 'enter-left';
-SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
-SC.EXIT_RIGHT = 'exit-right';
-
 /** @class
   This class is the brains behind a Blossom application.  You must create 
   exactly one instance of `SC.Application` somewhere in your code.  
@@ -347,10 +343,22 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_uiDidChange: function() {
     var old = this._sc_ui,
         cur = this.get('ui'),
-        uiElement = document.getElementById('ui'),
-        transition, container, style;
+        uiContainer = this._sc_uiContainer;
 
-    sc_assert(uiElement);
+    if (!uiContainer) {
+      var uiElement = document.getElementById('ui');
+      sc_assert(uiElement);
+
+      // Don't bind the `ui` property, we need to send some delegate methods 
+      // before the container sees the change to the `ui` property.
+      uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
+        __sc_element__: uiElement,
+        orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
+        replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
+        orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
+      });
+    }
+
     sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_ui is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@ui must either be null or an SC.Surface instance.");
 
@@ -365,93 +373,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
 
     this._sc_ui = cur;
-    if (cur) this.addSurface(cur);
-    // Don't remove old from surfaces until we're done with our transition...
-
-    if (!old && cur)      transition = this.get('uiOrderInTransition');
-    else if (old && cur)  transition = this.get('uiReplaceTransition');
-    else if (old && !cur) transition = this.get('uiOrderOutTransition');
-    else sc_assert(false);
-
-    // transition = null; // force no transition
-    if (old) transition = null;
-    if (transition) {
-      
-      // order in
-      if (!old && cur) {
-        container = cur.get('container');
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-
-        style = container.style;
-        style.display  = 'block';
-        style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
-        style.webkitBackfaceVisibility = 'hidden';
-        style.webkitTransform = 'rotateY(180deg)';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        uiElement.insertBefore(container, null); // add to DOM
-        uiElement.style.opacity = '1';
-        uiElement.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
-        cur.didAttach();
-      }
-
-    // Update the UI without any 3D transition.
-    } else {
-
-      // order in
-      if (!old && cur) {
-        container = cur.get('container');
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-
-        style = container.style;
-        style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        uiElement.insertBefore(container, null); // add to DOM
-        cur.didAttach();
-
-      // replace
-      } else if (old && cur) {
-        container = cur.get('container');
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-        sc_assert(document.getElementById(old.get('container').id));
-
-        style = container.style;
-        style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        uiElement.replaceChild(container, old.get('container'));
-        this.removeSurface(old);
-        cur.didAttach();
-        old.didDetach();
-
-      // order out
-      } else if (old && !cur) {
-        sc_assert(document.getElementById(old.get('container').id));
-
-        uiElement.removeChild(old.get('container'));
-        this.removeSurface(old);
-        old.didDetach();
-      }
-    }
+    uiContainer.set('surface', cur);
 
     if (old && old.didLoseUserInterfaceTo) {
       old.didLoseUserInterfaceTo(cur);
