@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('views/view');
 sc_require('mixins/static_layout');
+
+if (SPROUTCORE) {
 
 /** @class
 
@@ -135,3 +138,5 @@ SC.StaticContentView = SC.View.extend(SC.StaticLayout, {
   }
   
 });
+
+} // SPROUTCORE

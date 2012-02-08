@@ -4,8 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('views/container');
+
+if (SPROUTCORE) {
 
 /** @class
 
@@ -204,3 +207,6 @@ SC.SceneView = SC.ContainerView.extend(
   
   
 });
+
+} // SPROUTCORE
+

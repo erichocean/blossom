@@ -87,10 +87,10 @@ function drawButton(ctx, pressed) {
 }
 
 function main() {
-  var surface = SC.Surface.create({
+  var surface = SC.ViewSurface.create({
     layout: { top: 0, right: 0, bottom: 0, left: 0 },
     // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
-    // childViews: "test".w(),
+
     render: function(ctx) {
       // Draw background.
       ctx.fillStyle = base3;
@@ -122,37 +122,37 @@ function main() {
       ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
       ctx.lineWidth = 0.5;
       ctx.stroke();
-    }
+    },
 
-    // test: SC.View.extend({
-    //   layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
-    //   cornerRadius: 25,
-    // 
-    //   mouseDown:    function(evt) { alert('clicked view'); },
-    //   mouseEntered: function(evt) { document.body.style.cursor = "pointer"; },
-    //   mouseExited:  function(evt) { document.body.style.cursor = "default"; },
-    // 
-    //   render: function(ctx) {
-    //     ctx.beginPath();
-    //     this.get('layer').renderHitTestPath(ctx);
-    //     ctx.fillStyle = green;
-    //     ctx.shadowOffsetX = 0;
-    //     ctx.shadowOffsetY = 15;
-    //     ctx.shadowBlur = 25;
-    //     ctx.shadowColor = "rgba(0,0,0,0.3)";
-    //     ctx.fill();
-    // 
-    //     // Draw some text.
-    //     var bounds = this.getPath('layer.bounds');
-    //     ctx.fillStyle = base3;
-    //     ctx.font = "16pt Calibri";
-    //     ctx.textBaseline = "middle";
-    //     ctx.textAlign = "center";
-    //     ctx.shadowBlur = 0;
-    //     ctx.shadowColor = "rgba(0,0,0,0)";
-    //     ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
-    //   }
-    // })
+    contentView: SC.View.create({
+      layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+      cornerRadius: 25,
+    
+      mouseDown:    function(evt) { alert("clicked on view"); },
+      mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
+      mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
+    
+      render: function(ctx) {
+        ctx.beginPath();
+        this.get('layer').renderHitTestPath(ctx);
+        ctx.fillStyle = green;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 15;
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.fill();
+    
+        // Draw some text.
+        var bounds = this.getPath('layer.bounds');
+        ctx.fillStyle = base3;
+        ctx.font = "16pt Calibri";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "rgba(0,0,0,0)";
+        ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+      }
+    })
   });
 
   var surface2 = SC.Surface.create({

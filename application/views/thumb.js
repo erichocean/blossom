@@ -8,8 +8,11 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('views/view');
+
+if (SPROUTCORE) {
 
 /**
   @class
@@ -68,3 +71,4 @@ SC.ThumbView = SC.View.extend(
 
 });
 
+} // SPROUTCORE
