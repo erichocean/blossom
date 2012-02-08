@@ -128,7 +128,8 @@ function main() {
     // },
 
     contentView: SC.View.create({
-      layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+      // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+      layout: { top: 10, right: 10, bottom: 10, left: 10 },
       cornerRadius: 25,
     
       mouseDown:    function(evt) { alert("clicked on view"); },
@@ -153,7 +154,8 @@ function main() {
         ctx.textAlign = "center";
         ctx.shadowBlur = 0;
         ctx.shadowColor = "rgba(0,0,0,0)";
-        ctx.fillText("Hello from Blossom.", ctx.width/2, ctx.height/2-20);
+        ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4-20);
+        ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3-20);
       }
     })
   });

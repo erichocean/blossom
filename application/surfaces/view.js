@@ -70,9 +70,9 @@ SC.ViewSurface = SC.Surface.extend({
     // Draw background.
     ctx.fillStyle = base3;
     ctx.fillRect(0, 0, ctx.width, ctx.height);
-    ctx.strokeStyle = base0;
-    ctx.lineWidth = 2; // overlap of 1 on the inside
-    ctx.strokeRect(0, 0, ctx.width, ctx.height);
+    // ctx.strokeStyle = base0;
+    // ctx.lineWidth = 2; // overlap of 1 on the inside
+    // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
     var t = layer._sc_transformFromSuperlayerToLayer;
     
@@ -83,10 +83,14 @@ SC.ViewSurface = SC.Surface.extend({
 
     // Draw lines overlay.
     ctx.beginPath();
-    ctx.moveTo(0, h/2);
-    ctx.lineTo(w, h/2);
-    ctx.moveTo(w/2, 0);
-    ctx.lineTo(w/2, h);
+    var line = h/2;
+    if (h%2 === 0) line += 0.5;
+    ctx.moveTo(0, line);
+    ctx.lineTo(w, line);
+    var vline = w/2;
+    if (w%2 === 0) vline += 0.5;
+    ctx.moveTo(vline, 0);
+    ctx.lineTo(vline, h);
     ctx.strokeStyle = orange;
     ctx.lineWidth = 0.5;
     ctx.stroke();
