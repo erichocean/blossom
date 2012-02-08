@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION */
+/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION BENCHMARK_LAYOUT_FUNCTION */
 
 SC.layoutFunctions = {};
 
@@ -18,12 +18,19 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
   sc_assert(typeof vmax === "boolean");
   sc_assert(layoutMode >= 0 && layoutMode < 9);
 
+  var shouldBenchmark = BENCHMARK_LAYOUT_FUNCTION;
+
   var funcName = ['sc', hmode, vmode, hmax, vmax, layoutMode].join('_'),
       func = SC.layoutFunctions[funcName];
 
   if (!func) {
     // There are 9,216 unique layout functions.
     func = SC.layoutFunctions[funcName] = function(layout, pwidth, pheight, anchorX, anchorY, position, bounds) {
+      if (shouldBenchmark) {
+        var benchKey = funcName;
+        SC.Benchmark.start(benchKey);
+      }
+
       var minLayoutWidth,  xAdjustment = 0,
           minLayoutHeight, yAdjustment = 0,
           maxLayoutWidth,
@@ -241,6 +248,10 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       position.y    = y + anchorY * height;
       bounds.width  = width;
       bounds.height = height;
+
+      if (shouldBenchmark) {
+        SC.Benchmark.end(benchKey);
+      }
     };
   }
 

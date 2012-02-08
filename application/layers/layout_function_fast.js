@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION */
+/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION BENCHMARK_LAYOUT_FUNCTION */
 
 /*jslint evil:true */
 
@@ -11,6 +11,8 @@ sc_require('layers/layout_function');
 
 if (BLOSSOM) {
 if (FAST_LAYOUT_FUNCTION) {
+
+console.log("Using FAST_LAYOUT_FUNCTION");
 
 // This implementation generates optimized source code for each possible 
 // layout function (there are 9,216). It then uses new Function() to create 
@@ -23,12 +25,19 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
   sc_assert(typeof vmax === "boolean");
   sc_assert(layoutMode >= 0 && layoutMode < 9);
 
+  var shouldBenchmark = BENCHMARK_LAYOUT_FUNCTION;
+
   var funcName = ['sc', hmode, vmode, hmax, vmax, layoutMode].join('_'),
       func = SC.layoutFunctions[funcName],
       src;
 
   if (!func) {
     src = [];
+
+    if (shouldBenchmark) {
+      src.push(['var benchKey = "', funcName, '";'].join(''));
+      src.push('SC.Benchmark.start(benchKey);');
+    }
 
     // Note: layoutMode 5 (top, left) does not depends on pheight, and pwidth 
     // at all, and thus does not have any post-layout adjustments.
@@ -271,7 +280,12 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     src.push('bounds.width  = width;');
     src.push('bounds.height = height;');
 
+    if (shouldBenchmark) {
+      src.push('SC.Benchmark.end(benchKey);');
+    }
+
     src = src.join('\n  ');
+    if (funcName === "sc_4_0_false_false_5") console.log(src);
     func = SC.layoutFunctions[funcName] = new Function("layout", "pwidth", "pheight", "anchorX", "anchorY", "position", "bounds", src);
   }
 
