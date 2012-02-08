@@ -127,7 +127,7 @@ function main() {
     //   ctx.stroke();
     // },
 
-    contentView: SC.View.create({
+    contentView: SC.View.extend({
       // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
       layout: { top: 10, right: 10, bottom: 10, left: 10 },
       cornerRadius: 25,

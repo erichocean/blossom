@@ -227,6 +227,11 @@ SC.ViewSurface = SC.Surface.extend({
         cur = this.get('contentView'),
         layer = this.get('layer');
 
+    if (cur && cur.isViewClass) {
+      this.set('contentView', cur.create());
+      return;
+    }
+
     sc_assert(old === null || old.kindOf(SC.View), "Blossom internal error: SC.Application^_sc_contentView is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.View), "SC.Application@ui must either be null or an SC.View instance.");
 
