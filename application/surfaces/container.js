@@ -69,6 +69,8 @@ SC.ContainerSurface = SC.Surface.extend({
     if (old === cur) return; // Nothing to do.
 
     this._sc_surface = cur;
+    cur.set('container', this);
+
     if (cur) {
       cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
@@ -159,10 +161,6 @@ SC.ContainerSurface = SC.Surface.extend({
       }
     }
   }.observes('surface'),
-
-  viewportSizeDidChange: function(size) {
-    console.log('SC.ContainerSurface#viewportSizeDidChange()');
-  },
 
   updateSurface: function() {} // Nothing to do.
 

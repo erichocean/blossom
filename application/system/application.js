@@ -333,9 +333,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
         __sc_element__: uiElement,
+        bounds: this.computeViewportSize(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
-        orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
+        orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay(),
+
+        viewportSizeDidChange: function(size) { this.set('bounds', size); }
       });
 
       uiContainer.set('isPresentInViewport', true);
