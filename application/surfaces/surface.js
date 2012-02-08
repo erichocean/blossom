@@ -197,7 +197,18 @@ SC.Surface = SC.Responder.extend({
     else this.invokeLast(this.destroySurface);
   }.observes('isPresentInViewport'),
 
-  createSurface: function() {},
+  createSurface: function() {
+    var element = this.__sc_element__, key;
+    // apply the layout style manually for now...
+    var layoutStyle = this.get('layoutStyle');
+    console.log(layoutStyle);
+    for (key in layoutStyle) {
+      if (!layoutStyle.hasOwnProperty(key)) continue;
+      if (layoutStyle[key] !== null) {
+        element.style[key] = layoutStyle[key];
+      }
+    }
+  },
 
   updateSurface: function() {
     console.log('All SC.Surface subclasses should override updateSurface()');
@@ -502,10 +513,10 @@ SC.Surface = SC.Responder.extend({
       else el.id = this.get('id')
     }
 
-    el.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
+    // el.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
     // el.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
     // el.style.webkitTransform = "translateZ(0)";
-    el.style.webkitTransform = "rotateY(45deg)";
+    // el.style.webkitTransform = "rotateY(45deg)";
 
     this.foo = el;
 

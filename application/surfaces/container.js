@@ -95,10 +95,10 @@ SC.ContainerSurface = SC.Surface.extend({
         style = container.style;
         style.display  = 'block';
         style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
+        // style.top      = '0px';
+        // style.left     = '0px';
+        // style.width    = '100%';
+        // style.height   = '100%';
         style.webkitBackfaceVisibility = 'hidden';
         style.webkitTransform = 'rotateY(180deg)';
 

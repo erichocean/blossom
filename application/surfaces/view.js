@@ -63,6 +63,7 @@ SC.ViewSurface = SC.Surface.extend({
 
   createSurface: function() {
     console.log('SC.ViewSurface#createSurface()');
+    arguments.callee.base.apply(this, arguments);
     var container = this;
 
     // SC.ViewSurface only has two layers: `layer` and `hitTestLayer`.

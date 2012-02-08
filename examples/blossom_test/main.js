@@ -88,8 +88,8 @@ function drawButton(ctx, pressed) {
 
 function main() {
   var surface = SC.ViewSurface.create({
-    layout: { top: 0, right: 0, bottom: 0, left: 0 },
-    // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
+    // layout: { top: 10, right: 10, bottom: 10, left: 10 },
+    layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
 
     render: function(ctx) {
       console.log('rendering');
