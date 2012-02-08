@@ -133,6 +133,9 @@ SC.Layer = SC.Object.extend({
   },
 
   updateDisplay: function() {
+    var benchKey = 'SC.Layer#updateDisplay()';
+    SC.Benchmark.start(benchKey);
+
     // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var ctx = this.get('context');
 
@@ -143,13 +146,20 @@ SC.Layer = SC.Object.extend({
       this.set('needsDisplay', false);
     }
     this.get('sublayers').invoke('updateDisplay');
+
+    SC.Benchmark.end(benchKey);
   },
 
   display: function(ctx) {
+    var benchKey = 'SC.Layer#display()';
+    SC.Benchmark.start(benchKey);
+
     // console.log('SC.Layer#display()', SC.guidFor(this));
     var delegate = this.get('delegate');
     if (delegate && delegate.render) delegate.render(ctx, this);
     else this.render(ctx);
+
+    SC.Benchmark.end(benchKey);
   },
 
   render: function(ctx) {},

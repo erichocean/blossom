@@ -31,6 +31,9 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
 
   firstTime: true,
   render: function(context, layer) {
+    var benchKey = 'BlossomTest.ButtonView#render()';
+    SC.Benchmark.start(benchKey);
+
     // console.log('BlossomTest.ButtonView#render()', SC.guidFor(this));
 
     if (this.firstTime) {
@@ -94,6 +97,8 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
           );
         break;
     }
+
+    SC.Benchmark.end(benchKey);
   },
   
   /**

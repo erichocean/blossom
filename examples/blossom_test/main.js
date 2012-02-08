@@ -133,14 +133,17 @@ function main() {
       cornerRadius: 25,
     
       render: function(ctx) {
+        var benchKey = 'MyView#render()';
+        SC.Benchmark.start(benchKey);
+
         console.log('MyView.render()', SC.guidFor(this));
         ctx.beginPath();
         this.get('layer').renderHitTestPath(ctx);
         ctx.fillStyle = green;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 15;
-        ctx.shadowBlur = 25;
-        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        // ctx.shadowOffsetX = 0;
+        // ctx.shadowOffsetY = 15;
+        // ctx.shadowBlur = 25;
+        // ctx.shadowColor = "rgba(0,0,0,0.3)";
         ctx.fill();
 
         // Draw some text.
@@ -152,6 +155,8 @@ function main() {
         ctx.shadowColor = "rgba(0,0,0,0)";
         ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
         ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
+
+        SC.Benchmark.end(benchKey);
       },
 
       childViews: 'foo button'.w(),
@@ -165,16 +170,19 @@ function main() {
         mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
 
         render: function(ctx, layer) {
+          var benchKey = 'foo#render()';
+          SC.Benchmark.start(benchKey);
+
           console.log('foo.render()', SC.guidFor(this));
           var w = ctx.width, h = ctx.height;
 
           ctx.beginPath();
           this.get('layer').renderHitTestPath(ctx);
           ctx.fillStyle = blue;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 15;
-          ctx.shadowBlur = 25;
-          ctx.shadowColor = "rgba(0,0,0,0.3)";
+          // ctx.shadowOffsetX = 0;
+          // ctx.shadowOffsetY = 15;
+          // ctx.shadowBlur = 25;
+          // ctx.shadowColor = "rgba(0,0,0,0.3)";
           ctx.fill();
 
           // Draw some text.
@@ -186,6 +194,8 @@ function main() {
           ctx.shadowColor = "rgba(0,0,0,0)";
           ctx.fillText("I'm a subview.", ctx.width/2, ctx.height/4);
           ctx.fillText("Click Me.", ctx.width/2, (ctx.height/4)*3);
+
+          SC.Benchmark.end(benchKey);
         }
       }),
 

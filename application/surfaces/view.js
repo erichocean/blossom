@@ -129,17 +129,29 @@ SC.ViewSurface = SC.Surface.extend({
   //
 
   updateLayout: function() {
+    var benchKey = 'SC.ViewSurface#updateLayout()';
+    SC.Benchmark.start(benchKey);
+
     // console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
     var layer = this.getPath('contentView.layer');
     if (layer) layer.updateLayout();
+
+    SC.Benchmark.end(benchKey);
   },
 
   updateDisplay: function() {
+    var benchKey = 'SC.ViewSurface#updateDisplay()',
+        updateKey = 'SC.ViewSurface#updateDisplay() - update',
+        copyKey = 'SC.ViewSurface#updateDisplay() - copy';
+    SC.Benchmark.start(benchKey);
+
     // console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
     sc_assert(document.getElementById(this.__sc_element__.id));
     var layer = this.getPath('contentView.layer');
 
+    SC.Benchmark.start(updateKey);
     if (layer) layer.updateDisplay();
+    SC.Benchmark.end(updateKey);
 
     var ctx = this.getPath('layer.context'),
         w = ctx.width, h = ctx.height;
@@ -153,7 +165,9 @@ SC.ViewSurface = SC.Surface.extend({
     // ctx.lineWidth = 2; // overlap of 1 on the inside
     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
+    SC.Benchmark.start(copyKey);
     layer.copyIntoContext(ctx);
+    SC.Benchmark.end(copyKey);
 
     // Draw lines overlay.
     ctx.beginPath();
@@ -176,6 +190,8 @@ SC.ViewSurface = SC.Surface.extend({
     ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
     ctx.lineWidth = 0.5;
     ctx.stroke();
+
+    SC.Benchmark.end(benchKey);
   },
 
   // ..........................................................

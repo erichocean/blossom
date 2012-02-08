@@ -214,21 +214,33 @@ SC.Surface = SC.Responder.extend({
 
     // debugger;
 
+    var benchKey = 'SC.Surface#updateIfNeeded()',
+        layoutKey = 'SC.Surface#updateIfNeeded(): needsLayout',
+        displayKey = 'SC.Surface#updateIfNeeded(): needsDisplay';
+
+    SC.Benchmark.start(benchKey);
+
     if (needsLayout && (ignoreVisibility || this.get('isVisible'))) {
+      SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
         this.updateLayout();
         this.set('needsLayout', false);
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
+      SC.Benchmark.end(layoutKey);
     }
 
     if (needsDisplay && (ignoreVisibility || this.get('isVisible'))) {
+      SC.Benchmark.start(displayKey);
       if (this.get('isPresentInViewport')) {
         this.updateDisplay();
         this.set('needsDisplay', false);
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
+      SC.Benchmark.end(displayKey);
     }
+
+    SC.Benchmark.end(benchKey);
   },
 
   updateLayout: function() {
