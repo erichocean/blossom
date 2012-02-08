@@ -160,7 +160,7 @@ function main() {
         layout: { centerX: 0, width: 0.3, centerY: 0, height: 0.3 },
         cornerRadius: 25,
 
-        mouseDown:    function(evt) { alert("I guess event handling works!"); },
+        mouseDown:    function(evt) { alert("You clicked the blue subview."); },
         mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
         mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
 
@@ -184,13 +184,13 @@ function main() {
           ctx.textAlign = "center";
           ctx.shadowBlur = 0;
           ctx.shadowColor = "rgba(0,0,0,0)";
-          ctx.fillText("I'm a subview.", ctx.width/4, ctx.height/4);
-          ctx.fillText("Click Me.", (ctx.width/4)*3, (ctx.height/4)*3);
+          ctx.fillText("I'm a subview.", ctx.width/2, ctx.height/4);
+          ctx.fillText("Click Me.", ctx.width/2, (ctx.height/4)*3);
         }
       }),
 
       button: BlossomTest.ButtonView.extend({
-        layout: { top: 50, left: 210, width: 140, height: 24 },
+        layout: { top: 50, right: 50, width: 140, height: 24 },
         title: "Regular Button",
         theme: 'regular',
         // action: function() {
