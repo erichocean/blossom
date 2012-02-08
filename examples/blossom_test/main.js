@@ -161,19 +161,15 @@ function main() {
       childViews: 'foo'.w(),
 
       foo: SC.View.extend({
-        // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+        layout: { centerX: 0, width: 0.3, centerY: 0, height: 0.3 },
         cornerRadius: 25,
 
-        render: function(ctx) {
+        render: function(ctx, layer) {
           console.log('foo.render()');
           var w = ctx.width, h = ctx.height;
 
           ctx.beginPath();
-          ctx.save();
-          ctx.translate(w/2-w/8, h/2-h/8);
-          ctx.scale(0.25, 0.25);
           this.get('layer').renderHitTestPath(ctx);
-          ctx.restore();
           ctx.fillStyle = blue;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 15;
@@ -183,12 +179,13 @@ function main() {
 
           // Draw some text.
           ctx.fillStyle = base3;
-          ctx.font = "16pt Calibri";
+          ctx.font = "14pt Calibri";
           ctx.textBaseline = "middle";
           ctx.textAlign = "center";
           ctx.shadowBlur = 0;
           ctx.shadowColor = "rgba(0,0,0,0)";
-          ctx.fillText("I'm a subview.", ctx.width/2, ctx.height/2);
+          ctx.fillText("I'm a subview.", ctx.width/4, ctx.height/4);
+          ctx.fillText("Click Me.", (ctx.width/4)*3, (ctx.height/4)*3);
         }
       })
     })

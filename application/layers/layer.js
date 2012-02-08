@@ -134,7 +134,7 @@ SC.Layer = SC.Object.extend({
 
   display: function(ctx) {
     var delegate = this.get('delegate');
-    if (delegate && delegate.render) delegate.render(ctx);
+    if (delegate && delegate.render) delegate.render(ctx, this);
     else this.render(ctx);
   },
 

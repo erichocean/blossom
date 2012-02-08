@@ -887,15 +887,21 @@ SC.View = SC.View.extend(
 
     var ret = this._sc_layer;
     if (!ret) {
-      var K = this.get('layerClass');
+      var K = this.get('layerClass'), __sc_layout__,
+          hasOwnLayout = this.hasOwnProperty('layout');
+
       sc_assert(K && K.kindOf(SC.Layer));
+
+      if (!hasOwnLayout) {
+        __sc_layout__ = this.constructor.prototype.__sc_layout__;
+      }
 
       // We want to allow the developer to provide a layout hash on the view, 
       // or to override the `layout` computed property.
-      if (this.hasOwnProperty('layout')) {
+      if (hasOwnLayout || __sc_layout__) {
         // It's still possible that layout is a computed property. Don't use 
         // `get()` to find out!
-        var layout = this.layout;
+        var layout = hasOwnLayout? this.layout : __sc_layout__;
         if (typeof layout === "object") {
           // We assume `layout` is a layout hash. The layer will throw an 
           // exception if `layout` is invalid -- don't test for that here.
@@ -914,7 +920,7 @@ SC.View = SC.View.extend(
 
         // Only delete layout if it is not a computed property. This allows 
         // the computed property on the prototype to shine through.
-        if (typeof layout !== "function" || !layout.isProperty) {
+        if (hasOwnLayout && typeof layout !== "function" || !layout.isProperty) {
           delete this.layout;
         }
       } else {
@@ -1231,6 +1237,33 @@ SC.View = SC.View.extend(
 
     this.displayDidChange();
     this._sc_surfaceDidChange();
+  }
+
+});
+
+SC.View.__sc_extend__ = SC.View.extend;
+
+SC.mixin(SC.View, {
+
+  /** @private
+    This exists so that we can have special handling for the `layout` 
+    property, even when a class overrides layout.
+  */
+  extend: function() {
+    var args = arguments,
+        hash = args[args.length-1];
+
+    if (hash.hasOwnProperty('layout')) {
+      var layout = hash.layout;
+
+      // Only delete layout if it is not a computed property. This allows 
+      // a computed property to shine through.
+      if (typeof layout !== "function" || !layout.isProperty) {
+        delete hash.layout;
+        hash.__sc_layout__ = layout;
+      }
+    }
+    return this.__sc_extend__.apply(this, arguments);
   }
 
 });
