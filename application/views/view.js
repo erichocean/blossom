@@ -52,6 +52,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   */
   displayDidChange: function() {
     // console.log('SC.View#displayDidChange()', SC.guidFor(this));
+    sc_assert(SC.RunLoop.isRunLoopInProgress(), "Display won't update without a run loop.");
     this.set('layerNeedsUpdate', YES) ;
     return this;
   },
