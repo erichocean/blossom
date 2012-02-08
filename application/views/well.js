@@ -4,8 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('views/container');
+
+if (SPROUTCORE) {
 
 // Constants
 SC.WELL_CONTAINER_PADDING=15;
@@ -84,4 +87,7 @@ SC.WellView = SC.ContainerView.extend(
     this.replaceContent(view);
   }.observes('contentView')
   
-}) ;
+});
+
+} // SPROUTCORE
+

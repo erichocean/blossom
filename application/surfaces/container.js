@@ -56,6 +56,7 @@ SC.ContainerSurface = SC.Surface.extend({
 
   _sc_surface: null, // Note: Required, we're strict about null checking.
   _sc_surfaceDidChange: function() {
+    console.log('SC.ContainerSurface#_sc_surfaceDidChange()');
     var old = this._sc_surface,
         cur = this.get('surface'),
         element = this.__sc_element__,
@@ -71,6 +72,7 @@ SC.ContainerSurface = SC.Surface.extend({
     if (cur) {
       cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
+      cur.set('container', this);
     }
 
     if (!old && cur)      transition = this.get('orderInTransition');
@@ -84,7 +86,7 @@ SC.ContainerSurface = SC.Surface.extend({
       
       // order in
       if (!old && cur) {
-        container = cur.get('container');
+        container = cur.__sc_element__;
         sc_assert(container);
         sc_assert(!document.getElementById(container.id));
 
@@ -101,6 +103,7 @@ SC.ContainerSurface = SC.Surface.extend({
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         element.insertBefore(container, null); // add to DOM
+        sc_assert(document.getElementById(container.id));
         element.style.opacity = '1';
         element.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
         cur.didAttach();
@@ -159,7 +162,9 @@ SC.ContainerSurface = SC.Surface.extend({
 
   viewportSizeDidChange: function(size) {
     console.log('SC.ContainerSurface#viewportSizeDidChange()');
-  }
+  },
+
+  updateSurface: function() {} // Nothing to do.
 
 });
 

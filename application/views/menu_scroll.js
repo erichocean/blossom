@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals SPROUTCORE */
 
 sc_require('system/event');
 sc_require('views/scroll');
+
+if (SPROUTCORE) {
 
 /** @class
 
@@ -20,7 +23,6 @@ sc_require('views/scroll');
   @extends SC.ScrollerView
   @since SproutCore 1.0
 */
-
 SC.MenuScrollerView = SC.ScrollerView.extend({
   classNames: ['sc-menu-scroller-view'],
   
@@ -587,3 +589,5 @@ SC.MenuScrollView = SC.ScrollView.extend({
   }.observes('verticalScrollOffset')
 
 });
+
+} // SPROUTCORE

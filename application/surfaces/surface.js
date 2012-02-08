@@ -82,7 +82,135 @@ if (BLOSSOM) {
 */
 SC.Surface = SC.Responder.extend({
 
+  isSurface: true,
   isResponderContext: true, // We can dispatch events and actions.
+
+  concatenatedProperties: ['displayProperties'],
+
+  bounds: function() {
+    return { width: 100, height: 100 };
+  }.property(),
+
+  // ..........................................................
+  // DISPLAY PROPERTIES
+  //
+
+  /**
+    You can set this array to include any properties that should immediately
+    invalidate the display.  The display will be automatically invalidated
+    when one of these properties change.
+
+    Implementation note:  `isVisible` is also effectively a display property,
+    but it is not declared as such because the same effect is implemented
+    inside `_sc_isVisibleDidChange()`.  This avoids having two observers on
+    `isVisible`, which is:
+      a.  More efficient
+      b.  More correct, because we can guarantee the order of operations
+
+    @property {Array}
+    @readOnly
+  */
+  displayProperties: [],
+
+  /**
+    This method is invoked whenever a display property changes.  It will set
+    the surfaceNeedsUpdate property to true.  If you need to perform 
+    additional setup whenever the display changes, you can override this 
+    method as well.
+  */
+  displayDidChange: function() {
+    this.set('surfaceNeedsUpdate', true);
+  },
+
+  // ..........................................................
+  // VISIBILITY SUPPORT
+  //
+
+  /**
+    The isVisible property determines if the view is shown in the view
+    hierarchy it is a part of. A view can have isVisible == YES and still have
+    isVisibleInWindow == NO. This occurs, for instance, when a parent view has
+    isVisible == NO. Default is YES.
+
+    The isVisible property is considered part of the layout and so changing it
+    will trigger a layout update.
+
+    @property {Boolean}
+  */
+  isVisible: true,
+  isVisibleBindingDefault: SC.Binding.bool(),
+
+  _sc_isVisibleDidChange: function() {
+    this.displayDidChange();
+  }.observes('isVisible'),
+
+  // ..........................................................
+  // RENDERING SUPPORT
+  //
+
+  surfaceNeedsUpdate: false,
+
+  /** @private
+    Schedules the updateSurfaceIfNeeded method to run at the end of the 
+    runloop if surfaceNeedsUpdate is set to true.
+  */
+  _sc_surfaceNeedsUpdateDidChange: function() {
+    if (this.get('surfaceNeedsUpdate')) {
+      this.invokeOnce(this.updateSurfaceIfNeeded) ;
+    }
+  }.observes('surfaceNeedsUpdate'),
+
+  /**
+    Updates the surface only if the surface is visible, in the viewport, and 
+    if `surfaceNeedsUpdate` is true.  Normally you will not invoke this 
+    method directly.  Instead you'd set the `surfaceNeedsUpdate` property to 
+    true and this method will be called once at the end of the runloop.
+
+    If you need to update the surface sooner than the end of the runloop, you
+    can call this method directly. If the surface is not even present in the 
+    viewport, this method does nothing.
+
+    You should not override this method.  Instead override updateSurface().
+
+    @param {Boolean} ignoreVisibility
+  */
+  updateSurfaceIfNeeded: function(ignoreVisibility) {
+    var needsUpdate  = this.get('surfaceNeedsUpdate');
+    if (needsUpdate && (ignoreVisibility || this.get('isVisible'))) {
+      if (this.get('isPresentInViewport')) {
+        this.updateSurface();
+        this.set('surfaceNeedsUpdate', false);
+      } // else leave it set to true, we'll update it when it again becomes 
+        // visible in the viewport
+    }
+  },
+
+  // ..........................................................
+  // VIEWPORT SUPPORT
+  //
+
+  isPresentInViewport: false,
+
+  _sc_isPresentInViewportDidChange: function() {
+    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()');
+
+    // Either (a) we set up our layers, or (b) we schedule them to be 
+    // destroyed at the end of the run loop.
+    if (this.get('isPresentInViewport')) this.createSurface();
+    else this.invokeLast(this.destroySurface);
+  }.observes('isPresentInViewport'),
+
+  createSurface: function() {},
+
+  updateSurface: function() {
+    console.log('All SC.Surface subclasses should override updateSurface()');
+  },
+
+  destroySurface: function() {},
+
+  // ..........................................................
+  // DOM SUPPORT (Private, Browser-only)
+  //
 
   __sc_element__: null,
 
@@ -98,24 +226,48 @@ SC.Surface = SC.Responder.extend({
   /** @private Overriden by subclasses as needed. */
   initElement: function() {
     // Use the element we're given; otherwise, create one.
-    var el = this.__sc_element__;
+    var el = this.__sc_element__, id;
     if (!el) {
       el = this.__sc_element__ = document.createElement('div');
-      el.id = this.get('id');
+      id = el.id = this.get('id');
     } else {
-      var id = el.id;
+      id = el.id;
       if (id) this.set('id', id);
       else el.id = this.get('id')
     }
+
+    el.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
+    // el.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
+    // el.style.webkitTransform = "translateZ(0)";
+    el.style.webkitTransform = "rotateY(45deg)";
+
+    this.foo = el;
+
+    // HACK: Make sure SproutCore can find this surface.
+    SC.View.views[id] = this;
   },
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
-
     this.initElement();
+    this.displayDidChange();
 
-    // TODO: Do initial `el` setup here.
+    this.pane = this; // Needed so that our childViews can get our "pane".
+
+    if (SC.app) {
+      this.__sc_needFirstResponderInit__ = false;
+      this._sc_firstResponderDidChange();
+    } else {
+      // This flag instructs SC.app to execute our 
+      // `_sc_firstResponderDidChange` method when we are first added to the 
+      // app's set of surfaces.
+      this.__sc_needFirstResponderInit__ = true;
+    }
   },
+
+  // ..........................................................
+  // ANIMATION SUPPORT
+  //
 
   transitions: {},
 
@@ -237,8 +389,6 @@ SC.Surface = SC.Responder.extend({
 
     return { top: top, left: left };
   },
-
-  hitTestLayer: null,
 
   /**
     Finds the layer that is hit by this event, and returns its view.
@@ -581,144 +731,144 @@ SC.Surface = SC.Responder.extend({
     else return layer.get('layout');
   }.property(),
 
-  /**
-    The SC.Layer subclass to instantiate to create this view's layer.
+  // /**
+  //   The SC.Layer subclass to instantiate to create this view's layer.
+  // 
+  //   @property {SC.Layer}
+  // */
+  // layerClass: SC.Layer,
+  // 
+  // layer: function(key, value) {
+  //   sc_assert(value === undefined); // We're read only.
+  //   return this._sc_layer;
+  // }.property(),
+  // 
+  // hitTestLayer: function(key, value) {
+  //   sc_assert(value === undefined); // We're read only.
+  //   return this._sc_hitTestLayer;
+  // }.property(),
+  // 
+  // containerId: function(key, value) {
+  //   if (value) this._containerId = value;
+  //   if (this._containerId) return this._containerId;
+  //   return SC.guidFor(this) ;
+  // }.property().cacheable(),
 
-    @property {SC.Layer}
-  */
-  layerClass: SC.Layer,
+  // createLayersForContainer: function(container, width, height) {
+  //   if (this._sc_didCreateLayers) return;
+  //   this._sc_didCreateLayers = true;
+  // 
+  //   // SC.Pane only has two layers `layer` and `hitTestLayer`.
+  //   var K = this.get('layerClass');
+  //   sc_assert(K && K.kindOf(SC.Layer));
+  // 
+  //   // We want to allow the developer to provide a layout hash on the view, 
+  //   // or to override the 'layout' computed property.
+  //   if (this.hasOwnProperty('layout')) {
+  //     // It's still possible that layout is a computed property. Don't use 
+  //     // `get()` to find out!
+  //     var layout = this.layout;
+  //     if (typeof layout === "object") {
+  //       // We assume `layout` is a layout hash. The layer will throw an 
+  //       // exception if `layout` is invalid -- don't test for that here.
+  //       this._sc_layer = K.create({
+  //         layout: layout,
+  //         owner: this, // TODO: Do we need owner here?
+  //         container: container,
+  //         delegate: this
+  //       });
+  //       this._sc_hitTestLayer = K.create({
+  //         layout: layout,
+  //         isHitTestOnly: true,
+  //         owner: this, // TODO: Do we need owner here?
+  //         container: container,
+  //         delegate: this
+  //       });
+  //     } else {
+  //       this._sc_layer = K.create({
+  //         // `layout` is whatever the default on SC.Layer is
+  //         owner: this, // TODO: Do we need owner here?
+  //         container: container,
+  //         delegate: this
+  //       });
+  //       this._sc_hitTestLayer = K.create({
+  //         // `layout` is whatever the default on SC.Layer is
+  //         isHitTestOnly: true,
+  //         owner: this, // TODO: Do we need owner here?
+  //         container: container,
+  //         delegate: this
+  //       });
+  //     }
+  // 
+  //     // Only delete layout if it is not a computed property. This allows 
+  //     // the computed property on the prototype to shine through.
+  //     if (typeof layout !== "function" || !layout.isProperty) {
+  //       // console.log('deleting layout');
+  //       delete this.layout;
+  //     }
+  //   } else {
+  //     this._sc_layer = K.create({
+  //       // `layout` is whatever the default on SC.Layer is
+  //       owner: this, // TODO: Do we need owner here?
+  //       container: container,
+  //       delegate: this
+  //     });
+  //     this._sc_hitTestLayer = K.create({
+  //       // `layout` is whatever the default on SC.Layer is
+  //       isHitTestOnly: true,
+  //       owner: this, // TODO: Do we need owner here?
+  //       container: container,
+  //       delegate: this
+  //     });
+  //   }
+  // 
+  //   this.notifyPropertyChange('layer');
+  //   this.notifyPropertyChange('hitTestLayer');
+  // },
 
-  layer: function(key, value) {
-    sc_assert(value === undefined); // We're read only.
-    return this._sc_layer;
-  }.property(),
-
-  hitTestLayer: function(key, value) {
-    sc_assert(value === undefined); // We're read only.
-    return this._sc_hitTestLayer;
-  }.property(),
-
-  containerId: function(key, value) {
-    if (value) this._containerId = value;
-    if (this._containerId) return this._containerId;
-    return SC.guidFor(this) ;
-  }.property().cacheable(),
-
-  createLayersForContainer: function(container, width, height) {
-    if (this._sc_didCreateLayers) return;
-    this._sc_didCreateLayers = true;
-
-    // SC.Pane only has two layers `layer` and `hitTestLayer`.
-    var K = this.get('layerClass');
-    sc_assert(K && K.kindOf(SC.Layer));
-
-    // We want to allow the developer to provide a layout hash on the view, 
-    // or to override the 'layout' computed property.
-    if (this.hasOwnProperty('layout')) {
-      // It's still possible that layout is a computed property. Don't use 
-      // `get()` to find out!
-      var layout = this.layout;
-      if (typeof layout === "object") {
-        // We assume `layout` is a layout hash. The layer will throw an 
-        // exception if `layout` is invalid -- don't test for that here.
-        this._sc_layer = K.create({
-          layout: layout,
-          owner: this, // TODO: Do we need owner here?
-          container: container,
-          delegate: this
-        });
-        this._sc_hitTestLayer = K.create({
-          layout: layout,
-          isHitTestOnly: true,
-          owner: this, // TODO: Do we need owner here?
-          container: container,
-          delegate: this
-        });
-      } else {
-        this._sc_layer = K.create({
-          // `layout` is whatever the default on SC.Layer is
-          owner: this, // TODO: Do we need owner here?
-          container: container,
-          delegate: this
-        });
-        this._sc_hitTestLayer = K.create({
-          // `layout` is whatever the default on SC.Layer is
-          isHitTestOnly: true,
-          owner: this, // TODO: Do we need owner here?
-          container: container,
-          delegate: this
-        });
-      }
-
-      // Only delete layout if it is not a computed property. This allows 
-      // the computed property on the prototype to shine through.
-      if (typeof layout !== "function" || !layout.isProperty) {
-        console.log('deleting layout');
-        delete this.layout;
-      }
-    } else {
-      this._sc_layer = K.create({
-        // `layout` is whatever the default on SC.Layer is
-        owner: this, // TODO: Do we need owner here?
-        container: container,
-        delegate: this
-      });
-      this._sc_hitTestLayer = K.create({
-        // `layout` is whatever the default on SC.Layer is
-        isHitTestOnly: true,
-        owner: this, // TODO: Do we need owner here?
-        container: container,
-        delegate: this
-      });
-    }
-
-    this.notifyPropertyChange('layer');
-    this.notifyPropertyChange('hitTestLayer');
-  },
-
-  container: function(key, element) {
-    if (element !== undefined) {
-      this._pane_container = element ;
-    } else {
-      element = this._pane_container;
-      if (!element) {
-        this._pane_container = element = document.createElement('div');
-        element.id = this.get('containerId');
-        element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
-//        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
-        // element.style.webkitTransform = "translateZ(0)";
-        element.style.webkitTransform = "rotateY(45deg)";
-
-        // apply the layout style manually for now...
-        // var layoutStyle = this.get('layoutStyle');
-        // for (key in layoutStyle) {
-        //   if (!layoutStyle.hasOwnProperty(key)) continue;
-        //   if (layoutStyle[key] !== null) {
-        //     element.style[key] = layoutStyle[key];
-        //   }
-        // }
-
-        // Make sure SproutCore can find this view.
-        SC.View.views[this.get('containerId')] = this;
-      }
-    }
-    return element ;
-  }.property(),
+//   container: function(key, element) {
+//     if (element !== undefined) {
+//       this._pane_container = element ;
+//     } else {
+//       element = this._pane_container;
+//       if (!element) {
+//         this._pane_container = element = document.createElement('div');
+//         element.id = this.get('containerId');
+//         element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
+// //        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
+//         // element.style.webkitTransform = "translateZ(0)";
+//         element.style.webkitTransform = "rotateY(45deg)";
+// 
+//         // apply the layout style manually for now...
+//         // var layoutStyle = this.get('layoutStyle');
+//         // for (key in layoutStyle) {
+//         //   if (!layoutStyle.hasOwnProperty(key)) continue;
+//         //   if (layoutStyle[key] !== null) {
+//         //     element.style[key] = layoutStyle[key];
+//         //   }
+//         // }
+// 
+//         // Make sure SproutCore can find this view.
+//         SC.View.views[this.get('containerId')] = this;
+//       }
+//     }
+//     return element ;
+//   }.property(),
 
   didAttach: function() {
-    var container = this.get('container');
-
-    // Okay, the order here is very important; otherwise, the layers will 
-    // not know their correct size.
-
-    this.createLayersForContainer(container);
-    this.render(this.getPath('layer.context'), true);
-
-    container = null; // avoid memory leak
+    // var container = this.get('container');
+    // 
+    // // Okay, the order here is very important; otherwise, the layers will 
+    // // not know their correct size.
+    // 
+    // this.createLayersForContainer(container);
+    // this.render(this.getPath('layer.context'), true);
+    // 
+    // container = null; // avoid memory leak
   },
 
   didDetach: function() {
-    console.log('Implement me! Destroy layers...');
+    // console.log('Implement me! Destroy layers...');
   },
 
   render: function(context) {},
@@ -758,14 +908,14 @@ SC.Surface = SC.Responder.extend({
     if (lW !== undefined && lW === SC.LAYOUT_AUTO && !stLayout) {
       error= SC.Error.desc("%@.layout() you cannot use width:auto if "+
               "staticLayout is disabled".fmt(this),"%@".fmt(this),-1);
-      console.error(error.toString()) ;
+      // console.error(error.toString()) ;
       throw error ;
     }
 
     if (lH !== undefined && lH === SC.LAYOUT_AUTO && !stLayout) {
       error = SC.Error.desc("%@.layout() you cannot use height:auto if "+
                 "staticLayout is disabled".fmt(this),"%@".fmt(this),-1);
-      console.error(error.toString()) ;
+      // console.error(error.toString()) ;
       throw error ;
     }
 
@@ -824,7 +974,7 @@ SC.Surface = SC.Responder.extend({
         ret.marginLeft = Math.floor(lcX - ret.width/2) ;
       }else {
         // This error message happens whenever width is not set.
-        console.warn("You have to set width and centerX usign both percentages or pixels");
+        // console.warn("You have to set width and centerX usign both percentages or pixels");
         ret.marginLeft = "50%";
       }
       ret.right = null ;
@@ -903,7 +1053,7 @@ SC.Surface = SC.Responder.extend({
       }else if(lH && lH >= 1 && !SC.isPercentage(lcY)){
         ret.marginTop = Math.floor(lcY - ret.height/2) ;
       }else {
-        console.warn("You have to set height and centerY to use both percentages or pixels");
+        // console.warn("You have to set height and centerY to use both percentages or pixels");
         ret.marginTop = "50%";
       }
     } else if (!SC.none(lH)) {
@@ -958,22 +1108,7 @@ SC.Surface = SC.Responder.extend({
       if (typeof value === SC.T_NUMBER) ret[key] = (value + "px");
     }
     return ret ;
-  }.property().cacheable(),
-
-  /** @private */
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    this.pane = this; // Needed so that our childViews can get our "pane".
-    if (SC.app) {
-      this.__sc_needFirstResponderInit__ = false;
-      this._sc_firstResponderDidChange();
-    } else {
-      // This flag instructs SC.app to execute our 
-      // `_sc_firstResponderDidChange` method when we are first added to the 
-      // app's set of surfaces.
-      this.__sc_needFirstResponderInit__ = true;
-    }
-  }
+  }.property().cacheable()
 
 });
 

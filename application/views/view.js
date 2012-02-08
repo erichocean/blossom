@@ -567,7 +567,7 @@ if (BLOSSOM) {
 SC.View = SC.View.extend(
 /** @scope SC.View.prototype */ { // Monkey patch for now.
 
-  concatenatedProperties: 'displayProperties'.w(),
+  concatenatedProperties: ['displayProperties'],
 
   // ..........................................................
   // DISPLAY PROPERTIES SUPPORT

@@ -92,6 +92,7 @@ function main() {
     // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
 
     render: function(ctx) {
+      console.log('rendering');
       // Draw background.
       ctx.fillStyle = base3;
       ctx.fillRect(0, 0, ctx.width, ctx.height);

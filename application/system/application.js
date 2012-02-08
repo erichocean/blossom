@@ -337,6 +337,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
       });
+
+      uiContainer.set('isPresentInViewport', true);
     }
     return uiContainer;
   }.property(),

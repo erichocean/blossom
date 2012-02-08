@@ -120,10 +120,8 @@ SC.Layer = SC.Object.extend({
         if (container) {
           sc_assert(!superlayer);
           // Use the container's bounds as the parents bounds.
-          pbounds = {
-            width: container.offsetWidth,
-            height: container.offsetHeight
-          };
+          // debugger;
+          pbounds = container.get('bounds');
          } else if (superlayer) {
           // Use our superlayer's bounds.
           pbounds = superlayer.get('bounds');
@@ -359,7 +357,11 @@ SC.Layer = SC.Object.extend({
     }
 
     var container = this.get('container');
-    if (container) container.appendChild(canvas); // a DOM call
+    if (container) {
+      console.log('appending canvas element');
+      sc_assert(container.__sc_element__);
+      container.__sc_element__.appendChild(canvas); // a DOM call
+    }
   },
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
