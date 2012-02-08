@@ -36,6 +36,19 @@ SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.
 
+  view: function() {
+    var view = this.get('view'),
+        superlayer = view? null : this.get('superlayer');
+
+    while (superlayer && !view) {
+      view = superlayer.get('view');
+      superlayer = superlayer.get('superlayer');
+    }
+
+    sc_assert(view === null || view.kindOf(SC.View));
+    return view;
+  },
+
   // ..........................................................
   // VISIBILITY SUPPORT
   //

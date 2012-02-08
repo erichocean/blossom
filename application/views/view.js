@@ -908,12 +908,14 @@ SC.View = SC.View.extend(
           this._sc_layer = ret = K.create({
             layout: layout,
             owner: this, // TODO: Do we need owner here?
+            view: this,
             delegate: this
           });
         } else {
           this._sc_layer = ret = K.create({
             // `layout` is whatever the default on SC.Layer is
             owner: this, // TODO: Do we need owner here?
+            view: this,
             delegate: this
           });
         }
@@ -927,6 +929,7 @@ SC.View = SC.View.extend(
         this._sc_layer = ret = K.create({
           // `layout` is whatever the default on SC.Layer is
           owner: this, // TODO: Do we need owner here?
+          view: this,
           delegate: this
         });
       }

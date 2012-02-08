@@ -574,12 +574,12 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
   _sc_global: {},
 
   /** @private properties to copy from native event onto the event */
-  _sc_props: "altKey attrChange attrName bubbles button cancelable "         + 
+  _sc_props: ("altKey attrChange attrName bubbles button cancelable "        +
     "charCode clientX clientY ctrlKey currentTarget data detail eventPhase " +
     "fromElement handler keyCode metaKey newValue originalTarget pageX "     +
     "pageY prevValue relatedNode relatedTarget screenX screenY shiftKey "    +
     "srcElement target timeStamp toElement type view which animationName "   +
-    "elapsedTime".split(" ")
+    "elapsedTime").split(" ")
 
 });
 

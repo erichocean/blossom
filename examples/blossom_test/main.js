@@ -132,12 +132,8 @@ function main() {
       layout: { top: 10, right: 10, bottom: 10, left: 10 },
       cornerRadius: 25,
     
-      mouseDown:    function(evt) { alert("clicked on view"); },
-      mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
-      mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
-    
       render: function(ctx) {
-        console.log('MyView.render()');
+        console.log('MyView.render()', SC.guidFor(this));
         ctx.beginPath();
         this.get('layer').renderHitTestPath(ctx);
         ctx.fillStyle = green;
@@ -164,8 +160,12 @@ function main() {
         layout: { centerX: 0, width: 0.3, centerY: 0, height: 0.3 },
         cornerRadius: 25,
 
+        mouseDown:    function(evt) { alert("I guess event handling works!"); },
+        mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
+        mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
+
         render: function(ctx, layer) {
-          console.log('foo.render()');
+          console.log('foo.render()', SC.guidFor(this));
           var w = ctx.width, h = ctx.height;
 
           ctx.beginPath();

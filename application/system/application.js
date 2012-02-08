@@ -681,18 +681,18 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Object} object that handled the event or null if not handled
   */
   sendEvent: function(action, evt, target) {
-    var pane, ret;
+    var surface, ret;
 
-    SC.run(function() {
+    // SC.run(function() {
       // get the target pane
-      if (target) pane = target.get('pane') ;
-      else pane = this.get('menuPane') || this.get('keyPane') || this.get('mainPane') ;
+      if (target) surface = target.get('surface') ;
+      else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 
       // if we found a valid pane, send the event to it
-      ret = (pane) ? pane.sendEvent(action, evt, target) : null ;
-    }, this);
+      ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
+    // }, this);
 
-    return ret ;
+    return ret;
   },
 
   // .......................................................
@@ -709,7 +709,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @param {Array} keyNames
     @param {Element} target
     @param {Object} receiver - optional if you don't want 'this'
-    @returns {SC.RootResponder} receiver
+    @returns {SC.Application} receiver
   */
   listenFor: function(keyNames, target, receiver) {
     receiver = receiver ? receiver : this;
@@ -916,8 +916,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {void}
   */
   awake: function() {
+    console.log('SC.Application#awake()');
     // handle touch events
-    this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
+    // this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
 
     // handle basic events
     this.listenFor('keydown keyup beforedeactivate mousedown mouseup click mousemove selectstart contextmenu'.w(), document);
@@ -991,11 +992,21 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {SC.View} view instance or null
   */
   targetViewForEvent: function(evt) {
+    // console.log('SC.Application#targetViewForEvent()');
     // FIXME: this only works for panes for now...
-    var pane = evt.target ? SC.View.views[evt.target.id] : null,
-        ret = pane? pane.targetViewForEvent(evt) : null ;
-    
-    // console.log('target', ret);
+    // debugger;
+    // var surface = evt.target ? SC.View.views[evt.target.id] : null,
+    //     ret = surface? surface.targetViewForEvent(evt) : null ;
+
+    var parentNode = evt.target, id, ret, views = SC.View.views;
+
+    while (parentNode && !ret) {
+      id = parentNode.id;
+      if (id) ret = views[id];
+      parentNode = parentNode.parentNode;
+    }
+
+    ret = ret? ret.targetViewForEvent(evt) : null;
     return ret;
   },
 
@@ -1188,6 +1199,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   mousedown: function(evt) {
+    // console.log('SC.Application#mousedown()');
     // if(!SC.browser.msie) window.focus();
     window.focus();
     
@@ -1216,10 +1228,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // outside the view.  This is a special case as textfields are not 
     // supposed to loose focus unless you click on a list, another textfield 
     // or on a special view/control.
-    if (view) fr = view.getPath('pane.firstResponder');
-    if (fr && fr.kindOf(SC.InlineTextFieldView) && fr !== view) {
-      fr.resignFirstResponder();
-    }
+    // if (view) fr = view.getPath('pane.firstResponder');
+    // if (fr && fr.kindOf(SC.InlineTextFieldView) && fr !== view) {
+    //   fr.resignFirstResponder();
+    // }
 
     view = this._sc_mouseDownView = this.sendEvent('mouseDown', evt, view);
     if (view && view.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
