@@ -56,7 +56,7 @@ SC.ContainerSurface = SC.Surface.extend({
 
   _sc_surface: null, // Note: Required, we're strict about null checking.
   _sc_surfaceDidChange: function() {
-    console.log('SC.ContainerSurface#_sc_surfaceDidChange()');
+    // console.log('SC.ContainerSurface#_sc_surfaceDidChange()');
     var old = this._sc_surface,
         cur = this.get('surface'),
         element = this.__sc_element__,

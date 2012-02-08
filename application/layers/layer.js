@@ -85,11 +85,11 @@ SC.Layer = SC.Object.extend({
   _sc_needsDisplay: false,
   needsDisplay: function(key, value) {
     if (value !== undefined) {
-      console.log('SC.Layer@needsDisplay=', SC.guidFor(this), value);
+      // console.log('SC.Layer@needsDisplay=', SC.guidFor(this), value);
       this._sc_needsDisplay = value;
       // if (!value) debugger;
     } else {
-      console.log('SC.Layer@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
+      // console.log('SC.Layer@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
       return this._sc_needsDisplay;
     }
   }.property(),
@@ -104,13 +104,13 @@ SC.Layer = SC.Object.extend({
   }.observes('needsDisplay'),
 
   updateLayout: function() {
-    console.log('SC.Layer#updateLayout()', SC.guidFor(this));
+    // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
     // debugger;
     var bounds = this.get('bounds'),
         canvas = this.__sc_element__;
 
     sc_assert(this.get('needsDisplay'));
-    console.log(bounds);
+    // console.log(bounds);
 
     canvas.width = bounds.width;
     canvas.height = bounds.height;
@@ -119,7 +119,7 @@ SC.Layer = SC.Object.extend({
   },
 
   updateDisplay: function() {
-    console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
+    // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var ctx = this.get('context');
 
     if (this.get('needsDisplay')) {
@@ -170,7 +170,7 @@ SC.Layer = SC.Object.extend({
 
   _sc_surface: null,
   _sc_surfaceDidChange: function() {
-    console.log('SC.Layer#_sc_surfaceDidChange()');
+    // console.log('SC.Layer#_sc_surfaceDidChange()');
     var old = this._sc_surface,
         cur = this.get('surface'),
         sublayers = this.get('sublayers'),

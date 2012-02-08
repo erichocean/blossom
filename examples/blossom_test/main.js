@@ -154,8 +154,8 @@ function main() {
         ctx.textAlign = "center";
         ctx.shadowBlur = 0;
         ctx.shadowColor = "rgba(0,0,0,0)";
-        ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4-20);
-        ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3-20);
+        ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
+        ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
       }
     })
   });

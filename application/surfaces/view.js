@@ -48,13 +48,13 @@ SC.ViewSurface = SC.Surface.extend({
   //
 
   updateLayout: function() {
-    console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
+    // console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
     var layer = this.getPath('contentView.layer');
     if (layer && layer.get('needsLayout')) layer.updateLayout();
   },
 
   updateDisplay: function() {
-    console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
+    // console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
     sc_assert(document.getElementById(this.__sc_element__.id));
     var layer = this.getPath('contentView.layer');
     // debugger;
@@ -227,7 +227,7 @@ SC.ViewSurface = SC.Surface.extend({
 
   _sc_contentView: null,
   _sc_contentViewDidChange: function() {
-    console.log('SC.ViewSurface#_sc_contentViewDidChange()');
+    // console.log('SC.ViewSurface#_sc_contentViewDidChange()');
     var old = this._sc_contentView,
         cur = this.get('contentView'),
         layer = this.get('layer');

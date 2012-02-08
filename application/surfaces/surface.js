@@ -150,11 +150,11 @@ SC.Surface = SC.Responder.extend({
   _sc_needsDisplay: false,
   needsDisplay: function(key, value) {
     if (value !== undefined) {
-      console.log('SC.Surface@needsDisplay=', SC.guidFor(this), value);
+      // console.log('SC.Surface@needsDisplay=', SC.guidFor(this), value);
       this._sc_needsDisplay = value;
       // if (!value) debugger;
     } else {
-      console.log('SC.Surface@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
+      // console.log('SC.Surface@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
       return this._sc_needsDisplay;
     }
   }.property(),
@@ -164,7 +164,7 @@ SC.Surface = SC.Responder.extend({
     runloop if `needsDisplay` is set to true.
   */
   _sc_needsDisplayDidChange: function() {
-    console.log('SC.Surface#_sc_needsDisplayDidChange()', SC.guidFor(this));
+    // console.log('SC.Surface#_sc_needsDisplayDidChange()', SC.guidFor(this));
     if (this.get('needsDisplay')) {
       this.invokeOnce(this.updateIfNeeded) ;
     }
@@ -187,7 +187,7 @@ SC.Surface = SC.Responder.extend({
     runloop if `needsDisplay` is set to true.
   */
   _sc_needsLayoutDidChange: function() {
-    console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
+    // console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
     if (this.get('needsLayout')) {
       this.invokeOnce(this.updateIfNeeded) ;
     }
@@ -208,7 +208,7 @@ SC.Surface = SC.Responder.extend({
     @param {Boolean} ignoreVisibility
   */
   updateIfNeeded: function(ignoreVisibility) {
-    console.log('SC.Surface#updateIfNeeded()');
+    // console.log('SC.Surface#updateIfNeeded()');
     var needsLayout = this.get('needsLayout'),
         needsDisplay = this.get('needsDisplay');
 
@@ -246,7 +246,7 @@ SC.Surface = SC.Responder.extend({
   isPresentInViewport: false,
 
   _sc_isPresentInViewportDidChange: function() {
-    console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
+    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
 
     // Either (a) we set up our layers, or (b) we schedule them to be 
     // destroyed at the end of the run loop.
@@ -547,7 +547,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
-    console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
 

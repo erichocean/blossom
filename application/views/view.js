@@ -175,7 +175,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @test in updateLayer
   */
   updateLayerIfNeeded: function(ignoreVisibility) {
-    console.log('SC.View#updateLayerIfNeeded()', ignoreVisibility, SC.guidFor(this));
+    // console.log('SC.View#updateLayerIfNeeded()', ignoreVisibility, SC.guidFor(this));
     // debugger;
     var needsUpdate  = this.get('layerNeedsUpdate');
     if (needsUpdate && (ignoreVisibility || this.get('isVisibleInWindow'))) {
@@ -586,7 +586,7 @@ SC.View = SC.View.extend(
 
   _sc_surface: null,
   _sc_surfaceDidChange: function() {
-    console.log('SC.View#_sc_surfaceDidChange()');
+    // console.log('SC.View#_sc_surfaceDidChange()');
     var old = this._sc_surface,
         cur = this.get('surface'),
         childView, childViews = this.get('childViews'),
@@ -959,7 +959,7 @@ SC.View = SC.View.extend(
     @returns {SC.View} receiver
   */
   updateLayer: function() {
-    console.log('SC.View#updateLayer()');
+    // console.log('SC.View#updateLayer()');
     var surface = this.get('surface'),
         layer = this.get('layer');
 
