@@ -1,6 +1,6 @@
 /*globals global require __dirname BT process CoreTest */
 
-require('blossom/buildtools'); // adds the BT namespace as a global
+require('./buildtools'); // adds the BT namespace as a global
 
 var fs = require('fs'),
     path = require('path'),
