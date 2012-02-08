@@ -136,6 +136,7 @@ function main() {
       mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
     
       render: function(ctx) {
+        console.log('MyView.render()');
         ctx.beginPath();
         this.get('layer').renderHitTestPath(ctx);
         ctx.fillStyle = green;
@@ -144,16 +145,15 @@ function main() {
         ctx.shadowBlur = 25;
         ctx.shadowColor = "rgba(0,0,0,0.3)";
         ctx.fill();
-          
+
         // Draw some text.
-        var bounds = this.getPath('layer.bounds');
         ctx.fillStyle = base3;
         ctx.font = "16pt Calibri";
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.shadowBlur = 0;
         ctx.shadowColor = "rgba(0,0,0,0)";
-        ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+        ctx.fillText("Hello from Blossom.", ctx.width/2, ctx.height/2-20);
       }
     })
   });

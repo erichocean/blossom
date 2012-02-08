@@ -124,28 +124,38 @@ SC.Layer = SC.Object.extend({
 
     if (this.get('needsDisplay')) {
       ctx.save();
-      ctx.beginPath();
-      this.renderHitTestPath(ctx);
-      ctx.fillStyle = green;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 15;
-      ctx.shadowBlur = 25;
-      ctx.shadowColor = "rgba(0,0,0,0.3)";
-      ctx.fill();
-
-      // Draw some text.
-      var bounds = this.get('bounds');
-      ctx.fillStyle = base3;
-      ctx.font = "16pt Calibri";
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+      this.display(ctx);
       ctx.restore();
       this.set('needsDisplay', false);
     }
     this.get('sublayers').invoke('updateDisplay');
+  },
+
+  display: function(ctx) {
+    var delegate = this.get('delegate');
+    if (delegate && delegate.render) delegate.render(ctx);
+    else this.render(ctx);
+  },
+
+  render: function(ctx) {
+    ctx.beginPath();
+    this.renderHitTestPath(ctx);
+    ctx.fillStyle = green;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 15;
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.fill();
+
+    // Draw some text.
+    var bounds = this.get('bounds');
+    ctx.fillStyle = base3;
+    ctx.font = "16pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "rgba(0,0,0,0)";
+    ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
   },
 
   // ..........................................................
