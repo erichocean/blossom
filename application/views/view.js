@@ -51,6 +51,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @returns {SC.View} receiver
   */
   displayDidChange: function() {
+    // console.log('SC.View#displayDidChange()', SC.guidFor(this));
     this.set('layerNeedsUpdate', YES) ;
     return this;
   },
@@ -109,9 +110,9 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     YES only if the view and all of its parent views are currently visible
     in the window.  This property is used to optimize certain behaviors in
     the view.  For example, updates to the view layer are not performed
-    if the view until the view becomes visible in the window.
+    on the view until the view becomes visible in the window.
   */
-  isVisibleInWindow: false,
+  isVisibleInWindow: true, // false,
 
   /** @private
     Whenever the view’s visibility changes, we need to recompute whether it is
@@ -120,6 +121,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     to updating the layer accordingly.
   */
   _sc_isVisibleDidChange: function() {
+    console.log('SC.View#_sc_isVisibleDidChange()', SC.guidFor(this));
     // 'isVisible' is effectively a displayProperty, but we'll call
     // displayDidChange() manually here instead of declaring it as a
     // displayProperty because that avoids having two observers on
@@ -127,7 +129,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     //   a.  More efficient
     //   b.  More correct, because we can guarantee the order of operations
     this.displayDidChange();
-    this.recomputeIsVisibleInWindow();
+    // this.recomputeIsVisibleInWindow();
   }.observes('isVisible'),
 
   // ..........................................................
@@ -173,6 +175,8 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @test in updateLayer
   */
   updateLayerIfNeeded: function(ignoreVisibility) {
+    console.log('SC.View#updateLayerIfNeeded()', ignoreVisibility, SC.guidFor(this));
+    // debugger;
     var needsUpdate  = this.get('layerNeedsUpdate');
     if (needsUpdate && (ignoreVisibility || this.get('isVisibleInWindow'))) {
       this.updateLayer();
@@ -197,17 +201,6 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     is used when calculcating key responder loop.
   */
   acceptsFirstResponder: NO,
-
-  // ..........................................................
-  // KEY RESPONDER
-  //
-
-  /** @property
-    YES if the view is currently first responder and the pane the view belongs
-    to is also key pane.  While this property is set, you should expect to
-    receive keyboard events.
-  */
-  isKeyResponder: NO,
 
   // ..........................................................
   // TEXT HANDLING AND KEYBOARD SUPPORT
@@ -582,14 +575,48 @@ SC.View = SC.View.extend(
   backgroundColor: null,
 
   // ..........................................................
-  // PANE SUPPORT
+  // SURFACE SUPPORT
   //
 
   /**
-    The current pane this view is a child of (may be null).
-    @property {SC.Pane}
+    The current surface this view is a child of (may be null).
+    @property {SC.Surface}
   */
-  pane: null,
+  surface: null,
+
+  _sc_surface: null,
+  _sc_surfaceDidChange: function() {
+    console.log('SC.View#_sc_surfaceDidChange()');
+    var old = this._sc_surface,
+        cur = this.get('surface'),
+        childView, childViews = this.get('childViews'),
+        len = childViews.length, idx,
+        layer = this.get('layer');
+
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.View^_sc_surface is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.View@surface must either be null or an SC.Surface instance.");
+
+    if (old === cur) return; // Nothing to do.
+
+    for (idx=0; idx<len; ++idx) {
+      childView = childViews[idx];
+      sc_assert(childView._sc_setSurfaceForSelfAndAllChildViews);
+      childView.set('surface', cur);
+    }
+
+    if (layer) layer.set('surface', cur);
+  }.observes('surface'),
+
+  // ..........................................................
+  // KEY RESPONDER
+  //
+
+  /** @property
+    YES if the view is currently first responder and the surface the view 
+    belongs to is also the input surface.  While this property is set, you 
+    should expect to receive text input and keyboard events.
+  */
+  isInputResponder: NO,
 
   // ..........................................................
   // CHILD VIEW SUPPORT
@@ -675,7 +702,6 @@ SC.View = SC.View.extend(
 
     // Set parentView of child.
     view.set('parentView', this);
-    if (this.isPane) view.set('pane', pane); // HACK: This is for SC.Pane.
 
     // Add to childView's array.
     var idx, childViews = this.get('childViews') ;
@@ -780,43 +806,11 @@ SC.View = SC.View.extend(
     this.recomputeIsVisibleInWindow() ;
     this.updateLayerLocation() ;
 
-    // We also need to iterate down through the view hierarchy and update
-    // all our child view's 'pane' property, since it could have changed.
-    this._sc_setPaneForSelfAndAllChildViews();
-  },
+    var parentView = this.get('parentView'),
+        old = this.get('surface'),
+        cur = parentView? parentView.get('surface') : null;
 
-  /** @private
-    We want to cache the 'pane' property, but it's impossible for us to
-    declare a dependence on all properties that can affect the value.  (For
-    example, if our grandparent gets attached to a new pane, our pane will
-    have changed.)  So when there's the potential for the pane changing, we
-    need to invalidate the caches for all our child views, and their child
-    views, and so on.
-  */
-  _sc_setPaneForSelfAndAllChildViews: function (pane) {
-    var childView, childViews = this.get('childViews'),
-        len = childViews.length, idx, parentView, current;
-
-    if (this.isPane) pane = this; // HACK: This is for SC.Pane.
-
-    // If we weren't given a pane, try and get it from our parentView. Our 
-    // parentView will always have the correct value for pane.
-    if (pane === undefined) {
-      parentView = this.get('parentView');
-      pane = parentView? parentView.get('pane') : null;
-    }
-
-    current = this.get('pane');
-    if (current !== pane) {
-      // Only update our children if they're not right already.
-      this.set('pane', pane);
-
-      for (idx=0; idx<len; ++idx) {
-        childView = childViews[idx];
-        sc_assert(childView._sc_setPaneForSelfAndAllChildViews);
-        childView._sc_setPaneForSelfAndAllChildViews(pane);
-      }
-    }
+    if (old !== cur) this.set('surface', cur); // Updates our childViews, too.
   },
 
   /**
@@ -831,7 +825,7 @@ SC.View = SC.View.extend(
     if (this === view) return true;
     else if (parentView) return parentView.isDescendantOf(view);
     else return false;
-  },
+  }.property(),
 
   // ..........................................................
   // LAYOUT SUPPORT
@@ -965,8 +959,13 @@ SC.View = SC.View.extend(
     @returns {SC.View} receiver
   */
   updateLayer: function() {
-    // console.log('SC.View#updateLayer()');
-    this.render(this.getPath('layer.context'));
+    console.log('SC.View#updateLayer()');
+    var surface = this.get('surface'),
+        layer = this.get('layer');
+
+    if (surface) surface.set('needsDisplay', true);
+    // debugger;
+    if (layer) layer.set('needsDisplay', true);
   },
 
   /**
@@ -1230,6 +1229,9 @@ SC.View = SC.View.extend(
 
     // Register scroll views for autoscroll during drags.
     if (this.get('isScrollable')) SC.Drag.addScrollableView(this) ;
+
+    this.displayDidChange();
+    this._sc_surfaceDidChange();
   }
 
 });
@@ -1332,6 +1334,17 @@ SC.View = SC.View.extend(
   // ..........................................................
   // PANE SUPPORT
   //
+
+  // ..........................................................
+  // KEY RESPONDER
+  //
+
+  /** @property
+    YES if the view is currently first responder and the pane the view belongs
+    to is also key pane.  While this property is set, you should expect to
+    receive keyboard events.
+  */
+  isKeyResponder: NO,
 
   /**
     The current pane this view is a child of (may be null).

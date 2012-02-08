@@ -162,7 +162,8 @@ SC.ContainerSurface = SC.Surface.extend({
     }
   }.observes('surface'),
 
-  updateSurface: function() {} // Nothing to do.
+  updateLayout: function() {}, // Nothing to do.
+  updateDisplay: function() {} // Nothing to do.
 
 });
 

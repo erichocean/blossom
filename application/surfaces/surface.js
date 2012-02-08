@@ -111,12 +111,12 @@ SC.Surface = SC.Responder.extend({
 
   /**
     This method is invoked whenever a display property changes.  It will set
-    the surfaceNeedsUpdate property to true.  If you need to perform 
-    additional setup whenever the display changes, you can override this 
+    the needsDisplay property to true.  If you need to perform additional 
+    set up whenever the display changes, you can override this 
     method as well.
   */
   displayDidChange: function() {
-    this.set('surfaceNeedsUpdate', true);
+    this.set('needsDisplay', true);
   },
 
   // ..........................................................
@@ -138,6 +138,8 @@ SC.Surface = SC.Responder.extend({
   isVisibleBindingDefault: SC.Binding.bool(),
 
   _sc_isVisibleDidChange: function() {
+    var el = this.__sc_element__;
+    el.style.visibility = this.get('isVisible')? "visible" : "hidden";
     this.displayDidChange();
   }.observes('isVisible'),
 
@@ -145,23 +147,57 @@ SC.Surface = SC.Responder.extend({
   // RENDERING SUPPORT
   //
 
-  surfaceNeedsUpdate: false,
+  _sc_needsDisplay: false,
+  needsDisplay: function(key, value) {
+    if (value !== undefined) {
+      console.log('SC.Surface@needsDisplay=', SC.guidFor(this), value);
+      this._sc_needsDisplay = value;
+      // if (!value) debugger;
+    } else {
+      console.log('SC.Surface@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
+      return this._sc_needsDisplay;
+    }
+  }.property(),
 
   /** @private
     Schedules the updateSurfaceIfNeeded method to run at the end of the 
-    runloop if surfaceNeedsUpdate is set to true.
+    runloop if `needsDisplay` is set to true.
   */
-  _sc_surfaceNeedsUpdateDidChange: function() {
-    if (this.get('surfaceNeedsUpdate')) {
-      this.invokeOnce(this.updateSurfaceIfNeeded) ;
+  _sc_needsDisplayDidChange: function() {
+    console.log('SC.Surface#_sc_needsDisplayDidChange()', SC.guidFor(this));
+    if (this.get('needsDisplay')) {
+      this.invokeOnce(this.updateIfNeeded) ;
     }
-  }.observes('surfaceNeedsUpdate'),
+  }.observes('needsDisplay'),
+
+  _sc_needsLayout: false,
+  needsLayout: function(key, value) {
+    // console.log('SC.Surface@needsLayout=', SC.guidFor(this), value);
+    if (value !== undefined) {
+      this._sc_needsLayout = value;
+      // if (!value) debugger;
+    } else {
+      // console.log('SC.Surface@needsLayout', SC.guidFor(this), value);
+      return this._sc_needsLayout;
+    }
+  }.property(),
+
+  /** @private
+    Schedules the updateSurfaceIfNeeded method to run at the end of the 
+    runloop if `needsDisplay` is set to true.
+  */
+  _sc_needsLayoutDidChange: function() {
+    console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
+    if (this.get('needsLayout')) {
+      this.invokeOnce(this.updateIfNeeded) ;
+    }
+  }.observes('needsLayout'),
 
   /**
     Updates the surface only if the surface is visible, in the viewport, and 
-    if `surfaceNeedsUpdate` is true.  Normally you will not invoke this 
-    method directly.  Instead you'd set the `surfaceNeedsUpdate` property to 
-    true and this method will be called once at the end of the runloop.
+    if `needsDisplay` is true.  Normally you will not invoke this method 
+    directly.  Instead you'd set the `needsDisplay` property to true and this 
+    method will be called once at the end of the runloop.
 
     If you need to update the surface sooner than the end of the runloop, you
     can call this method directly. If the surface is not even present in the 
@@ -171,15 +207,36 @@ SC.Surface = SC.Responder.extend({
 
     @param {Boolean} ignoreVisibility
   */
-  updateSurfaceIfNeeded: function(ignoreVisibility) {
-    var needsUpdate  = this.get('surfaceNeedsUpdate');
-    if (needsUpdate && (ignoreVisibility || this.get('isVisible'))) {
+  updateIfNeeded: function(ignoreVisibility) {
+    console.log('SC.Surface#updateIfNeeded()');
+    var needsLayout = this.get('needsLayout'),
+        needsDisplay = this.get('needsDisplay');
+
+    // debugger;
+
+    if (needsLayout && (ignoreVisibility || this.get('isVisible'))) {
       if (this.get('isPresentInViewport')) {
-        this.updateSurface();
-        this.set('surfaceNeedsUpdate', false);
+        this.updateLayout();
+        this.set('needsLayout', false);
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
     }
+
+    if (needsDisplay && (ignoreVisibility || this.get('isVisible'))) {
+      if (this.get('isPresentInViewport')) {
+        this.updateDisplay();
+        this.set('needsDisplay', false);
+      } // else leave it set to true, we'll update it when it again becomes 
+        // visible in the viewport
+    }
+  },
+
+  updateLayout: function() {
+    console.log('All SC.Surface subclasses should override updateLayout()');
+  },
+
+  updateDisplay: function() {
+    console.log('All SC.Surface subclasses should override updateDisplay()');
   },
 
   // ..........................................................
@@ -189,19 +246,19 @@ SC.Surface = SC.Responder.extend({
   isPresentInViewport: false,
 
   _sc_isPresentInViewportDidChange: function() {
-    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()');
+    console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
 
     // Either (a) we set up our layers, or (b) we schedule them to be 
     // destroyed at the end of the run loop.
     if (this.get('isPresentInViewport')) this.createSurface();
-    else this.invokeLast(this.destroySurface);
+    else this.invokeLast(this.destroySurfaceIfNeeded);
   }.observes('isPresentInViewport'),
 
   createSurface: function() {
     var element = this.__sc_element__, key;
     // apply the layout style manually for now...
     var layoutStyle = this.get('layoutStyle');
-    console.log(layoutStyle);
+    // console.log(layoutStyle);
     for (key in layoutStyle) {
       if (!layoutStyle.hasOwnProperty(key)) continue;
       if (layoutStyle[key] !== null) {
@@ -210,8 +267,8 @@ SC.Surface = SC.Responder.extend({
     }
   },
 
-  updateSurface: function() {
-    console.log('All SC.Surface subclasses should override updateSurface()');
+  destroySurfaceIfNeeded: function() {
+    if (!this.get('isPresentInViewport')) this.destroySurface();
   },
 
   destroySurface: function() {},
@@ -270,15 +327,13 @@ SC.Surface = SC.Responder.extend({
 
   container: null,
 
-  needsLayout: false,
-
   _sc_layoutDidChange: function() {
     this.updateLayoutRules(); // Lots of code, so it's put in its own file.
-    this.set('needsLayout', true);
+    this.set('surfaceNeedsLayout', true);
   }.observes('layout'),
 
   _sc_containerDidChange: function() {
-    this.set('needsLayout', true);
+    this.set('surfaceNeedsLayout', true);
   }.observes('container'),
 
   zIndex: 0,
@@ -306,6 +361,8 @@ SC.Surface = SC.Responder.extend({
     } else return this._sc_position;
   }.property(),
 
+  surfaceNeedsLayout: true,
+
   /**
     Specifies the bounds rectangle of the receiver. Animatable.
 
@@ -316,10 +373,11 @@ SC.Surface = SC.Responder.extend({
       sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Surface#set('bounds', value)";
     } else {
-      if (this.get('needsLayout')) {
+      if (this.get('surfaceNeedsLayout')) {
         var container = this.get('container'),
             anchorPoint = this.get('anchorPoint'),
             pbounds;
+
         if (container) {
           // Use the container's bounds as the parents bounds.
           pbounds = container.get('bounds');
@@ -337,15 +395,15 @@ SC.Surface = SC.Responder.extend({
             this._sc_bounds
           );
 
-        this.set('needsLayout', false);
+        this.set('surfaceNeedsLayout', false);
       }
       return this._sc_bounds;
     }
   }.property(),
 
-  foouoeueou: function() {
-    console.log('bounds did change', this.get('bounds'));
-  }.observes('bounds'),
+  _sc_frameDidChange: function() {
+    this._sc_frameIsDirty = true;
+  }.observes('bounds', 'position', 'anchorPoint'),
 
   /**
     Specifies receiver's frame rectangle in the superlayer's coordinate space.
@@ -362,6 +420,8 @@ SC.Surface = SC.Responder.extend({
     Note: The frame does not take into account the layer's transform 
     property, or the superlayer's sublayerTransform property. The value of 
     frame is before these transforms have been applied.
+
+    Note: `frame` is not observable.
 
     @property SC.Rect
   */
@@ -626,6 +686,9 @@ SC.Surface = SC.Responder.extend({
     // indices in the context of a particular layout function.
     this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 50);
     this._sc_layoutDidChange();
+
+    this._sc_needsLayoutDidChange();
+    this._sc_needsDisplayDidChange();
   },
 
   /* @private

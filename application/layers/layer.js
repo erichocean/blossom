@@ -12,11 +12,185 @@ sc_require('ext/float32');
 
 if (BLOSSOM) {
 
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
 var ENFORCE_BLOSSOM_2DCONTEXT_API = true; // removes context.canvas
 
 SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.
+
+  // ..........................................................
+  // VISIBILITY SUPPORT
+  //
+
+  /**
+    The isVisible property determines if the view is shown in the view
+    hierarchy it is a part of. A view can have isVisible == YES and still have
+    isVisibleInWindow == NO. This occurs, for instance, when a parent view has
+    isVisible == NO. Default is YES.
+
+    The isVisible property is considered part of the layout and so changing it
+    will trigger a layout update.
+
+    @property {Boolean}
+  */
+  isVisible: true,
+  isVisibleBindingDefault: SC.Binding.bool(),
+
+  // ..........................................................
+  // RENDERING SUPPORT
+  //
+
+  _sc_needsLayout: false,
+  needsLayout: function(key, value) {
+    if (value !== undefined) {
+      // console.log('SC.Layer@needsLayout=', SC.guidFor(this), value);
+      this._sc_needsLayout = value;
+      // if (!value) debugger;
+    } else {
+      // console.log('SC.Layer@needsLayout', SC.guidFor(this), this._sc_needsLayout);
+      return this._sc_needsLayout;
+    }
+  }.property(),
+
+  /** @private
+    Tells the layer's surface that it needs to redisplay itself.
+  */
+  _sc_needsLayoutDidChange: function() {
+    // console.log('SC.Layer#_sc_needsLayoutDidChange()', SC.guidFor(this));
+    var surface = this.get('surface');
+    if (surface && this.get('needsLayout')) {
+      debugger;
+      surface.set('needsLayout', true);
+    }
+  }.observes('needsLayout'),
+
+  _sc_needsDisplay: false,
+  needsDisplay: function(key, value) {
+    if (value !== undefined) {
+      console.log('SC.Layer@needsDisplay=', SC.guidFor(this), value);
+      this._sc_needsDisplay = value;
+      // if (!value) debugger;
+    } else {
+      console.log('SC.Layer@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
+      return this._sc_needsDisplay;
+    }
+  }.property(),
+
+  /** @private
+    Tells the layer's surface that it needs to redisplay itself.
+  */
+  _sc_needsDisplayDidChange: function() {
+    // console.log('SC.Layer#_sc_needsDisplayDidChange()', SC.guidFor(this));
+    var surface = this.get('surface');
+    if (surface && this.get('needsDisplay')) surface.set('needsDisplay', true);
+  }.observes('needsDisplay'),
+
+  updateLayout: function() {
+    console.log('SC.Layer#updateLayout()', SC.guidFor(this));
+    // debugger;
+    var bounds = this.get('bounds'),
+        canvas = this.__sc_element__;
+
+    sc_assert(this.get('needsDisplay'));
+    console.log(bounds);
+
+    canvas.width = bounds.width;
+    canvas.height = bounds.height;
+    this._sc_transformFromSuperlayerToLayerIsDirty = true; // HACK
+    this._sc_computeTransformFromSuperlayerToLayer();
+  },
+
+  updateDisplay: function() {
+    console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
+    var ctx = this.get('context');
+
+    if (this.get('needsDisplay')) {
+      ctx.save();
+      ctx.beginPath();
+      this.renderHitTestPath(ctx);
+      ctx.fillStyle = green;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 15;
+      ctx.shadowBlur = 25;
+      ctx.shadowColor = "rgba(0,0,0,0.3)";
+      ctx.fill();
+
+      // Draw some text.
+      var bounds = this.get('bounds');
+      ctx.fillStyle = base3;
+      ctx.font = "16pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+      ctx.restore();
+      this.set('needsDisplay', false);
+    }
+    this.get('sublayers').invoke('updateDisplay');
+  },
+
+  // ..........................................................
+  // SURFACE SUPPORT
+  //
+
+  /**
+    The current surface this layer is a child of (may be null).
+    @property {SC.Surface}
+  */
+  surface: null,
+
+  _sc_surface: null,
+  _sc_surfaceDidChange: function() {
+    console.log('SC.Layer#_sc_surfaceDidChange()');
+    var old = this._sc_surface,
+        cur = this.get('surface'),
+        sublayers = this.get('sublayers'),
+        len = sublayers.length, idx;
+
+    sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.View^_sc_surface is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.View@surface must either be null or an SC.Surface instance.");
+
+    if (old === cur) return; // Nothing to do.
+
+    this._sc_surface = cur;
+
+    for (idx=0; idx<len; ++idx) {
+      sublayers[idx].set('surface', cur);
+    }
+
+    if (cur) {
+      this.set('needsLayout', true);
+
+      // If we already needed layout, then the above line won't cause our 
+      // observer to fire.  Force our layout to be updated, but keep the 
+      // previous line, because the surface will check for true there to 
+      // determine if layout *really* needs to be done.
+      cur.set('needsLayout', true);
+    }
+  }.observes('surface'),
+
+  // ..........................................................
+  // LAYOUT SUPPORT
+  //
 
   /**
     The `layout` property describes how you want the layer to be sized and 
@@ -66,16 +240,10 @@ SC.Layer = SC.Object.extend({
   */
   layout: { top: 0, left: 0, bottom: 0, right: 0 },
 
-  needsLayout: false,
-
   _sc_layoutDidChange: function() {
     this.updateLayoutRules(); // Lots of code, so it's put in its own file.
     this.set('needsLayout', true);
   }.observes('layout'),
-
-  _sc_superlayerDidChange: function() {
-    this.set('needsLayout', true);
-  }.observes('superlayer'),
 
   zIndex: 0,
   cornerRadius: 0,
@@ -114,15 +282,22 @@ SC.Layer = SC.Object.extend({
     } else {
       if (this.get('needsLayout')) {
         var container = this.get('container'),
+            surface = this.get('surface'),
             superlayer = this.get('superlayer'),
             anchorPoint = this.get('anchorPoint'),
             pbounds;
+
         if (container) {
+          sc_assert(!surface);
           sc_assert(!superlayer);
-          // Use the container's bounds as the parents bounds.
+          // Use the container's bounds as the parent's bounds.
           // debugger;
           pbounds = container.get('bounds');
-         } else if (superlayer) {
+        } else if (surface) {
+          sc_assert(!superlayer);
+          // Use our superlayer's bounds.
+          pbounds = surface.get('bounds');
+        } else if (superlayer) {
           // Use our superlayer's bounds.
           pbounds = superlayer.get('bounds');
         } else {
@@ -254,9 +429,24 @@ SC.Layer = SC.Object.extend({
   */
   superlayer: function(key, value) {
     if (value !== undefined) {
-      console.log("No implementation for SC.Layer#set('superlayer', value)");
+      sc_assert(value === null || value.kindOf(SC.Layer), "SC.Layer@superlayer must either be null or an SC.Layer instance.");
+      this._sc_superlayer = value;
     } else return this._sc_superlayer;
   }.property(),
+
+  _sc_superlayer: null,
+  _sc_superlayerDidChange: function() {
+    // console.log('SC.Layer#_sc_superlayerDidChange()');
+    var superlayer = this.get('superlayer'),
+        old = this.get('surface'),
+        cur = superlayer? superlayer.get('surface') : null ;
+
+    if (old !== cur) {
+      this.set('surface', cur); // Also updates our sublayers.
+    }
+
+    this.set('needsLayout', true);
+  }.observes('superlayer'),
 
   /**
     An array containing the receiver's sublayers.
@@ -358,7 +548,7 @@ SC.Layer = SC.Object.extend({
 
     var container = this.get('container');
     if (container) {
-      console.log('appending canvas element');
+      // console.log('appending canvas element');
       sc_assert(container.__sc_element__);
       container.__sc_element__.appendChild(canvas); // a DOM call
     }
@@ -518,6 +708,10 @@ SC.Layer = SC.Object.extend({
     // This is a specialized initializer for our subclasses, so that each 
     // subclass can create their own backing layer type (canvas, video, etc.).
     this.initElement();
+
+    this._sc_superlayerDidChange();
+    this._sc_needsLayoutDidChange();
+    this._sc_needsDisplayDidChange();
   },
 
   /* @private

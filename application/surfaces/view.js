@@ -10,6 +10,24 @@ sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
 /** @class
   `SC.ViewSurface` implements an SC.View host.  You set a view as the 
   `contentView` property, and it will be sized relative to the `bounds` of 
@@ -26,15 +44,69 @@ SC.ViewSurface = SC.Surface.extend({
   // }.property(),
 
   // ..........................................................
+  // RENDERING SUPPORT
+  //
+
+  updateLayout: function() {
+    console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
+    var layer = this.getPath('contentView.layer');
+    if (layer && layer.get('needsLayout')) layer.updateLayout();
+  },
+
+  updateDisplay: function() {
+    console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
+    sc_assert(document.getElementById(this.__sc_element__.id));
+    var layer = this.getPath('contentView.layer');
+    // debugger;
+
+
+    if (layer && layer.get('needsDisplay')) layer.updateDisplay();
+
+    var ctx = this.getPath('layer.context'),
+        w = ctx.width, h = ctx.height;
+
+    sc_assert(ctx);
+
+    // Draw background.
+    ctx.fillStyle = base3;
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.strokeStyle = base0;
+    ctx.lineWidth = 2; // overlap of 1 on the inside
+    ctx.strokeRect(0, 0, ctx.width, ctx.height);
+
+    var t = layer._sc_transformFromSuperlayerToLayer;
+    
+    ctx.save();
+    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    ctx.drawLayer(layer, 0, 0);
+    ctx.restore();
+
+    // Draw lines overlay.
+    ctx.beginPath();
+    ctx.moveTo(0, h/2);
+    ctx.lineTo(w, h/2);
+    ctx.moveTo(w/2, 0);
+    ctx.lineTo(w/2, h);
+    ctx.strokeStyle = orange;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+    ctx.fillStyle = orange;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  },
+
+  // ..........................................................
   // DOM SUPPORT (Private, Browser-only)
   //
 
   initElement: function() {
     arguments.callee.base.apply(this, arguments);
     var element = this.__sc_element__;
-
-    
-
     this._sc_contentViewDidChange();
   },
 
@@ -62,7 +134,12 @@ SC.ViewSurface = SC.Surface.extend({
   }.property(),
 
   createSurface: function() {
-    console.log('SC.ViewSurface#createSurface()');
+    // console.log('SC.ViewSurface#createSurface()');
+
+    // For now, just do this one time.
+    if (this._sc_didCreateSurface) return;
+    this._sc_didCreateSurface = true;
+
     arguments.callee.base.apply(this, arguments);
     var container = this;
 
@@ -138,12 +215,6 @@ SC.ViewSurface = SC.Surface.extend({
     console.log('SC.ViewSurface#destroySurface()');
   },
 
-  updateSurface: function() {
-    console.log('SC.ViewSurface#updateSurface()');
-    sc_assert(document.getElementById(this.__sc_element__.id));
-    this.render(this.getPath('layer.context'));
-  },
-
   // ..........................................................
   // CONTENT VIEW SUPPORT
   //
@@ -152,14 +223,18 @@ SC.ViewSurface = SC.Surface.extend({
 
   _sc_contentView: null,
   _sc_contentViewDidChange: function() {
-    // console.log('SC.ViewSurface#_sc_contentViewDidChange()');
+    console.log('SC.ViewSurface#_sc_contentViewDidChange()');
     var old = this._sc_contentView,
-        cur = this.get('_sc_contentView');
+        cur = this.get('contentView'),
+        layer = this.get('layer');
 
     sc_assert(old === null || old.kindOf(SC.View), "Blossom internal error: SC.Application^_sc_contentView is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.View), "SC.Application@ui must either be null or an SC.View instance.");
 
     if (old === cur) return; // Nothing to do.
+
+    if (old) old.set('surface', null);
+    if (cur) cur.set('surface', this);
 
     this.displayDidChange();
   }.observes('contentView')
