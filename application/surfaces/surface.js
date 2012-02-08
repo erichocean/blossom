@@ -6,6 +6,7 @@
 /*globals BLOSSOM sc_assert */
 
 sc_require('layers/layer');
+sc_require('layers/layout');
 sc_require('system/property_animation');
 
 if (BLOSSOM) {
@@ -86,10 +87,6 @@ SC.Surface = SC.Responder.extend({
   isResponderContext: true, // We can dispatch events and actions.
 
   concatenatedProperties: ['displayProperties'],
-
-  bounds: function() {
-    return { width: 100, height: 100 };
-  }.property(),
 
   // ..........................................................
   // DISPLAY PROPERTIES
@@ -209,10 +206,279 @@ SC.Surface = SC.Responder.extend({
   destroySurface: function() {},
 
   // ..........................................................
+  // LAYOUT SUPPORT
+  //
+
+  /**
+    The `layout` property describes how you want the layer to be sized and 
+    positioned on the screen, relative to its superlayer.  You can define the 
+    following layout properties:
+
+    Horizontal axis (pick exactly two):
+     - left: an offset from the left edge
+     - right: an offset from the right edge
+     - centerX: an offset from center X
+     - width: a width
+
+    Vertical axis (pick exactly two):
+     - top: an offset from the top edge
+     - bottom: an offset from the bottom edge
+     - centerY: an offset from center Y
+     - height: a height
+
+    Layout rectangle constraints (all are optional):
+     - minLayoutWidth: the minimum width at which to do layout on the x-axis
+     - maxLayoutWidth: the maximum width at which to do layout on the x-axis
+     - minLayoutHeight: the minimum height at which to do layout on the y-axis
+     - maxLayoutHeight: the maximum height at which to do layout on the y-axis
+
+    You can also specify where to position the layout rectangle relative to 
+    the parent's layout rectangle when it is smaller or larger on a 
+    particular axis due to layout rectangle min/max clamping:
+     - position: valid strings are: "center", "top", "bottom", "left"
+       "top left", "bottom left", "right", "top right", and "bottom right".
+
+    Each of these layout properties can take either an absolute value, or a 
+    percentage (with the exception of `position`, which only takes the 
+    strings listed above). Percentages can be defined in one of two ways:
+      - a number between -1 and 1, e.g. 0.5 or -0.2. Note that -1 and 1 are 
+        not considered to be percentages; they are absolute values.
+      - a string containing a number followed by the '%' character
+      - for width and height only: negative numbers are not allowed
+
+    When a negative number or percentage is given, it will specify a negative 
+    offset. For example, `top: -10` offsets the layer -10 units in the y axis 
+    relative to its superlayer.
+
+    An exception is thrown when `layout` is set to an invalid value.
+
+    Note: `centerX` may only be combined with `width`, and `centerY` may only 
+    be combined with `height`.
+  */
+  layout: { top: 0, left: 0, bottom: 0, right: 0 },
+
+  container: null,
+
+  needsLayout: false,
+
+  _sc_layoutDidChange: function() {
+    this.updateLayoutRules(); // Lots of code, so it's put in its own file.
+    this.set('needsLayout', true);
+  }.observes('layout'),
+
+  _sc_containerDidChange: function() {
+    this.set('needsLayout', true);
+  }.observes('container'),
+
+  zIndex: 0,
+  cornerRadius: 0,
+
+  /**
+    Defines the anchor point of the layer's bounds rectangle. Animatable.
+    
+    @property SC.Point
+  */
+  anchorPoint: function(key, value) {
+    if (value !== undefined) {
+      throw "No implementation for SC.Surface#set('anchorPoint', value)";
+    } else return this._sc_anchorPoint;
+  }.property(),
+
+  /**
+    Specifies the receiver’s position in the superlayer’s coordinate system. Animatable.
+
+    @property SC.Point
+  */
+  position: function(key, value) {
+    if (value !== undefined) {
+      throw "No implementation for SC.Surface#set('position', value)";
+    } else return this._sc_position;
+  }.property(),
+
+  /**
+    Specifies the bounds rectangle of the receiver. Animatable.
+
+    @property SC.Rect
+  */
+  bounds: function(key, value) {
+    if (value !== undefined) {
+      sc_assert(SC.IsRect(value));
+      throw "No implementation for SC.Surface#set('bounds', value)";
+    } else {
+      if (this.get('needsLayout')) {
+        var container = this.get('container'),
+            anchorPoint = this.get('anchorPoint'),
+            pbounds;
+        if (container) {
+          // Use the container's bounds as the parents bounds.
+          pbounds = container.get('bounds');
+        } else {
+          // We'll get the minimum layout allowed.
+          pbounds = { width: 0, height: 0 };
+        }
+
+        // This updates `position` and `bounds`.
+        this._sc_layoutFunction(
+            this._sc_layoutValues,
+            pbounds.width, pbounds.height,
+            anchorPoint[0]/*x*/, anchorPoint[1]/*y*/,
+            this._sc_position,
+            this._sc_bounds
+          );
+
+        this.set('needsLayout', false);
+      }
+      return this._sc_bounds;
+    }
+  }.property(),
+
+  foouoeueou: function() {
+    console.log('bounds did change', this.get('bounds'));
+  }.observes('bounds'),
+
+  /**
+    Specifies receiver's frame rectangle in the superlayer's coordinate space.
+
+    The value of frame is derived from the bounds, anchorPoint and position 
+    properties. When the frame is set, the receiver's position and the size 
+    of the receiver's bounds are changed to match the new frame rectangle. 
+    The value of this property is specified in points.
+
+    Setting the frame _does not_ cause implicit animation to occur. If you 
+    desire animation, please set the bounds and positions properties 
+    directly.
+
+    Note: The frame does not take into account the layer's transform 
+    property, or the superlayer's sublayerTransform property. The value of 
+    frame is before these transforms have been applied.
+
+    @property SC.Rect
+  */
+  frame: function(key, value) {
+    var frame = this._sc_frame, anchorPoint, bounds, position;
+    if (value !== undefined) {
+      if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
+
+      anchorPoint = this._sc_anchorPoint;
+      bounds = this._sc_bounds;
+      position = this._sc_position;
+
+      // The bounds' size should have the same size as the frame. Set this 
+      // first so that the position can take into account the new size.
+      bounds[2]/*width*/  = value[2]/*width*/;
+      bounds[3]/*height*/ = value[3]/*height*/;
+
+      // Position is updated relative to the bounds' origin, taking into account the layer's anchorPoint.
+      position[0]/*x*/ = -((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/);
+      position[1]/*y*/ = -((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/);
+
+      // Cache the new frame so we don't need to compute it later.
+      frame.set(value);
+      this._sc_frameIsDirty = false;
+    } else {
+      if (this._sc_frameIsDirty) {
+        anchorPoint = this._sc_anchorPoint;
+        bounds = this._sc_bounds;
+        position = this._sc_position;
+
+        // The x and y coordinates take into account the bounds, anchorPoint, and position properties.
+        frame[0]/*x*/ = (-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) + position[0]/*x*/;
+        frame[1]/*y*/ = (-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) + position[1]/*y*/;
+
+        // The frame has the same size as the bounds.
+        frame[2]/*width*/  = bounds[2]/*width*/;
+        frame[3]/*height*/ = bounds[3]/*height*/;
+
+        this._sc_frameIsDirty = false;
+      }
+      return SC.MakeRect(frame); // give caller a copy
+    }
+  }.property(),
+  
+  // rasterizationScale: 1.0, // The scale at which to rasterize content, relative to the coordinate space of the layer. Animatable
+
+  /**
+    Specifies a transform applied to each sublayer when rendering. Animatable.
+
+    @property SC.AffineTransform
+  */
+  sublayerTransform: function(key, value) {
+    if (value !== undefined) {
+      throw "No implementation for SC.Surface#set('sublayerTransform', value)";
+    } else return this._sc_sublayerTransform;
+  }.property(),
+
+  _sc_sublayerTransformDidChange: function() {
+    if (SC.IsIdentityAffineTransform(this._sc_sublayerTransform)) {
+      this._sc_hasSublayerTransform = false;
+    } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
+  }.observes('sublayerTransform'),
+
+  /**
+    Specifies a transform applied to each sublayer when rendering. Animatable.
+
+    @property SC.AffineTransform
+  */
+  transform: function(key, value) {
+    if (value !== undefined) {
+      throw "No implementation for SC.Surface#set('transform', value)";
+    } else return this._sc_transform;
+  }.property(),
+
+  /**
+    Returns the visible region of the receiver, in its own coordinate space.
+    
+    The visible region is the area not clipped by the containing scroll layer.
+
+    @property SC.Rect
+    @readOnly
+  */
+  visibleRect: function(key, value) {
+    throw "No implementation for SC.Surface#get/set('visibleRect', value)";
+  }.property(),
+
+  /**
+    Specifies receiver's superlayer.
+
+    @property SC.Surface
+    @readOnly
+  */
+  container: null,
+
+  // ..........................................................
   // DOM SUPPORT (Private, Browser-only)
   //
 
   __sc_element__: null,
+
+  /* @private */
+  getPath: function(path) {
+    var ary = path.split('.'),
+        structureKey = ary[0],
+        member = ary[1];
+
+    if (SC.Surface.OBSERVABLE_STRUCTURES.indexOf(structureKey) >= 0) {
+      // Get the internal structure directly, without using .get().
+      return this['_sc_'+structureKey][member];
+    } else return arguments.callee.base.apply(this, arguments);
+  },
+
+  /* @private */
+  setPath: function(path, value) {
+    var ary = path.split('.'),
+        structureKey = ary[0],
+        member = ary[1];
+
+    if (SC.Surface.OBSERVABLE_STRUCTURES.indexOf(structureKey) >= 0) {
+      // Set the internal structure directly, without using .set().
+      this['_sc_'+structureKey][member] = value;
+    } else arguments.callee.base.apply(this, arguments);
+  },
+
+  structureDidChange: function(struct, key, member, oldvalue, newvalue) {
+    console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    this.notifyPropertyChange(key, this['_sc_'+key]);
+  },
 
   /** @private
     The ID to use when building CSS rules for this container surface.
@@ -263,6 +529,220 @@ SC.Surface = SC.Responder.extend({
       // app's set of surfaces.
       this.__sc_needFirstResponderInit__ = true;
     }
+
+    // Allocate our own structures to modify in-place. For performance, we 
+    // create a single ArrayBuffer up front and have all of the layer's 
+    // graphical structures reference it. This both reduces memory use and 
+    // improves memory locality, and since these structures are frequently 
+    // accessed together, overall performance improves too, especially during
+    // critical animation loops.
+    var buf = SC.MakeFloat32ArrayBuffer(58); // indicates num of floats needed
+
+    // We want to allow a developer to specify initial properties inline,
+    // but we actually need the computed properties for correct behavior.
+    // The code below takes care of all this, as well as correct defaults.
+    var P = this.constructor.prototype;
+    function hasNonPrototypeNonComputedDefaultProperty(key) {
+      return this[key] !== P[key] && this[key] && !this[key].isProperty;
+    }
+
+    // The various SC.Make*FromBuffer functions all validate their arguments.
+    if (hasNonPrototypeNonComputedDefaultProperty('bounds')) {
+      this._sc_bounds = SC.MakeRectFromBuffer(buf, 0, this.bounds);
+      delete this.bounds; // let the prototype shine through
+    } else {
+      this._sc_bounds = SC.MakeRectFromBuffer(buf, 0);
+    }
+
+    if (hasNonPrototypeNonComputedDefaultProperty('position')) {
+      this._sc_position = SC.MakePointFromBuffer(buf, 4, this.position);
+      delete this.position; // let the prototype shine through
+    } else {
+      this._sc_position = SC.MakePointFromBuffer(buf, 4);
+    }
+
+    if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
+      this._sc_anchorPoint = SC.MakePointFromBuffer(buf, 6, this.anchorPoint);
+      delete this.anchorPoint; // let the prototype shine through
+    } else {
+      this._sc_anchorPoint = SC.MakePointFromBuffer(buf, 6, 0.5, 0.5);
+    }
+
+    if (hasNonPrototypeNonComputedDefaultProperty('transform')) {
+      this._sc_transform = SC.MakeIdentityAffineTransformFromBuffer(buf, 8, this.transform);
+      delete this.transform; // let the prototype shine through
+    } else {
+      this._sc_transform = SC.MakeIdentityAffineTransformFromBuffer(buf, 8);
+    }
+
+    if (hasNonPrototypeNonComputedDefaultProperty('sublayerTransform')) {
+      this._sc_sublayerTransform = SC.MakeIdentityAffineTransformFromBuffer(buf, 14, this.sublayerTransform);
+      delete this.sublayerTransform; // let the prototype shine through
+      if (SC.IsIdentityAffineTransform(this._sc_sublayerTransform)) {
+        this._sc_hasSublayerTransform = false;
+      } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
+    } else {
+      this._sc_sublayerTransform = SC.MakeIdentityAffineTransformFromBuffer(buf, 14);
+      this._sc_hasSublayerTransform = false;
+    }
+
+    // Float32Array's prototype has been enhanced with custom getters and 
+    // setters using named property keys (x, y, width, height, m11, tx, etc.)
+    // These getters and setters are kvo-compliant if we configure them to
+    // be so; do that now.
+    var that = this;
+    SC.Layer.OBSERVABLE_STRUCTURES.forEach(function (key) {
+      var structure = that['_sc_'+key];
+      sc_assert(structure.owner === undefined && structure.keyName === undefined);
+      structure.owner = that;
+      structure.keyName = key;
+    });
+
+    this._sc_frame = SC.MakeRectFromBuffer(buf, 20);
+    this._sc_frameIsDirty = true; // force re-compute on get('frame')
+
+    this._sc_transformFromSuperlayerToLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 24);
+    this._sc_transformFromLayerToSuperlayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 30);
+    this._sc_transformFromSuperlayerToLayerIsDirty = this._sc_transformFromLayerToSuperlayerIsDirty = true; // force re-compute
+
+    // This is used by various methods for temporary computations.
+    this._sc_tmpTransform = SC.MakeAffineTransformFromBuffer(buf, 36);
+    this._sc_tmpPoint = SC.MakePointFromBuffer(buf, 42);
+    this._sc_tmpPoint2 = SC.MakePointFromBuffer(buf, 44);
+    this._sc_tmpRect = SC.MakeRectFromBuffer(buf, 46);
+
+    // This is used by layout functions, which know the meaning of the sixteen
+    // indices in the context of a particular layout function.
+    this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 50);
+    this._sc_layoutDidChange();
+  },
+
+  /* @private
+    This method computes the accumulated transform from this layer's 
+    coordinate system to it's superlayer's coordinate system, taking into 
+    account all properties of this layer and this layer's superlayer that 
+    go into that accumulated transform. The 
+    _sc_computeTransformFromSuperlayerToLayer() method computes the inverse.
+
+    This transform is used internally by the various convert*FromLayer() 
+    methods to transform points, sizes and rects in this layer's coordinate 
+    system to their equivalent values in the layer's superlayer's coordinate 
+    system.
+
+    Here are the properties that go into this computation:
+      - from this layer: anchorPoint, bounds, position, transform
+      - from this layer's superlayer: sublayerTransform
+  */
+  _sc_computeTransformFromLayerToSuperlayer: function() {
+    // Assume our callers have checked to determine if we should be called.
+    // if (!this._sc_transformFromLayerToSuperlayerIsDirty) return;
+    sc_assert(this._sc_transformFromLayerToSuperlayerIsDirty);
+
+    // _sc_transformFromSuperlayerToLayer is just the inverse of _sc_transformFromLayerToSuperlayer. 
+    // Make sure it's ready to be inverted first.
+    if (this._sc_transformFromSuperlayerToLayerIsDirty) this._sc_computeTransformFromSuperlayerToLayer();
+
+    // Actually do the inverse transform now.
+    SC.AffineTransformInvertTo(this._sc_transformFromSuperlayerToLayer, this._sc_transformFromLayerToSuperlayer);
+
+    this._sc_transformFromLayerToSuperlayerIsDirty = false;
+  },
+
+  _sc_computeTransformFromSuperlayerToLayer: function() {
+    // Assume our callers have checked to determine if we should be called.
+    // if (!this._sc_transformFromSuperlayerToLayerIsDirty) return;
+    sc_assert(this._sc_transformFromSuperlayerToLayerIsDirty);
+
+    // This implementation is designed to prevent any memory allocations.
+    var anchorPoint = this._sc_anchorPoint,
+        bounds = this._sc_bounds,
+        position = this._sc_position,
+        superlayer = this._sc_superlayer,
+        transform = this._sc_transform,
+        computedAnchorPoint = this._sc_tmpPoint,
+        transformedAnchorPoint = this._sc_tmpPoint2,
+        transformFromSuperlayer = this._sc_transformFromSuperlayerToLayer;
+
+    // Our `transformFromSuperlayer` starts out as just our `transform`. 
+    // Later, we'll adjust it to account for `anchorPoint` and `position`.
+    SC.CopyAffineTransformTo(transform, transformFromSuperlayer);
+
+    // Calculate the computed anchor point within `bounds`.
+    computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + (bounds[2]/*width*/  * anchorPoint[0]/*x*/);
+    computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + (bounds[3]/*height*/ * anchorPoint[1]/*y*/);
+
+    // Find the new location of our anchorPoint, post-transformation.
+    SC.PointApplyAffineTransformTo(computedAnchorPoint, transformFromSuperlayer, transformedAnchorPoint);
+
+    // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
+    // origin, taking into account `anchorPoint` and `position`, as well as 
+    // how `transform` modified the actual location of `anchorPoint`.
+    transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/ - computedAnchorPoint[0]/*x*/ + (computedAnchorPoint[0]/*x*/ - transformedAnchorPoint[0]/*x*/);
+    transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/ - computedAnchorPoint[1]/*y*/ + (computedAnchorPoint[1]/*y*/ - transformedAnchorPoint[1]/*y*/);
+
+    // Our superlayer can apply a sublayerTransform before we are drawn. 
+    // Pre-concatenate that to the transform so far if it exists.
+    if (superlayer && superlayer._sc_hasSublayerTransform) {
+      SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
+    }
+
+    this._sc_transformFromSuperlayerToLayerIsDirty = false;
+  },
+
+  /**
+    Converts a point from the specified layer's coordinate system into the 
+    receiver's coordinate system and places the result in dest.
+    
+    @param point the point to convert
+    @param layer the layer coordinate system to convert from
+    @param dest where to put the resulting point
+  */
+  convertPointFromLayerTo: function(point, layer, dest) {
+    var tmpTransform = this._sc_tmpTransform;
+    SC.Layer.computeLayerTransformTo(layer, this, tmpTransform);
+    SC.PointApplyAffineTransformTo(point, tmpTransform, dest);
+  },
+
+  /**
+    Converts a point from the receiver's coordinate system to the specified 
+    layer's coordinate system and places the result in dest.
+
+    @param point the point to convert
+    @param layer the layer coordinate system to convert to
+    @param dest where to put the resulting point
+  */
+  convertPointToLayerTo: function(point, layer, dest) {
+    var tmpTransform = this._sc_tmpTransform;
+    SC.Layer.computeLayerTransformTo(this, layer, tmpTransform);
+    SC.PointApplyAffineTransformTo(point, tmpTransform, dest);
+  },
+
+  /**
+    Converts a rectangle from the specified layer's coordinate system into 
+    the receiver's coordinate system and places the result in dest.
+
+    @param rect the rect to convert
+    @param layer the layer coordinate system to convert from
+    @param dest where to put the resulting rect
+  */
+  convertRectFromLayerTo: function(rect, layer, dest) {
+    var tmpTransform = this._sc_tmpTransform;
+    SC.Layer.computeLayerTransformTo(layer, this, tmpTransform);
+    SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
+  },
+
+  /**
+    Converts a rectangle from the receiver's coordinate system to the 
+    specified layer's coordinate system and places the result in dest.
+
+    @param rect the rect to convert
+    @param layer the layer coordinate system to convert to
+    @param dest where to put the resulting rect
+  */
+  convertRectToLayerTo: function(rect, layer, dest) {
+    var tmpTransform = this._sc_tmpTransform;
+    SC.Layer.computeLayerTransformTo(this, layer, tmpTransform);
+    SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
   },
 
   // ..........................................................
@@ -709,28 +1189,6 @@ SC.Surface = SC.Responder.extend({
   */
   applicationHasFocus: false,
 
-  // .......................................................
-  // LAYOUT SUPPORT
-  //
-
-  /**
-    The layout property shadows the layout property on this view's root 
-    layer (aka the result of `this.get('layer')`).
-
-    As a special, non-standard capability, if you set this property to a hash 
-    when creating the view, the hash will be used as the initial `layout` of 
-    the root layer. The hash will then be deleted from the view, allowing the 
-    computed property below to shine through from the prototype.
-
-    Note: since `layer` is read only, we don't add the unnecessary observer 
-    on the `layer` key.
-  */
-  layout: function(key, value) {
-    var layer = this.get('layer');
-    if (value !== undefined) layer.set('layout', value);
-    else return layer.get('layout');
-  }.property(),
-
   // /**
   //   The SC.Layer subclass to instantiate to create this view's layer.
   // 
@@ -1111,5 +1569,46 @@ SC.Surface = SC.Responder.extend({
   }.property().cacheable()
 
 });
+
+SC.Surface.OBSERVABLE_STRUCTURES = 'bounds position anchorPoint transform sublayerTransform'.w();
+
+SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
+  var ary, idx, layer;
+
+  SC.SetIdentityAffineTransform(dest);
+
+  if (fromLayer) {
+    layer = fromLayer;
+    while (layer && layer !== toLayer) {
+      // layer._sc_transformFromLayerToSuperlayer isn't recomputed immediately. Check to
+      // see if we need to recompute it now.
+      if (layer._sc_transformFromLayerToSuperlayerIsDirty) layer._sc_computeTransformFromLayerToSuperlayer();
+      SC.AffineTransformConcatTo(dest, layer._sc_transformFromLayerToSuperlayer, dest);
+      layer = layer._sc_superlayer;
+    }
+
+    if (!toLayer || layer === toLayer) return ; // EARLY EXIT <===============
+  }
+
+  // Gather layers _up_ the tree, so we can apply their transforms in reverse 
+  // (down the tree). TODO: Remove this array allocation and use the layers 
+  // as a linked list.
+  ary = []; layer = toLayer;
+  while (layer) {
+    ary.push(layer);
+    layer = layer._sc_superlayer;
+  }
+
+  idx = ary.length;
+  while (idx--) {
+    layer = ary[idx];
+    // layer._sc_transformFromSuperlayerToLayer isn't recomputed immediately. Check to
+    // see if we need to recompute it now.
+    if (layer._sc_transformFromSuperlayerToLayerIsDirty) layer._sc_computeTransformFromSuperlayerToLayer();
+    SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
+  }
+};
+
+SC.Surface.prototype.updateLayoutRules = SC.Layer.prototype.updateLayoutRules;
 
 } // BLOSSOM

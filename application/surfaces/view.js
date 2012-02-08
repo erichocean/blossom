@@ -20,10 +20,10 @@ if (BLOSSOM) {
 */
 SC.ViewSurface = SC.Surface.extend({
 
-  bounds: function() {
-    // FIXME!
-    return this.getPath('container.bounds');
-  }.property(),
+  // bounds: function() {
+  //   // FIXME!
+  //   return this.getPath('container.bounds');
+  // }.property(),
 
   // ..........................................................
   // DOM SUPPORT (Private, Browser-only)

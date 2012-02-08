@@ -72,9 +72,9 @@ SC.ContainerSurface = SC.Surface.extend({
     cur.set('container', this);
 
     if (cur) {
+      cur.set('container', this);
       cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
-      cur.set('container', this);
     }
 
     if (!old && cur)      transition = this.get('orderInTransition');
