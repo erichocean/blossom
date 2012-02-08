@@ -525,7 +525,10 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     listener = SC.data(elem, "listener") || SC.data(elem, "listener", 
       function() {
-        return SC.Event.handle.apply(SC.Event._sc_elements[guid], arguments); 
+        SC.RunLoop.begin();
+        var ret = SC.Event.handle.apply(SC.Event._sc_elements[guid], arguments);
+        SC.RunLoop.end();
+        return ret;
     });
     
     // Bind the global event handler to the element.

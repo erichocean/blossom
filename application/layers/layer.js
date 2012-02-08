@@ -146,6 +146,7 @@ SC.Layer = SC.Object.extend({
   },
 
   display: function(ctx) {
+    // console.log('SC.Layer#display()', SC.guidFor(this));
     var delegate = this.get('delegate');
     if (delegate && delegate.render) delegate.render(ctx, this);
     else this.render(ctx);
@@ -315,8 +316,12 @@ SC.Layer = SC.Object.extend({
           // Use our superlayer's bounds.
           pbounds = surface.get('bounds');
         } else {
-          // We'll get the minimum layout allowed.
-          pbounds = { width: 0, height: 0 };
+          // Give width and height a try, otherwise we'll get the minimum
+          // possible size once `this._sc_layoutFunction()` runs.
+          pbounds = {
+            width: this.get('width') || 0,
+            height: this.get('height') || 0
+          };
         }
 
         // This updates `position` and `bounds`.

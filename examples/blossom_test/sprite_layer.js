@@ -27,8 +27,10 @@ SC.spriteImage = SC.Image.create({
 
   imageDidLoad: function() {
     // console.log('SC.spriteImage#imageDidLoad()');
-    SC.spriteLayer.set('content', this);
-    SC.spriteLayer.flushDependentSprites();
+    SC.run(function() {
+      SC.spriteLayer.set('content', this);
+      SC.spriteLayer.flushDependentSprites();
+    }, this);
   }
 });
 

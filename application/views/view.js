@@ -121,7 +121,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     to updating the layer accordingly.
   */
   _sc_isVisibleDidChange: function() {
-    console.log('SC.View#_sc_isVisibleDidChange()', SC.guidFor(this));
+    // console.log('SC.View#_sc_isVisibleDidChange()', SC.guidFor(this));
     // 'isVisible' is effectively a displayProperty, but we'll call
     // displayDidChange() manually here instead of declaring it as a
     // displayProperty because that avoids having two observers on
@@ -153,7 +153,8 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   */
   _sc_layerNeedsUpdateDidChange: function() {
     if (this.get('layerNeedsUpdate')) {
-      this.invokeOnce(this.updateLayerIfNeeded) ;
+      // console.log('this.invokeOnce(this.updateLayerIfNeeded)');
+      this.invokeOnce(this.updateLayerIfNeeded);
     }
   }.observes('layerNeedsUpdate'),
 

@@ -916,7 +916,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {void}
   */
   awake: function() {
-    console.log('SC.Application#awake()');
+    // console.log('SC.Application#awake()');
     // handle touch events
     // this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
 
