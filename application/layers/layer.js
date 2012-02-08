@@ -106,16 +106,17 @@ SC.Layer = SC.Object.extend({
   updateLayout: function() {
     // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
     // debugger;
-    var bounds = this.get('bounds'),
-        canvas = this.__sc_element__;
+    if (this.get('needsLayout')) {
+      var bounds = this.get('bounds'), // Sets `needsLayout` to false.
+          canvas = this.__sc_element__;
 
-    sc_assert(this.get('needsDisplay'));
-    // console.log(bounds);
-
-    canvas.width = bounds.width;
-    canvas.height = bounds.height;
-    this._sc_transformFromSuperlayerToLayerIsDirty = true; // HACK
-    this._sc_computeTransformFromSuperlayerToLayer();
+      canvas.width = bounds.width;
+      canvas.height = bounds.height;
+      this._sc_transformFromSuperlayerToLayerIsDirty = true; // HACK
+      this._sc_computeTransformFromSuperlayerToLayer();
+    }
+    // debugger;
+    this.get('sublayers').invoke('updateLayout');
   },
 
   updateDisplay: function() {
@@ -137,25 +138,15 @@ SC.Layer = SC.Object.extend({
     else this.render(ctx);
   },
 
-  render: function(ctx) {
-    ctx.beginPath();
-    this.renderHitTestPath(ctx);
-    ctx.fillStyle = green;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 15;
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "rgba(0,0,0,0.3)";
-    ctx.fill();
+  render: function(ctx) {},
 
-    // Draw some text.
-    var bounds = this.get('bounds');
-    ctx.fillStyle = base3;
-    ctx.font = "16pt Calibri";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText("Hello from Blossom.", bounds.width/2, bounds.height/2-20);
+  copyIntoContext: function(ctx) {
+    var t = this._sc_transformFromSuperlayerToLayer;
+    ctx.save();
+    ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    ctx.drawLayer(this, 0, 0);
+    this.get('sublayers').invoke('copyIntoContext', ctx);
+    ctx.restore();
   },
 
   // ..........................................................
@@ -303,13 +294,13 @@ SC.Layer = SC.Object.extend({
           // Use the container's bounds as the parent's bounds.
           // debugger;
           pbounds = container.get('bounds');
-        } else if (surface) {
-          sc_assert(!superlayer);
-          // Use our superlayer's bounds.
-          pbounds = surface.get('bounds');
         } else if (superlayer) {
           // Use our superlayer's bounds.
           pbounds = superlayer.get('bounds');
+          // debugger;
+        } else if (surface) {
+          // Use our superlayer's bounds.
+          pbounds = surface.get('bounds');
         } else {
           // We'll get the minimum layout allowed.
           pbounds = { width: 0, height: 0 };

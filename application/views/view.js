@@ -600,7 +600,6 @@ SC.View = SC.View.extend(
 
     for (idx=0; idx<len; ++idx) {
       childView = childViews[idx];
-      sc_assert(childView._sc_setSurfaceForSelfAndAllChildViews);
       childView.set('surface', cur);
     }
 

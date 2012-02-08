@@ -74,12 +74,7 @@ SC.ViewSurface = SC.Surface.extend({
     // ctx.lineWidth = 2; // overlap of 1 on the inside
     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
-    var t = layer._sc_transformFromSuperlayerToLayer;
-    
-    ctx.save();
-    ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
-    ctx.drawLayer(layer, 0, 0);
-    ctx.restore();
+    layer.copyIntoContext(ctx);
 
     // Draw lines overlay.
     ctx.beginPath();
