@@ -285,7 +285,7 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
     }
 
     src = src.join('\n  ');
-    if (funcName === "sc_4_0_false_false_5") console.log(src);
+    // if (funcName === "sc_12_12_false_false_5") console.log(src);
     func = SC.layoutFunctions[funcName] = new Function("layout", "pwidth", "pheight", "anchorX", "anchorY", "position", "bounds", src);
   }
 
