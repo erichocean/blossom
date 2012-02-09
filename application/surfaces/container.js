@@ -68,6 +68,12 @@ SC.ContainerSurface = SC.Surface.extend({
 
     if (old === cur) return; // Nothing to do.
 
+    // Work around a bug with WebKit where the screen is black on first load.
+    if (SC.isExecutingMain) {
+      // HACK: Solves the blackscreen-at-startup-until-resize bug.
+      setTimeout(function() { document.body.insertBefore(document.createElement('div'), null); }, 0);
+    }
+
     this._sc_surface = cur;
     cur.set('container', this);
 
@@ -116,7 +122,7 @@ SC.ContainerSurface = SC.Surface.extend({
 
       // order in
       if (!old && cur) {
-        container = cur.get('container');
+        container = cur.__sc_element__;
         sc_assert(container);
         sc_assert(!document.getElementById(container.id));
 
@@ -130,14 +136,15 @@ SC.ContainerSurface = SC.Surface.extend({
         // The order is important here, otherwise the layers won't have the 
         // correct size.
         element.insertBefore(container, null); // add to DOM
+        element.style.opacity = 1;
         cur.didAttach();
 
       // replace
       } else if (old && cur) {
-        container = cur.get('container');
+        container = cur.__sc_element__;
         sc_assert(container);
         sc_assert(!document.getElementById(container.id));
-        sc_assert(document.getElementById(old.get('container').id));
+        sc_assert(document.getElementById(old.__sc_element__.id));
 
         style = container.style;
         style.position = 'absolute';
@@ -148,15 +155,16 @@ SC.ContainerSurface = SC.Surface.extend({
 
         // The order is important here, otherwise the layers won't have the 
         // correct size.
-        element.replaceChild(container, old.get('container'));
+        element.replaceChild(container, old.__sc_element__);
         cur.didAttach();
         old.didDetach();
 
       // order out
       } else if (old && !cur) {
-        sc_assert(document.getElementById(old.get('container').id));
+        sc_assert(document.getElementById(old.__sc_element__.id));
 
-        element.removeChild(old.get('container'));
+        element.removeChild(old.__sc_element__);
+        element.style.opacity = 0;
         old.didDetach();
       }
     }

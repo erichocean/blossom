@@ -79,7 +79,9 @@ SC.mixin({
 
       // Now execute main, if defined and SC.UserDefaults is ready
       if (SC.userDefaults.get('ready')) {
+        SC.isExecutingMain = true;
         if ((SC.mode === SC.APP_MODE) && (typeof main != "undefined") && (main instanceof Function) && !SC.suppressMain) main();
+        SC.isExecutingMain = false;
       } else {
         SC.userDefaults.readyCallback(window, main);
       }
