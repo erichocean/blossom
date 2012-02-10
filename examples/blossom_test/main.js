@@ -86,46 +86,8 @@ function drawButton(ctx, pressed) {
   ctx.restore();
 }
 
-// SC.LOG_OBSERVERS = true;
-
 function main() {
   var surface = SC.ViewSurface.create({
-    // layout: { top: 10, right: 10, bottom: 10, left: 10 },
-    // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
-
-    // render: function(ctx) {
-    //   console.log('rendering');
-    //   // Draw background.
-    //   ctx.fillStyle = base3;
-    //   ctx.fillRect(0, 0, ctx.width, ctx.height);
-    //   // ctx.strokeStyle = base0;
-    //   // ctx.lineWidth = 2; // overlap of 1 on the inside
-    //   // ctx.strokeRect(0, 0, ctx.width, ctx.height);
-    // 
-    //   var w = ctx.width, h = ctx.height;
-    // 
-    //   // Draw lines overlay.
-    //   ctx.beginPath();
-    //   var line = h/2;
-    //   if (h%2 === 0) line += 0.5;
-    //   ctx.moveTo(0, line);
-    //   ctx.lineTo(w, line);
-    //   var vline = w/2;
-    //   if (w%2 === 0) vline += 0.5;
-    //   ctx.moveTo(vline, 0);
-    //   ctx.lineTo(vline, h);
-    //   ctx.strokeStyle = orange;
-    //   ctx.lineWidth = 0.5;
-    //   ctx.stroke();
-    //   ctx.beginPath();
-    //   ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
-    //   ctx.fillStyle = orange;
-    //   ctx.fill();
-    //   ctx.beginPath();
-    //   ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
-    //   ctx.lineWidth = 0.5;
-    //   ctx.stroke();
-    // },
 
     contentView: SC.View.extend({
       // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
@@ -140,10 +102,6 @@ function main() {
         ctx.beginPath();
         this.get('layer').renderHitTestPath(ctx);
         ctx.fillStyle = green;
-        // ctx.shadowOffsetX = 0;
-        // ctx.shadowOffsetY = 15;
-        // ctx.shadowBlur = 25;
-        // ctx.shadowColor = "rgba(0,0,0,0.3)";
         ctx.fill();
 
         // Draw some text.
@@ -179,10 +137,6 @@ function main() {
           ctx.beginPath();
           this.get('layer').renderHitTestPath(ctx);
           ctx.fillStyle = blue;
-          // ctx.shadowOffsetX = 0;
-          // ctx.shadowOffsetY = 15;
-          // ctx.shadowBlur = 25;
-          // ctx.shadowColor = "rgba(0,0,0,0.3)";
           ctx.fill();
 
           // Draw some text.
@@ -203,55 +157,51 @@ function main() {
         layout: { top: 50, right: 50, width: 140, height: 24 },
         title: "Regular Button",
         theme: 'regular',
-        // action: function() {
-        //   alert("Hi from Blossom");
-        // },
         buttonBehavior: SC.PUSH_BEHAVIOR
       })
     })
   });
 
-  var surface2 = SC.Surface.create({
-    layout: { top: 0, right: 0, bottom: 0, left: 0 },
-    // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
-    render: function(ctx) {
-      // Draw background.
-      ctx.fillStyle = base03;
-      ctx.fillRect(0, 0, ctx.width, ctx.height);
-      // ctx.strokeStyle = base00;
-      // ctx.lineWidth = 2; // overlap of 1 on the inside
-      // ctx.strokeRect(0, 0, ctx.width, ctx.height);
-
-      var w = ctx.width, h = ctx.height;
-
-      // Draw lines overlay.
-      ctx.beginPath();
-      var hline = h/2;
-      if (h%2 === 0) hline += 0.5;
-      ctx.moveTo(0, hline);
-      ctx.lineTo(w, hline);
-      var vline = w/2;
-      if (w%2 === 0) vline += 0.5;
-      ctx.moveTo(vline, 0);
-      ctx.lineTo(vline, h);
-      ctx.strokeStyle = green;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
-      ctx.fillStyle = green;
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-  });
-
   SC.Application.create();
-  // setTimeout(function() {
-    SC.app.set('ui', surface);
-  // }, 500);
+  SC.app.set('ui', surface);
+
+  // var surface2 = SC.Surface.create({
+  //   layout: { top: 0, right: 0, bottom: 0, left: 0 },
+  //   // layout: { centerX: 0, centerY: 0, width: 1000, height: 800 },
+  //   render: function(ctx) {
+  //     // Draw background.
+  //     ctx.fillStyle = base03;
+  //     ctx.fillRect(0, 0, ctx.width, ctx.height);
+  //     // ctx.strokeStyle = base00;
+  //     // ctx.lineWidth = 2; // overlap of 1 on the inside
+  //     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
+  // 
+  //     var w = ctx.width, h = ctx.height;
+  // 
+  //     // Draw lines overlay.
+  //     ctx.beginPath();
+  //     var hline = h/2;
+  //     if (h%2 === 0) hline += 0.5;
+  //     ctx.moveTo(0, hline);
+  //     ctx.lineTo(w, hline);
+  //     var vline = w/2;
+  //     if (w%2 === 0) vline += 0.5;
+  //     ctx.moveTo(vline, 0);
+  //     ctx.lineTo(vline, h);
+  //     ctx.strokeStyle = green;
+  //     ctx.lineWidth = 0.5;
+  //     ctx.stroke();
+  //     ctx.beginPath();
+  //     ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+  //     ctx.fillStyle = green;
+  //     ctx.fill();
+  //     ctx.beginPath();
+  //     ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+  //     ctx.lineWidth = 0.5;
+  //     ctx.stroke();
+  //   }
+  // });
+
   // setTimeout(function() {
   //   SC.app.set('ui', surface2);
   // }, 3500);
