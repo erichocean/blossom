@@ -45,3 +45,13 @@ SC.mixin(SC,
 
 SC.DEFAULT_TREE = 'default';
 
+SC.RequestAnimationFrame = function() {
+  var ret = window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ;
+
+  if (!ret) throw "This browser is not supported by Blossom.";
+  return ret;
+}();

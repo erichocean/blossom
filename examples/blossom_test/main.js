@@ -23,15 +23,6 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-window.requestAnimFrame = function(callback) {
-  return window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function(callback) { window.setTimeout(callback, 1000 / 60); };
-}();
-
 function roundRect(ctx, x, y, width, height, radius) {
   if (typeof radius === "undefined") {
     radius = 5;
