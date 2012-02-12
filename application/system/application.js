@@ -160,10 +160,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_runAnimationLoop: function(timestamp) {
     // console.log('SC.Application#_sc_runAnimationLoop()');
     this._sc_didRequestAnimationLoop = false;
-    SC.RunLoop.begin();
+    SC.isAnimating = true;
     this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
     this.get('ui').updateAnimationIfNeeded(timestamp);
-    SC.RunLoop.end();
+    SC.isAnimating = false;
+    sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during an animation loop.");
   },
 
   // .......................................................
