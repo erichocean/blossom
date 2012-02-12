@@ -3,7 +3,8 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION BENCHMARK_LAYOUT_FUNCTION */
+/*globals sc_assert BLOSSOM FAST_LAYOUT_FUNCTION BENCHMARK_LAYOUT_FUNCTION 
+  Float32Array */
 
 SC.layoutFunctions = {};
 

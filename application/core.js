@@ -45,13 +45,16 @@ SC.mixin(SC,
 
 SC.DEFAULT_TREE = 'default';
 
-SC.RequestAnimationFrame = function() {
+SC.RequestAnimationFrame = function(callback) {
+  console.log('SC.RequestAnimationFrame()');
   var ret = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ;
+    window.msRequestAnimationFrame || 
+    function(callback) { window.setTimeout(function() { callback(); }, 1/60); } ;
 
-  if (!ret) throw "This browser is not supported by Blossom.";
-  return ret;
-}();
+  // HACK: Safari 5.1.1 doesn't support webkitRequestAnimationFrame yet.
+  // if (!ret) throw "This browser is not supported by Blossom.";
+  ret.call(window, callback);
+};

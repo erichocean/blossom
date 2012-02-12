@@ -209,18 +209,57 @@ SC.Surface = SC.Responder.extend({
   */
   updateIfNeeded: function(ignoreVisibility) {
     // console.log('SC.Surface#updateIfNeeded()');
+    SC.app.requestAnimationLoop();
+
+    // var needsLayout = this.get('needsLayout'),
+    //     needsDisplay = this.get('needsDisplay');
+    // 
+    // // debugger;
+    // 
+    // var benchKey = 'SC.Surface#updateIfNeeded()',
+    //     layoutKey = 'SC.Surface#updateIfNeeded(): needsLayout',
+    //     displayKey = 'SC.Surface#updateIfNeeded(): needsDisplay';
+    // 
+    // SC.Benchmark.start(benchKey);
+    // 
+    // if (needsLayout && (ignoreVisibility || this.get('isVisible'))) {
+    //   SC.Benchmark.start(layoutKey);
+    //   if (this.get('isPresentInViewport')) {
+    //     this.updateLayout();
+    //     this.set('needsLayout', false);
+    //   } // else leave it set to true, we'll update it when it again becomes 
+    //     // visible in the viewport
+    //   SC.Benchmark.end(layoutKey);
+    // }
+    // 
+    // if (needsDisplay && (ignoreVisibility || this.get('isVisible'))) {
+    //   SC.Benchmark.start(displayKey);
+    //   if (this.get('isPresentInViewport')) {
+    //     this.updateDisplay();
+    //     this.set('needsDisplay', false);
+    //   } // else leave it set to true, we'll update it when it again becomes 
+    //     // visible in the viewport
+    //   SC.Benchmark.end(displayKey);
+    // }
+    // 
+    // SC.Benchmark.end(benchKey);
+  },
+
+  updateAnimationIfNeeded: function(timestamp) {
+    console.log('SC.Surface#updateAnimationIfNeeded()');
     var needsLayout = this.get('needsLayout'),
-        needsDisplay = this.get('needsDisplay');
+        needsDisplay = this.get('needsDisplay'),
+        isVisible = this.get('isVisible');
 
     // debugger;
 
-    var benchKey = 'SC.Surface#updateIfNeeded()',
-        layoutKey = 'SC.Surface#updateIfNeeded(): needsLayout',
-        displayKey = 'SC.Surface#updateIfNeeded(): needsDisplay';
+    var benchKey = 'SC.Surface#updateAnimationIfNeeded()',
+        layoutKey = 'SC.Surface#updateAnimationIfNeeded(): needsLayout',
+        displayKey = 'SC.Surface#updateAnimationIfNeeded(): needsDisplay';
 
     SC.Benchmark.start(benchKey);
 
-    if (needsLayout && (ignoreVisibility || this.get('isVisible'))) {
+    if (needsLayout && isVisible) {
       SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
         this.updateLayout();
@@ -230,7 +269,7 @@ SC.Surface = SC.Responder.extend({
       SC.Benchmark.end(layoutKey);
     }
 
-    if (needsDisplay && (ignoreVisibility || this.get('isVisible'))) {
+    if (needsDisplay && isVisible) {
       SC.Benchmark.start(displayKey);
       if (this.get('isPresentInViewport')) {
         this.updateDisplay();

@@ -142,6 +142,31 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   // .......................................................
+  // ANIMATION LOOP
+  //
+
+  _sc_didRequestAnimationLoop: false,
+  requestAnimationLoop: function() {
+    // console.log('SC.Application#requestAnimationLoop()');
+    if (!this._sc_didRequestAnimationLoop) {
+      this._sc_didRequestAnimationLoop = true;
+      SC.RequestAnimationFrame(function(timestamp) {
+        // console.log('SC.RequestAnimationFrame() - callback');
+        SC.app._sc_runAnimationLoop(timestamp);
+      });
+    }
+  },
+
+  _sc_runAnimationLoop: function(timestamp) {
+    // console.log('SC.Application#_sc_runAnimationLoop()');
+    this._sc_didRequestAnimationLoop = false;
+    SC.RunLoop.begin();
+    this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
+    this.get('ui').updateAnimationIfNeeded(timestamp);
+    SC.RunLoop.end();
+  },
+
+  // .......................................................
   // SURFACE HANDLING
   //
 
