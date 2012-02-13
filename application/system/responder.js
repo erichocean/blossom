@@ -106,7 +106,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -221,4 +221,4 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -9,7 +9,7 @@
 sc_require('system/browser');
 sc_require('panes/panel');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   Displays a modal sheet pane that animates from the top of the viewport.
@@ -217,4 +217,4 @@ SC.SheetPane.mixin( /** @scope SC.SheetPane */ {
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

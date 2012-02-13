@@ -266,7 +266,7 @@ SC.UserDefaults = SC.Object.extend(
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   @class
@@ -656,7 +656,7 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   }.observes('ready')  
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 
 /** global user defaults. */
 SC.userDefaults = SC.UserDefaults.create();

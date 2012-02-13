@@ -9,7 +9,7 @@
 sc_require('system/browser');
 sc_require('views/view');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 SC.RESIZE_BOTH = 'resize-both';
 SC.RESIZE_TOP_LEFT = 'resize-top-left';
@@ -786,5 +786,5 @@ SC.SplitView = SC.View.extend(
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

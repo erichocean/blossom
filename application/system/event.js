@@ -713,7 +713,7 @@ SC.Event.prototype = {
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   The event class provides a simple cross-platform library for capturing and
@@ -1579,4 +1579,4 @@ SC.Event.fire = SC.Event.trigger;
 
 if(SC.browser.msie) SC.Event.add(window, 'unload', SC.Event.prototype, SC.Event.unload) ;
 
-} // !BLOSSOM
+} // ! BLOSSOM

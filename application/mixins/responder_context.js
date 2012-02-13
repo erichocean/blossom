@@ -8,7 +8,7 @@
 
 sc_require('system/responder');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @namespace
 
@@ -271,5 +271,5 @@ SC.ResponderContext = {
 
 };
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

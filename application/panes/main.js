@@ -8,7 +8,7 @@
 
 sc_require('panes/pane');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -50,4 +50,4 @@ SC.MainPane = SC.Pane.extend({
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

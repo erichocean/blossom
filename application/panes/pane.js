@@ -9,7 +9,7 @@
 sc_require('mixins/responder_context');
 sc_require('views/view');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
   A Pane is like a regular view except that it does not need to live within a 
@@ -808,4 +808,4 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

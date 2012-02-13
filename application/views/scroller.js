@@ -8,7 +8,7 @@
 
 sc_require('views/view');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -888,4 +888,4 @@ SC.TouchScrollerView = SC.ScrollerView.extend({
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

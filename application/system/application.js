@@ -1333,7 +1333,7 @@ SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -1364,4 +1364,4 @@ SC.Application = SC.Responder.extend(SC.ResponderContext,
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -12,7 +12,7 @@
 
 sc_require('views/view');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   @class
@@ -71,4 +71,4 @@ SC.ThumbView = SC.View.extend(
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -9,7 +9,7 @@
 sc_require('system/event');
 sc_require('views/scroll');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -590,4 +590,4 @@ SC.MenuScrollView = SC.ScrollView.extend({
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

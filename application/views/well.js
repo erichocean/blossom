@@ -8,7 +8,7 @@
 
 sc_require('views/container');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 // Constants
 SC.WELL_CONTAINER_PADDING=15;
@@ -89,5 +89,5 @@ SC.WellView = SC.ContainerView.extend(
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

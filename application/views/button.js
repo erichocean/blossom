@@ -630,7 +630,7 @@ SC.ButtonView.CLICK_AND_HOLD_DELAY = 300;
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   The delay after which "click" behavior should transition to "click and hold"
@@ -642,7 +642,7 @@ if (!BLOSSOM) {
 */
 SC.ButtonView.CLICK_AND_HOLD_DELAY = SC.browser.msie ? 600 : 300;
 
-} // !BLOSSOM
+} // ! BLOSSOM
 
 SC.REGULAR_BUTTON_HEIGHT=24;
 

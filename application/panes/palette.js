@@ -8,7 +8,7 @@
 
 sc_require('panes/panel');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   Displays a non-modal, default positioned, drag&drop-able palette pane.
@@ -76,4 +76,4 @@ SC.PalettePane = SC.PanelPane.extend({
  
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -9,7 +9,7 @@
 sc_require('views/view');
 sc_require('mixins/static_layout');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -139,4 +139,4 @@ SC.StaticContentView = SC.View.extend(SC.StaticLayout, {
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

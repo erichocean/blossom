@@ -23,7 +23,7 @@ SC.isMozilla = function() {
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 SC.browser = (function() {
   var userAgent = navigator.userAgent.toLowerCase(),
@@ -98,4 +98,4 @@ SC.mixin(SC.browser, (function() {
 
 })() );
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -17,7 +17,7 @@ sc_require('system/ready');
 /** Set to NO to leave the backspace key under the control of the browser.*/
 SC.CAPTURE_BACKSPACE_KEY = NO ;
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -2054,5 +2054,5 @@ SC.ready(SC.RootResponder, SC.RootResponder.ready = function() {
   r.setup() ;
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

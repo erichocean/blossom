@@ -7,7 +7,7 @@
 
 sc_require('panes/modal');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** 
   Shadow views from top-left corner clockwise
@@ -182,4 +182,4 @@ SC.PanelPane = SC.Pane.extend({
   }
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

@@ -95,7 +95,7 @@ SC.mixin({
 
 } // BLOSSOM
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 SC.mixin({
   _sc_isReadyBound: NO,
@@ -233,7 +233,7 @@ SC.mixin({
 
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 
 SC._sc_bindReady();
 SC.removeLoading = YES;

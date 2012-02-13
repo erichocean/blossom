@@ -9,7 +9,7 @@
 sc_require('system/browser');
 sc_require('system/builder');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   CoreQuery is a simplified DOM manipulation library used internally by 
@@ -2049,4 +2049,4 @@ SC.mixin(SC.$, {
   
 }) ;
 
-} // !BLOSSOM
+} // ! BLOSSOM

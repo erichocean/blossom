@@ -8,7 +8,7 @@
 
 sc_require('views/container');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -208,5 +208,5 @@ SC.SceneView = SC.ContainerView.extend(
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

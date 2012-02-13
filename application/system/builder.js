@@ -6,7 +6,7 @@
 // ==========================================================================
 /*globals BLOSSOM */
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -209,4 +209,4 @@ SC.Builder.fn = {
   }
 })();
 
-} // !BLOSSOM
+} // ! BLOSSOM

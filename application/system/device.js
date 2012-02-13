@@ -146,7 +146,7 @@ SC.Device = SC.Device.extend({
 
 }
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 SC.Device = SC.Device.extend({
 
@@ -170,6 +170,6 @@ SC.ready(function() {
   SC.device.setup() ;
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 
 SC.device = SC.Device.create();

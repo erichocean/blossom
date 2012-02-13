@@ -11,7 +11,7 @@ sc_require('views/container');
 sc_require('views/scroller');
 sc_require('mixins/border');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 SC.NORMAL_SCROLL_DECELERATION = 0.95;
 SC.FAST_SCROLL_DECELERATION = 0.85;
@@ -1794,5 +1794,5 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM
 

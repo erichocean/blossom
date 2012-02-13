@@ -11,7 +11,7 @@ sc_require('system/event');
 sc_require('views/view');
 sc_require('mixins/control');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -95,4 +95,4 @@ SC.WebView = SC.View.extend(SC.Control, {
   }
 });
 
-} // !BLOSSOM
+} // ! BLOSSOM

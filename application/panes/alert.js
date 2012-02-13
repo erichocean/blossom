@@ -9,7 +9,7 @@
 sc_require('panes/panel');
 sc_require('views/button');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /** 
   button1 : 1st button from the right. default:OK
@@ -413,4 +413,4 @@ SC.AlertPane.plain = function(message, description, caption, button1Title, butto
   return this.show.apply(this, args);
 };
 
-} // !BLOSSOM
+} // ! BLOSSOM

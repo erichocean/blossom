@@ -406,7 +406,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       this._isFocused = YES ;
       this.becomeFirstResponder();
       // if (this.get('isVisibleInWindow')) {
-      //   if (!BLOSSOM) {
+      //   if (! BLOSSOM) {
       //     this.$()[0].focus();
       //   }
       // }
@@ -448,10 +448,10 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
         inside = true;
         if (inside && this.get('isEnabled')) this._action(evt) ;
       } // BLOSSOM
-      if (!BLOSSOM) {
+      if (! BLOSSOM) {
         inside = this.$().within(evt.target) ;
         if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // !BLOSSOM
+      } // ! BLOSSOM
     }
 
     return YES ;
@@ -468,7 +468,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._isFocused = YES ;
       this.becomeFirstResponder();
-      if (!BLOSSOM) {
+      if (! BLOSSOM) {
         if (this.get('isVisibleInWindow')) {
           this.$()[0].focus();
         }

@@ -9,7 +9,7 @@
 sc_require('panes/picker');
 sc_require('views/menu_item');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /**
   @class
@@ -1118,4 +1118,4 @@ SC.MenuPane.HUGE_SUBMENU_OFFSET_X = 0;
 // the menu will be offset from the top and bottom of the viewport.
 SC.MenuPane.VERTICAL_OFFSET = 23;
 
-} // !BLOSSOM
+} // ! BLOSSOM

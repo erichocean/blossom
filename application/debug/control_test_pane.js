@@ -8,7 +8,7 @@
 
 sc_require('panes/pane');
 
-if (!BLOSSOM) {
+if (! BLOSSOM) {
 
 /*global test */
 
@@ -195,5 +195,5 @@ SC.ControlTestPane.show = function() {
   });
 };
 
-} // !BLOSSOM
+} // ! BLOSSOM
 
