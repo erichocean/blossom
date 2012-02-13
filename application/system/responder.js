@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM sc_assert */
+/*globals BLOSSOM sc_assert */
 
 /** @class
 
@@ -106,7 +106,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -221,4 +221,4 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

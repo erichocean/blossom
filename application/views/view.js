@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM sc_assert */
+/*globals BLOSSOM sc_assert */
 
 sc_require('system/browser');
 sc_require('system/cursor');
@@ -1275,7 +1275,7 @@ SC.mixin(SC.View, {
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -3684,7 +3684,7 @@ SC.View = SC.View.extend(
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 
 SC.View.mixin(/** @scope SC.View */ {
 
@@ -4042,7 +4042,7 @@ SC.View.unload = function() {
   }
 } ;
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
   //unload views for IE, trying to collect memory.
   if(SC.browser.msie) SC.Event.add(window, 'unload', SC.View, SC.View.unload) ;
 }
@@ -4104,12 +4104,12 @@ SC.FULL_HEIGHT = { top: 0, bottom: 0 };
 */
 SC.ANCHOR_CENTER = { centerX: 0, centerY: 0 };
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** Layout property for width, height */
 SC.LAYOUT_AUTO = 'auto';
 
-} // SPROUTCORE
+} // !BLOSSOM
 
 /**
   Default property to disable or enable by default the contextMenu

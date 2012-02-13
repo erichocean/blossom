@@ -4,14 +4,14 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/container');
 sc_require('views/scroller');
 sc_require('mixins/border');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 SC.NORMAL_SCROLL_DECELERATION = 0.95;
 SC.FAST_SCROLL_DECELERATION = 0.85;
@@ -1794,5 +1794,5 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 

@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*global SPROUTCORE BLOSSOM main sc_assert */
+/*global BLOSSOM main sc_assert */
 
 sc_require('system/browser');
 sc_require('system/event');
@@ -95,7 +95,7 @@ SC.mixin({
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 SC.mixin({
   _sc_isReadyBound: NO,
@@ -233,7 +233,7 @@ SC.mixin({
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 
 SC._sc_bindReady();
 SC.removeLoading = YES;

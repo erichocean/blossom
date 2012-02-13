@@ -4,12 +4,12 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('panes/palette');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** 
   Popular customized picker position rules:
@@ -698,4 +698,4 @@ SC.PickerPane.LARGE_PICKER_MENU_EXTRA_RIGHT_OFFSET = 17;
 SC.PickerPane.HUGE_PICKER_MENU_POINTER_OFFSET = [9, -9, -18, 18];
 SC.PickerPane.HUGE_PICKER_MENU_EXTRA_RIGHT_OFFSET = 12;
 
-} // SPROUTCORE
+} // !BLOSSOM

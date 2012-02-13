@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/view');
@@ -630,7 +630,7 @@ SC.ButtonView.CLICK_AND_HOLD_DELAY = 300;
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   The delay after which "click" behavior should transition to "click and hold"
@@ -642,7 +642,7 @@ if (SPROUTCORE) {
 */
 SC.ButtonView.CLICK_AND_HOLD_DELAY = SC.browser.msie ? 600 : 300;
 
-} // SPROUTCORE
+} // !BLOSSOM
 
 SC.REGULAR_BUTTON_HEIGHT=24;
 

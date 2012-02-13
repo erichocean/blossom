@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM SPROUTCORE sc_assert */
+/*globals BLOSSOM sc_assert */
 
 sc_require('system/browser');
 sc_require('system/core_query');
@@ -713,7 +713,7 @@ SC.Event.prototype = {
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   The event class provides a simple cross-platform library for capturing and
@@ -1579,4 +1579,4 @@ SC.Event.fire = SC.Event.trigger;
 
 if(SC.browser.msie) SC.Event.add(window, 'unload', SC.Event.prototype, SC.Event.unload) ;
 
-} // SPROUTCORE
+} // !BLOSSOM

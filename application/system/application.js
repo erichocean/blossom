@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM sc_assert */
+/*globals BLOSSOM sc_assert */
 
 sc_require('mixins/responder_context');
 sc_require('ext/float32');
@@ -1333,7 +1333,7 @@ SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -1364,4 +1364,4 @@ SC.Application = SC.Responder.extend(SC.ResponderContext,
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

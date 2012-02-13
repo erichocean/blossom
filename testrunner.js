@@ -19,7 +19,6 @@ var jsFiles = datastore.get('orderedJavaScriptFiles').map(function(file) {
 global.SC = global.SproutCore; // Already loaded by the buildtools
 // global.SproutCore = SC;
 // global.BLOSSOM = true;
-// global.SPROUTCORE = false;
 // global.FAST_LAYOUT_FUNCTION = false;
 
 // Load the code we want to test.

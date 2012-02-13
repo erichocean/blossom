@@ -4,12 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/view');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 SC.RESIZE_BOTH = 'resize-both';
 SC.RESIZE_TOP_LEFT = 'resize-top-left';
@@ -786,5 +786,5 @@ SC.SplitView = SC.View.extend(
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 

@@ -4,11 +4,11 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('panes/pane');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /*global test */
 
@@ -195,5 +195,5 @@ SC.ControlTestPane.show = function() {
   });
 };
 
-} // SPROUTCORE
+} // !BLOSSOM
 

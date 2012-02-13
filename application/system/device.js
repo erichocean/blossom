@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/platform');
 sc_require('system/ready');
@@ -146,7 +146,7 @@ SC.Device = SC.Device.extend({
 
 }
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 SC.Device = SC.Device.extend({
 
@@ -170,6 +170,6 @@ SC.ready(function() {
   SC.device.setup() ;
 });
 
-}
+} // !BLOSSOM
 
 SC.device = SC.Device.create();

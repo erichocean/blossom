@@ -12,7 +12,7 @@
 sc_require('views/view');
 sc_require('views/split');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   @class
@@ -73,4 +73,4 @@ SC.SplitDividerView = SC.View.extend(
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

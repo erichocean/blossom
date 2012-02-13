@@ -4,12 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/event');
 sc_require('views/scroll');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -590,4 +590,4 @@ SC.MenuScrollView = SC.ScrollView.extend({
 
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

@@ -4,11 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('panes/pane');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -50,4 +50,4 @@ SC.MainPane = SC.Pane.extend({
   
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

@@ -4,14 +4,14 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('system/event');
 sc_require('views/view');
 sc_require('mixins/control');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -95,4 +95,4 @@ SC.WebView = SC.View.extend(SC.Control, {
   }
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

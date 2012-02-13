@@ -4,12 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see SPROUTCORE-LICENSE)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('mixins/responder_context');
 sc_require('views/view');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
   A Pane is like a regular view except that it does not need to live within a 
@@ -808,4 +808,4 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

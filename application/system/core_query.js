@@ -4,12 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE CQ add */
+/*globals BLOSSOM CQ add */
 
 sc_require('system/browser');
 sc_require('system/builder');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   CoreQuery is a simplified DOM manipulation library used internally by 
@@ -2049,4 +2049,4 @@ SC.mixin(SC.$, {
   
 }) ;
 
-} // SPROUTCORE
+} // !BLOSSOM

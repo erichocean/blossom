@@ -4,12 +4,12 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals SPROUTCORE */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('panes/panel');
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   Displays a modal sheet pane that animates from the top of the viewport.
@@ -217,4 +217,4 @@ SC.SheetPane.mixin( /** @scope SC.SheetPane */ {
   
 });
 
-} // SPROUTCORE
+} // !BLOSSOM

@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM ie7userdata openDatabase*/
+/*globals BLOSSOM ie7userdata openDatabase*/
 
 sc_require('system/browser');
 
@@ -266,7 +266,7 @@ SC.UserDefaults = SC.Object.extend(
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /**
   @class
@@ -656,7 +656,7 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   }.observes('ready')  
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 
 /** global user defaults. */
 SC.userDefaults = SC.UserDefaults.create();

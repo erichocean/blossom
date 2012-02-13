@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM */
+/*globals BLOSSOM */
 
 if (BLOSSOM) {
 
@@ -23,7 +23,7 @@ SC.isMozilla = function() {
 
 } // BLOSSOM
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 SC.browser = (function() {
   var userAgent = navigator.userAgent.toLowerCase(),
@@ -98,4 +98,4 @@ SC.mixin(SC.browser, (function() {
 
 })() );
 
-} // SPROUTCORE
+} // !BLOSSOM

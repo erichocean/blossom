@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals SPROUTCORE BLOSSOM */
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('system/event');
@@ -17,7 +17,7 @@ sc_require('system/ready');
 /** Set to NO to leave the backspace key under the control of the browser.*/
 SC.CAPTURE_BACKSPACE_KEY = NO ;
 
-if (SPROUTCORE) {
+if (!BLOSSOM) {
 
 /** @class
 
@@ -2054,5 +2054,5 @@ SC.ready(SC.RootResponder, SC.RootResponder.ready = function() {
   r.setup() ;
 });
 
-} // SPROUTCORE
+} // !BLOSSOM
 
