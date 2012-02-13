@@ -5,6 +5,7 @@
 // ==========================================================================
 /*globals BLOSSOM sc_assert */
 
+sc_require('system/responder');
 sc_require('layers/layer');
 sc_require('layers/layout');
 sc_require('system/property_animation');
