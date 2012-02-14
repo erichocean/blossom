@@ -30,8 +30,6 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-var ENFORCE_BLOSSOM_2DCONTEXT_API = true; // removes context.canvas
-
 SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.

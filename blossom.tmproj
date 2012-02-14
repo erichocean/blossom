@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>examples/blossom_test/main.js</string>
+	<string>application/layers/layer.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,14 +21,28 @@
 	<integer>292</integer>
 	<key>metaData</key>
 	<dict>
-		<key>application/ext/float32.js</key>
+		<key>application/behaviors/behavior.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>41</integer>
+				<integer>66</integer>
 				<key>line</key>
-				<integer>361</integer>
+				<integer>12</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>application/core.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>20</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -40,30 +54,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>57</integer>
 				<key>line</key>
-				<integer>14</integer>
+				<integer>40</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>14</integer>
-			</dict>
 		</dict>
 		<key>application/layers/layout.js</key>
 		<dict>
@@ -95,26 +93,12 @@
 				<integer>547</integer>
 			</dict>
 		</dict>
-		<key>application/layers/layout_function.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>239</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>application/layers/layout_function_fast.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>63</integer>
+				<integer>31</integer>
 				<key>line</key>
 				<integer>267</integer>
 			</dict>
@@ -142,28 +126,56 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>29</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>785</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>638</integer>
 		</dict>
+		<key>application/surfaces/surface.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>28</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>application/system/root_responder.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>37</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>52</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>3</integer>
+		</dict>
+		<key>application/views/view.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>20</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>buildtools/buildtools.js</key>
 		<dict>
@@ -172,37 +184,21 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>491</integer>
+				<integer>464</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>447</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>483</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>491</integer>
-			</dict>
+			<integer>441</integer>
 		</dict>
 		<key>examples/blossom_test/main.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>46</integer>
+				<integer>53</integer>
 				<key>line</key>
-				<integer>25</integer>
+				<integer>83</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -436,11 +432,17 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
+		<string>buildtools/buildtools.js</string>
 		<string>examples/blossom_test/main.js</string>
+		<string>application/core.js</string>
+		<string>application/layers/layer.js</string>
+		<string>application/views/view.js</string>
+		<string>application/behaviors/behavior.js</string>
+		<string>application/surfaces/surface.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{530, 248}, {1217, 1170}}</string>
+	<string>{{365, 219}, {1310, 1163}}</string>
 </dict>
 </plist>
