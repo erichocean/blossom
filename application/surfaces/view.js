@@ -29,9 +29,8 @@ var green =    "#859900";
 var white =    "white";
 
 /** @class
-  `SC.ViewSurface` implements an SC.View host.  You set a view as the 
-  `contentView` property, and it will be sized relative to the `bounds` of 
-  the view surface.
+  `SC.View` implements an view controller, composed of a layer tree with 
+  associated behaviors.
 
   @extends SC.Surface
   @since Blossom 1.0

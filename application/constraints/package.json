@@ -1,0 +1,15 @@
+{
+  "name"          : "blossom-constraints",
+  "description"   : "Cassowary Constraint Solving Toolkit for Blossom",
+  "repository"    : { "type" : "git",
+                      "url"  : "https://github.com/fohr/blossom.git" },
+  "url"           : "http://fohr.com/",
+  "keywords"      : ["blossom", "sproutcore", "cassowary"],
+  "author"        : ["Erich Ocean <eocean@fohr.com>", "Greg J. Badros", "Alex Rusell <slightlyoff@chromium.org>"],
+  "contributors"  : [],
+  "dependencies"  : {},
+  "main"          : "./node/buildfile",
+  "version"       : "0.1.0",
+  "scripts"       : {},
+  "engines"       : {"node": "0.6.x"}
+}
