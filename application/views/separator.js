@@ -3,8 +3,11 @@
 // Copyright ©2006-2011, Strobe Inc. and contributors.
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -36,3 +39,5 @@ SC.SeparatorView = SC.View.extend(
 
 
 });
+
+} // ! BLOSSOM

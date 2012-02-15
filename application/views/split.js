@@ -787,4 +787,3 @@ SC.SplitView = SC.View.extend(
 });
 
 } // ! BLOSSOM
-

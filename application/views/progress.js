@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
 sc_require('mixins/control');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -250,4 +253,6 @@ SC.ProgressView = SC.View.extend(SC.Control, {
     return classNameArray.join(" ");
   }
   
-}) ;
+});
+
+} // ! BLOSSOM

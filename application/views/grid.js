@@ -1,8 +1,11 @@
 // ==========================================================================
 // SC.GridView
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/list') ;
+
+if (! BLOSSOM) {
 
 /** @class
 
@@ -205,3 +208,5 @@ SC.GridView = SC.ListView.extend(
     }
   }.observes('clippingFrame')
 }) ;
+
+} // ! BLOSSOM

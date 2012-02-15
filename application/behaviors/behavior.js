@@ -35,14 +35,13 @@ if (BLOSSOM) {
     `layer`'s `context` property. If you just need to draw, override 
     `render()` instead.
 
-  - *render:* override this method to draw your layer to reflect the current 
-    state of your behavior.
-
   @extends SC.Responder
   @since Blossom 1.0
 */
 SC.Behavior = SC.Responder.extend({
-  
+
+  isBehavior: true // Walk like a duck.
+
 });
 
 } // BLOSSOM

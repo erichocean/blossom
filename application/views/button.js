@@ -16,6 +16,8 @@ sc_require('mixins/control');
 sc_require('mixins/button');
 sc_require('mixins/static_layout');
 
+if (! BLOSSOM) {
+
 /*jslint evil:true */
 
 /** @class
@@ -646,3 +648,4 @@ SC.ButtonView.CLICK_AND_HOLD_DELAY = SC.browser.msie ? 600 : 300;
 
 SC.REGULAR_BUTTON_HEIGHT=24;
 
+} // ! BLOSSOM

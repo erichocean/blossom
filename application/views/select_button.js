@@ -4,8 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/button');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -847,3 +850,5 @@ SC.SelectButtonView.HUGE_OFFSET_Y = 0;
 SC.SelectButtonView.HUGE_POPUP_MENU_WIDTH_OFFSET = 0;
 
 SC.SelectButtonView.MENU_WIDTH_OFFSET = -2;
+
+} // ! BLOSSOM

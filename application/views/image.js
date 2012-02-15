@@ -4,10 +4,13 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/view') ;
 sc_require('mixins/control') ;
+
+if (! BLOSSOM) {
 
 SC.IMAGE_STATE_NONE = 'none';
 SC.IMAGE_STATE_LOADING = 'loading';
@@ -180,3 +183,4 @@ SC.ImageView.valueIsUrl = function(value) {
   return value ? value.indexOf('/') >= 0 : NO ;
 } ;
 
+} // ! BLOSSOM

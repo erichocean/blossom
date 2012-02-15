@@ -3,9 +3,12 @@
 // Copyright: ©2012 xTuple. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
 sc_require("ext/common");
+
+if (! BLOSSOM) {
 
 /** @class
 
@@ -213,4 +216,6 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
     this._sc_collectAnimationEvents(this._sc_childAnimationEvents);
   }
 
-}) ;
+});
+
+} // ! BLOSSOM

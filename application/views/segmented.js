@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
 sc_require('mixins/control');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -680,6 +683,4 @@ SC._segmented_fetchItem = function(k) {
   return this.get ? this.get(k) : this[k]; 
 };
 
-
-
-
+} // ! BLOSSOM

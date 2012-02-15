@@ -2,9 +2,12 @@
 // SproutCore
 // copyright 2006-2011 Strobe Inc.
 // ========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/text_field') ;
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -583,4 +586,6 @@ SC.InlineTextFieldView.mixin(
   */
   editor: null
   
-}) ;
+});
+
+} // ! BLOSSOM

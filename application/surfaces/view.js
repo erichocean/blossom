@@ -36,7 +36,7 @@ var white =    "white";
   @extends SC.Surface
   @since Blossom 1.0
 */
-SC.ViewSurface = SC.Surface.extend({
+SC.View = SC.Surface.extend({
 
   // bounds: function() {
   //   // FIXME!

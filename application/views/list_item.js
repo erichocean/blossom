@@ -4,9 +4,12 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
 sc_require('mixins/control');
+
+if (! BLOSSOM) {
 
 SC.LIST_ITEM_ACTION_CANCEL = 'sc-list-item-cancel-action';
 SC.LIST_ITEM_ACTION_REFRESH = 'sc-list-item-cancel-refresh';
@@ -837,3 +840,5 @@ SC.ListItemView = SC.View.extend(
   }
   
 });
+
+} // ! BLOSSOM

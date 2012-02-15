@@ -77,80 +77,117 @@ function drawButton(ctx, pressed) {
   ctx.restore();
 }
 
+var MyLayer = SC.Layer.extend({
+
+  render: function(ctx) {
+    var benchKey = 'MyLayer#render()';
+    SC.Benchmark.start(benchKey);
+
+    console.log('MyView.render()', SC.guidFor(this));
+    ctx.beginPath();
+    this.get('layer').renderHitTestPath(ctx);
+    ctx.fillStyle = green;
+    ctx.fill();
+
+    // Draw some text.
+    ctx.fillStyle = base3;
+    ctx.font = "16pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "rgba(0,0,0,0)";
+    ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
+    ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
+
+    SC.Benchmark.end(benchKey);
+  }
+
+});
+
 function main() {
-  var surface = SC.ViewSurface.create({
+  var surface = SC.View.create({
 
-    contentView: SC.View.extend({
-      // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
-      layout: { top: 10, right: 10, bottom: 10, left: 10 },
-      cornerRadius: 25,
-    
-      render: function(ctx) {
-        var benchKey = 'MyView#render()';
-        SC.Benchmark.start(benchKey);
-
-        console.log('MyView.render()', SC.guidFor(this));
-        ctx.beginPath();
-        this.get('layer').renderHitTestPath(ctx);
-        ctx.fillStyle = green;
-        ctx.fill();
-
-        // Draw some text.
-        ctx.fillStyle = base3;
-        ctx.font = "16pt Calibri";
-        ctx.textBaseline = "middle";
-        ctx.textAlign = "center";
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = "rgba(0,0,0,0)";
-        ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
-        ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
-
-        SC.Benchmark.end(benchKey);
-      },
-
-      childViews: 'foo button'.w(),
-
-      foo: SC.View.extend({
-        layout: { centerX: 0, width: 0.3, centerY: 0, height: 0.3 },
-        cornerRadius: 25,
-
-        mouseDown:    function(evt) { alert("You clicked the blue subview."); },
-        mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
-        mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
-
-        render: function(ctx, layer) {
-          var benchKey = 'foo#render()';
-          SC.Benchmark.start(benchKey);
-
-          console.log('foo.render()', SC.guidFor(this));
-          var w = ctx.width, h = ctx.height;
-
-          ctx.beginPath();
-          this.get('layer').renderHitTestPath(ctx);
-          ctx.fillStyle = blue;
-          ctx.fill();
-
-          // Draw some text.
-          ctx.fillStyle = base3;
-          ctx.font = "14pt Calibri";
-          ctx.textBaseline = "middle";
-          ctx.textAlign = "center";
-          ctx.shadowBlur = 0;
-          ctx.shadowColor = "rgba(0,0,0,0)";
-          ctx.fillText("I'm a subview.", ctx.width/2, ctx.height/4);
-          ctx.fillText("Click Me.", ctx.width/2, (ctx.height/4)*3);
-
-          SC.Benchmark.end(benchKey);
+    layerTree: {
+      "defaultTree": "root",
+      "root": {
+        layer: {
+          layerClass: 'MyLayer',
+          layout: { top: 10, right: 10, bottom: 10, left: 10 }
         }
-      }),
+      }
+    }
 
-      button: BlossomTest.ButtonView.extend({
-        layout: { top: 50, right: 50, width: 140, height: 24 },
-        title: "Regular Button",
-        theme: 'regular',
-        buttonBehavior: SC.PUSH_BEHAVIOR
-      })
-    })
+    // contentView: SC.View.extend({
+    //   // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },
+    //   layout: { top: 10, right: 10, bottom: 10, left: 10 },
+    //   cornerRadius: 25,
+    // 
+    //   render: function(ctx) {
+    //     var benchKey = 'MyView#render()';
+    //     SC.Benchmark.start(benchKey);
+    // 
+    //     console.log('MyView.render()', SC.guidFor(this));
+    //     ctx.beginPath();
+    //     this.get('layer').renderHitTestPath(ctx);
+    //     ctx.fillStyle = green;
+    //     ctx.fill();
+    // 
+    //     // Draw some text.
+    //     ctx.fillStyle = base3;
+    //     ctx.font = "16pt Calibri";
+    //     ctx.textBaseline = "middle";
+    //     ctx.textAlign = "center";
+    //     ctx.shadowBlur = 0;
+    //     ctx.shadowColor = "rgba(0,0,0,0)";
+    //     ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
+    //     ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
+    // 
+    //     SC.Benchmark.end(benchKey);
+    //   },
+    // 
+    //   childViews: 'foo button'.w(),
+    // 
+    //   foo: SC.View.extend({
+    //     layout: { centerX: 0, width: 0.3, centerY: 0, height: 0.3 },
+    //     cornerRadius: 25,
+    // 
+    //     mouseDown:    function(evt) { alert("You clicked the blue subview."); },
+    //     mouseEntered: function(evt) { document.body.style.cursor = 'pointer'; },
+    //     mouseExited:  function(evt) { document.body.style.cursor = 'default'; },
+    // 
+    //     render: function(ctx, layer) {
+    //       var benchKey = 'foo#render()';
+    //       SC.Benchmark.start(benchKey);
+    // 
+    //       console.log('foo.render()', SC.guidFor(this));
+    //       var w = ctx.width, h = ctx.height;
+    // 
+    //       ctx.beginPath();
+    //       this.get('layer').renderHitTestPath(ctx);
+    //       ctx.fillStyle = blue;
+    //       ctx.fill();
+    // 
+    //       // Draw some text.
+    //       ctx.fillStyle = base3;
+    //       ctx.font = "14pt Calibri";
+    //       ctx.textBaseline = "middle";
+    //       ctx.textAlign = "center";
+    //       ctx.shadowBlur = 0;
+    //       ctx.shadowColor = "rgba(0,0,0,0)";
+    //       ctx.fillText("I'm a subview.", ctx.width/2, ctx.height/4);
+    //       ctx.fillText("Click Me.", ctx.width/2, (ctx.height/4)*3);
+    // 
+    //       SC.Benchmark.end(benchKey);
+    //     }
+    //   }),
+    // 
+    //   button: BlossomTest.ButtonView.extend({
+    //     layout: { top: 50, right: 50, width: 140, height: 24 },
+    //     title: "Regular Button",
+    //     theme: 'regular',
+    //     buttonBehavior: SC.PUSH_BEHAVIOR
+    //   })
+    // })
   });
 
   SC.Application.create();

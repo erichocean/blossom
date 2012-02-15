@@ -4,8 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/collection') ;
+
+if (! BLOSSOM) {
 
 /**
   @class 
@@ -108,3 +111,5 @@ SC.StackedView = SC.CollectionView.extend(
   didCreateLayer: function() { return this.updateHeight(); }
   
 });
+
+} // ! BLOSSOM

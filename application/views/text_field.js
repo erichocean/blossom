@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('system/event');
@@ -11,6 +12,8 @@ sc_require('views/field') ;
 sc_require('system/text_selection') ;
 sc_require('mixins/static_layout') ;
 sc_require('mixins/editable');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -944,3 +947,5 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   }.observes('value')
   
 });
+
+} // ! BLOSSOM

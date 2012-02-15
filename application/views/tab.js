@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/view');
 sc_require('views/segmented');
+
+if (! BLOSSOM) {
 
 SC.TOP_LOCATION = 'top';
 SC.TOP_TOOLBAR_LOCATION = 'top-toolbar';
@@ -183,3 +186,5 @@ SC.TabView = SC.View.extend(
 }) ;
 
 SC._TAB_ITEM_KEYS = 'itemTitleKey itemValueKey itemIsEnabledKey itemIconKey itemWidthKey itemToolTipKey itemActionKey itemTargetKey'.w();
+
+} // ! BLOSSOM

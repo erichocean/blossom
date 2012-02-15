@@ -16,6 +16,8 @@ sc_require('system/responder') ;
 sc_require('layers/layer') ;
 sc_require('mixins/string') ;
 
+if (! BLOSSOM) {
+
 SC.View = SC.Responder.extend(SC.DelegateSupport,
 /** @scope SC.View.prototype */ {
 
@@ -524,7 +526,10 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
 });
 
-if (BLOSSOM) {
+} // if (! BLOSSOM)
+
+// if (BLOSSOM) {
+if (! BLOSSOM) {
 
 /** @class
 
@@ -3686,6 +3691,8 @@ SC.View = SC.View.extend(
 
 } // ! BLOSSOM
 
+if (! BLOSSOM) {
+
 SC.View.mixin(/** @scope SC.View */ {
 
   /** @private walk like a duck -- used by SC.Page */
@@ -4042,10 +4049,14 @@ SC.View.unload = function() {
   }
 } ;
 
+} // ! BLOSSOM
+
 if (! BLOSSOM) {
   //unload views for IE, trying to collect memory.
   if(SC.browser.msie) SC.Event.add(window, 'unload', SC.View, SC.View.unload) ;
 }
+
+if (! BLOSSOM) {
 
 SC.viewKey = SC.guidKey + "_view" ;
 
@@ -4126,3 +4137,4 @@ SC.TABBING_ONLY_INSIDE_DOCUMENT = YES;
 SC.EMPTY_CHILD_VIEWS_ARRAY = [];
 SC.EMPTY_CHILD_VIEWS_ARRAY.needsClone = YES;
 
+} // ! BLOSSOM

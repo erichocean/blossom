@@ -3,9 +3,12 @@
 // Copyright ©2006-2011, Strobe Inc. and contributors.
 // Portions copyright ©2008 Apple Inc.  All rights reserved.
 // ========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/event');
 sc_require('views/field');
+
+if (! BLOSSOM) {
 
 /**
   @class
@@ -341,3 +344,5 @@ SC.SelectFieldView = SC.FieldView.extend(
   }
  
 });
+
+} // ! BLOSSOM

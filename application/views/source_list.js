@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('views/list') ;
 sc_require('views/source_list_group');
+
+if (! BLOSSOM) {
 
 SC.BENCHMARK_SOURCE_LIST_VIEW = YES ;
 
@@ -45,3 +48,5 @@ SC.SourceListView = SC.ListView.extend(
   actOnSelect: YES
 
 });
+
+} // ! BLOSSOM

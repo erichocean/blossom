@@ -4,9 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals Shared */
+/*globals BLOSSOM Shared */
 
 sc_require('views/text_field');
+
+if (! BLOSSOM) {
 
 /** @class
 
@@ -319,3 +321,5 @@ SC.DateFieldView = SC.TextFieldView.extend(
   }
 
 });
+
+} // ! BLOSSOM

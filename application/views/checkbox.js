@@ -4,11 +4,14 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/button');
 sc_require('mixins/button');
 sc_require('mixins/static_layout');
+
+if (! BLOSSOM) {
 
 /** @class
 
@@ -115,3 +118,5 @@ SC.CheckboxView = SC.ButtonView.extend(SC.StaticLayout, SC.Button,
   }
     
 }) ;
+
+} // ! BLOSSOM

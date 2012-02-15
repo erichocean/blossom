@@ -4,11 +4,14 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/event');
 sc_require('views/view') ;
 sc_require('mixins/control') ;
 sc_require('mixins/validatable') ;
+
+if (! BLOSSOM) {
 
 /** @class
 
@@ -319,3 +322,4 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
   
 });
 
+} // ! BLOSSOM

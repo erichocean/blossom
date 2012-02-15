@@ -4,10 +4,13 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('views/collection');
 sc_require('mixins/collection_row_delegate');
+
+if (! BLOSSOM) {
 
 /** @class
   
@@ -634,3 +637,5 @@ SC.ListView = SC.CollectionView.extend(
   }  
   
 });
+
+} // ! BLOSSOM
