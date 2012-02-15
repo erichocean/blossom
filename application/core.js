@@ -46,7 +46,7 @@ SC.mixin(SC,
 SC.DEFAULT_TREE = 'default';
 
 SC.RequestAnimationFrame = function(callback) {
-  console.log('SC.RequestAnimationFrame()');
+  // console.log('SC.RequestAnimationFrame()');
   var ret = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||

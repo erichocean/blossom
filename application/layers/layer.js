@@ -88,7 +88,7 @@ SC.Layer = SC.Object.extend({
     // console.log('SC.Layer#_sc_needsLayoutDidChange()', SC.guidFor(this));
     var surface = this.get('surface');
     if (surface && this.get('needsLayout')) {
-      debugger;
+      // debugger;
       surface.set('needsLayout', true);
     }
   }.observes('needsLayout'),

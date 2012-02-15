@@ -4,6 +4,8 @@
 //
 // Parts Copyright (C) 2011, Alex Rusell (slightlyoff@chromium.org)
 
+sc_require('constraint');
+
 (function(c) {
 "use strict";
 

@@ -707,11 +707,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Object} object that handled the event or null if not handled
   */
   sendEvent: function(action, evt, target) {
+    // console.log('SC.Application#sendEvent(', action, evt, target, ')');
     var surface, ret;
 
     // SC.run(function() {
       // get the target pane
-      if (target) surface = target.get('surface') ;
+      if (target) {
+        surface = target.get('surface') ;
+        if (!surface) surface = target.get('container') ;
+      }
       else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 
       // if we found a valid pane, send the event to it

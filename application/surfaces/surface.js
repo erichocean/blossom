@@ -247,7 +247,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   updateAnimationIfNeeded: function(timestamp) {
-    console.log('SC.Surface#updateAnimationIfNeeded()');
+    // console.log('SC.Surface#updateAnimationIfNeeded()');
     var needsLayout = this.get('needsLayout'),
         needsDisplay = this.get('needsDisplay'),
         isVisible = this.get('isVisible');
@@ -298,7 +298,7 @@ SC.Surface = SC.Responder.extend({
   isPresentInViewport: false,
 
   _sc_isPresentInViewportDidChange: function() {
-    console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
+    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
 
     // Either (a) we set up our layers, or (b) we schedule them to be 
     // destroyed at the end of the run loop.

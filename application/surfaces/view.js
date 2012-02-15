@@ -45,83 +45,83 @@ SC.View = SC.Surface.extend({
   /**
     Finds the layer that is hit by this event, and returns its view.
   */
-  targetViewForEvent: function(evt) {
-    // console.log('SC.ViewSurface#targetViewForEvent(', evt, ')');
-    var context = this.getPath('hitTestLayer.context'),
-        contentView = this.get('contentView'),
-        hitLayer = null, zIndex = -1,
-        mousePosition, x, y;
-
-    // debugger;
-    mousePosition = this.updateMousePositionWithEvent(evt);
-    x = mousePosition.x;
-    y = mousePosition.y;
-
-    if (!contentView) return this;
-
-    function hitTestSublayer(sublayer) {
-      // debugger;
-      if (sublayer.get('isHidden')) return;
-      context.save();
-
-      // Prevent this layer and any sublayer from drawing paths outside our
-      // bounds.
-      sublayer.renderBoundsPath(context);
-      context.clip();
-
-      // Make sure the layer's transform is current.
-      if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
-        sublayer._sc_computeTransformFromSuperlayerToLayer();
-      }
-
-      // Apply the sublayer's transform from our layer (it's superlayer).
-      var t = sublayer._sc_transformFromSuperlayerToLayer;
-      context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
-
-      // First, test our sublayers.
-      sublayer.get('sublayers').forEach(hitTestSublayer);
-
-      // Only test ourself if (a) no hit has been found, or (b) our zIndex is
-      // higher than whatever hit has been found so far.
-      var sublayerZ = sublayer.get('zIndex');
-      if (!hitLayer || zIndex < sublayerZ) {
-        // See if we actually hit something. Start by beginning a new path.
-        context.beginPath();
-
-        // Next, draw the path(s) we'll test.
-        sublayer.renderHitTestPath(context);
-
-        // Finally, test the point for intersection with the path(s).
-        if (context.isPointInPath(x, y)) {
-          hitLayer = sublayer;
-          zIndex = sublayerZ;
-        }
-      }
-
-      context.restore();
-    }
-
-    context.save();
-
-    var layer = contentView.get('layer');
-
-    // First, clip the context to the pane's layer's bounds.
-    context.beginPath();
-    layer.renderBoundsPath(context);
-    context.clip();
-
-    // Next, begin the hit testing process. When this completes, hitLayer
-    // will contain the layer that was hit with the highest zIndex.
-    hitTestSublayer(layer);
-
-    context.restore();
-
-    // console.log(hitLayer, hitLayer? hitLayer.get('view') : undefined);
-
-    // We don't need to test `layer`, because we already know it was hit when
-    // this method is called by SC.RootResponder.
-    return hitLayer? hitLayer.get('view') : this ;
-  },
+  // targetViewForEvent: function(evt) {
+  //   // console.log('SC.ViewSurface#targetViewForEvent(', evt, ')');
+  //   var context = this.getPath('hitTestLayer.context'),
+  //       contentView = this.get('contentView'),
+  //       hitLayer = null, zIndex = -1,
+  //       mousePosition, x, y;
+  // 
+  //   // debugger;
+  //   mousePosition = this.updateMousePositionWithEvent(evt);
+  //   x = mousePosition.x;
+  //   y = mousePosition.y;
+  // 
+  //   if (!contentView) return this;
+  // 
+  //   function hitTestSublayer(sublayer) {
+  //     // debugger;
+  //     if (sublayer.get('isHidden')) return;
+  //     context.save();
+  // 
+  //     // Prevent this layer and any sublayer from drawing paths outside our
+  //     // bounds.
+  //     sublayer.renderBoundsPath(context);
+  //     context.clip();
+  // 
+  //     // Make sure the layer's transform is current.
+  //     if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
+  //       sublayer._sc_computeTransformFromSuperlayerToLayer();
+  //     }
+  // 
+  //     // Apply the sublayer's transform from our layer (it's superlayer).
+  //     var t = sublayer._sc_transformFromSuperlayerToLayer;
+  //     context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+  // 
+  //     // First, test our sublayers.
+  //     sublayer.get('sublayers').forEach(hitTestSublayer);
+  // 
+  //     // Only test ourself if (a) no hit has been found, or (b) our zIndex is
+  //     // higher than whatever hit has been found so far.
+  //     var sublayerZ = sublayer.get('zIndex');
+  //     if (!hitLayer || zIndex < sublayerZ) {
+  //       // See if we actually hit something. Start by beginning a new path.
+  //       context.beginPath();
+  // 
+  //       // Next, draw the path(s) we'll test.
+  //       sublayer.renderHitTestPath(context);
+  // 
+  //       // Finally, test the point for intersection with the path(s).
+  //       if (context.isPointInPath(x, y)) {
+  //         hitLayer = sublayer;
+  //         zIndex = sublayerZ;
+  //       }
+  //     }
+  // 
+  //     context.restore();
+  //   }
+  // 
+  //   context.save();
+  // 
+  //   var layer = contentView.get('layer');
+  // 
+  //   // First, clip the context to the pane's layer's bounds.
+  //   context.beginPath();
+  //   layer.renderBoundsPath(context);
+  //   context.clip();
+  // 
+  //   // Next, begin the hit testing process. When this completes, hitLayer
+  //   // will contain the layer that was hit with the highest zIndex.
+  //   hitTestSublayer(layer);
+  // 
+  //   context.restore();
+  // 
+  //   // console.log(hitLayer, hitLayer? hitLayer.get('view') : undefined);
+  // 
+  //   // We don't need to test `layer`, because we already know it was hit when
+  //   // this method is called by SC.RootResponder.
+  //   return hitLayer? hitLayer.get('view') : this ;
+  // },
 
   // ..........................................................
   // RENDERING SUPPORT
@@ -227,7 +227,7 @@ SC.View = SC.Surface.extend({
   }.property(),
 
   createSurface: function() {
-    console.log('SC.ViewSurface#createSurface()');
+    // console.log('SC.ViewSurface#createSurface()');
 
     // For now, just do this one time.
     if (this._sc_didCreateSurface) return;
