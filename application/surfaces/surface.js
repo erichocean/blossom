@@ -18,8 +18,8 @@ if (BLOSSOM) {
   3D animation and transitions. Surfaces are responders, and will be 
   forwarded events that occur to them by the application.
 
-  Usually you will not work directly with the `SC.Surface` class, but with one 
-  of its subclasses.  Subclasses of `SC.ContainerSurface` arrange surfaces in 
+  Usually you will not work directly with the `SC.Surface` class, but with one
+  of its subclasses.  Subclasses of `SC.CompositeSurface` arrange surfaces in 
   a hierarchy, allowing their layout to depend on their parent's position and 
   size, rather than the application's viewport.
 
@@ -298,7 +298,7 @@ SC.Surface = SC.Responder.extend({
   isPresentInViewport: false,
 
   _sc_isPresentInViewportDidChange: function() {
-    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
+    console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
 
     // Either (a) we set up our layers, or (b) we schedule them to be 
     // destroyed at the end of the run loop.

@@ -166,7 +166,7 @@ SC.View = SC.Surface.extend({
     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
     SC.Benchmark.start(copyKey);
-    layer.copyIntoContext(ctx);
+    if (layer) layer.copyIntoContext(ctx);
     SC.Benchmark.end(copyKey);
 
     // Draw lines overlay.
@@ -228,7 +228,7 @@ SC.View = SC.Surface.extend({
   }.property(),
 
   createSurface: function() {
-    // console.log('SC.ViewSurface#createSurface()');
+    console.log('SC.ViewSurface#createSurface()');
 
     // For now, just do this one time.
     if (this._sc_didCreateSurface) return;
@@ -339,5 +339,10 @@ SC.View = SC.Surface.extend({
   }.observes('contentView')
 
 });
+
+// HACK: FIXME
+SC.View.views = {};
+SC.LAYOUT_AUTO = 'auto';
+SC._VIEW_DEFAULT_DIMS = 'marginTop marginLeft'.w();
 
 } // BLOSSOM

@@ -107,15 +107,15 @@ var MyLayer = SC.Layer.extend({
 function main() {
   var surface = SC.View.create({
 
-    layerTree: {
-      "defaultTree": "root",
-      "root": {
-        layer: {
-          layerClass: 'MyLayer',
-          layout: { top: 10, right: 10, bottom: 10, left: 10 }
-        }
-      }
-    }
+    // layerTree: {
+    //   "defaultTree": "root",
+    //   "root": {
+    //     layer: {
+    //       layerClass: 'MyLayer',
+    //       layout: { top: 10, right: 10, bottom: 10, left: 10 }
+    //     }
+    //   }
+    // }
 
     // contentView: SC.View.extend({
     //   // layout: { centerX: 0, width: 0.5, centerY: 0, height: 0.5 },

@@ -5,7 +5,7 @@
 // ==========================================================================
 /*globals BLOSSOM sc_assert */
 
-sc_require('surfaces/surface');
+sc_require('surfaces/composite');
 sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
@@ -25,10 +25,10 @@ if (BLOSSOM) {
   You can change the transition to use, or set them to `null` to use no 
   transition at all.
 
-  @extends SC.Surface
+  @extends SC.CompositeSurface
   @since Blossom 1.0
 */
-SC.ContainerSurface = SC.Surface.extend({
+SC.ContainerSurface = SC.CompositeSurface.extend({
 
   /** @property
     The surface displayed by this container.
