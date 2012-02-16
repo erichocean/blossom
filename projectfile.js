@@ -13,6 +13,7 @@ var project = BT.Project.create({
   "static": BT.Directory.create({
     "blossom_test": require('./examples/blossom_test'),
     "quaddemo": require('./examples/quaddemo'),
+    "text_demo": require('./examples/text_demo'),
     "stage_test": require('./examples/stage_test'),
     "bullet_test": require('./examples/bullet_test'),
     "box2d_test": require('./examples/box2d_test'),
