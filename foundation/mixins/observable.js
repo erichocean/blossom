@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*global global */
 
 sc_require('private/observer_set') ;
 
@@ -166,9 +167,9 @@ SC.Observable = {
     @param key {String} the key that is changing
     @returns {Boolean} YES if automatic notification should occur.
   */
-  automaticallyNotifiesObserversFor: function(key) { 
-    return YES;
-  },
+  // automaticallyNotifiesObserversFor: function(key) { 
+  //   return YES;
+  // },
 
   // ..........................................
   // PROPERTIES
@@ -268,12 +269,13 @@ SC.Observable = {
     }}}
     
     @param key {String} the property to set
-    @param value {Object} the value to set or null.
+    @param value {Object} the value to set or undefined.
     @returns {SC.Observable}
   */
   set: function(key, value) {
-    var func   = this[key], 
-        notify = this.automaticallyNotifiesObserversFor(key),
+    var func   = this[key],
+        auto   = this.automaticallyNotifiesObserversFor,
+        notify = auto? this.automaticallyNotifiesObserversFor(key) : true,
         ret    = value, 
         cachedep, cache, idx, dfunc ;
 
@@ -421,7 +423,8 @@ SC.Observable = {
     @returns {SC.Observable}
   */
   propertyDidChange: function(key,value, _keepCache) {
-
+    // if (!SC.isNode) console.log('propertyDidChange', key, value, _keepCache, arguments.length);
+    // debugger;
     this._kvo_revision = (this._kvo_revision || 0) + 1; 
     var level = this._kvo_changeLevel || 0,
         cachedep, idx, dfunc, cache, func,
@@ -1285,6 +1288,7 @@ SC.Observable = {
     @returns {SC.Observable}
   */
   notifyPropertyChange: function(key, value) {
+    // if (!SC.isNode) console.log('notifyPropertyChange', key, value, arguments.length);
     this.propertyWillChange(key) ;
     this.propertyDidChange(key, value) ;
     return this; 

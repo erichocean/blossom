@@ -732,8 +732,7 @@ SC.Surface = SC.Responder.extend({
     this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 50);
     this._sc_layoutDidChange();
 
-    this._sc_needsLayoutDidChange();
-    this._sc_needsDisplayDidChange();
+    this.invokeOnce(this.updateIfNeeded);
   },
 
   /* @private
