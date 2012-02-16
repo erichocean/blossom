@@ -241,11 +241,14 @@ var QuadDemo = c.inherit({
     var x = ev.pageX - this.canvas.offsetLeft;
     var y = ev.pageY - this.canvas.offsetTop;
     if ( this.dbDragging != -1 ) {
+      var benchKey = 'SimplexSolver#full-cycle';
+      SC.Benchmark.start(benchKey);
       this.solver
         .suggestValue(this.db[this.dbDragging].X(),x)
         .suggestValue(this.db[this.dbDragging].Y(),y)
         .resolve();
       // this.draw();
+      SC.Benchmark.end(benchKey);
     }
     return true;
   },

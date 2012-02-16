@@ -335,11 +335,14 @@ c.SimplexSolver = c.inherit({
   },
 
   resolve: function() {
+    var benchKey = 'SimplexSolver#resolve()';
+    SC.Benchmark.start(benchKey);
     if (c.trace) c.fnenterprint("resolve()");
     this.dualOptimize();
     this.setExternalVariables();
     this._infeasibleRows.clear();
     this.resetStayConstants();
+    SC.Benchmark.end(benchKey);
   },
 
   suggestValue: function(v /*ClVariable*/, x /*double*/) {
@@ -370,10 +373,13 @@ c.SimplexSolver = c.inherit({
   },
 
   solve: function() {
+    var benchKey = 'SimplexSolver#solve()';
+    SC.Benchmark.start(benchKey);
     if (this._fNeedsSolving) {
       this.optimize(this._objective);
       this.setExternalVariables();
     }
+    SC.Benchmark.end(benchKey);
     return this;
   },
 

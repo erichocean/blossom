@@ -100,7 +100,7 @@ c.LinearExpression = c.inherit({
       }
       return this.times(1.0 / x);
     } else if (x instanceof c.LinearExpression) {
-      if (!x.isConstant) {
+      if (!x.isConstant()) {
         throw new c.NonlinearExpression();
       }
       return this.times(1.0 / x.constant);
