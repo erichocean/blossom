@@ -148,21 +148,11 @@ SC.Surface = SC.Responder.extend({
   // RENDERING SUPPORT
   //
 
-  _sc_needsDisplay: false,
-  needsDisplay: function(key, value) {
-    if (value !== undefined) {
-      // console.log('SC.Surface@needsDisplay=', SC.guidFor(this), value);
-      this._sc_needsDisplay = value;
-      // if (!value) debugger;
-    } else {
-      // console.log('SC.Surface@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
-      return this._sc_needsDisplay;
-    }
-  }.property(),
+  needsDisplay: false,
 
   /** @private
-    Schedules the updateSurfaceIfNeeded method to run at the end of the 
-    runloop if `needsDisplay` is set to true.
+    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
+    `needsDisplay` is set to true.
   */
   _sc_needsDisplayDidChange: function() {
     // console.log('SC.Surface#_sc_needsDisplayDidChange()', SC.guidFor(this));
@@ -171,21 +161,11 @@ SC.Surface = SC.Responder.extend({
     }
   }.observes('needsDisplay'),
 
-  _sc_needsLayout: false,
-  needsLayout: function(key, value) {
-    // console.log('SC.Surface@needsLayout=', SC.guidFor(this), value);
-    if (value !== undefined) {
-      this._sc_needsLayout = value;
-      // if (!value) debugger;
-    } else {
-      // console.log('SC.Surface@needsLayout', SC.guidFor(this), value);
-      return this._sc_needsLayout;
-    }
-  }.property(),
+  needsLayout: false,
 
   /** @private
-    Schedules the updateSurfaceIfNeeded method to run at the end of the 
-    runloop if `needsDisplay` is set to true.
+    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
+    `needsLayout` is set to true.
   */
   _sc_needsLayoutDidChange: function() {
     // console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
@@ -193,6 +173,19 @@ SC.Surface = SC.Responder.extend({
       this.invokeOnce(this.updateIfNeeded) ;
     }
   }.observes('needsLayout'),
+
+  needsTextLayout: false,
+
+  /** @private
+    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
+    `needsTextLayout` is set to true.
+  */
+  _sc_needsTextLayoutDidChange: function() {
+    // console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
+    if (this.get('needsTextLayout')) {
+      this.invokeOnce(this.updateIfNeeded) ;
+    }
+  }.observes('needsTextLayout'),
 
   /**
     Updates the surface only if the surface is visible, in the viewport, and 

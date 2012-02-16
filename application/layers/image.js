@@ -11,9 +11,7 @@ SC.ImageLayer = SC.Layer.extend({
 
   content: null, // should be an SC.Image object
 
-  widthOrHeightDidChange: SC.K,
-
-  contentDidChange: function() {
+  _sc_contentDidChange: function() {
     var content = this.get('content');
     if (content !== this._sc_content) {
       this._sc_content = content;
@@ -30,7 +28,7 @@ SC.ImageLayer = SC.Layer.extend({
   }.observes('content'),
 
   initElement: function() {
-    this.contentDidChange();
+    this._sc_contentDidChange();
   }
 
 });

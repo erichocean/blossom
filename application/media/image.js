@@ -5,7 +5,11 @@
 // ==========================================================================
 /*globals BLOSSOM */
 
-SC.Image = SC.Object.extend({
+sc_require('media/media');
+
+SC.Image = SC.Media.extend({
+
+  isImage: true, // Walk like a duck.
 
   source: null,
 
