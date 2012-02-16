@@ -45,7 +45,8 @@ BT.Server = BT.Object.extend({
     arguments.callee.base.apply(this, arguments);
     var project = this.get('project'),
         hostname = this.get('hostname'),
-        port = this.get('port');
+        port = this.get('port'),
+        that = this;
 
     this._bt_server = http.createServer(function (req, res) {
       var url = path.normalize(req.url);
@@ -56,7 +57,7 @@ BT.Server = BT.Object.extend({
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(project.get('indexHTML'));
       } else {
-        var ary = url.slice(1).split('/');
+        var ary = url.slice(1).split('/'), proxy;
 
         if (ary.length === 1) {
           // send back the HTML for the app, if it's an app
@@ -66,6 +67,9 @@ BT.Server = BT.Object.extend({
           if (app) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(app.get('indexHTML'));
+          } else if (proxy = project.findProxy(appName)) {
+            proxy.handle(req, res, that);
+            return;
           } else {
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end("You asked to load '"+appName+"' which is not an app in this project.");

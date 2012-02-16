@@ -5,7 +5,8 @@
 // ==========================================================================
 /*globals global require __dirname BT */
 
-var fs = require('fs'),
+var http = require('http'),
+    fs = require('fs'),
     path = require('path'),
     Graph = require('./utils/graph'); // needed for topological sorting
 
@@ -55,7 +56,8 @@ BT.Visitor = BT.Object.extend({
   visitBuildNode:    traverse("BuildNode"),
   visitApp:          traverse("App"),
   visitLocalization: traverse("Localization"),
-  visitFramework:    traverse("Framework")
+  visitFramework:    traverse("Framework"),
+  visitProxy:        traverse("Proxy")
 });
 
 function spaces(depth) {
@@ -80,7 +82,8 @@ BT.LoggingVisitor = BT.Visitor.extend({
   visitBuildNode:    log("build node"),
   visitApp:          log("app"),
   visitLocalization: log("localization"),
-  visitFramework:    log("framework")
+  visitFramework:    log("framework"),
+  visitProxy:        log("proxy")
 });
 
 BT.BuildNode = BT.Object.extend({
@@ -373,6 +376,32 @@ BT.Project = BT.BuildNode.extend({
     return ret;
   },
 
+  /**
+    Returns the app if `str` refers to an app is this project; null otherwise.
+  */
+  findProxy: function(str) {
+    var ret = null, expected = "found-it";
+
+    var visitor = BT.Visitor.create({
+      visitProxy: function(node, name, depth) {
+        if (name === str) {
+          ret = node;
+          throw expected;
+        } else {
+          arguments.callee.base.apply(this, arguments);
+        }
+      }
+    });
+
+    try {
+      this.accept(visitor);
+    } catch (e) {
+      if (e !== expected) throw e;
+    }
+
+    return ret;
+  },
+
   indexHTML: function() {
     var ret = "", project = this.get('project');
 
@@ -516,6 +545,63 @@ BT.Framework = BT.Target.extend({
   isFramework: true,
 
   accept: acceptBuilder('visitFramework')
+
+});
+
+BT.Proxy = BT.BuildNode.extend({
+
+  isProxy: true,
+
+  accept: acceptBuilder('visitProxy'),
+
+  proxyHost: '127.0.0.1',
+
+  proxyPort: 8080,
+
+  proxyPrefix: '/',
+
+  handle: function(request, response, server) {
+    var body = '', that = this;
+
+    // request.addListener('data', function(chunk) {
+    request.on('data', function(chunk) {
+      body += chunk;
+    }).on('end', function() {
+      var proxyClient, proxyRequest,
+          url = request.url;
+
+      url = url.replace(that.get('nodeName'), that.get('proxyPrefix'));
+
+      proxyClient = http.request({
+        port: that.get('proxyPort'), 
+        host: that.get('proxyHost'),
+        path: url,
+        method: 'POST'
+      }, function(proxyResponse) {
+        response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+        proxyResponse.on('data', function(chunk) {
+          response.write(chunk, 'binary');
+        }).on('end', function() {
+          response.end();
+        });
+      });
+
+      proxyClient.on('error', function(err) {
+        console.error('ERROR: "' + err.message + '" for proxy request on ' + that.get('proxyHost') + ':' + that.get('proxyPort'));
+        response.writeHead(404);
+        response.end();
+      });
+
+      request.headers.host = that.get('proxyPort');
+      request.headers['content-length'] = body.length;
+      request.headers['X-Forwarded-Host'] = request.headers.host + ':' + server.get('port');
+      if (that.get('proxyPort') != 80) request.headers.host += ':' + that.get('proxyPort');
+
+      if (body.length > 0) { proxyClient.write(body, 'binary'); }
+
+      proxyClient.end();
+    });
+  }
 
 });
 
