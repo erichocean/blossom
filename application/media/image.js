@@ -5,15 +5,13 @@
 // ==========================================================================
 /*globals BLOSSOM */
 
-sc_require('media/media');
-
-SC.Image = SC.Media.extend({
+SC.Image = SC.Object.extend({
 
   isImage: true, // Walk like a duck.
 
   source: null,
 
-  sourceDidChange: function() {
+  _sc_sourceDidChange: function() {
     var source = this.get('source');
     if (source !== this._sc_source) {
       this._sc_source = source;
@@ -33,8 +31,7 @@ SC.Image = SC.Media.extend({
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
-
-    this.sourceDidChange();
+    this._sc_sourceDidChange();
   }
 
 });
