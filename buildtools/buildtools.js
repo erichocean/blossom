@@ -400,7 +400,7 @@ BT.Project = BT.BuildNode.extend({
       if (e !== expected) throw e;
     }
 
-    console.log(ret);
+    // console.log(ret);
     return ret;
   },
 
