@@ -384,6 +384,7 @@ BT.Project = BT.BuildNode.extend({
 
     var visitor = BT.Visitor.create({
       visitProxy: function(node, name, depth) {
+        // console.log("finding proxy", name);
         if (name === str) {
           ret = node;
           throw expected;
@@ -399,6 +400,7 @@ BT.Project = BT.BuildNode.extend({
       if (e !== expected) throw e;
     }
 
+    console.log(ret);
     return ret;
   },
 
@@ -560,7 +562,7 @@ BT.Proxy = BT.BuildNode.extend({
 
   proxyPrefix: '/',
 
-  handle: function(request, response, serverPort) {
+  handle: function(request, response, prefix, serverPort) {
     var body = '', that = this;
 
     // request.addListener('data', function(chunk) {
@@ -570,7 +572,7 @@ BT.Proxy = BT.BuildNode.extend({
       var proxyClient, proxyRequest,
           url = request.url;
 
-      url = url.replace(that.get('nodeName'), that.get('proxyPrefix'));
+      url = url.replace(prefix, that.get('proxyPrefix'));
 
       proxyClient = http.request({
         port: that.get('proxyPort'), 

@@ -57,7 +57,7 @@ BT.Server = BT.Object.extend({
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(project.get('indexHTML'));
       } else {
-        var ary = url.slice(1).split('/'), proxy;
+        var ary = url.slice(1).split('/'), proxyName, proxy;
 
         if (ary.length === 1) {
           // send back the HTML for the app, if it's an app
@@ -67,15 +67,31 @@ BT.Server = BT.Object.extend({
           if (app) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(app.get('indexHTML'));
-          } else if (proxy = project.findProxy(appName)) {
-            proxy.handle(req, res, that.get('port'));
             return;
-          } else {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end("You asked to load '"+appName+"' which is not an app in this project.");
           }
 
+          // Give the proxy a try.
+          proxyName = ary[0];
+          proxy = project.get(proxyName);
+          if (proxy && proxy.isProxy) {
+            proxy.handle(req, res, '/'+proxyName, that.get('port'));
+            return;
+          }
+
+          res.writeHead(200, {'Content-Type': 'text/plain'});
+          res.end("You asked to load '"+appName+"' which is not an app in this project.");
+
         } else {
+          // Handle proxies first.
+          if (ary.length >= 1) {
+            proxyName = ary[0];
+            proxy = project.get(proxyName);
+            if (proxy && proxy.isProxy) {
+              proxy.handle(req, res, '/'+proxyName, that.get('port'));
+              return;
+            }
+          }
+
           var idx, len, node = project, part;
           for (idx=0, len=ary.length; idx<len; ++idx) {
             part = ary[idx];
