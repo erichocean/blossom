@@ -68,7 +68,7 @@ BT.Server = BT.Object.extend({
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(app.get('indexHTML'));
           } else if (proxy = project.findProxy(appName)) {
-            proxy.handle(req, res, that);
+            proxy.handle(req, res, that.get('port'));
             return;
           } else {
             res.writeHead(200, {'Content-Type': 'text/plain'});

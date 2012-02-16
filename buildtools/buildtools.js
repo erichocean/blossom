@@ -560,7 +560,7 @@ BT.Proxy = BT.BuildNode.extend({
 
   proxyPrefix: '/',
 
-  handle: function(request, response, server) {
+  handle: function(request, response, serverPort) {
     var body = '', that = this;
 
     // request.addListener('data', function(chunk) {
@@ -594,7 +594,7 @@ BT.Proxy = BT.BuildNode.extend({
 
       request.headers.host = that.get('proxyPort');
       request.headers['content-length'] = body.length;
-      request.headers['X-Forwarded-Host'] = request.headers.host + ':' + server.get('port');
+      request.headers['X-Forwarded-Host'] = request.headers.host + ':' + serverPort;
       if (that.get('proxyPort') != 80) request.headers.host += ':' + that.get('proxyPort');
 
       if (body.length > 0) { proxyClient.write(body, 'binary'); }
