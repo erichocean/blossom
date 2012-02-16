@@ -99,7 +99,13 @@ function main() {
         return [];
       }
 
+      var benchKey = 'TextDemo -- layout and draw text';
+      SC.Benchmark.start(benchKey);
+
       align('justify', [350], 3, true);
+
+      SC.Benchmark.end(benchKey);
+
       // align('#center', 'center', [350], 3);
       // align('#left', 'left', [350], 4);
       // align('#flow', 'justify', [350, 350, 350, 200, 200, 200, 200, 200, 200, 200, 350, 350], 3);
