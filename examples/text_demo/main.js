@@ -70,7 +70,7 @@ function main() {
             context.textAlign = 'left';
           }
 
-          y += 21;
+          y += 24;
         });
         return lines;
       }
