@@ -80,7 +80,7 @@ function main() {
 
         if (context) {
           context.textBaseline = 'top';
-          context.font = "14px 'times new roman', 'FreeSerif', serif";
+          context.font = "18px 'times new roman', 'FreeSerif', serif";
 
           format = formatter(function (str) {
             return context.measureText(str).width;
