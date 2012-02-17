@@ -291,6 +291,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
   }.observes('surfaces'),
 
+  // .......................................................
+  // DISPLAY PROPERTIES
+  //
+
   /** @property
     The 3D persective property for the app's UI. You can override this on 
     individual surfaces if you want; otherwise, the surface will exist in 
@@ -467,8 +471,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     The most-recently computed viewport size.  Calling `computeViewportSize` 
-    updates this value, and `SC.Application` will also update this value 
-    whenever a viewport change is detected.
+    updates this value, and `SC.app` will also update this value whenever a 
+    viewport change is detected.
 
     @type SC.Size
     @isReadOnly
@@ -573,7 +577,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Boolean} true if action was performed, false otherwise
     @test in targetForAction
   */
-  sendAction: function( action, target, sender, pane, context) {
+  sendAction: function(action, target, sender, pane, context) {
     target = this.targetForAction(action, target, sender, pane) ;
 
     // HACK: If the target is a ResponderContext, forward the action.
@@ -622,10 +626,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @param {Object|String} target or null if no target is specified
     @param {String} method name for target
     @param {Object} sender optional sender
-    @param {SC.Pane} optional pane
+    @param {SC.Surface} optional surface
     @returns {Object} target object or null if none found
   */
-  targetForAction: function(methodName, target, sender, pane) {
+  targetForAction: function(methodName, target, sender, surface) {
 
     // 1. no action, no target...
     if (!methodName || typeof methodName !== "string") {
@@ -650,19 +654,24 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       return target ;
     }
 
-    // 3. an explicit pane was passed...
-    if (pane) return this._sc_responderFor(pane, methodName);
+    // 3. an explicit surface was passed...
+    if (surface) return this._sc_responderFor(surface, methodName);
 
-    // 4. no target or pane passed... try to find target in the active panes
-    // and the defaultResponder
-    var keyPane = this.get('keyPane'), mainPane = this.get('mainPane') ;
+    // 4. no target or surface passed... try to find target in the active 
+    // surfaces and the defaultResponder
+    var menuSurface = this.get('menuSurface'),
+        inputSurface = this.get('inputSurface'),
+        ui = this.get('ui') ;
 
-    // ...check key and main panes first
-    if (keyPane) {
-      target = this._sc_responderFor(keyPane, methodName);
+    // ...check menu, input and ui surfaces first
+    if (menuSurface) {
+      target = this._sc_responderFor(menuSurface, methodName);
     }
-    if (!target && mainPane && (mainPane !== keyPane)) {
-      target = this._sc_responderFor(mainPane, methodName);
+    if (!target && inputSurface && inputSurface !== menuSurface) {
+      target = this._sc_responderFor(inputSurface, methodName);
+    }
+    if (!target && ui && (ui !== menuSurface || ui !== inputSurface)) {
+      target = this._sc_responderFor(menuSurface, methodName);
     }
 
     // ...still no target? check the defaultResponder...
