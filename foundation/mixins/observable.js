@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*global global */
+/*global global sc_assert */
 
 sc_require('private/observer_set') ;
 
@@ -911,8 +911,7 @@ SC.Observable = {
   // this private method actually notifies the observers for any keys in the
   // observer queue.  If you pass a key it will be added to the queue.
   _notifyPropertyObservers: function(key) {
-
-    if (!this._observableInited) this.initObservable() ;
+    sc_assert(this._observableInited, "You must call this.initObservable() first in your init() method.");
     
     SC.Observers.flush(this) ; // hookup as many observers as possible.
 
