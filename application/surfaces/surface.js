@@ -242,17 +242,17 @@ SC.Surface = SC.Responder.extend({
     // SC.Benchmark.end(benchKey);
   },
 
-  updateAnimationIfNeeded: function(timestamp) {
-    // console.log('SC.Surface#updateAnimationIfNeeded()');
+  performLayoutAndRenderingIfNeeded: function(timestamp) {
+    // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
     var needsLayout = this.get('needsLayout'),
         needsDisplay = this.get('needsDisplay'),
         isVisible = this.get('isVisible');
 
     // debugger;
 
-    var benchKey = 'SC.Surface#updateAnimationIfNeeded()',
-        layoutKey = 'SC.Surface#updateAnimationIfNeeded(): needsLayout',
-        displayKey = 'SC.Surface#updateAnimationIfNeeded(): needsDisplay';
+    var benchKey = 'SC.Surface#performLayoutAndRenderingIfNeeded()',
+        layoutKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsLayout',
+        displayKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDisplay';
 
     SC.Benchmark.start(benchKey);
 

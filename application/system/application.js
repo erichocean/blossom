@@ -127,7 +127,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   // .......................................................
-  // ANIMATION LOOP
+  // LAYOUT AND RENDERING
   //
 
   _sc_didRequestLayoutAndRendering: false,
@@ -151,8 +151,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.isAnimating = true;
     this._sc_didRequestLayoutAndRendering = false;
 
-    this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
-    this.get('ui').updateAnimationIfNeeded(timestamp);
+    this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
+    this.get('ui').performLayoutAndRenderingIfNeeded(timestamp);
 
     SC.isAnimating = false;
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
