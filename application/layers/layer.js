@@ -12,24 +12,6 @@ sc_require('ext/float32');
 
 if (BLOSSOM) {
 
-var base03 =   "#002b36";
-var base02 =   "#073642";
-var base01 =   "#586e75";
-var base00 =   "#657b83";
-var base0 =    "#839496";
-var base1 =    "#93a1a1";
-var base2 =    "#eee8d5";
-var base3 =    "#fdf6e3";
-var yellow =   "#b58900";
-var orange =   "#cb4b16";
-var red =      "#dc322f";
-var magenta =  "#d33682";
-var violet =   "#6c71c4";
-var blue =     "#268bd2";
-var cyan =     "#2aa198";
-var green =    "#859900";
-var white =    "white";
-
 SC.Layer = SC.Object.extend({
 
   isLayer: true, // Walk like a duck.
@@ -448,6 +430,10 @@ SC.Layer = SC.Object.extend({
     throw "No implementation for SC.Layer#get/set('visibleRect', value)";
   }.property(),
 
+  // ..........................................................
+  // LAYER TREE SUPPORT
+  //
+
   /**
     Specifies receiver's superlayer.
 
@@ -483,6 +469,33 @@ SC.Layer = SC.Object.extend({
     @property Array
   */
   sublayers: null,
+
+  // When the sublayers property changes, we need to observe it's members
+  // for changes.
+  _sc_sublayersDidChange: function() {
+    // console.log("SC.Layer#_sc_sublayersDidChange()");
+    var cur  = this.get('sublayers'),
+        last = this._sc_sublayers,
+        func = this._sc_sublayersMembersDidChange;
+        
+    if (last === cur) return this; // nothing to do
+
+    // teardown old observer
+    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
+    
+    // save new cached values 
+    this._sc_sublayers = cur ;
+    
+    // setup new observers
+    if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
+
+    // process the changes
+    this._sc_sublayersMembersDidChange();
+  }.observes('sublayers'),
+
+  _sc_sublayersMembersDidChange: function() {
+    // console.log("SC.Layer#_sc_sublayersMembersDidChange()");
+  },
 
   /**
     Will this layer only be used for canvas hit-testing? Defaults to false.
@@ -584,33 +597,6 @@ SC.Layer = SC.Object.extend({
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
     // console.log('SC.Layer#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     this.notifyPropertyChange(key, this['_sc_'+key]);
-  },
-
-  // When the sublayers property changes, we need to observe it's members
-  // for changes.
-  _sc_sublayersDidChange: function() {
-    // console.log("SC.Layer#_sc_sublayersDidChange()");
-    var cur  = this.get('sublayers'),
-        last = this._sc_sublayers,
-        func = this._sc_sublayersMembersDidChange;
-        
-    if (last === cur) return this; // nothing to do
-
-    // teardown old observer
-    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
-    
-    // save new cached values 
-    this._sc_sublayers = cur ;
-    
-    // setup new observers
-    if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
-
-    // process the changes
-    this._sc_sublayersMembersDidChange();
-  }.observes('sublayers'),
-
-  _sc_sublayersMembersDidChange: function() {
-    // console.log("SC.Layer#_sc_sublayersMembersDidChange()");
   },
 
   /* @private */

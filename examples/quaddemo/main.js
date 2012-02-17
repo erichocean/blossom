@@ -7,10 +7,10 @@
 
 sc_require('quaddemo');
 
-var base03 =   "#002b36";
+var base3 =    "#fdf6e3";
 
 function main() {
-  SC.Application.create();
+  SC.Application.create(); // Assigns itself automatically to SC.app
 
   var sz = SC.app.computeViewportSize();
 
@@ -44,6 +44,8 @@ function main() {
     }
 
   });
+
   SC.app.set('ui', surface);
+
   qd.canvas = surface.get('layer').__sc_element__; // HACK
 }

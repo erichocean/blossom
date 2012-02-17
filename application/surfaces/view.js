@@ -5,7 +5,7 @@
 // ==========================================================================
 /*globals BLOSSOM sc_assert */
 
-sc_require('surfaces/surface');
+sc_require('surfaces/leaf');
 sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
@@ -35,7 +35,7 @@ var white =    "white";
   @extends SC.Surface
   @since Blossom 1.0
 */
-SC.View = SC.Surface.extend({
+SC.View = SC.LeafSurface.extend({
 
   // bounds: function() {
   //   // FIXME!

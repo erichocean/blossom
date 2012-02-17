@@ -145,47 +145,50 @@ SC.Surface = SC.Responder.extend({
   }.observes('isVisible'),
 
   // ..........................................................
+  // SURFACE TREE SUPPORT
+  //
+
+  /**
+    Specifies receiver's supersurface.
+
+    @property SC.Surface
+    @readOnly
+  */
+  supersurface: function(key, value) {
+    if (value !== undefined) {
+      sc_assert(value === null || value.kindOf(SC.Surface), "SC.Surface@supersurface must either be null or an SC.Surface instance.");
+      sc_assert(value? value.get('subsurfaces').contains(this) : true, "The supersurface must already contain this surface in its subsurfaces array.");
+      this._sc_supersurface = value;
+    } else return this._sc_supersurface;
+  }.property(),
+
+  /**
+    An array containing the receiver's subsurfaces.
+
+    The subsurfaces are listed in back to front order. Defaults to null.
+
+    @property Array
+  */
+  subsurfaces: null,
+
+  // ..........................................................
   // RENDERING SUPPORT
   //
 
+  needsLayout: false,
+  needsTextLayout: false,
+  needsContraintSolver: false,
   needsDisplay: false,
 
   /** @private
-    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
-    `needsDisplay` is set to true.
+    Schedules the `updateIfNeeded` method to run at the end of the runloop 
+    whenever `needsDisplay`, `needsLayout`, or `needsTextLayout` are set to 
+    true.
   */
-  _sc_needsDisplayDidChange: function() {
-    // console.log('SC.Surface#_sc_needsDisplayDidChange()', SC.guidFor(this));
-    if (this.get('needsDisplay')) {
-      this.invokeOnce(this.updateIfNeeded) ;
-    }
-  }.observes('needsDisplay'),
-
-  needsLayout: false,
-
-  /** @private
-    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
-    `needsLayout` is set to true.
-  */
-  _sc_needsLayoutDidChange: function() {
-    // console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
-    if (this.get('needsLayout')) {
-      this.invokeOnce(this.updateIfNeeded) ;
-    }
-  }.observes('needsLayout'),
-
-  needsTextLayout: false,
-
-  /** @private
-    Schedules the `updateIfNeeded` method to run at the end of the runloop if 
-    `needsTextLayout` is set to true.
-  */
-  _sc_needsTextLayoutDidChange: function() {
-    // console.log('SC.Surface#_sc_needsLayoutDidChange()', SC.guidFor(this));
-    if (this.get('needsTextLayout')) {
-      this.invokeOnce(this.updateIfNeeded) ;
-    }
-  }.observes('needsTextLayout'),
+  _sc_updateIfNeededObserver: function(observer, key) {
+    // console.log('SC.Surface#_sc_updateIfNeededObserver()', SC.guidFor(this), key);
+    if (this.get(key)) this.invokeOnce(this.updateIfNeeded);
+  }.observes('needsLayout', 'needsTextLayout', 'needsConstraintSolver', 'needsDisplay'),
 
   /**
     Updates the surface only if the surface is visible, in the viewport, and 
