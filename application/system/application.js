@@ -130,28 +130,32 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // ANIMATION LOOP
   //
 
-  _sc_didRequestAnimationLoop: false,
-  requestAnimationLoop: function() {
-    // console.log('SC.Application#requestAnimationLoop()');
-    if (!this._sc_didRequestAnimationLoop) {
-      this._sc_didRequestAnimationLoop = true;
+  _sc_didRequestLayoutAndRendering: false,
+  requestLayoutAndRendering: function() {
+    // console.log('SC.Application#requestLayoutAndRendering()');
+    if (!this._sc_didRequestLayoutAndRendering) {
+      this._sc_didRequestLayoutAndRendering = true;
       SC.RequestAnimationFrame(function(timestamp) {
         // console.log('SC.RequestAnimationFrame() - callback');
-        SC.app._sc_runAnimationLoop(timestamp);
+        SC.app._sc_performLayoutAndRendering(timestamp);
       });
     }
   },
 
-  _sc_runAnimationLoop: function(timestamp) {
-    // console.log('SC.Application#_sc_runAnimationLoop()');
-    sc_assert(SC.app === this, "SC.Application#_sc_runAnimationLoop() called with this != SC.app.");
-    sc_assert(this._sc_didRequestAnimationLoop, "SC.Application#_sc_runAnimationLoop() called when an animation loop was not requested.");
-    this._sc_didRequestAnimationLoop = false;
+  _sc_performLayoutAndRendering: function(timestamp) {
+    // console.log('SC.Application#_sc_performLayoutAndRendering()');
+    sc_assert(SC.app === this, "SC.Application#_sc_performLayoutAndRendering() called with this != SC.app.");
+    sc_assert(this._sc_didRequestLayoutAndRendering, "SC.Application#_sc_performLayoutAndRendering() called when layout and rendering was not requested.");
+    sc_assert(!SC.isAnimating, "SC.Application#_sc_performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
+
     SC.isAnimating = true;
+    this._sc_didRequestLayoutAndRendering = false;
+
     this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
     this.get('ui').updateAnimationIfNeeded(timestamp);
+
     SC.isAnimating = false;
-    sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during an animation loop.");
+    sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
   },
 
   // .......................................................

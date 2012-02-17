@@ -206,7 +206,7 @@ SC.Surface = SC.Responder.extend({
   */
   updateIfNeeded: function(ignoreVisibility) {
     // console.log('SC.Surface#updateIfNeeded()');
-    SC.app.requestAnimationLoop();
+    SC.app.requestLayoutAndRendering();
 
     // var needsLayout = this.get('needsLayout'),
     //     needsDisplay = this.get('needsDisplay');
