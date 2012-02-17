@@ -856,7 +856,7 @@ SC.Reducers = /** @lends SC.Enumerable */ {
     @returns {Object} the reduced property or undefined
   */
   reducedProperty: function(key, value, generateProperty) {
-     
+    
     if (!key || key.charAt(0) !== '@') return undefined ; // not a reduced property
     
     // get the reducer key and the reducer

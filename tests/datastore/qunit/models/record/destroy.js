@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -23,7 +23,7 @@ suite("SC.Record#destroy", {
     
     MyApp.foo = MyApp.store.createRecord(MyApp.Foo, MyApp.json);
     
-    // modify store so that everytime refreshRecords() is called it updates 
+    // modify store so that every time refreshRecords() is called it updates 
     // callInfo
     callInfo = null ;
     MyApp.store.__orig = MyApp.store.destroyRecord;

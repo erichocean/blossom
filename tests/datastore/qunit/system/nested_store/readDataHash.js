@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -150,7 +150,7 @@ test("data state=EDITABLE", function() {
 });
 
 test("should return null when accessing an unknown storeKey", function() {
-  equals(store.readDataHash(20000000), null, 'shuld return null for non-existant store key');
+  equals(store.readDataHash(20000000), null, 'should return null for non-existent store key');
   equals(store.storeKeyEditState(20000000), SC.Store.LOCKED, 'should put into locked edit state');
 });
 

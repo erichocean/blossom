@@ -1,5 +1,5 @@
 /**
- * Complex Nested Records (SC.ChildRecord) Unit Test
+ * Complex Nested Records (SC.Record) Unit Test
  *
  * @author Evin Grano
  */
@@ -10,15 +10,15 @@
 var NestedRecord, store, testParent; 
 
 var initModels = function(){
-  NestedRecord.Address = SC.ChildRecord.extend({
+  NestedRecord.Address = SC.Record.extend({
     street: SC.Record.attr(String),
     city: SC.Record.attr(String),
     state: SC.Record.attr(String, {defaultValue: 'VA'})
   });
   
-  NestedRecord.Person = SC.ChildRecord.extend({
+  NestedRecord.Person = SC.Record.extend({
     /** Child Record Namespace */
-    childRecordNamespace: NestedRecord,
+    nestedRecordNamespace: NestedRecord,
     
     name: SC.Record.attr(String),
     address: SC.Record.toOne('NestedRecord.Address', { nested: true })
@@ -26,7 +26,7 @@ var initModels = function(){
   
   NestedRecord.ParentRecordTest = SC.Record.extend({
     /** Child Record Namespace */
-    childRecordNamespace: NestedRecord,
+    nestedRecordNamespace: NestedRecord,
 
     name: SC.Record.attr(String),
     person: SC.Record.toOne('NestedRecord.Person', { nested: true })
@@ -42,6 +42,7 @@ suite("Basic SC.Record Functions w/ a Parent > Child > Child", {
     NestedRecord = SC.Object.create({
       store: SC.Store.create()
     });
+    window.NestedRecord = NestedRecord;
     store = NestedRecord.store;
     initModels();
     SC.RunLoop.begin();
@@ -65,6 +66,7 @@ suite("Basic SC.Record Functions w/ a Parent > Child > Child", {
     delete NestedRecord.ParentRecordTest;
     delete NestedRecord.Person;
     delete NestedRecord.Address;
+    //delete window.NestedRecord;
     NestedRecord = null;
     testParent = null;
     store = null;
@@ -209,7 +211,7 @@ function() {
   // Test Child Record creation
   var p = testParent.get('person');
   // Check Model Class information
-  ok(SC.kindOf(p, SC.ChildRecord), "(parent > child).get() creates an actual instance that is a kind of a SC.ChildRecord Object");
+  ok(SC.kindOf(p, SC.Record), "(parent > child).get() creates an actual instance that is a kind of a SC.Record Object");
   ok(SC.instanceOf(p, NestedRecord.Person), "(parent > child).get() creates an actual instance of a Person Object");
   
   // Check reference information
@@ -222,7 +224,7 @@ function() {
   
   var a = testParent.getPath('person.address');
   // Check Model Class information
-  ok(SC.kindOf(a, SC.ChildRecord), "(parent > child > child) w/ getPath() creates an actual instance that is a kind of a SC.ChildRecord Object");
+  ok(SC.kindOf(a, SC.Record), "(parent > child > child) w/ getPath() creates an actual instance that is a kind of a SC.Record Object");
   ok(SC.instanceOf(a, NestedRecord.Address), "(parent > child > child) w/ getPath() creates an actual instance of an Address Object");
   
   // Check reference information
@@ -257,7 +259,7 @@ function() {
   });
   p = testParent.get('person');
   // Check Model Class information
-  ok(SC.kindOf(p, SC.ChildRecord), "set() with an object creates an actual instance that is a kind of a SC.ChildRecord Object");
+  ok(SC.kindOf(p, SC.Record), "set() with an object creates an actual instance that is a kind of a SC.Record Object");
   ok(SC.instanceOf(p, NestedRecord.Person), "set() with an object creates an actual instance of a ChildRecordTest Object");
   
   // Check reference information
@@ -276,14 +278,14 @@ function() {
   ok(testParent.get('status') & SC.Record.DIRTY, 'check that the parent record is dirty');
   oldP = p;
   p = testParent.get('person');
-  same(p, oldP, "after a set('name', <new>) on child, checking to see that the parent has recieved the changes from the child record");
+  same(p, oldP, "after a set('name', <new>) on child, checking to see that the parent has received the changes from the child record");
   same(testParent.readAttribute('person'), p.get('attributes'), "after a set('name', <new>) on child, readAttribute on the parent should be correct for info child attributes");
   
   // Check changes on the address
   a = testParent.getPath('person.address');
   a.set('street', '321 Nutty Professor Lane');
   parentAttrs = testParent.readAttribute('person');
-  same(a.get('attributes'), parentAttrs.address, "after a set('street', <new>) on address child, checking to see that the parent has recieved the changes from the child record");
+  same(a.get('attributes'), parentAttrs.address, "after a set('street', <new>) on address child, checking to see that the parent has received the changes from the child record");
 });
 
 test("Basic normalize()", function() {

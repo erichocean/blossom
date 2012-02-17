@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -57,5 +57,21 @@ test("Issue a pushError and check if there is conflicts", function() {
   equals(res, storeKey3, "There is no conflict, pushError was succesful.");
   res = store.pushRetrieve(SC.Record, undefined, undefined, storeKey6);
   ok(!res, "There is a conflict, because of the state, this is expected.");
+});
+
+test("A pushRetrieve updating the id of an existing record should update the primary Key cache", function(){
+  var tmpid, recFirst, recSecond, sK;
+  
+  tmpid = "@2345235asddsgfd";
+  recFirst = { firstname: 'me', lastname: 'too', guid: tmpid };
+  recSecond = { firstname: 'me', lastname: 'too', guid: 1 };
+  SC.RunLoop.begin();
+  var sK = store.loadRecord(SC.Record, recFirst, tmpid);
+  SC.RunLoop.end();
+  equals(store.idFor(sK),tmpid); //check whether the id is indeed tmpid
+  SC.RunLoop.begin();
+  store.pushRetrieve(SC.Record,1,recSecond,sK);
+  SC.RunLoop.end();
+  equals(store.idFor(sK),1); // id should now have been updated
 });
 

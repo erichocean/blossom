@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -9,6 +9,8 @@
 var rec, q;
 suite("SC.Query comparison of record types", {
   setup: function() {
+    SC.RunLoop.begin();
+
     // setup dummy app and store
     window.MyApp = SC.Object.create({
       store: SC.Store.create()
@@ -25,6 +27,8 @@ suite("SC.Query comparison of record types", {
     rec = window.MyApp.store.find(window.MyApp.Foo,1);
     
     q = SC.Query.create();
+
+    SC.RunLoop.end();
   }
 });
 

@@ -1,7 +1,7 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
-//            Portions ©2008-2010 Apple Inc. All rights reserved.
+//            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
@@ -39,10 +39,10 @@ SC.FixturesDataSource = SC.DataSource.extend(
     here.  You should tune this to simulate latency based on the expected 
     performance of your server network.  Here are some good guidelines:
     
-    - 500: Simulates a basic server written in PHP, Ruby, or Python (not twisted) without a CDN in front for caching.
-    - 250: (Default) simulates the average latency needed to go back to your origin server from anywhere in the world.  assumes your servers itself will respond to requests < 50 msec
-    - 100: simulates the latency to a "nearby" server (i.e. same part of the world).  Suitable for simulating locally hosted servers or servers with multiple data centers around the world.
-    - 50: simulates the latency to an edge cache node when using a CDN.  Life is really good if you can afford this kind of setup.
+     - 500: Simulates a basic server written in PHP, Ruby, or Python (not twisted) without a CDN in front for caching.
+     - 250: (Default) simulates the average latency needed to go back to your origin server from anywhere in the world.  assumes your servers itself will respond to requests < 50 msec
+     - 100: simulates the latency to a "nearby" server (i.e. same part of the world).  Suitable for simulating locally hosted servers or servers with multiple data centers around the world.
+     - 50: simulates the latency to an edge cache node when using a CDN.  Life is really good if you can afford this kind of setup.
     
     @property {Number}
   */
@@ -236,7 +236,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
     @param {SC.Store} store the store to load into
     @param {SC.Record} recordType the record type to load
     @param {SC.Array} ret is passed, array to add loaded storeKeys to.
-    @returns {SC.Fixture} receiver
+    @returns {SC.FixturesDataSource} receiver
   */
   loadFixturesFor: function(store, recordType, ret) {
     var hashes   = [],
@@ -344,7 +344,17 @@ SC.FixturesDataSource = SC.DataSource.extend(
     var ret = [], fixtures = this._fixtures[SC.guidFor(recordType)];
     return fixtures ? YES: NO;
   },
-  
+
+  /**
+    Resets the fixtures to their original values.
+
+    @returns {SC.FixturesDataSource} receiver
+  */
+  reset: function(){
+    this._fixtures = null;
+    return this;
+  },
+
   /**
     Returns YES or SC.MIXED_STATE if one or more of the storeKeys can be 
     handled by the fixture data source.

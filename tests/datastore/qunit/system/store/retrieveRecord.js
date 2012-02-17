@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -181,4 +181,20 @@ test("Retrieve a record with working data source and check for different errors 
 
   testStates(YES);
 
+});
+
+test("Retrieve a record with callback", function() {
+  // build a fake data source that claims to handle retrieval
+  var source = SC.DataSource.create({
+    retrieveRecords: function() { return YES ; }
+  });
+  store.set('dataSource', source);
+  var callback = NO;
+  store.retrieveRecord(undefined, undefined, storeKey1, YES, function(){callback = YES;});
+  
+  ok(store._callback_queue[storeKey1], "The callback exists in the queue");
+  
+  store.dataSourceDidComplete(storeKey1);
+  
+  ok(callback, "Callback did fire");
 });

@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -10,7 +10,9 @@ var json1, json2, json3, json4, json5, json6;
 
 suite("SC.Store#destroyRecord", {
   setup: function() {
-    
+
+    SC.RunLoop.begin();
+
     store = SC.Store.create();
     
     json1 = {
@@ -62,6 +64,8 @@ suite("SC.Store#destroyRecord", {
     store.writeDataHash(storeKey5, json5, SC.Record.READY_NEW);
     storeKey6 = SC.Store.generateStoreKey();
     store.writeDataHash(storeKey6, json6, SC.Record.READY_CLEAN);
+
+    SC.RunLoop.end();
   }
 });
 

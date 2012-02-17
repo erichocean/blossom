@@ -1,7 +1,7 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
-//            Portions ©2008-2010 Apple Inc. All rights reserved.
+//            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
@@ -11,13 +11,13 @@ sc_require('system/store');
   @class
 
   A nested store can buffer changes to a parent store and then commit them
-  all at once.  You usually will use a NestedStore as part of store chaining
+  all at once.  You usually will use a `NestedStore` as part of store chaining
   to stage changes to your object graph before sharing them with the rest of
   the application.
   
   Normally you will not create a nested store directly.  Instead, you can 
-  retrieve a nested store by using the chain() method.  When you are finished
-  working with the nested store, destroy() will dispose of it.
+  retrieve a nested store by using the `chain()` method.  When you are finished
+  working with the nested store, `destroy()` will dispose of it.
   
   @extends SC.Store
   @since SproutCore 1.0
@@ -29,7 +29,7 @@ SC.NestedStore = SC.Store.extend(
     This is set to YES when there are changes that have not been committed 
     yet.
 
-    @property {Boolean}
+    @type Boolean
     @default NO
   */
   hasChanges: NO,
@@ -37,17 +37,19 @@ SC.NestedStore = SC.Store.extend(
   /**
     The parent store this nested store is chained to.  Nested stores must have
     a parent store in order to function properly.  Normally, you create a 
-    nested store using the SC.Store#chain() method and this property will be
+    nested store using the `SC.Store#chain()` method and this property will be
     set for you.
     
-    @property {SC.Store}
+    @type SC.Store
+    @default null
   */
   parentStore: null,
 
   /**
-    YES if the view is nested. Walk like a duck
+    `YES` if the view is nested. Walk like a duck
     
-    @property {Boolean}
+    @type Boolean
+    @default YES
   */
   isNested: YES,
 
@@ -57,7 +59,7 @@ SC.NestedStore = SC.Store.extend(
     then change the record in the parent store, the changes will not be 
     visible to your nested store until you commit or discard changes.
     
-    If NO, then the attribute hash will lock only when you write data.
+    If `NO`, then the attribute hash will lock only when you write data.
     
     Normally you want to lock your attribute hash the first time you read it.
     This will make your nested store behave most consistently.  However, if
@@ -67,14 +69,15 @@ SC.NestedStore = SC.Store.extend(
     ensuring that the sibling stores do not edit the same part of the object
     graph at the same time.
     
-    @property {Boolean} 
+    @type Boolean
+    @default YES
   */
   lockOnRead: YES,
 
   /** @private
     Array contains the base revision for an attribute hash when it was first
     cloned from the parent store.  If the attribute hash is edited and 
-    commited, the commit will fail if the parent attributes hash has been 
+    committed, the commit will fail if the parent attributes hash has been 
     edited since.
     
     This is a form of optimistic locking, hence the name.
@@ -85,7 +88,8 @@ SC.NestedStore = SC.Store.extend(
     Note that this is kept as an array because it will be stored as a dense 
     array on some browsers, making it faster.
     
-    @property {Array}
+    @type Array
+    @default null
   */
   locks: null,
 
@@ -95,7 +99,8 @@ SC.NestedStore = SC.Store.extend(
     chained stores.  For a log changes that may actually be committed back to
     the server see the changelog property.
     
-    @property {SC.Set}
+    @type SC.Set
+    @default YES
   */
   chainedChanges: null,
     
@@ -104,10 +109,11 @@ SC.NestedStore = SC.Store.extend(
   // 
   
   /**
-    find() cannot accept REMOTE queries in a nested store.  This override will
-    verify that condition for you.  See SC.Store#find() for info on using this
+    `find()` cannot accept REMOTE queries in a nested store.  This override will
+    verify that condition for you.  See `SC.Store#find()` for info on using this
     method.
     
+    @param {SC.Query} query query object to use.
     @returns {SC.Record|SC.RecordArray}
   */
   find: function(query) {
@@ -181,11 +187,9 @@ SC.NestedStore = SC.Store.extend(
 
   /**
     Resets a store's data hash contents to match its parent.
-    
-    @returns {SC.Store} receiver
   */
   reset: function() {
-
+    var nRecords, nr, sk;
     // requires a pstore to reset
     var parentStore = this.get('parentStore');
     if (!parentStore) throw SC.Store.NO_PARENT_STORE_ERROR;
@@ -194,6 +198,10 @@ SC.NestedStore = SC.Store.extend(
     this.dataHashes = SC.beget(parentStore.dataHashes);
     this.revisions  = SC.beget(parentStore.revisions);
     this.statuses   = SC.beget(parentStore.statuses);
+    
+    // beget nested records references
+    this.childRecords = parentStore.childRecords ? SC.beget(parentStore.childRecords) : {};
+    this.parentRecords = parentStore.parentRecords ? SC.beget(parentStore.parentRecords) : {};
     
     // also, reset private temporary objects
     this.chainedChanges = this.locks = this.editables = null;
@@ -215,7 +223,7 @@ SC.NestedStore = SC.Store.extend(
   },
 
   /**
-    Returns the SC.Error object associated with a specific record.
+    Returns the `SC.Error` object associated with a specific record.
 
     Delegates the call to the parent store.
 
@@ -229,7 +237,7 @@ SC.NestedStore = SC.Store.extend(
   },
 
   /**
-    Returns the SC.Error object associated with a specific query.
+    Returns the `SC.Error` object associated with a specific query.
 
     Delegates the call to the parent store.
 
@@ -250,8 +258,8 @@ SC.NestedStore = SC.Store.extend(
   // to use these methods.
   
   /**
-    Returns the current edit status of a storekey.  May be one of INHERITED,
-    EDITABLE, and LOCKED.  Used mostly for unit testing.
+    Returns the current edit status of a storekey.  May be one of `INHERITED`,
+    `EDITABLE`, and `LOCKED`.  Used mostly for unit testing.
     
     @param {Number} storeKey the store key
     @returns {Number} edit status
@@ -266,7 +274,8 @@ SC.NestedStore = SC.Store.extend(
     store.
   */
   _lock: function(storeKey) {
-    var locks = this.locks, rev, editables;
+    var locks = this.locks, rev, editables, 
+        pk, pr, path, tup, obj, key;
     
     // already locked -- nothing to do
     if (locks && locks[storeKey]) return this;
@@ -288,11 +297,28 @@ SC.NestedStore = SC.Store.extend(
     }
     
     if (pstore && editState === SC.Store.EDITABLE) {
-      this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], YES);
+      
+      pk = this.childRecords[storeKey];
+      if (pk){
+        // Since this is a nested record we have to actually walk up the parent chain
+        // to get to the root parent and clone that hash. And then reconstruct the 
+        // memory space linking.
+        this._lock(pk);
+        pr = this.parentRecords[pk];
+        if (pr) {
+          path = pr[storeKey];
+          tup = path ? SC.tupleForPropertyPath(path, this.dataHashes[pk]) : null;
+          if (tup){ obj = tup[0]; key = tup[1]; }
+          this.dataHashes[storeKey] = obj && key ? obj[key] : null;
+        }
+      }
+      else {
+        this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], YES);
+      }
       if (!editables) editables = this.editables = [];
       editables[storeKey] = 1 ; // mark as editable
       
-    } else this.dataHashes[storeKey] = this.dataHashes[storeKey];
+    } else this.dataHashes[storeKey] = pstore.dataHashes[storeKey];
     
     // also copy the status + revision
     this.statuses[storeKey] = this.statuses[storeKey];
@@ -373,11 +399,10 @@ SC.NestedStore = SC.Store.extend(
     return arguments.callee.base.apply(this, arguments);
   },
   
-  /** @private - book-keeping for a single data hash. */
+  /** @private - bookkeeping for a single data hash. */
   dataHashDidChange: function(storeKeys, rev, statusOnly, key) {
-    
     // update the revision for storeKey.  Use generateStoreKey() because that
-    // gaurantees a universally (to this store hierarchy anyway) unique 
+    // guarantees a universally (to this store hierarchy anyway) unique 
     // key value.
     if (!rev) rev = SC.Store.generateStoreKey();
     var isArray, len, idx, storeKey;

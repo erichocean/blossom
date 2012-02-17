@@ -1,7 +1,7 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
-//            Portions ©2008-2010 Apple Inc. All rights reserved.
+//            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
@@ -10,19 +10,17 @@ sc_require('models/record_attribute');
 
 /** @class
   
-  SingleAttribute is a subclass of RecordAttribute and handles to-one
+  `SingleAttribute` is a subclass of `RecordAttribute` and handles to-one
   relationships.
 
-  There are many ways you can configure a SingleAttribute:
+  There are many ways you can configure a `SingleAttribute`:
   
-  {{{
-    group: SC.Record.toOne('MyApp.Group', { 
-      inverse: 'contacts', // set the key used to represent the inverse 
-      isMaster: YES|NO, // indicate whether changing this should dirty
-      transform: function(), // transforms value <=> storeKey,
-      isEditable: YES|NO, make editable or not
-    });
-  }}}
+      group: SC.Record.toOne('MyApp.Group', { 
+        inverse: 'contacts', // set the key used to represent the inverse 
+        isMaster: YES|NO, // indicate whether changing this should dirty
+        transform: function(), // transforms value <=> storeKey,
+        isEditable: YES|NO, make editable or not
+      });
   
   @extends SC.RecordAttribute
   @since SproutCore 1.0
@@ -35,7 +33,8 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
     of the current relationship.  If set, then modifying this relationship
     will also alter the opposite side of the relationship.
     
-    @property {String}
+    @type String
+    @default null
   */
   inverse: null,
   
@@ -43,7 +42,8 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
     If set, determines that when an inverse relationship changes whether this
     record should become dirty also or not.
     
-    @property {Boolean}
+    @type Boolean
+    @default YES
   */
   isMaster: YES,
   
@@ -101,11 +101,10 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
     of the relationship.  If this matches the inverse setting of the attribute
     then it will update itself accordingly.
     
-    @param {SC.Record} the record owning this attribute
+    @param {SC.Record} record the record owning this attribute
     @param {String} key the key for this attribute
     @param {SC.Record} inverseRecord record that was removed from inverse
-    @param {String} key key on inverse that was modified
-    @returns {void}
+    @param {String} inverseKey key on inverse that was modified
   */
   inverseDidRemoveRecord: function(record, key, inverseRecord, inverseKey) {
 
@@ -114,7 +113,7 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
         isMaster = this.get('isMaster'), attr;
 
     // ok, you removed me, I'll remove you...  if isMaster, notify change.
-    record.writeAttribute(key, null, !isMaster);
+    record.writeAttribute(this.get('key') || key, null, !isMaster);
     record.notifyPropertyChange(key);
 
     // if we have another value, notify them as well...
@@ -130,14 +129,12 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
     inverse relationship.  This will set the value of this inverse record to 
     the new record.
     
-    @param {SC.Record} the record owning this attribute
+    @param {SC.Record} record the record owning this attribute
     @param {String} key the key for this attribute
     @param {SC.Record} inverseRecord record that was added to inverse
-    @param {String} key key on inverse that was modified
-    @returns {void}
+    @param {String} inverseKey key on inverse that was modified
   */
   inverseDidAddRecord: function(record, key, inverseRecord, inverseKey) {
-    
     var myInverseKey  = this.get('inverse'),
         curRec   = this._scsa_call(record, key),
         isMaster = this.get('isMaster'), 
@@ -145,7 +142,7 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
 
     // ok, replace myself with the new value...
     nvalue = this.fromType(record, key, inverseRecord); // convert to attr.
-    record.writeAttribute(key, nvalue, !isMaster);
+    record.writeAttribute(this.get('key') || key, nvalue, !isMaster);
     record.notifyPropertyChange(key);
 
     // if we have another value, notify them as well...

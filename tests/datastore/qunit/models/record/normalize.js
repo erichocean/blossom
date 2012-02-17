@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -57,12 +57,12 @@ suite("SC.Record normalize method", {
 
     // A parent record
     MyApp.FooParent = SC.Record.extend({
-      childRecordNamespace: MyApp,
+      nestedRecordNamespace: MyApp,
       myChild: SC.ChildAttribute.attr('MyApp.FooChild')
     });
 
     // A child record
-    MyApp.FooChild = SC.ChildRecord.extend({
+    MyApp.FooChild = SC.Record.extend({
     });
     
     MyApp.Bar = SC.Record.extend({
@@ -312,3 +312,25 @@ test("normalizing a new record with toOne without defaultValue" ,function() {
   equals(fooRecord.get('oneBar'), oneBarRecord, 'get value of oneBar after normalizing remains 1');
   
 });
+
+
+test("normalizing an undefined Date value", function () {
+  var Message = SC.Record.extend({
+    to: SC.Record.attr(String),
+    from: SC.Record.attr(String),
+    timestamp: SC.Record.attr(Date),
+    text: SC.Record.attr(String)
+  });
+
+  var message = MyApp.store.createRecord(Message, {
+    guid: 'chocolate-moose',
+    to: 'swedish.chef@muppets.com',
+    from: 'moose@muppets.com',
+    text: 'Bork bork bork!'
+  });
+
+  message.normalize();
+
+  equals(message.get('timestamp'), null, "normalizes to null");
+});
+

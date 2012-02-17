@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -195,12 +195,20 @@ test("should recognize all primitives", function() {
   equals(q._tokenList[2].tokenValue, 'NOT', 'value should be NOT');
   
 }); 
-  
-  
-  // ..........................................................
-  // TREE-BUILDING 
-  // 
 
+// ..........................................................
+// COMPOUND
+//
+
+test("negative numbers with equals", function(){
+  q.conditions = "-1=-1";
+  q.parse();
+  equals(q._tokenList.length, 3, "should have 3 tokens");
+});
+
+// ..........................................................
+// TREE-BUILDING
+//
 
 test("token tree should build", function() {  
   // Just some examples
@@ -209,7 +217,7 @@ test("token tree should build", function() {
   q.parse();
   ok(q._tokenList.length == 13, 'list should have 13 tokens');
   ok(!q._tokenTree.error, 'there should be no errors');
-  ok(q._tokenTree.tokenValue == 'AND', 'tree root shoud be AND');
+  ok(q._tokenTree.tokenValue == 'AND', 'tree root should be AND');
   
 });
 

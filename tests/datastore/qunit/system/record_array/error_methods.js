@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -43,7 +43,7 @@ test("Verify error methods behave correctly", function() {
   store.dataSourceDidErrorQuery(q, SC.Record.GENERIC_ERROR);
   SC.RunLoop.end();
 
-  ok(things.get('isError'), "isError on things array should be YES");
+  ok((things.get('isError') === YES), "isError on things array should be YES");
 
   equals(things.get('errorObject'), SC.Record.GENERIC_ERROR,
     "get('errorObject') on things array should return the correct error object");

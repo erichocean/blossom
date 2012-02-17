@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -332,7 +332,7 @@ test("adding a record to a many-to-many; bar side", function() {
   
   bar3.get('fooToMany').pushObject(foo2);
 
-  // v-- since bar3 is added throught inverse, it should follow orderBy
+  // v-- since bar3 is added through inverse, it should follow orderBy
   equals(foo2.get('barToMany').indexOf(bar3), 1, 'foo1.barToMany should contain bar1');
   ok(bar3.get('fooToMany').indexOf(foo2) >= 0, 'bar1.fooToMany should contain foo1');
 

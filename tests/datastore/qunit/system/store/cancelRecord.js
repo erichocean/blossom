@@ -1,6 +1,6 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
-// Copyright: ©2006-2010 Apple Inc. and contributors.
+// Copyright: ©2006-2011 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 /*globals module ok equals same test MyApp */
@@ -49,6 +49,6 @@ test("Check for error state handling and make sure that the method executes.", f
   }catch (error){
     throwError=false;
   }
-  ok(throwError, " cancelRecord was succesfully executed.");
+  ok(throwError, " cancelRecord was successfully executed.");
   
 });
