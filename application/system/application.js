@@ -131,9 +131,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(SC.app === undefined, "You can only create one instance of SC.Application.");
     SC.app = this;
 
-    // FIXME: Use SC.app, not SC.RootResponder.responder throughout Blossom.
-    SC.RootResponder = { responder: this };
-
     SC.ready(this, function() {
       this.awake();
       this._sc_perspectiveDidChange();
@@ -159,6 +156,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   _sc_runAnimationLoop: function(timestamp) {
     // console.log('SC.Application#_sc_runAnimationLoop()');
+    sc_assert(SC.app === this, "SC.Application#_sc_runAnimationLoop() called with this != SC.app.");
     this._sc_didRequestAnimationLoop = false;
     SC.isAnimating = true;
     this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
@@ -1010,7 +1008,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // Do some initial set up.
     this.computeViewportSize();
-    SC.device.setup(); // HACK
     this.focus();
   },
 

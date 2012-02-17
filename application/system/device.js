@@ -14,6 +14,8 @@ sc_require('system/platform');
 sc_require('system/ready');
 sc_require('system/root_responder');
 
+if (! BLOSSOM) {
+
 /**
   The device object allows you to check device specific properties such as 
   orientation and if the device is offline, as well as observe when they change 
@@ -173,3 +175,5 @@ SC.ready(function() {
 } // ! BLOSSOM
 
 SC.device = SC.Device.create();
+
+} // BLOSSOM
