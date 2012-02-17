@@ -10,7 +10,7 @@ sc_require('quaddemo');
 var base3 =    "#fdf6e3";
 
 function main() {
-  console.log('main()');
+  // console.log('main()');
   SC.Application.create(); // Assigns itself automatically to SC.app
 
   var sz = SC.app.computeViewportSize();

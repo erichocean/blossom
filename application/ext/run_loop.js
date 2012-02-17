@@ -8,9 +8,20 @@
 
 // Create anonymous subclass of SC.RunLoop to add support for processing 
 // view queues and Timers.
+
+var runLoopBenchKey = 'SC.RunLoop#loop()';
+
 SC.RunLoop = SC.RunLoop.extend(
 /** @scope SC.RunLoop.prototype */ {
 
+  /* @private
+    Override so we can benchmark it.
+  */
+  beginRunLoop: function() {
+    SC.Benchmark.start(runLoopBenchKey);
+    return arguments.callee.base.apply(this, arguments); // do everything else
+  },
+  
   /**
     The time the current run loop began executing.
     
@@ -25,7 +36,6 @@ SC.RunLoop = SC.RunLoop.extend(
   }.property(),
   
   /* 
-  
     Override to fire and reschedule timers once per run loop.
     
     Note that timers should fire only once per run loop to avoid the 
@@ -37,6 +47,7 @@ SC.RunLoop = SC.RunLoop.extend(
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
     this.scheduleLayoutAndRendering();
+    SC.Benchmark.end(runLoopBenchKey);
     return ret; 
   },
   
