@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global sc_assert */
 
 sc_require('system/object');
 
@@ -153,6 +154,8 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     @returns {SC.RunLoop} receiver
   */
   invokeLast: function(target, method) {
+    sc_assert(!SC.isAnimating, "invokeLast() should not be called during layout and rendering.");
+
     // normalize
     if (method === undefined) { 
       method = target; target = this ;
