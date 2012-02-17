@@ -1063,7 +1063,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (keyCode === 27 && this._sc_drag) {
       this._sc_drag.cancelDrag();
       this._sc_drag = null;
-      this._sc_mouseDownView = null;
+      this._sc_mouseDownSurface = null;
       return true;
     }
 
@@ -1175,7 +1175,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // FIXME: Shouldn't we return at this point?
     }
 
-    var handler = null, view = this._sc_mouseDownView,
+    var handler = null, view = this._sc_mouseDownSurface,
         targetView = this.targetSurfaceForEvent(evt);
 
     this._sc_lastMouseUpAt = Date.now(); // Why not evt.timeStamp?
@@ -1215,7 +1215,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // cleanup
     this._sc_mouseCanDrag = false;
-    this._sc_mouseDownView = null;
+    this._sc_mouseDownSurface = null;
 
     return (handler) ? evt.hasCustomEventHandling : true ;
   },
@@ -1255,7 +1255,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   fr.resignFirstResponder();
     // }
 
-    view = this._sc_mouseDownView = this.sendEvent('mouseDown', evt, view);
+    view = this._sc_mouseDownSurface = this.sendEvent('mouseDown', evt, view);
     if (view && view.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
 
     return view ? evt.hasCustomEventHandling : true ;
@@ -1317,8 +1317,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
       // Also, if a mouseDownView exists, call the mouseDragged action, if
       // it exists.
-      if (this._sc_mouseDownView) {
-        this._sc_mouseDownView.tryToPerform('mouseDragged', evt);
+      if (this._sc_mouseDownSurface) {
+        this._sc_mouseDownSurface.tryToPerform('mouseDragged', evt);
       }
     }
   }
