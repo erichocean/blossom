@@ -137,13 +137,13 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       this._sc_didRequestLayoutAndRendering = true;
       SC.RequestAnimationFrame(function(timestamp) {
         // console.log('SC.RequestAnimationFrame() - callback');
-        SC.app._sc_performLayoutAndRendering(timestamp);
+        SC.app.performLayoutAndRendering(timestamp);
       });
     }
   },
 
-  _sc_performLayoutAndRendering: function(timestamp) {
-    // console.log('SC.Application#_sc_performLayoutAndRendering()');
+  performLayoutAndRendering: function(timestamp) {
+    // console.log('SC.Application#performLayoutAndRendering()');
     sc_assert(SC.app === this, "SC.Application#_sc_performLayoutAndRendering() called with this != SC.app.");
     sc_assert(this._sc_didRequestLayoutAndRendering, "SC.Application#_sc_performLayoutAndRendering() called when layout and rendering was not requested.");
     sc_assert(!SC.isAnimating, "SC.Application#_sc_performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
