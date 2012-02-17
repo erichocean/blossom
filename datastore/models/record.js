@@ -285,7 +285,7 @@ SC.Record = SC.Object.extend(
   refresh: function(recordOnly, callback) {
     var store = this.get('store'), rec, ro,
         sk = this.get('storeKey'),
-        prKey = store.parentStoreKeyExists();
+        prKey = store.parentStoreKeyExists(sk);
 
     // If we only want to commit this record or it doesn't have a parent record
     // we will commit this record
@@ -314,7 +314,7 @@ SC.Record = SC.Object.extend(
   destroy: function(recordOnly) {
     var store = this.get('store'), rec, ro,
         sk = this.get('storeKey'),
-        prKey = store.parentStoreKeyExists();
+        prKey = store.parentStoreKeyExists(sk);
 
     // If we only want to commit this record or it doesn't have a parent record
     // we will commit this record
@@ -325,6 +325,10 @@ SC.Record = SC.Object.extend(
       // If there are any aggregate records, we might need to propagate our new
       // status to them.
       this.propagateToAggregates();
+
+      // If we have a parent, they changed too!
+      var p = this.get('parentRecord');
+      if (p) p.recordDidChange();
 
     } else if (prKey){
       rec = store.materializeRecord(prKey);
@@ -729,7 +733,7 @@ SC.Record = SC.Object.extend(
   commitRecord: function(params, recordOnly, callback) {
     var store = this.get('store'), rec, ro,
         sk = this.get('storeKey'),
-        prKey = store.parentStoreKeyExists();
+        prKey = store.parentStoreKeyExists(sk);
 
     // If we only want to commit this record or it doesn't have a parent record
     // we will commit this record
