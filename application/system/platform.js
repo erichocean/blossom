@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*global BLOSSOM */
 
 sc_require('system/event');
 sc_require('system/core_query');
+
+if (! BLOSSOM) {
 
 /**
   This platform object allows you to conditionally support certain HTML5
@@ -299,3 +302,6 @@ SC.platform = {
     SC.platform.supportsAcceleratedLayers = true;
   }
 })();
+
+} // ! BLOSSOM
+
