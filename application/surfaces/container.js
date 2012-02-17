@@ -75,7 +75,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     }
 
     this._sc_surface = cur;
-    cur.set('container', this);
 
     if (cur) {
       cur.set('container', this);

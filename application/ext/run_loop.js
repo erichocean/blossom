@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals sc_assert */
 
 // Create anonymous subclass of SC.RunLoop to add support for processing 
 // view queues and Timers.
@@ -35,6 +36,7 @@ SC.RunLoop = SC.RunLoop.extend(
     this.fireExpiredTimers(); // fire them timers!
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
+    this.scheduleLayoutAndRendering();
     return ret; 
   },
   
@@ -143,6 +145,29 @@ SC.RunLoop = SC.RunLoop.extend(
     }
     
     return ret ;
+  },
+
+  _sc_didRequestAnimationFrame: false,
+
+  /** @private
+    Based on global flags, determines if a layout and rendering loop should 
+    be called. This is substantially faster than repeatedly requesting a 
+    layout and rendering loop with a function call.
+  */
+  scheduleLayoutAndRendering: function() {
+    // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
+    if (this._sc_didRequestAnimationFrame) return;
+    if (!SC.app.isAwake) return;
+
+    if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
+      this._sc_didRequestAnimationFrame = true;
+      var that = this;
+      SC.RequestAnimationFrame(function(timestamp) {
+        // console.log('SC.RequestAnimationFrame() - callback');
+        that._sc_didRequestAnimationFrame = false;
+        SC.app.performLayoutAndRendering(timestamp);
+      });
+    }
   },
 
   /** @private

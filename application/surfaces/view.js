@@ -131,7 +131,7 @@ SC.View = SC.LeafSurface.extend({
     var benchKey = 'SC.ViewSurface#updateLayout()';
     SC.Benchmark.start(benchKey);
 
-    // console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
+    console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
     var layer = this.getPath('contentView.layer');
     if (layer) layer.updateLayout();
 
@@ -144,7 +144,7 @@ SC.View = SC.LeafSurface.extend({
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
-    // console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
+    console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
     sc_assert(document.getElementById(this.__sc_element__.id));
     var layer = this.getPath('contentView.layer');
 
@@ -323,7 +323,7 @@ SC.View = SC.LeafSurface.extend({
 
     if (cur && cur.isViewClass) {
       this.set('contentView', cur.create());
-      return;
+      return;_sc_mouseDownSurface
     }
 
     sc_assert(old === null || old.kindOf(SC.View), "Blossom internal error: SC.Application^_sc_contentView is invalid.");

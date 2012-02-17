@@ -22,7 +22,7 @@ SC.CompositeSurface = SC.Surface.extend(
   // for changes.
   _sc_subsurfaces: null,
   _sc_subsurfacesDidChange: function() {
-    console.log("SC.CompositeSurface#_sc_subsurfacesDidChange()");
+    // console.log("SC.CompositeSurface#_sc_subsurfacesDidChange()");
     var cur  = this.get('subsurfaces'),
         last = this._sc_subsurfaces,
         func = this._sc_subsurfacesMembersDidChange;
@@ -43,7 +43,7 @@ SC.CompositeSurface = SC.Surface.extend(
   }.observes('subsurfaces'),
 
   _sc_subsurfacesMembersDidChange: function() {
-    console.log("SC.Surface#_sc_subsurfacesMembersDidChange()");
+    // console.log("SC.Surface#_sc_subsurfacesMembersDidChange()");
     this.get('subsurfaces').invoke('set', 'supersurface', this);
   },
 

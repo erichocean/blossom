@@ -87,6 +87,9 @@ SC.mixin({
       }
     }, this);
 
+    setTimeout(function() {
+      SC.RunLoop.currentRunLoop.scheduleLayoutAndRendering();
+    },0);
     SC.Benchmark.end('ready') ;
     if (SC.BENCHMARK_LOG_READY) SC.Benchmark.log();
   }

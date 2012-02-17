@@ -10,6 +10,7 @@ sc_require('quaddemo');
 var base3 =    "#fdf6e3";
 
 function main() {
+  console.log('main()');
   SC.Application.create(); // Assigns itself automatically to SC.app
 
   var sz = SC.app.computeViewportSize();
@@ -30,16 +31,19 @@ function main() {
     },
 
     mouseDown: function(evt) {
+      // console.log('mouseDown');
       this.set('needsDisplay', true);
       return qd.mousedown(evt);
     },
 
     mouseDragged: function(evt) {
+      // console.log('mouseDragged');
       this.set('needsDisplay', true);
       return qd.mousemove(evt);
     },
 
     mouseUp: function(evt) {
+      // console.log('mouseUp');
       this.set('needsDisplay', true);
       return qd.mouseup(evt);
     }

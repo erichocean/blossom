@@ -56,45 +56,24 @@ SC.Layer = SC.Object.extend({
     if (value !== undefined) {
       // console.log('SC.Layer@needsLayout=', SC.guidFor(this), value);
       this._sc_needsLayout = value;
-      // if (!value) debugger;
+      if (value) SC.needsLayoutAndRendering = true;
     } else {
       // console.log('SC.Layer@needsLayout', SC.guidFor(this), this._sc_needsLayout);
       return this._sc_needsLayout;
     }
   }.property(),
 
-  /** @private
-    Tells the layer's surface that it needs to redisplay itself.
-  */
-  _sc_needsLayoutDidChange: function() {
-    // console.log('SC.Layer#_sc_needsLayoutDidChange()', SC.guidFor(this));
-    var surface = this.get('surface');
-    if (surface && this.get('needsLayout')) {
-      // debugger;
-      surface.set('needsLayout', true);
-    }
-  }.observes('needsLayout'),
-
   _sc_needsDisplay: false,
   needsDisplay: function(key, value) {
     if (value !== undefined) {
       // console.log('SC.Layer@needsDisplay=', SC.guidFor(this), value);
       this._sc_needsDisplay = value;
-      // if (!value) debugger;
+      if (value) SC.needsLayoutAndRendering = true;
     } else {
       // console.log('SC.Layer@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
       return this._sc_needsDisplay;
     }
   }.property(),
-
-  /** @private
-    Tells the layer's surface that it needs to redisplay itself.
-  */
-  _sc_needsDisplayDidChange: function() {
-    // console.log('SC.Layer#_sc_needsDisplayDidChange()', SC.guidFor(this));
-    var surface = this.get('surface');
-    if (surface && this.get('needsDisplay')) surface.set('needsDisplay', true);
-  }.observes('needsDisplay'),
 
   updateLayout: function() {
     // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
@@ -458,7 +437,7 @@ SC.Layer = SC.Object.extend({
       this.set('surface', cur); // Also updates our sublayers.
     }
 
-    this.set('needsLayout', true);
+    if (cur) this.set('needsLayout', true);
   }.observes('superlayer'),
 
   /**
@@ -723,8 +702,8 @@ SC.Layer = SC.Object.extend({
     this.initElement();
 
     this._sc_superlayerDidChange();
-    this._sc_needsLayoutDidChange();
-    this._sc_needsDisplayDidChange();
+    // this._sc_needsLayoutDidChange();
+    // this._sc_needsDisplayDidChange();
   },
 
   /* @private

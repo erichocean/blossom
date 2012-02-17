@@ -18,6 +18,8 @@ sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 
+SC.needsLayoutAndRendering = false;
+
 /** @class
   This class is the brains behind a Blossom application.  You must create 
   exactly one instance of `SC.Application` somewhere in your code.  
@@ -130,33 +132,30 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // LAYOUT AND RENDERING
   //
 
-  _sc_didRequestLayoutAndRendering: false,
-  requestLayoutAndRendering: function() {
-    // console.log('SC.Application#requestLayoutAndRendering()');
-    if (!this._sc_didRequestLayoutAndRendering) {
-      this._sc_didRequestLayoutAndRendering = true;
-      SC.RequestAnimationFrame(function(timestamp) {
-        // console.log('SC.RequestAnimationFrame() - callback');
-        SC.app.performLayoutAndRendering(timestamp);
-      });
-    }
-  },
-
   performLayoutAndRendering: function(timestamp) {
     // console.log('SC.Application#performLayoutAndRendering()');
-    sc_assert(SC.app === this, "SC.Application#_sc_performLayoutAndRendering() called with this != SC.app.");
-    sc_assert(this._sc_didRequestLayoutAndRendering, "SC.Application#_sc_performLayoutAndRendering() called when layout and rendering was not requested.");
-    sc_assert(!SC.isAnimating, "SC.Application#_sc_performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
+    sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
+    sc_assert(SC.needsLayoutAndRendering, "SC.Application#performLayoutAndRendering() called when layout and rendering was not requested.");
+    sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
+
+    var benchKey = 'SC.Application#performLayoutAndRendering()';
+    SC.Benchmark.start(benchKey);
 
     SC.isAnimating = true;
-    this._sc_didRequestLayoutAndRendering = false;
+    SC.needsLayoutAndRendering = false; // Do this now so we can reschedule if needed.
 
+    // debugger;
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
-    this.get('ui').performLayoutAndRenderingIfNeeded(timestamp);
+    var ui = this.get('ui');
+    if (ui) ui.performLayoutAndRenderingIfNeeded(timestamp);
 
     SC.isAnimating = false;
     SC.viewportSizeDidChange = false;
+
+    SC.Benchmark.end(benchKey);
+
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
+    SC.RunLoop.currentRunLoop.scheduleLayoutAndRendering();
   },
 
   // .......................................................
@@ -499,16 +498,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   /** @private
-    On viewport resize, notifies surfaces of the change.
+    On viewport resize, requests layout and rendering.
 
     @returns {Boolean}
   */
   resize: function() {
-    var old = this.get('viewportSize'),
-        cur = this.computeViewportSize();
-
-    if (!SC.EqualSize(old, cur)) this.requestLayoutAndRendering();
-
+    this.computeViewportSize();
     return true; // Allow normal processing to continue. FIXME: Is this correct?
   },
 
@@ -1036,6 +1031,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // Do some initial set up.
     this.computeViewportSize();
     this.focus();
+    SC.app.isAwake = true;
   },
 
   /**
