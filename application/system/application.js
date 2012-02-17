@@ -135,7 +135,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   performLayoutAndRendering: function(timestamp) {
     // console.log('SC.Application#performLayoutAndRendering()');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
-    sc_assert(SC.needsLayoutAndRendering, "SC.Application#performLayoutAndRendering() called when layout and rendering was not requested.");
     sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
 
     var benchKey = 'SC.Application#performLayoutAndRendering()';

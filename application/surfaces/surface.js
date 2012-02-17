@@ -117,7 +117,7 @@ SC.Surface = SC.Responder.extend({
     method as well.
   */
   displayDidChange: function() {
-    this.set('needsDisplay', true);
+    this.triggerRendering();
   },
 
   // ..........................................................
@@ -172,55 +172,34 @@ SC.Surface = SC.Responder.extend({
   subsurfaces: null,
 
   // ..........................................................
-  // RENDERING SUPPORT
+  // LAYOUT & RENDERING SUPPORT
   //
 
-  // needsLayout: false,
-  // needsTextLayout: false,
-  // needsContraintSolver: false,
-  // needsDisplay: false,
+  __needsLayout__: false,
+  triggerLayout: function() {
+    // console.log('SC.Surface#triggerLayout()');
+    this.__needsLayout__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
 
-  _sc_needsLayout: false,
-  needsLayout: function(key, value) {
-    if (value !== undefined) {
-      // console.log('SC.Surface@needsLayout=', SC.guidFor(this), value);
-      this._sc_needsLayout = value;
-      if (value) SC.needsLayoutAndRendering = true;
-      // if (!value) debugger;
-    } else {
-      // console.log('SC.Surface@needsLayout', SC.guidFor(this), this._sc_needsLayout);
-      return this._sc_needsLayout;
-    }
-  }.property(),
+  __needsRendering__: false,
+  triggerRendering: function() {
+    // console.log('SC.Surface#triggerRendering()');
+    this.__needsRendering__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
 
-  _sc_needsDisplay: false,
-  needsDisplay: function(key, value) {
-    // console.log('SC.Surface@needsDisplay', SC.guidFor(this), key, value);
-    if (value !== undefined) {
-      // console.log('SC.Surface@needsDisplay=', SC.guidFor(this), value);
-      this._sc_needsDisplay = value;
-      if (value) SC.needsLayoutAndRendering = true;
-      // if (value) debugger;
-    } else {
-      // console.log('SC.Surface@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
-      return this._sc_needsDisplay;
-    }
-  }.property(),
-
-  /** @private
-    Schedules the `updateIfNeeded` method to run at the end of the runloop 
-    whenever `needsDisplay`, `needsLayout`, or `needsTextLayout` are set to 
-    true.
-  */
-  // _sc_updateIfNeededObserver: function(observer, key) {
-  //   // console.log('SC.Surface#_sc_updateIfNeededObserver()', SC.guidFor(this), key);
-  //   if (this.get(key)) SC.needsLayoutAndRendering = true;
-  // }.observes('needsLayout', 'needsTextLayout', 'needsConstraintSolver', 'needsDisplay'),
+  triggerLayoutAndRendering: function() {
+    // console.log('SC.Surface#triggerLayoutAndRendering()');
+    this.__needsLayout__ = true;
+    this.__needsRendering__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
 
   performLayoutAndRenderingIfNeeded: function(timestamp) {
     // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
-    var needsLayout = this.get('needsLayout'),
-        needsDisplay = this.get('needsDisplay'),
+    var needsLayout = this.__needsLayout__,
+        needsDisplay = this.__needsRendering__,
         isVisible = this.get('isVisible');
 
     var benchKey = 'SC.Surface#performLayoutAndRenderingIfNeeded()',
@@ -234,7 +213,7 @@ SC.Surface = SC.Responder.extend({
       SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
         this.updateLayout();
-        this.set('needsLayout', false);
+        this.__needsLayout__ = false;
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
@@ -244,7 +223,7 @@ SC.Surface = SC.Responder.extend({
       SC.Benchmark.start(displayKey);
       if (this.get('isPresentInViewport')) {
         this.updateDisplay();
-        this.set('needsDisplay', false);
+        this.__needsRendering__ = false;
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(displayKey);
@@ -349,8 +328,7 @@ SC.Surface = SC.Responder.extend({
 
   _sc_layoutDidChange: function() {
     this.updateLayoutRules(); // Lots of code, so it's put in its own file.
-    this.set('needsLayout', true);
-    this.set('needsDisplay', true);
+    this.triggerLayoutAndRendering();
   }.observes('layout'),
 
   container: null,
@@ -358,8 +336,7 @@ SC.Surface = SC.Responder.extend({
   _sc_containerDidChange: function() {
     // console.log('SC.Surface#_sc_containerDidChange()');
     // debugger;
-    this.set('needsLayout', true);
-    this.set('needsDisplay', true);
+    this.triggerLayoutAndRendering();
   }.observes('container'),
 
   zIndex: 0,
@@ -397,7 +374,7 @@ SC.Surface = SC.Responder.extend({
       sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Surface#set('bounds', value)";
     } else {
-      if (this.get('needsLayout')) {
+      if (this.__needsLayout__) {
         var container = this.get('container'),
             anchorPoint = this.get('anchorPoint'),
             pbounds;
@@ -419,7 +396,7 @@ SC.Surface = SC.Responder.extend({
             this._sc_bounds
           );
 
-        this.set('needsLayout', false);
+        this.__needsLayout__ = false;
       }
       return this._sc_bounds;
     }

@@ -32,19 +32,19 @@ function main() {
 
     mouseDown: function(evt) {
       // console.log('mouseDown');
-      this.set('needsDisplay', true);
+      this.triggerRendering();
       return qd.mousedown(evt);
     },
 
     mouseDragged: function(evt) {
       // console.log('mouseDragged');
-      this.set('needsDisplay', true);
+      this.triggerRendering();
       return qd.mousemove(evt);
     },
 
     mouseUp: function(evt) {
       // console.log('mouseUp');
-      this.set('needsDisplay', true);
+      this.triggerRendering();
       return qd.mouseup(evt);
     }
 

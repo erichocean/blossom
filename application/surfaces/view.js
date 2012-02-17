@@ -323,7 +323,7 @@ SC.View = SC.LeafSurface.extend({
 
     if (cur && cur.isViewClass) {
       this.set('contentView', cur.create());
-      return;_sc_mouseDownSurface
+      return;
     }
 
     sc_assert(old === null || old.kindOf(SC.View), "Blossom internal error: SC.Application^_sc_contentView is invalid.");

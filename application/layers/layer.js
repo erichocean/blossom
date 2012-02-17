@@ -51,35 +51,31 @@ SC.Layer = SC.Object.extend({
   // RENDERING SUPPORT
   //
 
-  _sc_needsLayout: false,
-  needsLayout: function(key, value) {
-    if (value !== undefined) {
-      // console.log('SC.Layer@needsLayout=', SC.guidFor(this), value);
-      this._sc_needsLayout = value;
-      if (value) SC.needsLayoutAndRendering = true;
-    } else {
-      // console.log('SC.Layer@needsLayout', SC.guidFor(this), this._sc_needsLayout);
-      return this._sc_needsLayout;
-    }
-  }.property(),
+  __needsLayout__: false,
+  triggerLayout: function() {
+    // console.log('SC.Layer#triggerLayout()');
+    this.__needsLayout__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
 
-  _sc_needsDisplay: false,
-  needsDisplay: function(key, value) {
-    if (value !== undefined) {
-      // console.log('SC.Layer@needsDisplay=', SC.guidFor(this), value);
-      this._sc_needsDisplay = value;
-      if (value) SC.needsLayoutAndRendering = true;
-    } else {
-      // console.log('SC.Layer@needsDisplay', SC.guidFor(this), this._sc_needsDisplay);
-      return this._sc_needsDisplay;
-    }
-  }.property(),
+  __needsRendering__: false,
+  triggerRendering: function() {
+    // console.log('SC.Layer#triggerRendering()');
+    this.__needsRendering__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
+
+  triggerLayoutAndRendering: function() {
+    // console.log('SC.Layer#triggerLayoutAndRendering()');
+    this.__needsLayout__ = true;
+    this.__needsRendering__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
 
   updateLayout: function() {
     // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
-    // debugger;
-    if (this.get('needsLayout')) {
-      var bounds = this.get('bounds'), // Sets `needsLayout` to false.
+    if (this.__needsLayout__) {
+      var bounds = this.get('bounds'), // Sets this.__needsLayout__ to false.
           canvas = this.__sc_element__;
 
       canvas.width = bounds.width;
@@ -87,7 +83,7 @@ SC.Layer = SC.Object.extend({
       this._sc_transformFromSuperlayerToLayerIsDirty = true; // HACK
       this._sc_computeTransformFromSuperlayerToLayer();
     }
-    // debugger;
+
     this.get('sublayers').invoke('updateLayout');
   },
 
@@ -98,11 +94,11 @@ SC.Layer = SC.Object.extend({
     // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var ctx = this.get('context');
 
-    if (this.get('needsDisplay')) {
+    if (this.__needsRendering__) {
       ctx.save();
       this.display(ctx);
       ctx.restore();
-      this.set('needsDisplay', false);
+      this.__needsRendering__ = false;
     }
     this.get('sublayers').invoke('updateDisplay');
 
@@ -162,13 +158,13 @@ SC.Layer = SC.Object.extend({
     }
 
     if (cur) {
-      this.set('needsLayout', true);
+      this.triggerLayout();
 
       // If we already needed layout, then the above line won't cause our 
       // observer to fire.  Force our layout to be updated, but keep the 
       // previous line, because the surface will check for true there to 
       // determine if layout *really* needs to be done.
-      cur.set('needsLayout', true);
+      cur.triggerLayout();
     }
   }.observes('surface'),
 
@@ -226,7 +222,7 @@ SC.Layer = SC.Object.extend({
 
   _sc_layoutDidChange: function() {
     this.updateLayoutRules(); // Lots of code, so it's put in its own file.
-    this.set('needsLayout', true);
+    this.triggerLayout();
   }.observes('layout'),
 
   zIndex: 0,
@@ -264,7 +260,7 @@ SC.Layer = SC.Object.extend({
       sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Layer#set('bounds', value)";
     } else {
-      if (this.get('needsLayout')) {
+      if (this.__needsLayout__) {
         var container = this.get('container'),
             surface = this.get('surface'),
             superlayer = this.get('superlayer'),
@@ -302,7 +298,7 @@ SC.Layer = SC.Object.extend({
             this._sc_bounds
           );
 
-        this.set('needsLayout', false);
+        this.__needsLayout__ = false;
       }
       return this._sc_bounds;
     }
@@ -437,7 +433,7 @@ SC.Layer = SC.Object.extend({
       this.set('surface', cur); // Also updates our sublayers.
     }
 
-    if (cur) this.set('needsLayout', true);
+    if (cur) this.triggerLayout();
   }.observes('superlayer'),
 
   /**
