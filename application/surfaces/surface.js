@@ -999,15 +999,6 @@ SC.Surface = SC.Responder.extend({
   },
 
   /**
-    Invoked by the application whenever the viewport resizes, and the surface 
-    is part of the application.  This should simply begin the process of 
-    notifying children that the viewport size has changed.
-
-    @param {SC.Size} size the new viewport size
-  */
-  // viewportSizeDidChange: function(size) {},
-
-  /**
     Attempts to send the event down the responder chain for this pane.  If you 
     pass a target, this method will begin with the target and work up the 
     responder chain.  Otherwise, it will begin with the current rr 

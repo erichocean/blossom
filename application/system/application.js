@@ -490,11 +490,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var old = this.get('viewportSize'),
         cur = SC.MakeSize(window.innerWidth, window.innerHeight);
 
-    if (!SC.EqualSize(old, cur)) {
-      this.set('viewportSize', cur);
-      this.get('surfaces').invoke('viewportSizeDidChange', cur);
-      this.get('uiContainer').viewportSizeDidChange(cur);
-    }
+    if (!SC.EqualSize(old, cur)) this.set('viewportSize', cur);
+
     return cur;
   },
 
@@ -504,7 +501,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Boolean}
   */
   resize: function() {
-    this.computeViewportSize();
+    var old = this.get('viewportSize'),
+        cur = this.computeViewportSize();
+
+    if (!SC.EqualSize(old, cur)) this.requestLayoutAndRendering();
+
     return true; // Allow normal processing to continue. FIXME: Is this correct?
   },
 
