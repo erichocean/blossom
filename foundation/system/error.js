@@ -30,7 +30,7 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
   
   You can actually make any object you want to be treated like an Error object
   by simply implementing two properties: isError and errorValue.  If you 
-  set isError to true, then calling SC.ok(obj) on your object will return NO.
+  set isError to true, then calling SC.ok(obj) on your object will return false.
   If isError is true, then SC.val(obj) will return your errorValue property 
   instead of the receiver.
   

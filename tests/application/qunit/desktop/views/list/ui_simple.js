@@ -40,7 +40,7 @@ var ContentArray = SC.Object.extend(SC.Array, {
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.ScrollView.design({
     layout: { left: 0, right: 0, top: 0, height: 300 },
-    hasHorizontalScroller: NO,
+    hasHorizontalScroller: false,
     contentView: SC.ListView.design({
       content: ContentArray.create({ length: 20001 }),
       contentValueKey: "title",
@@ -61,7 +61,7 @@ function verifyChildViewsMatch(views, set) {
     if (indexes.contains(idx)) {
       ok(true, "should find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
     } else {
-      ok(NO, "should NOT find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
+      ok(false, "should NOT find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
     }
     indexes.remove(idx);
   }, this);
@@ -69,7 +69,7 @@ function verifyChildViewsMatch(views, set) {
   if (indexes.get('length') === 0) {
     ok(true, "all nowShowing indexes should have matching child views");
   } else {
-    ok(NO, "all nowShowing indexes should have matching child views (indexes not found: %@)".fmt(indexes));
+    ok(false, "all nowShowing indexes should have matching child views (indexes not found: %@)".fmt(indexes));
   }
 }
 

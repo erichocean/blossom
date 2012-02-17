@@ -131,7 +131,7 @@ test("comparing by equal properties should use guid for order", function() {
 });
 
 test("specifying a custom orderBy comparison function", function() {
-  var usedCustomFunction = NO;
+  var usedCustomFunction = false;
   q.orderBy = function(rec1, rec2) {
     // We'll be explicit about our use of a custom comparison function, in
     // addition to returning later years first.

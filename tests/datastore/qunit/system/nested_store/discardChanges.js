@@ -59,7 +59,7 @@ function testStateTransition() {
   
   // verify result
   equals(store.storeKeyEditState(storeKey), SC.Store.INHERITED, 'data edit state');
-  equals(store.get('hasChanges'), NO, 'hasChanges should be NO');
+  equals(store.get('hasChanges'), false, 'hasChanges should be false');
   equals(store.readDataHash(storeKey), json, 'data hash should return parent hash again');
   equals(store.readStatus(storeKey), parent.readStatus(storeKey), 'should return record status from parent');
   ok(!store.chainedChanges || !store.chainedChanges.length, 'should have no chainedChanges queued');

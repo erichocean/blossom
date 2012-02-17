@@ -13,15 +13,15 @@ SC.mixin(/** @scope SC */ {
   
   /**
     @property
-    @default NO
+    @default false
     @type {Boolean}
     
     If true, log bundle loading.
   */
-  logBundleLoading: NO,
+  logBundleLoading: false,
   
   /**
-    Returns true is bundleName is loaded; NO if bundleName is not loaded or
+    Returns true is bundleName is loaded; false if bundleName is not loaded or
     no information is available.
     
     @param bundleName {String}
@@ -29,7 +29,7 @@ SC.mixin(/** @scope SC */ {
   */
   bundleIsLoaded: function(bundleName) {
     var bundleInfo = SC.BUNDLE_INFO[bundleName] ;
-    return bundleInfo ? !!bundleInfo.loaded : NO ;
+    return bundleInfo ? !!bundleInfo.loaded : false ;
   },
   
   /**
@@ -114,7 +114,7 @@ SC.mixin(/** @scope SC */ {
       SC.BUNDLE_INFO[bundleName] = {loaded: true};
       return SC.BUNDLE_INFO[bundleName]; 
     }
-    return NO;
+    return false;
   },
     
   /**
@@ -188,12 +188,12 @@ SC.mixin(/** @scope SC */ {
             throw "SC.loadBundle(): could not find required bundle '%@' for bundle '%@'".fmt(targetName, bundleName) ;
           } else {
             if (targetInfo.loading) {
-              dependenciesMet = NO ;
+              dependenciesMet = false ;
               break ;
             } else if (targetInfo.loaded) {
               continue ;
             } else {
-              dependenciesMet = NO ;
+              dependenciesMet = false ;
               
               // register ourself as a dependent bundle (used by 
               // SC.bundleDidLoad()...)

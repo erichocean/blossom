@@ -19,11 +19,11 @@ suite("SC.RangeObserver#rangeDidChange", {
     
     observer = SC.Object.create({
 
-      verify: NO ,
+      verify: false ,
       
       callCount: 0, 
       
-      indexes: NO,
+      indexes: false,
       
       // whenever this is called, verify proper params are passed
       changeObserver: function(inSource, inObject, inKey, inIndexes, inContext) { 

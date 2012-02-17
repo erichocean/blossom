@@ -39,16 +39,16 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   applyImmediately: true,
 
   /**
-    If true, the field will hide its text from display. The default value is NO.
+    If true, the field will hide its text from display. The default value is false.
   */
-  isPassword: NO,
+  isPassword: false,
 
   /**
     If true then allow multi-line input.  This will also change the default
     tag type from "input" to "textarea".  Otherwise, pressing return will
     trigger the default insertion handler.
   */
-  isTextArea: NO,
+  isTextArea: false,
 
   /**
     The hint to display while the field is not active.  Can be a loc key.
@@ -58,7 +58,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   /**
     If true then the text field is currently editing.
   */
-  isEditing: NO,
+  isEditing: false,
   
   hintON:true,
   
@@ -129,7 +129,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   maxLength: 5096,
   
   
-  _isFocused: NO,
+  _isFocused: false,
   
   
   init: function() {
@@ -372,7 +372,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     force the field render to render like the firsttime to avoid writing extra
     code. This can be useful also 
   */
-  _forceRenderFirstTime: NO,
+  _forceRenderFirstTime: false,
     
   _renderFieldLikeFirstTime: function(){
     this.set('_forceRenderFirstTime', true);
@@ -397,7 +397,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     
     spellCheckString = spellCheckEnabled ? ' spellcheck="true"' : ' spellcheck="false"';
     if (firstTime || this._forceRenderFirstTime) {
-      this._forceRenderFirstTime = NO;
+      this._forceRenderFirstTime = false;
       disabled = this.get('isEnabled') ? '' : 'disabled="disabled"' ;
       name = this.get('layerId');
       
@@ -454,7 +454,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
             input.val(hint);
           }else{
             // console.log('removing hint on render');
-            context.setClass('sc-hint', NO);
+            context.setClass('sc-hint', false);
             input.val('');
           }
         }
@@ -617,7 +617,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       var val = this.get('value');
       if(!this.get('_supportsPlaceHolder') && ((!val) || (val && val.length===0))){
         // console.log('turn off hint');
-        this.set('hintON', NO);
+        this.set('hintON', false);
       }
     }, this);
   },
@@ -628,7 +628,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
 
   _textField_fieldDidBlur: function(evt) {
     SC.run(function() {
-      this.set('focused',NO);
+      this.set('focused',false);
       // passing the original event here instead that was potentially set from
       // loosing the responder on the inline text editor so that we can
       // use it for the delegate to end editing
@@ -676,7 +676,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   _field_fieldValueDidChange: function(evt) {
     if(this.get('focused')){
       SC.run(function() {
-        this.fieldValueDidChange(NO);        
+        this.fieldValueDidChange(false);        
       }, this);
     }
   },
@@ -787,7 +787,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   },
   
   willLoseKeyResponderTo: function(responder) {
-    //if (this._isFocused) this._isFocused = NO ;
+    //if (this._isFocused) this._isFocused = false ;
   },
 
   // In IE, you can't modify functions on DOM elements so we need to wrap the
@@ -841,8 +841,8 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     // If the event is triggered by a return while entering IME input,
     // don't got through this path.
     var which = evt.which, maxLengthReached = false;
-    if ((which === 13 && !evt.isIMEInput) && !this.get('isTextArea')) return NO ;
-    if (which === 27) return NO ;
+    if ((which === 13 && !evt.isIMEInput) && !this.get('isTextArea')) return false ;
+    if (which === 27) return false ;
 
     // handle tab key
     if (which === 9 && this.get('defaultTabbingEnabled')) {
@@ -883,7 +883,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     // element's values won't be updated until after this event is finished
     // processing.
     this.notifyPropertyChange('selection');
-    this._isKeyDown = NO;
+    this._isKeyDown = false;
     evt.allowDefault();
     return true;
   },
@@ -900,7 +900,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   },
 
   mouseUp: function(evt) {
-    this._txtFieldMouseDown=NO;
+    this._txtFieldMouseDown=false;
     // The caret/selection could have moved.  In some browsers, though, the
     // element's values won't be updated until after this event is finished
     // processing.
@@ -942,7 +942,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   valueObserver: function(){
     // console.log('value observer');
     var val = this.get('value');
-    if (val && val.length>0) this.set('hintON', NO);
+    if (val && val.length>0) this.set('hintON', false);
     else this.set('hintON', true);
   }.observes('value')
   

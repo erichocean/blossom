@@ -14,7 +14,7 @@ suite("SC.SelectButtonView",{
   //setup
   setup: function() {
     SC.RunLoop.begin();
-    var isDue = NO ;
+    var isDue = false ;
 
     //pane
     pane = SC.MainPane.create({
@@ -30,7 +30,7 @@ suite("SC.SelectButtonView",{
         //view1
         SC.SelectButtonView.extend({
           objects: ["To","Back", "You"],
-          disableSort: NO
+          disableSort: false
         }),
 
         //view2
@@ -103,9 +103,9 @@ test("Check if valueBinding works", function() {
 test("Check if isVisibleBinding works", function() {
   var isDue = pane.isDue ;
   SC.RunLoop.begin() ;
-  pane.set('isDue', NO) ;
+  pane.set('isDue', false) ;
   SC.RunLoop.end() ;
-  ok(!view3.get('isVisibleInWindow'), 'view2.isVisibleInWindow should be NO') ;
+  ok(!view3.get('isVisibleInWindow'), 'view2.isVisibleInWindow should be false') ;
 });
 
 //test4
@@ -137,9 +137,9 @@ test("rebuildMenu() populates the Drop Down Menu with new data", function() {
 });
 
 //test7
-test("isEnabled=NO should add disabled class", function() {
+test("isEnabled=false should add disabled class", function() {
   SC.RunLoop.begin() ;
-    view1.set('isEnabled', NO) ;
+    view1.set('isEnabled', false) ;
   SC.RunLoop.end() ;
   ok(view1.$().hasClass('disabled'), 'should have disabled class') ;
 });

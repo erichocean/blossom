@@ -50,7 +50,7 @@ SC.RESIZE_BOTTOM_RIGHT = 'resize-bottom-right';
   
   In addition to resizing views, users can also collapse views by double
   clicking on a split divider view.  When a view is collapsed, it's isVisible
-  property is set to NO and its space it removed from the view.  Double
+  property is set to false and its space it removed from the view.  Double
   clicking on a divider again will restore a collapsed view.  A user can also
   start to drag the divider to show the collapsed view.
   
@@ -68,7 +68,7 @@ SC.RESIZE_BOTTOM_RIGHT = 'resize-bottom-right';
   Defaults to SC.HORIZONTAL. Use the :direction option with the split_view
   viewhelper.
   
-  @property {Boolean} canCollapseViews Set to NO when you don't want any of
+  @property {Boolean} canCollapseViews Set to false when you don't want any of
   the child views to collapse. Defaults to true. 
   
   In addition, the top/left and bottom/right child views can have these
@@ -101,7 +101,7 @@ SC.SplitView = SC.View.extend(
   layoutDirection: SC.LAYOUT_HORIZONTAL,
   
   /**
-    Set to NO to disable collapsing for all views.
+    Set to false to disable collapsing for all views.
   */
   canCollapseViews: true,
   
@@ -219,7 +219,7 @@ SC.SplitView = SC.View.extend(
     
     
     // top/left view
-    isCollapsed = topLeftView.get('isCollapsed') || NO ;
+    isCollapsed = topLeftView.get('isCollapsed') || false ;
     topLeftView.setIfChanged('isVisible', !isCollapsed) ;
     layout = SC.clone(topLeftView.get('layout'));
     if (direction === SC.LAYOUT_HORIZONTAL) {
@@ -319,7 +319,7 @@ SC.SplitView = SC.View.extend(
     }
     
     // bottom/right view
-    isCollapsed = bottomRightView.get('isCollapsed') || NO ;
+    isCollapsed = bottomRightView.get('isCollapsed') || false ;
     bottomRightView.setIfChanged('isVisible', !isCollapsed) ;
     layout = SC.clone(bottomRightView.get('layout'));
     if (direction === SC.LAYOUT_HORIZONTAL) {
@@ -382,7 +382,7 @@ SC.SplitView = SC.View.extend(
       if(this._recalculateDivider===undefined && desiredThickness<1) {
         this._recalculateDivider=true;
       }
-      else if(this._recalculateDivider) this._recalculateDivider=NO;
+      else if(this._recalculateDivider) this._recalculateDivider=false;
       
       
       if(elemRendered[0]) {
@@ -449,7 +449,7 @@ SC.SplitView = SC.View.extend(
   */
   mouseDownInThumbView: function(evt, thumbView) {
     var responder = this.getPath('pane.rootResponder') ;
-    if (!responder) return NO ; // nothing to do
+    if (!responder) return false ; // nothing to do
       
     // we're not the source view of the mouseDown:, so we need to capture events manually to receive them
     responder.dragDidStart(this) ;
@@ -481,12 +481,12 @@ SC.SplitView = SC.View.extend(
   mouseUp: function(evt) {
     if (this._inLiveResize === true) {
       this._thumbView = null ; // avoid memory leaks
-      this._inLiveResize = NO ;
+      this._inLiveResize = false ;
       this.endLiveResize() ;
       return true ;
     }
     
-    return NO ;
+    return false ;
   },
   
   touchesDragged: function(evt){
@@ -500,11 +500,11 @@ SC.SplitView = SC.View.extend(
   
   doubleClickInThumbView: function(evt, thumbView) {
     var view = this._topLeftView,
-        isCollapsed = view.get('isCollapsed') || NO ;
+        isCollapsed = view.get('isCollapsed') || false ;
     if (!isCollapsed && !this.canCollapseView(view)) {
       view = this._bottomRightView ;
-      isCollapsed = view.get('isCollapsed') || NO ;
-      if (!isCollapsed && !this.canCollapseView(view)) return NO;
+      isCollapsed = view.get('isCollapsed') || false ;
+      if (!isCollapsed && !this.canCollapseView(view)) return false;
     }
     
     if (!isCollapsed) {
@@ -736,17 +736,17 @@ SC.SplitView = SC.View.extend(
   /**
     (DELEGATE) Control whether a view can be collapsed.
     
-    The default implemention returns NO if the split view property
-    canCollapseViews is set to NO or when the given view has
-    property canCollapse set to NO, otherwise it returns true.
+    The default implemention returns false if the split view property
+    canCollapseViews is set to false or when the given view has
+    property canCollapse set to false, otherwise it returns true.
     
     @param {SC.SplitView} splitView the split view
     @param {SC.View} view the view we want to collapse.
     @returns {Boolean} true to allow collapse.
   */
   splitViewCanCollapse: function(splitView, view) {
-    if (splitView.get('canCollapseViews') === NO) return NO ;
-    if (view.get('canCollapse') === NO) return NO ;
+    if (splitView.get('canCollapseViews') === false) return false ;
+    if (view.get('canCollapse') === false) return false ;
     return true ;
   },
   

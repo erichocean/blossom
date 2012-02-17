@@ -84,9 +84,9 @@ test("rebuildMenu() populates the select component with new data", function() {
   equals('you?',obj.get(3),'should be the forth element');
 });
 
-test("isEnabled=NO should add disabled class", function() {
+test("isEnabled=false should add disabled class", function() {
   SC.RunLoop.begin();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.end();  
   ok(view.$().hasClass('disabled'), 'should have disabled class');
 });

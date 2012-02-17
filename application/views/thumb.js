@@ -59,7 +59,7 @@ SC.ThumbView = SC.View.extend(
   },
 
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return NO ;
+    if (!this.get('isEnabled')) return false ;
 
     var splitView = this.get('splitView');
     return (splitView) ? splitView.mouseDownInThumbView(evt, this) : arguments.callee.base.apply(this, arguments);

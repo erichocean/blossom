@@ -28,10 +28,10 @@ test("default implementation invokes renderChildViews if firstTime = true", func
 	view.render(curContext, curFirstTime);
 	equals(runCount, 1, 'did invoke renderChildViews()');
 
-	// VERIFY firstTime = NO
+	// VERIFY firstTime = false
 	runCount = 0 ;
 	curContext = view.renderContext();
-	curFirstTime = NO ;
+	curFirstTime = false ;
 	view.render(curContext, curFirstTime);
 	equals(runCount, 0, 'did NOT invoke renderChildViews()');
 		
@@ -73,10 +73,10 @@ test("creates a context and then invokes prepareContext on each childView", func
 	equals(runCount, 3, 'prepareContext() invoked for each child view');
 	
 
-	// VERIFY: firstTime= NO 	
+	// VERIFY: firstTime= false 	
 	runCount = 0 ; //reset
 	curContext = view.renderContext('div');
-	curFirstTime= NO ;
+	curFirstTime= false ;
 	equals(view.renderChildViews(curContext, curFirstTime), curContext, 'returns context');
 	equals(runCount, 3, 'prepareContext() invoked for each child view');
 

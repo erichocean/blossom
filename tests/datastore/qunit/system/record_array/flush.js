@@ -28,7 +28,7 @@ suite("SC.RecordArray core methods", {
 
     recsController = SC.Object.create({
       content: recs,
-      bigCost: NO,
+      bigCost: false,
       veryExpensiveObserver: function() {
         this.set('bigCost', true);
       }.observes('.content.[]')
@@ -39,7 +39,7 @@ suite("SC.RecordArray core methods", {
 
     fooRecsController = SC.Object.create({
       content: fooRecs,
-      bigCost: NO,
+      bigCost: false,
       veryExpensiveObserver: function() {
         this.set('bigCost', true);
       }.observes('.content.[]')
@@ -89,13 +89,13 @@ test("calling storeDidChangeStoreKeys() with a matching recordType", function() 
   json     = {  guid: "bar", foo: "bar" };
   store.writeDataHash(storeKey, json, SC.Record.READY_CLEAN);
 
-  equals(recs.get('needsFlush'), NO, 'PRECOND - should not need flush');
+  equals(recs.get('needsFlush'), false, 'PRECOND - should not need flush');
   same(recs.get('storeKeys'), orig, 'PRECOND - storeKeys should not have changed yet');
 
   recs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(SC.Record));
 
   orig.unshift(storeKey); // update - must be first b/c id.bar < id.foo
-  equals(recs.get('needsFlush'), NO, 'should not need flush anymore');
+  equals(recs.get('needsFlush'), false, 'should not need flush anymore');
   same(recs.get('storeKeys'), orig, 'storeKeys should now be updated - rec1[%@]{%@} = %@, rec2[%@]{%@} = %@'.fmt(
     rec.get('id'), rec.get('storeKey'), rec,
 
@@ -126,7 +126,7 @@ test("calling storeDidChangeStoreKeys() with a non-matching recordType", functio
   store.writeDataHash(storeKey, json, SC.Record.READY_CLEAN);
 
   recs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(Bar));
-  equals(recs.get('needsFlush'), NO, 'should not have indicated it needed a flush');
+  equals(recs.get('needsFlush'), false, 'should not have indicated it needed a flush');
 
 });
 
@@ -146,8 +146,8 @@ test("calling storeDidChangeStoreKeys() with a matching recordType should not un
   recs.flush();
   fooRecs.flush();
 
-  recsController.set('bigCost', NO);
-  fooRecsController.set('bigCost', NO);
+  recsController.set('bigCost', false);
+  fooRecsController.set('bigCost', false);
 
   // do it this way instead of using store.createRecord() to isolate the
   // method call.
@@ -155,14 +155,14 @@ test("calling storeDidChangeStoreKeys() with a matching recordType should not un
   json     = {  guid: "bar", foo: "bar" };
   store.writeDataHash(storeKey, json, SC.Record.READY_CLEAN);
 
-  equals(recsController.get('bigCost'), NO, 'PRECOND - recsController should not have spent big cost');
-  equals(fooRecsController.get('bigCost'), NO, 'PRECOND - fooRecsController should not have spent big cost');
+  equals(recsController.get('bigCost'), false, 'PRECOND - recsController should not have spent big cost');
+  equals(fooRecsController.get('bigCost'), false, 'PRECOND - fooRecsController should not have spent big cost');
 
   recs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(SC.Record));
   fooRecs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(SC.Record));
 
   equals(recsController.get('bigCost'), true, 'recsController should have spent big cost');
-  equals(fooRecsController.get('bigCost'), NO, 'fooRecsController should not have spent big cost');
+  equals(fooRecsController.get('bigCost'), false, 'fooRecsController should not have spent big cost');
 });
 
 // test("adding an array observer to a SC.RecordArray should cause the array to flush", function() {

@@ -105,7 +105,7 @@ test("calling dataHashDidChange twice with different statusOnly values before fl
   var record = SC.Record.create({ id: 514 }) ;
   var storeKey = SC.Record.storeKeyFor(514) ;
   record = store.materializeRecord(storeKey) ;
-  store.dataHashDidChange(storeKey, null, NO) ;
+  store.dataHashDidChange(storeKey, null, false) ;
   store.dataHashDidChange(storeKey, null, true) ;
   
   ok(store.recordPropertyChanges.hasDataChanges.contains(storeKey), 'recordPropertyChanges.hasDataChanges should contain the storeKey %@'.fmt(storeKey)) ;
@@ -129,7 +129,7 @@ test("calling _notifyRecordPropertyChange twice, once with a key and once withou
   // that if we notify about a change to one property and later also change all
   // properties, all properties get changed.  (Even if we notify about yet
   // another individual property change after that, but still before the flush.)
-  mainStore._notifyRecordPropertyChange(storeKey, NO, 'prop2');
+  mainStore._notifyRecordPropertyChange(storeKey, false, 'prop2');
   
   var nestedStore  = mainStore.chain();
   var nestedRecord = nestedStore.materializeRecord(storeKey);
@@ -145,7 +145,7 @@ test("calling _notifyRecordPropertyChange twice, once with a key and once withou
   // Now, we'll do one more innocuous "prop3 changed" notification to ensure
   // that the eventual flush does indeed invalidate *all* property caches, and
   // not just prop2 and prop3.
-  mainStore._notifyRecordPropertyChange(storeKey, NO, 'prop3');
+  mainStore._notifyRecordPropertyChange(storeKey, false, 'prop3');
 
   // Let the flush happen.
   SC.RunLoop.end();

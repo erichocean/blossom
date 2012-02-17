@@ -47,14 +47,14 @@ suite("SC.View#updateLayerIfNeeded", {
   
 });
 
-test("does not call updateLayer if layerNeedsUpdate is NO", function() {
-  view.set('layerNeedsUpdate', NO);
+test("does not call updateLayer if layerNeedsUpdate is false", function() {
+  view.set('layerNeedsUpdate', false);
   view.updateLayerIfNeeded();
   equals(callCount, 0, 'updateLayer did NOT run');
 });
 
-test("does not call updateLayer if isVisibleInWindow is NO", function() {
-  view.set('isVisibleInWindow', NO);
+test("does not call updateLayer if isVisibleInWindow is false", function() {
+  view.set('isVisibleInWindow', false);
   view.updateLayerIfNeeded();
   equals(callCount, 0, 'updateLayer did NOT run');
 });
@@ -67,17 +67,17 @@ test("does call updateLayer() if isVisible & layerNeedsUpdate", function() {
   ok(callCount > 0, 'updateLayer() did run');
 });
 
-test("resets layerNeedsUpdate to NO if called", function() {
+test("resets layerNeedsUpdate to false if called", function() {
   equals(view.get('layerNeedsUpdate'), true, 'precond - layerNeedsUpdate');
   view.updateLayerIfNeeded();
-  equals(view.get('layerNeedsUpdate'), NO, 'layerNeedsUpdate reset to NO');
+  equals(view.get('layerNeedsUpdate'), false, 'layerNeedsUpdate reset to false');
 });
 
 test("returns receiver", function() {
   equals(view.updateLayerIfNeeded(), view, 'returns receiver');
 });
 
-test("only runs updateLayer() once if called multiple times (since layerNeedsUpdate is set to NO)", function() {
+test("only runs updateLayer() once if called multiple times (since layerNeedsUpdate is set to false)", function() {
   callCount = 0;
   view.updateLayerIfNeeded().updateLayerIfNeeded().updateLayerIfNeeded();
   equals(callCount, 1, 'updateLayer() called only once');
@@ -107,7 +107,7 @@ test("setting layerNeedsUpdate calls updateLayerIfNeeded at end of runloop", fun
 test("setting & resetting only triggers updateLayerIfNeeded once per runloop", function() {
   SC.RunLoop.begin();
   view.set('layerNeedsUpdate', true)
-      .set('layerNeedsUpdate', NO)
+      .set('layerNeedsUpdate', false)
       .set('layerNeedsUpdate', true);
   SC.RunLoop.end();
   
@@ -138,9 +138,9 @@ test("layerNeedsUpdate actually triggers updateLayer", function() {
   
   SC.RunLoop.begin();
   view.set('layerNeedsUpdate', true);
-  view.set('layerNeedsUpdate', NO);
+  view.set('layerNeedsUpdate', false);
   SC.RunLoop.end();
   
-  equals(callCount, 0, 'updateLayer did NOT run b/c layerNeedsUpdate is NO');
+  equals(callCount, 0, 'updateLayer did NOT run b/c layerNeedsUpdate is false');
 });
 

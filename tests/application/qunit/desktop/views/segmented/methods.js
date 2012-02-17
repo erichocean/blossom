@@ -23,7 +23,7 @@ suite("SC.SegmentedView", {
           itemValueKey: 'value',
           itemIconKey: 'icon',
           value: "Item1 Item3".w(),
-          allowsEmptySelection: NO,
+          allowsEmptySelection: false,
           layout: { height: 25 } 
         })]
     });
@@ -88,7 +88,7 @@ test("Check that properties are mapped correctly", function() {
    elem = view.get('layer').childNodes[1];
       
    view.mouseUp(firstItemEvent);
-   equals(view._isMouseDown, NO, 'Mouse down flag on mouseup should be ');
+   equals(view._isMouseDown, false, 'Mouse down flag on mouseup should be ');
    equals(view.get('activeIndex'), -1, 'There shouldnt be any active item');
    
    // Test third item

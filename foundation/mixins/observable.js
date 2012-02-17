@@ -19,7 +19,7 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
   
   @property {Boolean}
 */
-SC.LOG_OBSERVERS = NO ;
+SC.LOG_OBSERVERS = false ;
 
 /**
   @namespace 
@@ -121,7 +121,7 @@ SC.LOG_OBSERVERS = NO ;
   {{{
     
     automaticallyNotifiesObserversFor: function(key) {
-      return (key === 'balance') ? NO : arguments.callee.base.apply(this, arguments);
+      return (key === 'balance') ? false : arguments.callee.base.apply(this, arguments);
     },
     
     balance: function(key, value) {
@@ -159,7 +159,7 @@ SC.Observable = {
     to a key.
     
     If you are manually implementing change notifications for a property, you
-    can override this method to return NO for properties you do not want the
+    can override this method to return false for properties you do not want the
     observing system to automatically notify for.
     
     The default implementation always returns true.
@@ -428,7 +428,7 @@ SC.Observable = {
     this._kvo_revision = (this._kvo_revision || 0) + 1; 
     var level = this._kvo_changeLevel || 0,
         cachedep, idx, dfunc, cache, func,
-        log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===NO);
+        log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===false);
 
     if (cache = this._kvo_cache) {
 
@@ -790,7 +790,7 @@ SC.Observable = {
 
     if (locals && locals.length>0) return true ;
     if (observers && observers.getMembers().length>0) return true ;
-    return NO ;
+    return false ;
   },
 
   /**
@@ -915,7 +915,7 @@ SC.Observable = {
     
     SC.Observers.flush(this) ; // hookup as many observers as possible.
 
-    var log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===NO),
+    var log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===false),
         observers, changes, dependents, starObservers, idx, keys, rev,
         members, membersLength, member, memberLoc, target, method, loc, func,
         context, spaces, cache, hasPropertyObserver = !!this.propertyObserver ;
@@ -1156,7 +1156,7 @@ SC.Observable = {
     this may be more efficient.
 
     NOTE: By default, the set() method will not set the value unless it has
-    changed. However, this check can skipped by setting .property().idempotent(NO)
+    changed. However, this check can skipped by setting .property().idempotent(false)
     setIfChanged() may be useful in this case.
 
     @param key {String} the key to change

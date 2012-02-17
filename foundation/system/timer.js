@@ -96,7 +96,7 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
   {{{
     timer.set('isPaused', true) ;
     // Perform some critical function; timer will not execute
-    timer.set('isPaused', NO) ;
+    timer.set('isPaused', false) ;
   }}}
   
   When a timer is paused, it will be scheduled and will fire like normal, 
@@ -151,11 +151,11 @@ SC.Timer = SC.Object.extend(
   /**
     Set if the timer should be created from a memory pool.  Normally you will
     want to leave this set, but if you plan to use bindings or observers with
-    this timer, then you must set isPooled to NO to avoid reusing your timer.
+    this timer, then you must set isPooled to false to avoid reusing your timer.
     
     @property {Boolean}
   */
-  isPooled: NO,
+  isPooled: false,
   
   /**
     The time interval in milliseconds.
@@ -191,7 +191,7 @@ SC.Timer = SC.Object.extend(
     
     @type {Boolean}
   */
-  repeats: NO,
+  repeats: false,
   
   /**
     Last date when the timer will execute.
@@ -223,12 +223,12 @@ SC.Timer = SC.Object.extend(
     
     @type {Boolean}
   */
-  isPaused: NO,
+  isPaused: false,
 
   /**
     true onces the timer has been scheduled for the first time.
   */
-  isScheduled: NO,
+  isScheduled: false,
   
   /**
     true if the timer can still execute.
@@ -326,7 +326,7 @@ SC.Timer = SC.Object.extend(
   */
   invalidate: function() {
     this.beginPropertyChanges();
-    this.set('isValid', NO);
+    this.set('isValid', false);
     SC.RunLoop.currentRunLoop.cancelTimer(this);
     this.action = this.target = null ; // avoid memory leaks
     this.endPropertyChanges();
@@ -413,8 +413,8 @@ SC.Timer = SC.Object.extend(
   /** @private - Default values to reset reused timers to. */
   RESET_DEFAULTS: {
     target: null, action: null, 
-    isPooled: NO, isPaused: NO, isScheduled: NO, isValid: true,
-    interval: 0, repeats: NO, until: null,
+    isPooled: false, isPaused: false, isScheduled: false, isValid: true,
+    interval: 0, repeats: false, until: null,
     startTime: null, lastFireTime: 0
   },
   
@@ -512,7 +512,7 @@ SC.Timer = SC.Object.extend(
   Created a new timer with the passed properties and schedules it to 
   execute.  This is the same as calling SC.Time.create({ props }).schedule().
   
-  Note that unless you explicitly set isPooled to NO, this timer will be 
+  Note that unless you explicitly set isPooled to false, this timer will be 
   pulled from a shared memory pool of timers.  You cannot using bindings or
   observers on these timers as they may be reused for future timers at any
   time.

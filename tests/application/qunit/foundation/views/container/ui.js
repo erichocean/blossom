@@ -17,11 +17,11 @@
     });
     
   pane.add("disabled", SC.ContainerView, {
-      isEnabled: NO
+      isEnabled: false
     });
     
     // .add("disabled - single selection", SC.ListView, {
-    //   isEnabled: NO,
+    //   isEnabled: false,
     //   content: content,
     //   contentValueKey: 'title',
     //   selection: singleSelection

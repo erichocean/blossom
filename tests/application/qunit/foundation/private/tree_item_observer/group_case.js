@@ -99,7 +99,7 @@ suite("SC.TreeItemObserver - Group Use Case", {
       TestObject.create({
         isGroup: true,
         title: "C",
-        isExpanded: NO,
+        isExpanded: false,
         outline: 0,
         children: "0 1 2 3 4".w().map(function(x) { 
           return TestObject.create({ 
@@ -281,7 +281,7 @@ test("replacing group children array", function() {
 });
 
 test("changing expansion property on group", function() {
-  SC.run(function() { content[1].set('isExpanded', NO); });
+  SC.run(function() { content[1].set('isExpanded', false); });
   flattened.removeAt(7,5);
   
   // changed reflect nearest top-level group
@@ -294,14 +294,14 @@ test("changing expansion property on group", function() {
 // 
 
 test("pushing object to top level with children, not expanded", function() {
-  extrachild.set('isExpanded', NO);
+  extrachild.set('isExpanded', false);
   SC.run(function() { content.pushObject(extrachild); });
   flattened.pushObject(extrachild);
   verifyObjectAt(obs, flattened, "after pushing top level object");
 });
 
 test("inserting object in middle of top level with children, not expanded", function() {
-  extrachild.set('isExpanded', NO);
+  extrachild.set('isExpanded', false);
   SC.run(function() { content.insertAt(2,extrachild); });
   flattened.insertAt(12, extrachild);
   verifyObjectAt(obs, flattened, "after pushing top level object");
@@ -663,12 +663,12 @@ test("replacing regular items in middle", function() {
 // 
 
 test("contentGroupIndexes - not grouped", function() {
-  equals(delegate.get('treeItemIsGrouped'), NO, 'precond - delegate.treeItemIsGrouped == NO');
+  equals(delegate.get('treeItemIsGrouped'), false, 'precond - delegate.treeItemIsGrouped == false');
   equals(obs.contentGroupIndexes(null, obs), null, 'contentGroupIndexes should be null');
   
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
-    equals(obs.contentIndexIsGroup(null, obs, idx), NO, 'obs.contentIndexIsGroup(null, obs, %@) should be NO'.fmt(idx));
+    equals(obs.contentIndexIsGroup(null, obs, idx), false, 'obs.contentIndexIsGroup(null, obs, %@) should be false'.fmt(idx));
   }
 });
 
@@ -698,7 +698,7 @@ test("contentIndexDisclosureState", function() {
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
     var expected = flattened[idx].isExpanded;
-    expected = (expected === NO) ? SC.BRANCH_CLOSED : (expected ? SC.BRANCH_OPEN : SC.LEAF_NODE);
+    expected = (expected === false) ? SC.BRANCH_CLOSED : (expected ? SC.BRANCH_OPEN : SC.LEAF_NODE);
     
     var str ;
     switch(expected) {

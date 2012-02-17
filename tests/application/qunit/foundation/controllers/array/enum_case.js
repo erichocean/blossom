@@ -37,7 +37,7 @@ suite("SC.ArrayController - enum_case - EMPTY SET", {
 test("state properties", function() {
   equals(controller.get("hasContent"), true, 'c.hasContent');
   equals(controller.get("canRemoveContent"), true, "c.canRemoveContent");
-  equals(controller.get("canReorderContent"), NO, "c.canReorderContent");
+  equals(controller.get("canReorderContent"), false, "c.canReorderContent");
   equals(controller.get("canAddContent"), true, "c.canAddContent");
 });
 

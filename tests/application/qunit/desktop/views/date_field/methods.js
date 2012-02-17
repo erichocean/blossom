@@ -23,12 +23,12 @@ suite("SC.DateFieldView", {
         hint: 'dd/mm/yyyy hh:mm AM/PM',
         value: SC.DateTime.create({ day: 1, month: 1, year: 2010, hour: 11, minute: 20 }),
         showTime: true,
-        isEnabled: NO
+        isEnabled: false
       }),
       SC.DateFieldView.extend({
         hint: 'hh:mm AM/PM',
         value: SC.DateTime.create({ hour: 11, minute: 20 }),
-        showDate: NO,
+        showDate: false,
         showTime: true
       })]
     });
@@ -52,16 +52,16 @@ function() {
   equals(view1.get('fieldValue'), '01/01/2010 11:20 AM', 'Field value should be equal - Date & Time');
   equals(view2.get('fieldValue'), '11:20 AM', 'Field value should be equal - Time Only');
   equals(view0.get('isEnabled'), true, 'field enabled');
-  equals(view1.get('isEnabled'), NO, 'field not enabled');
+  equals(view1.get('isEnabled'), false, 'field not enabled');
   var q = Q$('input', view0.get('layer'));
   equals(q.attr('type'), 'text', 'should have type as text');
   equals(q.attr('name'), view0.get('layerId'), 'should have name as view_layerid');
 });
 
-test("isEnabled=NO should add disabled class",
+test("isEnabled=false should add disabled class",
 function() {
   SC.RunLoop.begin();
-  view0.set('isEnabled', NO);
+  view0.set('isEnabled', false);
   SC.RunLoop.end();
   ok(view0.$().hasClass('disabled'), 'should have disabled class');
 });

@@ -18,7 +18,7 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
   
   @property {Boolean}
 */
-SC.LOG_BINDINGS = NO ;
+SC.LOG_BINDINGS = false ;
 
 /**
   Performance paramter.  This will benchmark the time spent firing each 
@@ -26,7 +26,7 @@ SC.LOG_BINDINGS = NO ;
   
   @property {Boolean}
 */
-SC.BENCHMARK_BINDING_NOTIFICATIONS = NO ;
+SC.BENCHMARK_BINDING_NOTIFICATIONS = false ;
 
 /**
   Performance parameter.  This will benchmark the time spend configuring each
@@ -34,7 +34,7 @@ SC.BENCHMARK_BINDING_NOTIFICATIONS = NO ;
   
   @property {Boolean}
 */
-SC.BENCHMARK_BINDING_SETUP = NO;
+SC.BENCHMARK_BINDING_SETUP = false;
   
 /** 
   Default placeholder for multiple values in bindings.
@@ -386,7 +386,7 @@ SC.Binding = {
   */
   _connect: function() {
     if (!this._connectionPending) return; //nothing to do
-    this._connectionPending = NO ;
+    this._connectionPending = false ;
 
     var path, root,
         bench = SC.BENCHMARK_BINDING_SETUP;
@@ -431,7 +431,7 @@ SC.Binding = {
 
     // now try to sync if needed
     if (this._syncOnConnect) {
-      this._syncOnConnect = NO ;
+      this._syncOnConnect = false ;
       if (bench) SC.Benchmark.start("SC.Binding.connect().sync");
       this.sync();
       if (bench) SC.Benchmark.end("SC.Binding.connect().sync");
@@ -449,7 +449,7 @@ SC.Binding = {
     
     // if connection is still pending, just cancel
     if (this._connectionPending) {
-      this._connectionPending = NO ;
+      this._connectionPending = false ;
       
     // connection is completed, disconnect.
     } else {
@@ -459,7 +459,7 @@ SC.Binding = {
       }
     }
     
-    this.isConnected = NO ;
+    this.isConnected = false ;
     return this ;  
   },
 
@@ -556,7 +556,7 @@ SC.Binding = {
   _alternateConnectQueue: SC.CoreSet.create(),
   _changeQueue: SC.CoreSet.create(),
   _alternateChangeQueue: SC.CoreSet.create(),
-  _changePending: NO,
+  _changePending: false,
 
   /**
     Call this method on SC.Binding to flush all bindings with changed pending.
@@ -566,11 +566,11 @@ SC.Binding = {
   flushPendingChanges: function() {
     
     // don't allow flushing more than one at a time
-    if (this._isFlushing) return NO; 
+    if (this._isFlushing) return false; 
     this._isFlushing = true ;
     SC.Observers.suspendPropertyObserving();
 
-    var didFlush = NO,
+    var didFlush = false,
         log = SC.LOG_BINDINGS,
         // connect any bindings
         queue, binding ;
@@ -603,7 +603,7 @@ SC.Binding = {
     }
     
     // clean up
-    this._isFlushing = NO ;
+    this._isFlushing = false ;
     SC.Observers.resumePropertyObserving();
 
     return didFlush ;
@@ -614,7 +614,7 @@ SC.Binding = {
     binding value from one side to the other.
   */
   applyBindingValue: function() {
-    this._changePending = NO ;
+    this._changePending = false ;
 
     // compute the binding targets if needed.
     this._computeBindingTargets() ;
@@ -688,7 +688,7 @@ SC.Binding = {
   },
   
   // set if you call sync() when the binding connection is still pending.
-  _syncOnConnect: NO,
+  _syncOnConnect: false,
   
   _computeBindingTargets: function() {
     if (!this._fromTarget) {
@@ -735,7 +735,7 @@ SC.Binding = {
     a different value.
     
     @param fromPath {String} optional from path to connect.
-    @param aFlag {Boolean} Optionally pass NO to set the binding back to two-way
+    @param aFlag {Boolean} Optionally pass false to set the binding back to two-way
     @returns {SC.Binding} this
   */
   oneWay: function(fromPath, aFlag) {
@@ -818,7 +818,7 @@ SC.Binding = {
     end of the transform chain.
     
     @param fromPath {String} optional from path to connect.
-    @param aFlag {Boolean} optionally pass NO to allow error objects again.
+    @param aFlag {Boolean} optionally pass false to allow error objects again.
     @returns {SC.Binding} this
   */
   noError: function(fromPath, aFlag) {
@@ -928,7 +928,7 @@ SC.Binding = {
     return this.from(fromPath).transform(function(v) {
       var t = SC.typeOf(v) ;
       if (t === SC.T_ERROR) return v ;
-      return (t == SC.T_ARRAY) ? (v.length > 0) : (v === '') ? NO : !!v ;
+      return (t == SC.T_ARRAY) ? (v.length > 0) : (v === '') ? false : !!v ;
     }) ;
   },
 
@@ -997,12 +997,12 @@ SC.Binding = {
     return this.from(fromPath).transform(function(v) {
       var t = SC.typeOf(v) ;
       if (t === SC.T_ERROR) return v ;
-      return !((t == SC.T_ARRAY) ? (v.length > 0) : (v === '') ? NO : !!v) ;
+      return !((t == SC.T_ARRAY) ? (v.length > 0) : (v === '') ? false : !!v) ;
     }) ;
   },
   
   /**
-    Adds a transform that will return true if the value is null, NO otherwise.
+    Adds a transform that will return true if the value is null, false otherwise.
     
     @returns {SC.Binding} this
   */

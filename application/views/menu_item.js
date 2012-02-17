@@ -46,7 +46,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   /**
     Disable context menu.
   */
-  isContextMenuEnabled: NO,
+  isContextMenuEnabled: false,
 
   // ..........................................................
   // KEY PROPERTIES
@@ -74,7 +74,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     @property {Boolean}
   */
   isEnabled: function() {
-    return this.getContentProperty('itemIsEnabledKey') !== NO &&
+    return this.getContentProperty('itemIsEnabledKey') !== false &&
            this.getContentProperty('itemSeparatorKey') !== true;
   }.property('content.isEnabled').cacheable(),
 
@@ -92,7 +92,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     menuItems = content.get(parentMenu.itemSubMenuKey );
     if (menuItems) {
       if (SC.kindOf(menuItems, SC.MenuPane)) {
-        menuItems.set('isModal', NO);
+        menuItems.set('isModal', false);
         menuItems.set('isSubMenu', true);
         menuItems.set('parentMenu', parentMenu);
         return menuItems;
@@ -100,7 +100,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
         return SC.MenuPane.create({
           layout: { width: 200 },
           items: menuItems,
-          isModal: NO,
+          isModal: false,
           isSubMenu: true,
           parentMenu: parentMenu,
           controlSize: parentMenu.get('controlSize')
@@ -252,7 +252,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   showSubMenu: function() {
     var subMenu = this.get('subMenu') ;
     if(subMenu) {
-      subMenu.set('mouseHasEntered', NO);
+      subMenu.set('mouseHasEntered', false);
       subMenu.popup(this,[0,0,0]) ;
     }
 
@@ -305,7 +305,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   performAction: function() {
     // Disabled menu items and menu items with submenus should not have
     // actions.
-    if (!this.get('isEnabled')||this.get('hasSubMenu')) return NO;
+    if (!this.get('isEnabled')||this.get('hasSubMenu')) return false;
 
     var disableFlash = this.getContentProperty('itemDisableMenuFlashKey'),
         menu;
@@ -344,7 +344,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     // Close the menu
     this.getPath('parentMenu.rootMenu').remove();
     // We're no longer flashing
-    rootMenu._isFlashing = NO;
+    rootMenu._isFlashing = false;
 
     action = (action === undefined) ? rootMenu.get('action') : action;
     target = (target === undefined) ? rootMenu.get('target') : target;

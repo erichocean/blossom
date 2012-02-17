@@ -295,7 +295,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /**
     The horizontal scroller view class. This will be replaced with a view 
     instance when the ScrollView is created unless hasHorizontalScroller is 
-    NO.
+    false.
     
     @property {SC.View}
   */
@@ -304,7 +304,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /**
     The horizontal scroller view for touch. This will be replaced with a view
     instance when touch is enabled when the ScrollView is created unless 
-    hasHorizontalScroller is NO.
+    hasHorizontalScroller is false.
   */
   horizontalTouchScrollerView: SC.TouchScrollerView,
   
@@ -312,7 +312,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     true if the horizontal scroller should be visible.  You can change this 
     property value anytime to show or hide the horizontal scroller.  If you 
     do not want to use a horizontal scroller at all, you should instead set 
-    hasHorizontalScroller to NO to avoid creating a scroller view in the 
+    hasHorizontalScroller to false to avoid creating a scroller view in the 
     first place.
     
     @property {Boolean}
@@ -348,7 +348,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   
   /**
     The vertical scroller view class. This will be replaced with a view 
-    instance when the ScrollView is created unless hasVerticalScroller is NO.
+    instance when the ScrollView is created unless hasVerticalScroller is false.
     
     @property {SC.View}
   */
@@ -364,7 +364,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     true if the vertical scroller should be visible.  You can change this 
     property value anytime to show or hide the vertical scroller.  If you do 
     not want to use a vertical scroller at all, you should instead set 
-    hasVerticalScroller to NO to avoid creating a scroller view in the first 
+    hasVerticalScroller to false to avoid creating a scroller view in the first 
     place.
     
     @property {Boolean}
@@ -409,7 +409,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   */
   verticalOverlay: function() {
     if (SC.platform.touch) return true;
-    return NO;
+    return false;
   }.property().cacheable(),
   
   /**
@@ -423,7 +423,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   */
   horizontalOverlay: function() {
     if (SC.platform.touch) return true;
-    return NO;
+    return false;
   }.property().cacheable(),
   
   /**
@@ -546,12 +546,12 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     if (arguments.length === 0) return arguments.callee.base.apply(this, arguments); 
     
     var contentView = this.get('contentView') ;
-    if (!contentView) return NO; // nothing to do if no contentView.
+    if (!contentView) return false; // nothing to do if no contentView.
 
     // get the frame for the view - should work even for views with static 
     // layout, assuming it has been added to the screen.
     var vf = view.get('frame');
-    if (!vf) return NO; // nothing to do
+    if (!vf) return false; // nothing to do
     
     // convert view's frame to an offset from the contentView origin.  This
     // will become the new scroll offset after some adjustment.
@@ -586,7 +586,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     if ((origX !== vo.x) || (origY !== vo.y)) {
       this.scrollTo(vo.x, vo.y);
       return true ;
-    } else return NO;
+    } else return false;
   },
   
   
@@ -804,7 +804,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /**
     Determines whether scaling is allowed.
   */
-  canScale: NO,
+  canScale: false,
   
   /**
     The current scale.
@@ -830,7 +830,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /**
     Whether to automatically determine the scale range based on the size of the content.
   */
-  autoScaleRange: NO,
+  autoScaleRange: false,
   
   _scale_css: "",
   
@@ -858,12 +858,12 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   
   /**
     If true, bouncing will always be enabled in the horizontal direction, even if the content
-    is smaller or the same size as the view. NO by default.
+    is smaller or the same size as the view. false by default.
   */
-  alwaysBounceHorizontal: NO,
+  alwaysBounceHorizontal: false,
   
   /**
-    If NO, bouncing will not be enabled in the vertical direction when the content is smaller
+    If false, bouncing will not be enabled in the vertical direction when the content is smaller
     or the same size as the scroll view. true by default.
   */
   alwaysBounceVertical: true,
@@ -987,7 +987,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
         horizontalScrollOffset = this._scroll_horizontalScrollOffset || 0,
         startClipOffsetX = horizontalScrollOffset,
         startClipOffsetY = verticalScrollOffset,
-        needsScrollEnd = NO;
+        needsScrollEnd = false;
     
     if (this.touch && this.touch.timeout) {
       // clear the timeout
@@ -1024,7 +1024,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
       enableScrolling: { 
         x: contentWidth * this._scale > containerWidth || this.get("alwaysBounceHorizontal"), 
         y: contentHeight * this._scale > containerHeight || this.get("alwaysBounceVertical") }, // TODO: get from class properties
-      scrolling: { x: NO, y: NO },
+      scrolling: { x: false, y: false },
       
       // offsets and velocities
       startClipOffset: { x: startClipOffsetX, y: startClipOffsetY },
@@ -1080,7 +1080,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
 
     if (!this.tracking) {
       this.tracking = true;
-      this.dragging = NO;
+      this.dragging = false;
     }
   },
   
@@ -1159,10 +1159,10 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     // calculate new offset
     if (!touch.scrolling.x && !touch.scrolling.y && !touch.canScale) return;
     if (touch.scrolling.x && !touch.scrolling.y) {
-      if (deltaX > touch.scrollLock && !touch.scrolling.y) touch.enableScrolling.y = NO;
+      if (deltaX > touch.scrollLock && !touch.scrolling.y) touch.enableScrolling.y = false;
     }
     if (touch.scrolling.y && !touch.scrolling.x) {
-      if (deltaY > touch.scrollLock && !touch.scrolling.x) touch.enableScrolling.x = NO;
+      if (deltaY > touch.scrollLock && !touch.scrolling.x) touch.enableScrolling.x = false;
     }
     
     // handle scaling
@@ -1210,7 +1210,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     this._touchScrollDidChange();
     
     if (timeStamp - touch.lastEventTime >= 1 || touch.notCalculated) {
-      touch.notCalculated = NO;
+      touch.notCalculated = false;
       var horizontalOffset = this._scroll_horizontalScrollOffset;
       var verticalOffset = this._scroll_verticalScrollOffset;
       
@@ -1228,10 +1228,10 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     touch.scrollHasEnded = true;
     if (avg.touchCount > 0) {
-      this.beginTouchTracking(touch, NO);
+      this.beginTouchTracking(touch, false);
     } else {
       if (this.dragging) {
-        touchStatus.dragging = NO;
+        touchStatus.dragging = false;
 
         // reset last event time
         touchStatus.lastEventTime = touch.timeStamp;
@@ -1263,8 +1263,8 @@ SC.ScrollView = SC.View.extend(SC.Border, {
         this.touch = null;
       }
       
-      this.tracking = NO;
-      this.dragging = NO;
+      this.tracking = false;
+      this.dragging = false;
     }
   },
   
@@ -1279,13 +1279,13 @@ SC.ScrollView = SC.View.extend(SC.Border, {
       this.set("verticalScrollOffset", this._scroll_verticalScrollOffset);
       this.set("horizontalScrollOffset", this._scroll_horizontalScrollOffset);
       this.endPropertyChanges();
-      this.tracking = NO;
+      this.tracking = false;
     
       if (this.dragging) {
         this._touchScrollDidEnd();
       }
     
-      this.dragging = NO;
+      this.dragging = false;
       this.touch = null;
     }
   },

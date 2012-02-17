@@ -105,7 +105,7 @@ test("modifying a range should not require the rest of the array to refetch", fu
 
 test("Check that requestIndex works with a rangeWindowSize larger than 1", function() {
 	var ary = SC.SparseArray.array(10) ;
-	var didRequestRange=NO;
+	var didRequestRange=false;
 	
 	var DummyDelegate = SC.Object.extend({
     content: [], // source array

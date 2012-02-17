@@ -209,7 +209,7 @@ test("calling commitRecords() with params", function() {
 });
 
 test("calling commitRecords() with callbacks", function() {
-  var wasCalled = NO;
+  var wasCalled = false;
   var cb = function(){wasCalled = true;};
   
   store.commitRecord(null, null, storeKey2, {}, cb);

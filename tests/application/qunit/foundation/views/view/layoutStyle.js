@@ -81,7 +81,7 @@ var commonSetup = {
 suite("NOTIFICATIONS", commonSetup) ;
 
 test("Setting layout will notify frame observers", function() {
-  var didNotify = NO, didNotifyStyle = NO;
+  var didNotify = false, didNotifyStyle = false;
   child.addObserver('frame', this, function() { didNotify = true; }) ;
   child.addObserver('layoutStyle', this, function() { didNotifyStyle = true; });
   

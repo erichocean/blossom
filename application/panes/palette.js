@@ -38,12 +38,12 @@ SC.PalettePane = SC.PanelPane.extend({
   classNames: 'sc-palette',
   
   /** Palettes are not modal by default */
-  isModal: NO,
+  isModal: false,
   
   /** Do not show smoke behind palettes */
   modalPane: SC.ModalPane,
   
-  isAnchored: NO,
+  isAnchored: false,
   
   _mouseOffsetX: null,
   _mouseOffsetY: null,

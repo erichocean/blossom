@@ -28,7 +28,7 @@ if (! BLOSSOM) {
     var pane = SC.ControlTestPane.design()
       .add('basic', SC.CheckboxView.design({ title: "Hello World" }))
       .add('disabled', SC.CheckboxView.design({
-        title: "Hello World", isEnabled: NO
+        title: "Hello World", isEnabled: false
       }));
       
     module("CheckboxView UI", pane);

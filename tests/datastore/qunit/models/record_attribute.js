@@ -65,7 +65,7 @@ suite("SC.RecordAttribute core methods", {
       }),
 
       // test readONly
-      readOnly: SC.Record.attr(String, { isEditable: NO })
+      readOnly: SC.Record.attr(String, { isEditable: false })
 
     });
 
@@ -205,7 +205,7 @@ test("writing pass-through should simply set value", function() {
 
 });
 
-test("writing when isEditable is NO should ignore", function() {
+test("writing when isEditable is false should ignore", function() {
   var v = rec.get('readOnly');
   rec.set('readOnly', 'NEW VALUE');
   equals(rec.get('readOnly'), v, 'read only value should not change');

@@ -14520,7 +14520,7 @@ discard}</string>
 
 \f0\fs24 \cf0 commit_nested\
 remove\
-did_change(parent editable = NO)\
+did_change(parent editable = false)\
 read(lock=true, parent editable=NO)}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>

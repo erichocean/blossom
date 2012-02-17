@@ -29,13 +29,13 @@ SC.DragSource = {
   dragSourceOperationMaskFor: function(drag, dropTarget) { return SC.DRAG_NONE ; },
   
   /**
-    If this property is set to NO or is not implemented, then the user may
+    If this property is set to false or is not implemented, then the user may
     modify the drag operation by changing the modifier keys they have 
     pressed.
     
     @returns {Boolean}
   */
-  ignoreModifierKeysWhileDragging: NO,
+  ignoreModifierKeysWhileDragging: false,
     
   /**  
     This method is called when the drag begins. You can use this to do any

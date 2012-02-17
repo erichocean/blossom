@@ -23,11 +23,11 @@ test("Test different moused states", function() {
   b.mouseDown();
   equals(b.get('isActive'), true, "the button should be active after a mouseDown event");
   b.mouseExited();
-  equals(b.get('isActive'), NO, "the button should be active after a mouseDown event");
+  equals(b.get('isActive'), false, "the button should be active after a mouseDown event");
   b.mouseEntered();
   equals(b.get('isActive'), b._isMouseDown, "the button should be active after a mouseDown event");  
 //  b.mouseUp();
-//  equals(b.get('isActive'), NO, "the button should be inactive after a mouseUP event");
+//  equals(b.get('isActive'), false, "the button should be inactive after a mouseUP event");
 
   b.set('buttonBehavior', SC.TOGGLE_BEHAVIOR);
   b._action();
@@ -89,7 +89,7 @@ test("Test action repeats while active", function(){
   var assertions = function(){
     // The actual number of times in not entirely predictable since there can be delays beyond the holdInterval
     ok(counter.get('value') > 2, "should have run more than 2 times");
-    b.set('isActive', NO); // Stops triggering
+    b.set('isActive', false); // Stops triggering
     start();
   };
 
@@ -100,7 +100,7 @@ test("Test action repeats while active", function(){
 test("Test action happens on mouseDown", function(){
   b.mouseDown();
   equals(counter.get('value'), 1, "should have run once");
-  b.set('isActive', NO); // Stops triggering
+  b.set('isActive', false); // Stops triggering
 });
 
 test("Test action does not happen on mouseUp", function(){
@@ -112,7 +112,7 @@ test("Test action does not happen on mouseUp", function(){
 test("Should stop when inactive", function(){
   b.set('isActive', true);
   b._action();
-  b.set('isActive', NO);
+  b.set('isActive', false);
 
   var assertions = function(){
     equals(counter.get('value'), 1, "should only run action once");

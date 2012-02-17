@@ -208,7 +208,7 @@ SC.MenuPane = SC.PickerPane.extend(
     @type Boolean
     @isReadOnly
   */
-  isSubMenu: NO,
+  isSubMenu: false,
 
   /**
     Whether the title of menu items should be localized before display.
@@ -232,7 +232,7 @@ SC.MenuPane = SC.PickerPane.extend(
   /**
     Disable context menu.
   */
-  isContextMenuEnabled: NO,
+  isContextMenuEnabled: false,
 
   // ..........................................................
   // METHODS
@@ -916,7 +916,7 @@ SC.MenuPane = SC.PickerPane.extend(
 
   keyUp: function(evt) {
     var ret = this.interpretKeyEvents(evt) ;
-    return !ret ? NO : ret ;
+    return !ret ? false : ret ;
   },
 
   /**
@@ -992,7 +992,7 @@ SC.MenuPane = SC.PickerPane.extend(
       target: this,
       action: 'clearKeyBuffer',
       interval: 500,
-      isPooled: NO
+      isPooled: false
     });
 
     keyBuffer = keyBuffer || '';
@@ -1006,7 +1006,7 @@ SC.MenuPane = SC.PickerPane.extend(
 
   performKeyEquivalent: function(keyEquivalent) {
     //If menu is not visible
-    if (!this.get('isVisibleInWindow')) return NO;
+    if (!this.get('isVisibleInWindow')) return false;
     
     // Look for menu item that has this key equivalent
     var menuItem = this._keyEquivalents[keyEquivalent];
@@ -1024,7 +1024,7 @@ SC.MenuPane = SC.PickerPane.extend(
       return true;
     }
 
-    return NO;
+    return false;
 
   },
 

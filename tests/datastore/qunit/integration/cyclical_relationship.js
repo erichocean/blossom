@@ -68,7 +68,7 @@ suite("Cyclical relationships", {
       { guid: 3,
         name: "G1-Norm1",
         group: 100,
-        isFavorite: NO },
+        isFavorite: false },
 
       { guid: 4,
         name: "G2-Fav1",
@@ -78,7 +78,7 @@ suite("Cyclical relationships", {
       { guid: 5,
         name: "G1-Norm1",
         group: 101,
-        isFavorite: NO }
+        isFavorite: false }
     ];
     
     

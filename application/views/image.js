@@ -94,7 +94,7 @@ SC.ImageView = SC.View.extend(SC.Control,
     as a foreground image.  If the image is not visible on screen, it will
     always be treated as a background image.
   */
-  canLoadInBackground: NO,
+  canLoadInBackground: false,
   
   /**
     If true, any specified toolTip will be localized before display.
@@ -180,7 +180,7 @@ SC.ImageView = SC.View.extend(SC.Control,
   name.
 */
 SC.ImageView.valueIsUrl = function(value) {
-  return value ? value.indexOf('/') >= 0 : NO ;
+  return value ? value.indexOf('/') >= 0 : false ;
 } ;
 
 } // ! BLOSSOM

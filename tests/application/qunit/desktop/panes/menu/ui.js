@@ -17,7 +17,7 @@ var items = [
   { separator: true },
   { title: 'Selected Menu Item…', isChecked: true, keyEquivalent: 'ctrl_shift_o' },
   { title: 'Item with Submenu', subMenu: [{ title: 'Submenu item 1' }, { title: 'Submenu item 2'}] },
-  { title: 'Disabled Menu Item', isEnabled: NO }//,
+  { title: 'Disabled Menu Item', isEnabled: false }//,
   // { isSeparator: true },
   // { groupTitle: 'Menu Label', items: [{ title: 'Nested Item' }, { title: 'Nested Item' }] }
 ];
@@ -55,7 +55,7 @@ suite('SC.MenuPane UI', {
 });
 
 /*
-  Simulates clicking on the specified index.  If you pass verify as true or NO
+  Simulates clicking on the specified index.  If you pass verify as true or false
   also verifies that the item view is subsequently selected or not.
 
   @param {SC.View} view the view
@@ -84,10 +84,10 @@ test('Basic UI', function(){
   menu.popup();
   ok(menu.$().hasClass('sc-menu'), 'pane should have "sc-menu" class');
   ok(menu.$().hasClass('sc-regular-size'), 'pane should have default control size class');
-  ok(!menu.get('isSubMenu'), 'isSubMenu should be NO on menus that are not submenus');
+  ok(!menu.get('isSubMenu'), 'isSubMenu should be false on menus that are not submenus');
   var menuItem = menu.get('menuItemViews')[0], selectedItem;
   menuItem.mouseEntered();
-  clickOn(menuItem, NO, NO);
+  clickOn(menuItem, false, false);
   stop();
 
   setTimeout(function() {
@@ -137,7 +137,7 @@ test('Legacy Function Support', function(){
   menu.popup();
   var menuItem = menu.get('menuItemViews')[1], selectedItem;
   menuItem.mouseEntered();
-  clickOn(menuItem, NO, NO);
+  clickOn(menuItem, false, false);
   stop();
 
   setTimeout(function() {
@@ -195,10 +195,10 @@ test('Menu Item Localization', function() {
   locMenu = SC.MenuPane.create({
     layout: { width: 200 },
     items: items,
-    localize: NO
+    localize: false
   });
   locMenu.popup();
-  equals('Localized.Text', locMenu.$('.sc-menu-item .value').text(), 'Menu item titles should not be localized if localize is NO');
+  equals('Localized.Text', locMenu.$('.sc-menu-item .value').text(), 'Menu item titles should not be localized if localize is false');
   locMenu.remove();
 
   locMenu = SC.MenuPane.create({

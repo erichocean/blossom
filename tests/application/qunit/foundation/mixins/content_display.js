@@ -17,7 +17,7 @@ suite('ContentDisplay', {
       content: contentA
     });
 
-    view.set('layerNeedsUpdate', NO);
+    view.set('layerNeedsUpdate', false);
   }
 });
 
@@ -39,7 +39,7 @@ test('should stop observing old content when content changes', function () {
 
 test('should begin observing new content when content changes', function () {
   view.set('content', contentB);
-  view.set('layerNeedsUpdate', NO);
+  view.set('layerNeedsUpdate', false);
   contentB.set('bar', 'newBar');
   ok(view.get('layerNeedsUpdate'));
 });

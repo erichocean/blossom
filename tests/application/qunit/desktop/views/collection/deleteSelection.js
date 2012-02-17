@@ -33,8 +33,8 @@ suite("SC.CollectionView.deleteSelection", {
 
 test("canDeleteContent", function() {
   
-  view.set('canDeleteContent', NO);
-  equals(view.deleteSelection(), NO, 'should return NO if not allowed');
+  view.set('canDeleteContent', false);
+  equals(view.deleteSelection(), false, 'should return false if not allowed');
   equals(content.get('length'), beforeLen, 'content.length should not change');
   equals(view.get('selection').get('length'), 2, 'should not change selection');
   
@@ -49,7 +49,7 @@ test("empty selection case", function() {
   view.set('canDeleteContent', true);
   equals(view.get('selection').get('length'), 0, 'precond - should have empty selection');
 
-  equals(view.deleteSelection(), NO, 'should return NO if not allowed');
+  equals(view.deleteSelection(), false, 'should return false if not allowed');
   equals(content.get('length'), beforeLen, 'content.length should not change');
 });
 
@@ -62,8 +62,8 @@ test("delegate.collectionViewShouldDeleteIndexes", function() {
     collectionViewShouldDeleteIndexes: function() { return this.v; }
   });
 
-  // delegate returns NO
-  equals(view.deleteSelection(), NO, 'should return NO if not allowed');
+  // delegate returns false
+  equals(view.deleteSelection(), false, 'should return false if not allowed');
   equals(content.get('length'), beforeLen, 'content.length should not change');
   equals(view.get('selection').get('length'), 2, 'should not change selection');
   

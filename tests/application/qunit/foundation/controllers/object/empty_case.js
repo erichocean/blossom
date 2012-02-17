@@ -35,7 +35,7 @@ test("setting any unknown value should have no effect", function() {
 });
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), NO, 'hasContent should be NO');
+  equals(controller.get("hasContent"), false, 'hasContent should be false');
 });
 
 
@@ -68,7 +68,7 @@ test("setting any unknown value should have no effect", function() {
 
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), NO, 'hasContent should be NO');
+  equals(controller.get("hasContent"), false, 'hasContent should be false');
 });
 
 test("allowsMultipleContent should have no effect", function() {
@@ -78,5 +78,5 @@ test("allowsMultipleContent should have no effect", function() {
   });
   
   equals(controller.get("length"), undefined, "controller.get(length)");
-  equals(controller.get('hasContent'), NO, 'controller.hasContent');
+  equals(controller.get('hasContent'), false, 'controller.hasContent');
 });

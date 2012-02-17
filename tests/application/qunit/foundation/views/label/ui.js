@@ -18,7 +18,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("disabled", SC.LabelView, { 
     value:'hello',
-    isEnabled: NO
+    isEnabled: false
   })
   
   .add("selectable", SC.LabelView, { 
@@ -92,29 +92,29 @@ test("Check that all labels have the right classes set", function() {
   var viewElem=pane.view('basic').$();
   ok(viewElem.hasClass('sc-view'), 'basic.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'basic.hasClass(sc-label-view) should be true');
-  ok(!viewElem.hasClass('icon'), 'basic.hasClass(icon) should be NO');
+  ok(!viewElem.hasClass('icon'), 'basic.hasClass(icon) should be false');
   ok(!viewElem.hasClass('disabled'), 'basic.hasClass(disabled) should be true');
   
   
   viewElem=pane.view('disabled').$();
   ok(viewElem.hasClass('sc-view'), 'title.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'title.hasClass(sc-label-view) should be true');
-  ok(!viewElem.hasClass('icon'), 'title.hasClass(icon) should be NO');
-  ok(viewElem.hasClass('disabled'), 'title.hasClass(disabled) should be NO');
+  ok(!viewElem.hasClass('icon'), 'title.hasClass(icon) should be false');
+  ok(viewElem.hasClass('disabled'), 'title.hasClass(disabled) should be false');
  
   viewElem=pane.view('selectable').$();
   ok(viewElem.hasClass('sc-view'), 'icon.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'icon.hasClass(sc-label-view) should be true');
   ok(viewElem.hasClass('sc-regular-size'), 'icon.hasClass(sc-regular-size) should be true');
   ok(!viewElem.hasClass('icon'), 'icon.hasClass(icon) should be true');
-  ok(!viewElem.hasClass('sel'), 'icon.hasClass(sel) should be NO');
-  ok(!viewElem.hasClass('disabled'), 'icon.hasClass(disabled) should be NO');
+  ok(!viewElem.hasClass('sel'), 'icon.hasClass(sel) should be false');
+  ok(!viewElem.hasClass('disabled'), 'icon.hasClass(disabled) should be false');
  
   viewElem=pane.view('centered').$();
   ok(viewElem.hasClass('sc-view'), 'title,icon.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'title,icon.hasClass(sc-label-view) should be true');
   ok(!viewElem.hasClass('icon'), 'title,icon.hasClass(icon) should be true');
-  ok(!viewElem.hasClass('disabled'), 'title,icon.hasClass(disabled) should be NO');
+  ok(!viewElem.hasClass('disabled'), 'title,icon.hasClass(disabled) should be false');
  
   viewElem=pane.view('centered,icon').$();
   ok(viewElem.hasClass('sc-view'), 'title,icon,disabled.hasClass(sc-view) should be true');
@@ -126,13 +126,13 @@ test("Check that all labels have the right classes set", function() {
   ok(viewElem.hasClass('sc-view'), 'title,icon,default.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'title,icon,default.hasClass(sc-label-view) should be true');
   ok(viewElem.hasClass('sc-regular-size'), 'title,icon,default.hasClass(sc-regular-size) should be true');
-  ok(!viewElem.hasClass('disabled'), 'title,icon,default.hasClass(disabled) should be NO');
+  ok(!viewElem.hasClass('disabled'), 'title,icon,default.hasClass(disabled) should be false');
       
   viewElem=pane.view('bold').$();
   ok(viewElem.hasClass('sc-view'), 'title,icon,selected.hasClass(sc-view) should be true');
   ok(viewElem.hasClass('sc-label-view'), 'title,icon,selected.hasClass(sc-label-view) should be true');
   ok(!viewElem.hasClass('icon'), 'title,icon,selected.hasClass(icon) should be true');
-  ok(!viewElem.hasClass('disabled'), 'title,icon,selected.hasClass(disabled) should be NO');
+  ok(!viewElem.hasClass('disabled'), 'title,icon,selected.hasClass(disabled) should be false');
    
 });
 

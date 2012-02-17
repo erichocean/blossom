@@ -173,13 +173,13 @@ SC.RadioView = SC.View.extend(SC.Control,
     // which can only happen with mixed state
     if (isArray && value.length <= 0) {
       value = value[0];
-      isArray = NO;
+      isArray = false;
     }
 
     // if necessary, regenerate the radio buttons
     if (this._renderAsFirstTime) {
       firstTime = true;
-      this._renderAsFirstTime = NO;
+      this._renderAsFirstTime = false;
     }
 
     if (firstTime) {
@@ -201,7 +201,7 @@ SC.RadioView = SC.View.extend(SC.Control,
         if (item) {
           sel = (isArray) ? (value.indexOf(item[1]) >= 0) : (value === item[1]);
         } else {
-          sel = NO;
+          sel = false;
         }
         selectionStateClassNames = this._getSelectionStateClassNames(item, sel, value, isArray, false);
 
@@ -231,7 +231,7 @@ SC.RadioView = SC.View.extend(SC.Control,
         if (item) {
           sel = (isArray) ? (value.indexOf(item[1]) >= 0) : (value === item[1]);
         } else {
-          sel = NO;
+          sel = false;
         }
         
         width = item[4];
@@ -304,7 +304,7 @@ SC.RadioView = SC.View.extend(SC.Control,
         // if item is nil, use somedefaults...
       } else {
         title = value = icon = null;
-        isEnabled = NO;
+        isEnabled = false;
       }
 
       // localize title if needed
@@ -359,7 +359,7 @@ SC.RadioView = SC.View.extend(SC.Control,
       if (target.className && target.className.indexOf('sc-radio-button') > -1) break;
       target = target.parentNode;
     }
-    if (!target) return NO;
+    if (!target) return false;
 
     target = this.$(target);
     if (target.hasClass('disabled')) return true;

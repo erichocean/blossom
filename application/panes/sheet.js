@@ -205,7 +205,7 @@ SC.SheetPane = SC.PanelPane.extend({
 
 SC.SheetPane.mixin( /** @scope SC.SheetPane */ {
   
-  ANIMATABLE_AVAILABLE: NO,
+  ANIMATABLE_AVAILABLE: false,
   
   // states for view animation
   NO_VIEW: 'NO_VIEW',

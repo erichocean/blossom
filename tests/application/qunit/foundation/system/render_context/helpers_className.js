@@ -69,13 +69,13 @@ test("should return true if context classNames has class name", function() {
 });
 
 test("should return false if context classNames does not have class name", function() {
-  equals(NO, context.hasClass('imaginary'), "should not have imaginary");
+  equals(false, context.hasClass('imaginary'), "should not have imaginary");
 });
 
 test("should return false if context has no classNames", function() {
   context = context.begin('div');
   ok(context.classNames().length===0, 'precondition - context has no classNames');
-  equals(NO, context.hasClass('foo'), 'should not have foo');
+  equals(false, context.hasClass('foo'), 'should not have foo');
 });
 
 // ..........................................................
@@ -99,11 +99,11 @@ test("should add class name to existing classNames array on currentTag", functio
 
 test("should only add class name once - does nothing if name already in array", function() {
   same(context.classNames(), ['foo'], 'precondition - has foo classname');
-  context._classNamesDidChange = NO; // reset  to pretend once not modified
+  context._classNamesDidChange = false; // reset  to pretend once not modified
   
   context.addClass('foo');
   same(context.classNames(), ['foo'], 'no change');
-  equals(context._classNamesDidChange, NO, "note did not change");
+  equals(context._classNamesDidChange, false, "note did not change");
 });
 
 // ..........................................................
@@ -127,20 +127,20 @@ test('should return receiver', function() {
 });
 
 test("should do nothing if class name not in array", function() {
-  context._classNamesDidChange = NO; // reset to pretend not modified
+  context._classNamesDidChange = false; // reset to pretend not modified
   context.removeClass('imaginary');
   same(context.classNames(), 'foo bar'.w(), 'did not change');
-  equals(context._classNamesDidChange, NO, "note did not change");
+  equals(context._classNamesDidChange, false, "note did not change");
 });
 
 test("should do nothing if there are no class names", function() {
   context = context.begin();
   same(context.classNames(), [], 'precondition - no class names');
-  context._classNamesDidChange = NO; // reset to pretend not modified
+  context._classNamesDidChange = false; // reset to pretend not modified
   
   context.removeClass('foo');
   same(context.classNames(), [], 'still no class names -- and no errors');
-  equals(context._classNamesDidChange, NO, "note did not change");
+  equals(context._classNamesDidChange, false, "note did not change");
 });
 
 // ..........................................................
@@ -158,9 +158,9 @@ test("should add named class if shouldAdd is true", function() {
   ok(context.hasClass("bar"), "now has bar");
 });
 
-test("should remove named class if shouldAdd is NO", function() {
+test("should remove named class if shouldAdd is false", function() {
   ok(context.hasClass("foo"), "precondition - has class foo");
-  context.setClass("foo", NO);
+  context.setClass("foo", false);
   ok(!context.hasClass("foo"), "should not have foo ");
 });
 
@@ -172,7 +172,7 @@ test("should add/remove all classes if a hash of class names is passed", functio
   ok(context.hasClass("foo"), "precondition - has class foo");
   ok(!context.hasClass("bar"), "precondition - does not have class bar");
 
-  context.setClass({ foo: NO, bar: true });
+  context.setClass({ foo: false, bar: true });
 
   ok(context.hasClass("bar"), "now has bar");
   ok(!context.hasClass("foo"), "should not have foo ");

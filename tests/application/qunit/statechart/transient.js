@@ -20,7 +20,7 @@ suite("SC.Statechart Mixin: Transient States", {
     
     basic = SC.Object.create(SC.Statechart, {
       startStates: {'default': 'a'},
-      startOnInit: NO,
+      startOnInit: false,
       
       a: SC.Statechart.registerState({
         enterState: function() { sequence.push('enter:a'); },
@@ -46,7 +46,7 @@ suite("SC.Statechart Mixin: Transient States", {
     
     advanced = SC.Object.create(SC.Statechart, {
       startStates: {'default': 'a'},
-      startOnInit: NO,
+      startOnInit: false,
       
       a: SC.Statechart.registerState({
         initialSubState: 'b',

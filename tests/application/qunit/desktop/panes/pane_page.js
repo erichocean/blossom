@@ -31,7 +31,7 @@ test("isVisible changes should update views that are instantiated in a page", fu
   SC.RunLoop.begin().end();
   pp.remove();
   SC.RunLoop.begin().end();
-  pp.childViews[0].childViews[0].set('isVisible', NO);
+  pp.childViews[0].childViews[0].set('isVisible', false);
   SC.RunLoop.begin().end();
   pp.append();
   SC.RunLoop.begin().end();

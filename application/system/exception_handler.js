@@ -81,5 +81,5 @@
 // 
 //     @property {Boolean}
 //   */
-//   isShowingErrorDialog: NO
+//   isShowingErrorDialog: false
 // };

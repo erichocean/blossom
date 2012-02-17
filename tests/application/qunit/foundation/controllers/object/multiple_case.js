@@ -11,14 +11,14 @@ var src, src2, content, controller;
 // NO MULTIPLE CONTENT
 // 
 
-suite("SC.ObjectController - multiple_case - ALLOWSMULTIPLE = NO", {
+suite("SC.ObjectController - multiple_case - ALLOWSMULTIPLE = false", {
   setup: function() {
     src        = SC.Object.create({ foo: "foo1", bar: "bar1" });
     src2       = SC.Object.create({ foo: "foo2", bar: "bar1" });
     content    = [src, src2];
     controller = SC.ObjectController.create({ 
       content: content,
-      allowsMultipleContent: NO 
+      allowsMultipleContent: false 
     });
   },
   
@@ -28,7 +28,7 @@ suite("SC.ObjectController - multiple_case - ALLOWSMULTIPLE = NO", {
 });
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), NO, 'hasContent should be NO');
+  equals(controller.get("hasContent"), false, 'hasContent should be false');
 });
 
 test("getting any value should return undefined", function() {
@@ -100,7 +100,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;

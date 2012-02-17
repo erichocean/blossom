@@ -147,7 +147,7 @@ SC.Set = SC.mixin({},
       
       if (items && items.isEnumerable && items.get('length')>0) {
 
-        ret.isObservable = NO; // suspend change notifications
+        ret.isObservable = false; // suspend change notifications
         
         // arrays and sets get special treatment to make them a bit faster
         if (items.isSCArray) {
@@ -212,7 +212,7 @@ SC.Set = SC.mixin({},
     // still be stored as a key, but points to an index that is beyond the
     // length.  Therefore the found idx must both be defined and less than
     // the current length.
-    if (obj === null) return NO ;
+    if (obj === null) return false ;
     var idx = this[SC.hashFor(obj)] ;
     return (!SC.none(idx) && (idx < this.length) && (this[idx]===obj)) ;
   },
@@ -227,12 +227,12 @@ SC.Set = SC.mixin({},
   isEqual: function(obj) {
     // fail fast
     if (!obj || !obj.isSet || (obj.get('length') !== this.get('length'))) {
-      return NO ;
+      return false ;
     }
     
     var loc = this.get('length');
     while(--loc>=0) {
-      if (!obj.contains(this[loc])) return NO ;
+      if (!obj.contains(this[loc])) return false ;
     }
     
     return true;
@@ -426,7 +426,7 @@ SC.Set = SC.mixin({},
     @returns {SC.Set} receiver
   */
   destroy: function() {
-    this.isFrozen = NO ; // unfreeze to return to pool
+    this.isFrozen = false ; // unfreeze to return to pool
     if (!this.isObservable) SC.Set._pool.push(this.clear());
     return this;
   },
@@ -529,7 +529,7 @@ SC.Set._pool = [];
 SC.CoreSet = SC.beget(SC.Set);
 
 /** @private */
-SC.CoreSet.isObservable = NO ;
+SC.CoreSet.isObservable = false ;
 
 /** @private */
 SC.CoreSet.constructor = SC.CoreSet;

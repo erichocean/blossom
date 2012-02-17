@@ -34,7 +34,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("disabled", SC.RadioView, {
     value: "",
-    isEnabled: NO,
+    isEnabled: false,
     items: itemList,
     itemTitleKey: 'title',
     itemValueKey: 'value',
@@ -216,7 +216,7 @@ test("enabled first", function() {
   var radioButtons = view.$('.sc-radio-button');
   equals(radioButtons.length, 3, 'number of radio buttons should be 3');
   SC.RunLoop.begin();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.end();
   var i = 0;
   radioButtons.forEach(function(radioInput) {

@@ -71,7 +71,7 @@ SC.State = SC.Object.extend(
     
     @property {Boolean}
   */
-  substatesAreConcurrent: NO,
+  substatesAreConcurrent: false,
   
   /**
     The immediate substates of this state. Managed by the statechart.
@@ -93,7 +93,7 @@ SC.State = SC.Object.extend(
     
     @propety {Boolean}
   */
-  stateIsInitialized: NO,
+  stateIsInitialized: false,
   
   /**
     An array of this state's current substates. Managed by the statechart
@@ -210,8 +210,8 @@ SC.State = SC.Object.extend(
     this._registeredStateObserveHandlers = {};
     this._registeredSubstatePaths = {};
     this._registeredSubstates = []; 
-    this._isEnteringState = NO;
-    this._isExitingState = NO;
+    this._isEnteringState = false;
+    this._isExitingState = false;
 
     // Setting up observes this way is faster then using .observes,
     // which adds a noticable increase in initialization time.
@@ -279,13 +279,13 @@ SC.State = SC.Object.extend(
         value = null,
         state = null,
         substates = [],
-        matchedInitialSubstate = NO,
+        matchedInitialSubstate = false,
         initialSubstate = this.get('initialSubstate'),
         substatesAreConcurrent = this.get('substatesAreConcurrent'),
         statechart = this.get('statechart'),
         i = 0,
         len = 0,
-        valueIsFunc = NO,
+        valueIsFunc = false,
         historyState = null;
         
     this.set('substates', substates);
@@ -618,7 +618,7 @@ SC.State = SC.Object.extend(
       arg = args[i];
       if (SC.typeOf(arg) !== SC.T_STRING || SC.empty(arg)) { 
         this.stateLogError("Invalid argument %@ for state observe handler %@ in state %@".fmt(arg, name, this));
-        validHandlers = NO;
+        validHandlers = false;
       }
     }
     
@@ -1019,7 +1019,7 @@ SC.State = SC.Object.extend(
   
   /**
     Called by the statechart to allow a state to try and handle the given event. If the
-    event is handled by the state then true is returned, otherwise NO.
+    event is handled by the state then true is returned, otherwise false.
     
     There is a particular order in how an event is handled by a state:
     
@@ -1071,19 +1071,19 @@ SC.State = SC.Object.extend(
     // then do not handle the event.
     if (this._registeredEventHandlers[event]) {
       this.stateLogWarning("state %@ can not handle event '%@' since it is a registered event handler".fmt(this, event));
-      return NO;
+      return false;
     }    
     
     if (this._registeredStateObserveHandlers[event]) {
       this.stateLogWarning("state %@ can not handle event '%@' since it is a registered state observe handler".fmt(this, event));
-      return NO;
+      return false;
     }
     
     // Now begin by trying a basic method on the state to respond to the event
     if (SC.typeOf(this[event]) === SC.T_FUNCTION) {
       if (trace) this.stateLogTrace("will handle event '%@'".fmt(event));
       sc.stateWillTryToHandleEvent(this, event, event);
-      ret = (this[event](arg1, arg2) !== NO);
+      ret = (this[event](arg1, arg2) !== false);
       sc.stateDidTryToHandleEvent(this, event, event, ret);
       return ret;
     }
@@ -1093,7 +1093,7 @@ SC.State = SC.Object.extend(
     if (handler) {
       if (trace) this.stateLogTrace("%@ will handle event '%@'".fmt(handler.name, event));
       sc.stateWillTryToHandleEvent(this, event, handler.name);
-      ret = (handler.handler.call(this, event, arg1, arg2) !== NO);
+      ret = (handler.handler.call(this, event, arg1, arg2) !== false);
       sc.stateDidTryToHandleEvent(this, event, handler.name, ret);
       return ret;
     }
@@ -1108,7 +1108,7 @@ SC.State = SC.Object.extend(
       if (event.match(handler.regexp)) {
         if (trace) this.stateLogTrace("%@ will handle event '%@'".fmt(handler.name, event));
         sc.stateWillTryToHandleEvent(this, event, handler.name);
-        ret = (handler.handler.call(this, event, arg1, arg2) !== NO);
+        ret = (handler.handler.call(this, event, arg1, arg2) !== false);
         sc.stateDidTryToHandleEvent(this, event, handler.name, ret);
         return ret;
       }
@@ -1119,13 +1119,13 @@ SC.State = SC.Object.extend(
     if (SC.typeOf(this['unknownEvent']) === SC.T_FUNCTION) {
       if (trace) this.stateLogTrace("unknownEvent will handle event '%@'".fmt(event));
       sc.stateWillTryToHandleEvent(this, event, 'unknownEvent');
-      ret = (this.unknownEvent(event, arg1, arg2) !== NO);
+      ret = (this.unknownEvent(event, arg1, arg2) !== false);
       sc.stateDidTryToHandleEvent(this, event, 'unknownEvent', ret);
       return ret;
     }
     
     // Nothing was able to handle the given event for this state
-    return NO;
+    return false;
   },
   
   /**
@@ -1185,7 +1185,7 @@ SC.State = SC.Object.extend(
   */
   stateDidBecomeEntered: function(context) { 
     this._setupAllStateObserveHandlers();
-    this._isEnteringState = NO;
+    this._isEnteringState = false;
   },
   
   /**
@@ -1236,7 +1236,7 @@ SC.State = SC.Object.extend(
     @see #exitState
   */
   stateDidBecomeExited: function(context) { 
-    this._isExitingState = NO;
+    this._isExitingState = false;
   },
   
   /** @private 
@@ -1318,7 +1318,7 @@ SC.State = SC.Object.extend(
   /** @override
   
     Returns true if this state can respond to the given event, otherwise
-    NO is returned
+    false is returned
   
     @param event {String} the value to check
     @returns {Boolean}

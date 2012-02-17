@@ -75,7 +75,7 @@ SC.mixin({
       SC._sc_readyQueue = null ;
 
       // trigger any bound ready events
-      SC.Event.trigger(document, "ready", null, NO);
+      SC.Event.trigger(document, "ready", null, false);
 
       // Now execute main, if defined and SC.UserDefaults is ready
       if (SC.userDefaults.get('ready')) {
@@ -98,7 +98,7 @@ SC.mixin({
 if (! BLOSSOM) {
 
 SC.mixin({
-  _sc_isReadyBound: NO,
+  _sc_isReadyBound: false,
   
   /** @private configures the ready event handler if needed */
   _sc_bindReady: function() {
@@ -108,7 +108,7 @@ SC.mixin({
     // Mozilla, Opera (see further below for it) and webkit nightlies 
     // currently support this event.  Use the handy event callback
     if ( document.addEventListener && !SC.browser.opera) {
-      document.addEventListener( "DOMContentLoaded", SC.didBecomeReady, NO );
+      document.addEventListener( "DOMContentLoaded", SC.didBecomeReady, false );
     }
 
     // If IE is used and is not in a frame
@@ -140,7 +140,7 @@ SC.mixin({
         }
         // and execute any waiting functions
         SC.didBecomeReady();
-      }, NO);
+      }, false);
     }
 
     if (SC.browser.safari && SC.browser.safari < 530.0 ) {
@@ -213,7 +213,7 @@ SC.mixin({
       SC._sc_readyQueue = null ;
 
       // trigger any bound ready events
-      SC.Event.trigger(document, "ready", null, NO);
+      SC.Event.trigger(document, "ready", null, false);
 
       // Remove any loading div
       if (SC.removeLoading) SC.$('#loading').remove();

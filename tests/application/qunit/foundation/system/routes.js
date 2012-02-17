@@ -145,7 +145,7 @@ suite('SC.routes defined routes', {
   setup: function() {
     router = SC.Object.create({
       params: null,
-      triggered: NO,
+      triggered: false,
       route: function(params) {
         this.set('params', params);
       },
@@ -174,7 +174,7 @@ test('calling trigger() triggers current location (again)', function() {
   SC.routes.add("foo", router, "triggerRoute");
   SC.routes.set('location', 'foo');
   ok(router.triggered, "Router triggered first time.");
-  router.triggered = NO;
+  router.triggered = false;
   
   SC.routes.trigger();
   ok(router.triggered, "Router triggered (again).");
@@ -280,7 +280,7 @@ suite('SC.routes location observing', {
   
   setup: function() {
     router = SC.Object.create({
-      hasBeenNotified: NO,
+      hasBeenNotified: false,
       route: function(params) {
         this.set('hasBeenNotified', true);
       }

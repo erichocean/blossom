@@ -15,7 +15,7 @@ test("verify sheet pane slide down works", function() {
   slidePane = SC.SheetPane.create({
     layout: { top: 60, width: 400, height: 200, centerX: 0 },
     contentView: SC.LabelView.extend({
-      escapeHTML: NO,
+      escapeHTML: false,
       value: '<h1>Slide Down!</h1>'
     })
   });

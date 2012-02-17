@@ -75,11 +75,11 @@ test('_toMilliseconds()', function() {
 
   // Now start at the original 1985 time, but modify only the hour as specified in time zone 60.
   options = { hour: originalHour - 1 };
-  equals(dt._toMilliseconds(options, ms, originalTimezone + 60, NO), ms, "Should get same result modifying only the hour as expressed in westerly time zone");
+  equals(dt._toMilliseconds(options, ms, originalTimezone + 60, false), ms, "Should get same result modifying only the hour as expressed in westerly time zone");
 
   // Now do the same thing the other way
   options = { hour: originalHour + 1 };
-  equals(dt._toMilliseconds(options, ms, originalTimezone - 60, NO), ms, "Should get same result modifying only the hour as expressed in westerly time zone");
+  equals(dt._toMilliseconds(options, ms, originalTimezone - 60, false), ms, "Should get same result modifying only the hour as expressed in westerly time zone");
 });
 
 test('create with a hash', function() {
@@ -202,7 +202,7 @@ test('compare', function() {
   equals(SC.DateTime.isComparable, true, "SC.DateTime is comparable");
   equals(SC.compare(dt, dt), 0, "A DateTime instance is equal to itself via compare()");
   equals(dt.isEqual(dt), true, "A DateTime instance is equal to itself via isEqual()");
-  equals(dt.advance({hour: 1}).isEqual(dt), NO);
+  equals(dt.advance({hour: 1}).isEqual(dt), false);
   equals(SC.compare(dt, dt.advance({hour: 1})), -1);
   equals(SC.compare(dt.advance({hour: 1}), dt), 1);
   equals(SC.DateTime.compareDate(dt, dt.advance({hour: 1})), 0);
@@ -238,11 +238,11 @@ test('Format', function() {
 });
 
 test('fancy getters', function() {
-  equals(dt.get('isLeapYear'), NO);
+  equals(dt.get('isLeapYear'), false);
 
   // (note must set all three components of a date
   // in order to get predictable results, per JS Date object spec)
-  equals(SC.DateTime.create({ year: 1900, month: 1, day: 1 }).get('isLeapYear'), NO);
+  equals(SC.DateTime.create({ year: 1900, month: 1, day: 1 }).get('isLeapYear'), false);
   equals(SC.DateTime.create({ year: 2000, month: 1, day: 1 }).get('isLeapYear'), true);
   equals(SC.DateTime.create({ year: 2004, month: 1, day: 1 }).get('isLeapYear'), true);
   

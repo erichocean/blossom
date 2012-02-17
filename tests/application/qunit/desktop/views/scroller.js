@@ -17,14 +17,14 @@ suite("SC.ScrollerView",{
 		SC.ScrollerView.extend({
 		  minimum:10,
 		  maximum:100,
-		  isEnabled:NO,
+		  isEnabled:false,
 		  layoutDirection: SC.LAYOUT_HORIZONTAL
 		}),
 		SC.ScrollerView.extend({
       layout:{ top: 0, bottom: 0, right: 0, width: 20 },
 		  minimum:0,
 		  maximum:100,
-		  hasButtons: NO
+		  hasButtons: false
 		})
 
 	  ]
@@ -57,9 +57,9 @@ test('value', function() {
 
 test('isEnabled', function() {
   ok(!view.$().hasClass('disabled'), 'scrollers should be enabled by default');
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.begin().end();
-  ok(view.$().hasClass('disabled'), 'scrollers should have disabled class set if isEnabled is set to NO');
+  ok(view.$().hasClass('disabled'), 'scrollers should have disabled class set if isEnabled is set to false');
 
   var layer = view.$('.button-down'),
       evt = SC.Event.simulateEvent(layer, 'mousedown'),

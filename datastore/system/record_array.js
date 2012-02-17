@@ -482,7 +482,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
     }
 
     if (!this.get('needsFlush') && !_flush) return this; // nothing to do
-    this.set('needsFlush', NO); // avoid running again.
+    this.set('needsFlush', false); // avoid running again.
 
     // fast exit
     var query = this.get('query'),
@@ -496,7 +496,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
     // OK, actually generate some results
     var storeKeys = this.get('storeKeys'),
         changed   = this._scq_changedStoreKeys,
-        didChange = NO,
+        didChange = false,
         K         = SC.Record,
         storeKeysToPace = [],
         startDate = new Date(),
@@ -517,7 +517,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
           if (!(status & K.EMPTY) && !((status & K.DESTROYED) || (status === K.BUSY_DESTROYING))) {
             rec = store.materializeRecord(storeKey);
             included = !!(rec && query.contains(rec));
-          } else included = NO ;
+          } else included = false ;
 
           // if storeKey should be in set but isn't -- add it.
           if (included) {
@@ -610,7 +610,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
       }
     }
 
-    this._insideFlush = NO;
+    this._insideFlush = false;
     return this;
   },
 

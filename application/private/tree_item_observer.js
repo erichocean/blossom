@@ -133,7 +133,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
   }.property('children').cacheable(),
   
   /**
-    Returns true if the item itself should be shown, NO if only its children
+    Returns true if the item itself should be shown, false if only its children
     should be shown.  Normally returns true unless the parentObject is null.
   */
   isHeaderVisible: function() {
@@ -320,7 +320,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
     this.invalidateBranchObserversAt(start);
     this._objectAtCache = this._outlineLevelCache = null;
     this._disclosureStateCache = null;
-    this._contentGroupIndexes = NO;
+    this._contentGroupIndexes = false;
     this.notifyPropertyChange('branchIndexes');
     
     var oldlen = this.get('length'),
@@ -380,7 +380,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
   // SC.COLLECTION CONTENT SUPPORT
   // 
 
-  _contentGroupIndexes: NO,
+  _contentGroupIndexes: false,
   
   /**
     Called by the collection view to return any group indexes.  The default 
@@ -391,7 +391,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
     if (content !== this) return null; // only care about receiver
 
     var ret = this._contentGroupIndexes;
-    if (ret !== NO) return ret ;
+    if (ret !== false) return ret ;
     
     // if this is not the root item, never do grouping
     if (this.get('parentObserver')) return null;
@@ -430,7 +430,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
   
   contentIndexIsGroup: function(view, content, idx) {
     var indexes = this.contentGroupIndexes(view, content);
-    return indexes ? indexes.contains(idx) : NO ;
+    return indexes ? indexes.contains(idx) : false ;
   },
   
   /**
@@ -821,7 +821,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
         key = del ? del.get('treeItemIsExpandedKey') : 'treeItemIsExpanded';
         this._treeItemIsExpandedKey = key ;
       }
-      item.setIfChanged(key, NO);
+      item.setIfChanged(key, false);
     }
     
     return this ;

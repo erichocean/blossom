@@ -65,10 +65,10 @@ test("layer creation and management", function() {
   // restore original updateLayer
   delete cv2.updateLayer ;
   
-  // all the views should have their isVisibleInWindow set to NO now
-  ok(!pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be NO');
-  ok(!cv1.get('isVisibleInWindow'), 'cv1.isVisibleInWindow should be NO');
-  ok(!cv2.get('isVisibleInWindow'), 'cv2.isVisibleInWindow should be NO');
+  // all the views should have their isVisibleInWindow set to false now
+  ok(!pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be false');
+  ok(!cv1.get('isVisibleInWindow'), 'cv1.isVisibleInWindow should be false');
+  ok(!cv2.get('isVisibleInWindow'), 'cv2.isVisibleInWindow should be false');
   // -----
   // OK, let's add this baby to the window
   SC.RunLoop.begin();

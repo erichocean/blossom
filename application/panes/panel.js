@@ -151,7 +151,7 @@ SC.PanelPane = SC.Pane.extend({
     var pane, ret = arguments.callee.base.apply(this, arguments);
     
     if (this._isShowingModal) {
-      this._isShowingModal = NO ;
+      this._isShowingModal = false ;
       if (pane = this._modalPane()) pane.paneDidRemove(this);
     }
     return ret ;
@@ -168,7 +168,7 @@ SC.PanelPane = SC.Pane.extend({
        
     } else {
       if (this._isShowingModal && (pane = this._modalPane())) {
-        this._isShowingModal = NO ;
+        this._isShowingModal = false ;
         pane.paneDidRemove(this); 
       }
     }

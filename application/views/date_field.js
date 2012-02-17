@@ -31,7 +31,7 @@ if (! BLOSSOM) {
   {{{
     timeOnly: Shared.DateFieldView.design({
       showTime: true,
-      showDate: NO,
+      showDate: false,
       valueBinding: '...'
     })
   }}}
@@ -67,7 +67,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
   
   // Default Behaviour
   showDate: true,
-  showTime: NO,
+  showTime: false,
   
   // Default formats to choose depending of the behaviour.
   formatTime: '%I:%M %p',
@@ -281,7 +281,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
       this.set('activeSelection', ns);
       return true;   
     }
-    return NO;
+    return false;
   },
 
   insertBacktab: function(evt) {
@@ -290,7 +290,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
       this.set('activeSelection', ns);
       return true;   
     }
-    return NO;
+    return false;
   },
 
   mouseUp: function(evt) {

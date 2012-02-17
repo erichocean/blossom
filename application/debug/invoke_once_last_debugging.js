@@ -36,7 +36,7 @@ SC.addInvokeOnceLastDebuggingInfo = function() {
       methods.contexts[SC.guidFor(method)] = context ;
     }
 
-    this._membersCacheIsValid = NO ;
+    this._membersCacheIsValid = false ;
 
     // THIS IS THE PORTION THAT DIFFERS FROM THE STANDARD IMPLEMENTATION
     
@@ -242,7 +242,7 @@ SC.addInvokeOnceLastDebuggingInfo = function() {
     while (currentFunction  &&  i < 6) {
       // Skip ourselves!
       if (first) {
-        first = NO;
+        first = false;
       }
       else {
         functionName = currentFunction.displayName || currentFunction.toString();

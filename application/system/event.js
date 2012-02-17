@@ -179,7 +179,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     The click handler for this method must have a method signature like:
 
-        function(event) { return true|NO; }
+        function(event) { return true|false; }
 
     Method Invocations
     ------------------
@@ -191,7 +191,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     with the target object you pass as "this".  The method should have a 
     signature like:
 
-        function(event, targetElement) { return true|NO; }
+        function(event, targetElement) { return true|false; }
 
     Like function handlers, you can pass an additional context data paramater
     that will be included on the event in the event.data property.
@@ -200,7 +200,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     ---------------------
 
     Both handler functions should return true if you want the event to 
-    continue to propagate and NO if you want it to stop.  Returning NO will
+    continue to propagate and false if you want it to stop.  Returning false will
     both stop bubbling of the event and will prevent any default action 
     taken by the browser.  You can also control these two behaviors separately
     by calling the stopPropagation() or preventDefault() methods on the event
@@ -289,7 +289,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     // Otherwise, remove the handler for this specific eventType if found.
     } else if (handlers = events[eventType]) {
-      var cleanupHandlers = NO;
+      var cleanupHandlers = false;
 
       // If a target/method is provided, remove only that one.
       if (target || method) {
@@ -333,7 +333,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     elem = events = handlers = null ; // avoid memory leaks
   },
 
-  NO_BUBBLE: ['blur', 'focus', 'change'],
+  false_BUBBLE: ['blur', 'focus', 'change'],
   
   /** @private
     Generates a simulated event object.  This is mostly useful for unit 
@@ -350,11 +350,11 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       type: eventType,
       target: elem,
       preventDefault: function() { this.cancelled = true; },
-      stopPropagation: function() { this.bubbles = NO; },
+      stopPropagation: function() { this.bubbles = false; },
       allowDefault: function() { this.hasCustomEventHandling = true; },
       timeStamp: Date.now(),
-      bubbles: (this.NO_BUBBLE.indexOf(eventType) < 0),
-      cancelled: NO,
+      bubbles: (this.false_BUBBLE.indexOf(eventType) < 0),
+      cancelled: false,
       normalized: true
     });
     if (attrs) SC.mixin(ret, attrs);
@@ -406,10 +406,10 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // Handle triggering native .onfoo handlers
     // onfoo = elem["on" + eventType] ;
     // isClick = SC.CoreQuery.nodeName(elem, 'a') && eventType === 'click';
-    // if ((!fn || isClick) && onfoo && onfoo.apply(elem, args) === NO) ret = NO;
+    // if ((!fn || isClick) && onfoo && onfoo.apply(elem, args) === false) ret = false;
 
     // Trigger the native events (except for clicks on links)
-    if (fn && donative !== NO && ret !== NO && !isClick) {
+    if (fn && donative !== false && ret !== false && !isClick) {
       this.triggered = true;
       try {
         sc_assert(!elem[eventType].isClass);
@@ -418,7 +418,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       } catch (e) {}
     }
     
-    this.triggered = NO;
+    this.triggered = false;
     return ret;
   },
 
@@ -441,7 +441,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // from within a trigger.
     if ((typeof SC === "undefined") || SC.Event.triggered) return true ;
     
-    // returned undefined or NO
+    // returned undefined or false
     var val, ret, namespace, all, handlers, args, key, handler, method, target;
 
     // Normalize event across browsers.  The new event will actually wrap the
@@ -451,7 +451,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     // get the handlers for this event type
     handlers = (SC.data(this, "events") || {})[event.type];
-    if (!handlers) return NO; // nothing to do
+    if (!handlers) return false; // nothing to do
 
     // invoke all handlers
     for (key in handlers ) {
@@ -466,12 +466,12 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       target = handler[0] || this ;
       ret = method.apply( target, args );
 
-      if (val !== NO) val = ret;
+      if (val !== false) val = ret;
 
-      // If method returned NO, do not continue.  Stop propogation and return 
-      // the default.  Note that we test explicitly for NO since if the 
+      // If method returned false, do not continue.  Stop propogation and return 
+      // the default.  Note that we test explicitly for false since if the 
       // handler returns no specific value, we do not want to stop.
-      if (ret === NO) {
+      if (ret === false) {
         event.preventDefault();
         event.stopPropagation();
       }
@@ -533,7 +533,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     
     // Bind the global event handler to the element.
     sc_assert(elem.addEventListener);
-    elem.addEventListener(eventType, listener, NO);
+    elem.addEventListener(eventType, listener, false);
 
     elem = listener = null; // avoid memory leak
   },
@@ -554,7 +554,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     var listener = SC.data(elem, "listener") ;
     if (listener) {
       sc_assert(elem.removeEventListener);
-      elem.removeEventListener(eventType, listener, NO);
+      elem.removeEventListener(eventType, listener, false);
     }
 
     elem = listener = null; // avoid memory leak
@@ -594,7 +594,7 @@ SC.Event.prototype = {
     you want to provide detailed control over how the browser handles the 
     real event.
   */
-  hasCustomEventHandling: NO,
+  hasCustomEventHandling: false,
   
   /**
     Indicates that you want to allow the normal default behavior.  Sets
@@ -618,7 +618,7 @@ SC.Event.prototype = {
     var evt = this.originalEvent ;
     if (evt) {
       if (evt.preventDefault) evt.preventDefault() ;
-      evt.returnValue = NO ; // IE
+      evt.returnValue = false ; // IE
     }
     this.hasCustomEventHandling = true ;
     return this ;
@@ -861,7 +861,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     
     The click handler for this method must have a method signature like:
     
-      function(event) { return true|NO; }
+      function(event) { return true|false; }
       
     h2. Method Invocations
     
@@ -872,7 +872,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     with the target object you pass as "this".  The method should have a 
     signature like:
     
-      function(event, targetElement) { return true|NO; }
+      function(event, targetElement) { return true|false; }
       
     Like function handlers, you can pass an additional context data paramater
     that will be included on the event in the event.data property.
@@ -880,7 +880,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     h2. Handler Return Values
     
     Both handler functions should return true if you want the event to 
-    continue to propagate and NO if you want it to stop.  Returning NO will
+    continue to propagate and false if you want it to stop.  Returning false will
     both stop bubbling of the event and will prevent any default action 
     taken by the browser.  You can also control these two behaviors separately
     by calling the stopPropagation() or preventDefault() methods on the event
@@ -1009,7 +1009,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // otherwise, remove the handler for this specific eventType if found
     } else if (handlers = events[eventType]) {
 
-      var cleanupHandlers = NO ;
+      var cleanupHandlers = false ;
       
       // if a target/method is provided, remove only that one
       if (target || method) {
@@ -1054,7 +1054,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     return this ;
   },
 
-  NO_BUBBLE: ['blur', 'focus', 'change'],
+  false_BUBBLE: ['blur', 'focus', 'change'],
   
   /**
     Generates a simulated event object.  This is mostly useful for unit 
@@ -1071,11 +1071,11 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       type: eventType,
       target: elem,
       preventDefault: function(){ this.cancelled = true; },
-      stopPropagation: function(){ this.bubbles = NO; },
+      stopPropagation: function(){ this.bubbles = false; },
       allowDefault: function() { this.hasCustomEventHandling = true; },
       timeStamp: Date.now(),
-      bubbles: (this.NO_BUBBLE.indexOf(eventType)<0),
-      cancelled: NO,
+      bubbles: (this.false_BUBBLE.indexOf(eventType)<0),
+      cancelled: false,
       normalized: true
     });
     if (attrs) SC.mixin(ret, attrs) ;
@@ -1150,10 +1150,10 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // Handle triggering native .onfoo handlers
     onfoo = elem["on" + eventType] ;
     isClick = SC.CoreQuery.nodeName(elem, 'a') && eventType === 'click';
-    if ((!fn || isClick) && onfoo && onfoo.apply(elem, args) === NO) ret = NO;
+    if ((!fn || isClick) && onfoo && onfoo.apply(elem, args) === false) ret = false;
 
     // Trigger the native events (except for clicks on links)
-    if (fn && donative !== NO && ret !== NO && !isClick) {
+    if (fn && donative !== false && ret !== false && !isClick) {
       this.triggered = true;
       try {
         elem[ eventType ]();
@@ -1161,7 +1161,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       } catch (e) {}
     }
     
-    this.triggered = NO;
+    this.triggered = false;
 
     return ret;
   },
@@ -1187,7 +1187,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     // from within a trigger.
     if ((typeof SC === "undefined") || SC.Event.triggered) return true ;
     
-    // returned undefined or NO
+    // returned undefined or false
     var val, ret, namespace, all, handlers, args, key, handler, method, target;
 
     // normalize event across browsers.  The new event will actually wrap the
@@ -1197,7 +1197,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     // get the handlers for this event type
     handlers = (SC.data(this, "events") || {})[event.type];
-    if (!handlers) return NO ; // nothing to do
+    if (!handlers) return false ; // nothing to do
     
     // invoke all handlers
     for (key in handlers ) {
@@ -1212,12 +1212,12 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       target = handler[0] || this ;
       ret = method.apply( target, args );
       
-      if (val !== NO) val = ret;
+      if (val !== false) val = ret;
 
-      // if method returned NO, do not continue.  Stop propogation and
-      // return default.  Note that we test explicitly for NO since 
+      // if method returned false, do not continue.  Stop propogation and
+      // return default.  Note that we test explicitly for false since 
       // if the handler returns no specific value, we do not want to stop.
-      if ( ret === NO ) {
+      if ( ret === false ) {
         event.preventDefault();
         event.stopPropagation();
       }
@@ -1244,7 +1244,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     your own handlers for custom events here by simply naming the event and
     including a hash with the following properties:
     
-     - setup: this function should setup the handler or return NO
+     - setup: this function should setup the handler or return false
      - teardown: this function should remove the event listener
      
   */
@@ -1265,13 +1265,13 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
         Implement support for mouseenter on browsers other than IE */
     mouseenter: {
       setup: function() {
-        if ( SC.browser.msie ) return NO;
+        if ( SC.browser.msie ) return false;
         SC.Event.add(this, 'mouseover', SC.Event.special.mouseenter.handler);
         return true;
       },
 
       teardown: function() {
-        if ( SC.browser.msie ) return NO;
+        if ( SC.browser.msie ) return false;
         SC.Event.remove(this, 'mouseover', SC.Event.special.mouseenter.handler);
         return true;
       },
@@ -1289,13 +1289,13 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
         Implement support for mouseleave on browsers other than IE */
     mouseleave: {
       setup: function() {
-        if ( SC.browser.msie ) return NO;
+        if ( SC.browser.msie ) return false;
         SC.Event.add(this, "mouseout", SC.Event.special.mouseleave.handler);
         return true;
       },
 
       teardown: function() {
-        if ( SC.browser.msie ) return NO;
+        if ( SC.browser.msie ) return false;
         SC.Event.remove(this, "mouseout", SC.Event.special.mouseleave.handler);
         return true;
       },
@@ -1353,8 +1353,8 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
 
     // Check for a special event handler
     // Only use addEventListener/attachEvent if the special
-    // events handler returns NO
-    if ( !special || special.setup.call(elem)===NO) {
+    // events handler returns false
+    if ( !special || special.setup.call(elem)===false) {
       
       // Save element in cache.  This must be removed later to avoid 
       // memory leaks.
@@ -1368,7 +1368,7 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
       
       // Bind the global event handler to the element
       if (elem.addEventListener) {
-        elem.addEventListener(eventType, listener, NO);
+        elem.addEventListener(eventType, listener, false);
       } else if (elem.attachEvent) {
         // attachEvent is not working for IE8 and xhr objects
         // there is currently a hack in request , but it needs to fixed here.
@@ -1398,11 +1398,11 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
   */
   _removeEventListener: function(elem, eventType) {
     var listener, special = SC.Event.special[eventType] ;
-    if (!special || (special.teardown.call(elem)===NO)) {
+    if (!special || (special.teardown.call(elem)===false)) {
       listener = SC.data(elem, "listener") ;
       if (listener) {
         if (elem.removeEventListener) {
-          elem.removeEventListener(eventType, listener, NO);
+          elem.removeEventListener(eventType, listener, false);
         } else if (elem.detachEvent) {
           elem.detachEvent("on" + eventType, listener);
         }
@@ -1438,7 +1438,7 @@ SC.Event.prototype = {
   /**
     Set to true if you have called either preventDefault() or stopPropagation().  This allows a generic event handler to notice if you want to provide detailed control over how the browser handles the real event.
   */
-  hasCustomEventHandling: NO,
+  hasCustomEventHandling: false,
   
   /**
     Returns the touches owned by the supplied view.
@@ -1476,7 +1476,7 @@ SC.Event.prototype = {
     var evt = this.originalEvent ;
     if (evt) {
       if (evt.preventDefault) evt.preventDefault() ;
-      evt.returnValue = NO ; // IE
+      evt.returnValue = false ; // IE
     }
     this.hasCustomEventHandling = true ;
     return this ;

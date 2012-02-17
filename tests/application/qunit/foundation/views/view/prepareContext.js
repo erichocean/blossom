@@ -22,7 +22,7 @@ test("populates context with layerId & classNames from view if firstTime", funct
   
   // test w/o firstTime
   context = view.renderContext();
-  view.prepareContext(context, NO);
+  view.prepareContext(context, false);
   ok(context.id() !== 'foo', 'did not set id');
   ok(context.hasClass('bar'), 'did set class name');
 });
@@ -47,8 +47,8 @@ test("invokes renderLayout if first time", function() {
 	// test w/o firstTime
 	runCount = 0 ;
   context = view.renderContext();
-  isFirstTime = NO ;
-	view.prepareContext(context, NO);
+  isFirstTime = false ;
+	view.prepareContext(context, false);
 	equals(runCount, 0, 'should not call renderLayout');
 
 });
@@ -65,13 +65,13 @@ test("adds text-selectable class if view has isTextSelectable", function() {
   ok(context.hasClass('allow-select'), 'should have text-selectable class');
   
   context = view.renderContext();
-  view.set('isTextSelectable', NO);
+  view.set('isTextSelectable', false);
   view.prepareContext(context, true);
   ok(!context.hasClass('allow-select'), 'should NOT have text-selectable class');
   
 });
 
-test("adds disabled class if view isEnabled = NO", function() {
+test("adds disabled class if view isEnabled = false", function() {
 
   var view = SC.View.create() ;
   var context ;
@@ -82,13 +82,13 @@ test("adds disabled class if view isEnabled = NO", function() {
   ok(!context.hasClass('disabled'), 'should NOT have disabled class');
   
   context = view.renderContext();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   view.prepareContext(context, true);
   ok(context.hasClass('disabled'), 'should have disabled class');
   
 });
 
-test("adds hidden class if view isVisible = NO", function() {
+test("adds hidden class if view isVisible = false", function() {
 
   var view = SC.View.create() ;
   var context ;
@@ -99,7 +99,7 @@ test("adds hidden class if view isVisible = NO", function() {
   ok(!context.hasClass('hidden'), 'should NOT have hidden class');
   
   context = view.renderContext();
-  view.set('isVisible', NO);
+  view.set('isVisible', false);
   view.prepareContext(context, true);
   ok(context.hasClass('hidden'), 'should have hidden class');  
 });
@@ -123,8 +123,8 @@ test("invokes render() passing context & firstTime", function() {
 
   runCount = 0 ;
   context = view.renderContext();
-  isFirstTime = NO;
-	view.prepareContext(context, NO);  
+  isFirstTime = false;
+	view.prepareContext(context, false);  
 	equals(runCount, 1, 'did invoke render()');
 });
 
@@ -159,8 +159,8 @@ test("invokes renderMixin() from mixins, passing context & firstTime", function(
 
   runCount = 0 ;
   context = view.renderContext();
-  isFirstTime = NO;
-	view.prepareContext(context, NO);  
+  isFirstTime = false;
+	view.prepareContext(context, false);  
 	equals(runCount, 2, 'did invoke renderMixin() from both mixins');
 });
 

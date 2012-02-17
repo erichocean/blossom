@@ -28,7 +28,7 @@ SC.Response = SC.Object.extend(
     
     @property {Boolean}
   */
-  isError: NO,
+  isError: false,
   
   /**
     Always the current response
@@ -95,7 +95,7 @@ SC.Response = SC.Object.extend(
     @property {Boolean}
   */
   isJSON: function() {
-    return this.getPath('request.isJSON') || NO;
+    return this.getPath('request.isJSON') || false;
   }.property('request').cacheable(),
 
   /**
@@ -105,7 +105,7 @@ SC.Response = SC.Object.extend(
     @property {Boolean}
   */
   isXML: function() {
-    return this.getPath('request.isXML') || NO ;
+    return this.getPath('request.isXML') || false ;
   }.property('request').cacheable(),
   
   /** 
@@ -168,10 +168,10 @@ SC.Response = SC.Object.extend(
   /**
     Set to true if response is cancelled
   */
-  isCancelled: NO,
+  isCancelled: false,
   
   /**
-    Set to true if the request timed out.  Set to NO if the request has
+    Set to true if the request timed out.  Set to false if the request has
     completed before the timeout value.  Set to null if the timeout timer is
     still ticking.
   */
@@ -214,7 +214,7 @@ SC.Response = SC.Object.extend(
         target:   this, 
         action:   'timeoutReached', 
         interval: timeout,
-        repeats:  NO
+        repeats:  false
       });
       this.set('timeoutTimer', timer);
     }
@@ -234,7 +234,7 @@ SC.Response = SC.Object.extend(
   /**
     Invoked by the transport when it receives a response.  The passed-in
     callback will be invoked to actually process the response.  If cancelled
-    we will pass NO.  You should clean up instead.
+    we will pass false.  You should clean up instead.
     
     Invokes callbacks on the source request also.
     
@@ -248,7 +248,7 @@ SC.Response = SC.Object.extend(
       // If we had a timeout timer scheduled, invalidate it now.
       var timer = this.get('timeoutTimer');
       if (timer) timer.invalidate();
-      this.set('timedOut', NO);
+      this.set('timedOut', false);
     
       var req = this.get('request');
       var source = req ? req.get('source') : null;
@@ -327,7 +327,7 @@ SC.Response = SC.Object.extend(
   */
   _notifyListener: function(listeners, status) {
     var info = listeners[status], params, target, action;
-    if (!info) return NO ;
+    if (!info) return false ;
     
     params = (info.params || []).copy();
     params.unshift(this);
@@ -348,7 +348,7 @@ SC.Response = SC.Object.extend(
     var listeners = this.get('listeners'), 
         status    = this.get('status'),
         baseStat  = Math.floor(status / 100) * 100,
-        handled   = NO ;
+        handled   = false ;
         
     if (!listeners) return this ; // nothing to do
     
@@ -437,7 +437,7 @@ SC.XHRResponse = SC.Response.extend({
           return item ;
         } catch (e) {}
       }
-      return NO;
+      return false;
     }
     
     rawRequest = tryThese(
@@ -460,7 +460,7 @@ SC.XHRResponse = SC.Response.extend({
         return ret ;
       };
       if (!SC.isNode && (SC.browser && !SC.browser.msie && !SC.browser.opera)) {
-        rawRequest.addEventListener('readystatechange', handleReadyStateChange, NO);
+        rawRequest.addEventListener('readystatechange', handleReadyStateChange, false);
         // SC.Event.add(rawRequest, 'readystatechange', this, 
         //              this.finishRequest, rawRequest) ;
       } else {
@@ -531,7 +531,7 @@ SC.XHRResponse = SC.Response.extend({
       // Avoid memory leaks
       if (!SC.isNode && (SC.browser && !SC.browser.msie && !SC.browser.opera)) {
         sc_assert(listener);
-        rawRequest.removeEventListener('readystatechange', listener, NO);
+        rawRequest.removeEventListener('readystatechange', listener, false);
         // SC.Event.remove(rawRequest, 'readystatechange', this, this.finishRequest);
       } else {
         rawRequest.onreadystatechange = null;
@@ -539,7 +539,7 @@ SC.XHRResponse = SC.Response.extend({
 
       return true;
     }
-    return NO; 
+    return false; 
   }
 
   

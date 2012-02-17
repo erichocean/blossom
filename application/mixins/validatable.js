@@ -107,7 +107,7 @@ SC.Validatable = {
   
   /**
     Runs a keypress validation.  Returns true if the keypress should be 
-    allowed, NO otherwise.  If no validator is defined, always returns true.
+    allowed, false otherwise.  If no validator is defined, always returns true.
     
     @param {String} charStr the key string
     @returns {Boolean}

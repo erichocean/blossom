@@ -171,7 +171,7 @@ SC.StatePathMatcher = SC.Object.extend(
   */
   match: function(path) {
     this._stack = path.split('.');
-    if (SC.empty(path) || SC.typeOf(path) !== SC.T_STRING) return NO;
+    if (SC.empty(path) || SC.typeOf(path) !== SC.T_STRING) return false;
     return this._chain.match();
   },
   
@@ -208,7 +208,7 @@ SC.StatePathMatcher._Token = SC.Object.extend({
     Used to match against what is currently on the owner's
     current path stack
   */
-  match: function() { return NO; }
+  match: function() { return false; }
   
 });
 
@@ -232,7 +232,7 @@ SC.StatePathMatcher._BasicToken = SC.StatePathMatcher._Token.extend({
   match: function() {
     var part = this.owner._pop(),
         token = this.nextToken;
-    if (this.value !== part) return NO;
+    if (this.value !== part) return false;
     return token ? token.match() : true;
   }
     
@@ -265,7 +265,7 @@ SC.StatePathMatcher._ExpandToken = SC.StatePathMatcher._Token.extend({
         token = this.nextToken;
           
     part = this.owner._pop();
-    if (part !== end) return NO;
+    if (part !== end) return false;
       
     while (part = this.owner._pop()) {
       if (part === start) {
@@ -273,7 +273,7 @@ SC.StatePathMatcher._ExpandToken = SC.StatePathMatcher._Token.extend({
       }
     }
       
-    return NO;
+    return false;
   }
     
 });
@@ -300,13 +300,13 @@ SC.StatePathMatcher._ThisToken = SC.StatePathMatcher._Token.extend({
         
     part = this.owner._lastPopped;
 
-    if (!part || this.owner._stack.length !== 0) return NO;
+    if (!part || this.owner._stack.length !== 0) return false;
     
     for (; i < len; i += 1) {
       if (substates[i].get('name') === part) return true;
     }
     
-    return NO;
+    return false;
   }
   
 });

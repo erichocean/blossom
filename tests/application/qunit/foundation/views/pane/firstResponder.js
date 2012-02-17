@@ -89,7 +89,7 @@ test("make firstResponder from other view, not keyPane", function() {
   ok(view0.get('isFirstResponder'), 'should set view.isFirstResponder to true');
   ok(!view0.get('isKeyResponder'), 'should not set view.isKeyResponder');
   
-  ok(!view1.get('isFirstResponder'), 'view1.isFirstResponder should now be set to NO');
+  ok(!view1.get('isFirstResponder'), 'view1.isFirstResponder should now be set to false');
   
 });
 
@@ -117,8 +117,8 @@ test("make firstResponder from other view, as keyPane", function() {
   ok(view0.get('isFirstResponder'), 'should set view.isFirstResponder to true');
   ok(view0.get('isKeyResponder'), 'should set view.isKeyResponder');
   
-  ok(!view1.get('isFirstResponder'), 'view1.isFirstResponder should now be set to NO');
-  ok(!view1.get('isKeyResponder'), 'view1.isFirstResponder should now be set to NO');
+  ok(!view1.get('isFirstResponder'), 'view1.isFirstResponder should now be set to false');
+  ok(!view1.get('isKeyResponder'), 'view1.isFirstResponder should now be set to false');
   
 });
 

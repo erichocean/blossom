@@ -16,7 +16,7 @@ SC.TaskQueue = SC.Task.extend({
   /**
     If true, the queue will automatically run in the background when the browser idles.
   */
-  runWhenIdle: NO,
+  runWhenIdle: false,
   
   /**
     A limit which, if exceeded, the task queue will wait until a later run
@@ -32,7 +32,7 @@ SC.TaskQueue = SC.Task.extend({
   /**
     If running, true.
   */
-  isRunning: NO,
+  isRunning: false,
   
   /**
     The minimum elapsed time since the last event. As a rule of thumb, perhaps
@@ -107,7 +107,7 @@ SC.TaskQueue = SC.Task.extend({
     @private
   */
   _idleEntry: function() {
-    this._idleIsScheduled = NO;
+    this._idleIsScheduled = false;
     var last = SC.RunLoop.lastRunLoopEnd;
     if (Date.now() - last > this.get('minimumIdleDuration')) {
       // if no recent events (within < 1s)
@@ -139,7 +139,7 @@ SC.TaskQueue = SC.Task.extend({
     // set up idle timer if needed
     this._setupIdle();
     
-    this.set("isRunning", NO);
+    this.set("isRunning", false);
   }
   
   

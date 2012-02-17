@@ -33,7 +33,7 @@ suite("SC.NestedStore#readDataHash", {
 // BASIC STATE TRANSITIONS
 // 
 
-test("data state=INHERITED, lockOnRead=true, parent editable=NO", function() {
+test("data state=INHERITED, lockOnRead=true, parent editable=false", function() {
   // preconditions
   equals(store.get('lockOnRead'), true, 'precond - lockOnRead should be true');
   equals(store.storeKeyEditState(storeKey), SC.Store.INHERITED, 'precond - storeKey should be inherited from parent');
@@ -54,11 +54,11 @@ test("data state=INHERITED, lockOnRead=true, parent editable=NO", function() {
 });
 
 
-test("data state=INHERITED, lockOnRead=NO, parent editable=NO", function() {
+test("data state=INHERITED, lockOnRead=false, parent editable=false", function() {
   // preconditions
-  store.set('lockOnRead', NO);
+  store.set('lockOnRead', false);
   
-  equals(store.get('lockOnRead'), NO, 'precond - lockOnRead should be NO');
+  equals(store.get('lockOnRead'), false, 'precond - lockOnRead should be false');
   equals(store.storeKeyEditState(storeKey), SC.Store.INHERITED, 'precond - storeKey should be inherited from parent');
   var oldrev = store.revisions[storeKey]; // save old rev for testing later
 

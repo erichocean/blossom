@@ -33,7 +33,7 @@ SC.CheckboxView = SC.ButtonView.extend(SC.StaticLayout, SC.Button,
   tagName: 'label',
 
   /* Ellipsis is disabled by default to allow multiline text */
-  needsEllipsis: NO,
+  needsEllipsis: false,
 
   render: function(context, firstTime) {
     var dt, elem,
@@ -75,7 +75,7 @@ SC.CheckboxView = SC.ButtonView.extend(SC.StaticLayout, SC.Button,
   
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return NO;
+    else return false;
   }.property('isEnabled'),
   
   
@@ -103,8 +103,8 @@ SC.CheckboxView = SC.ButtonView.extend(SC.StaticLayout, SC.Button,
       this.$().attr('aria-checked', 'true');
       this.set('value', this.get('toggleOnValue'));
     }
-    this.set('isActive', NO);
-    this._isMouseDown = NO;
+    this.set('isActive', false);
+    this._isMouseDown = false;
     return true;
   },
   

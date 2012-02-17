@@ -52,7 +52,7 @@ if (! BLOSSOM) {
   document body, as well as deregistering it from the RootResponder so that it 
   no longer receives events.
   
-  The isVisibleInWindow method will also change to NO for the Pane and all of 
+  The isVisibleInWindow method will also change to false for the Pane and all of 
   its childViews and the views will no longer have their updateDisplay methods 
   called.  
   
@@ -75,7 +75,7 @@ if (! BLOSSOM) {
   application.
   
   You can prevent your Pane from becoming key by setting the acceptsKeyPane 
-  to NO on the pane.  This is useful when creating palettes and other popups 
+  to false on the pane.  This is useful when creating palettes and other popups 
   that should not steal keyboard control from another view.
 
   @extends SC.View
@@ -297,7 +297,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   firstResponder: null,
   
   /** 
-    If true, this pane can become the key pane.  You may want to set this to NO 
+    If true, this pane can become the key pane.  You may want to set this to false 
     for certain types of panes.  For example, a palette may never want to 
     become key.  The default value is true.
     
@@ -310,7 +310,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     
     @property {Boolean}
   */
-  isKeyPane: NO,
+  isKeyPane: false,
 
   /**
     Make the pane receive key events.  Until you call this method, the 
@@ -369,7 +369,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     // change setting
     if (current) {
       current.beginPropertyChanges()
-        .set('isFirstResponder', NO).set('isKeyResponder', NO)
+        .set('isFirstResponder', false).set('isKeyResponder', false)
       .endPropertyChanges();
     }
 
@@ -422,7 +422,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
       }
     }
 
-    return NO;
+    return false;
   },
 
   /** @private method forwards status changes in a generic way. */
@@ -448,7 +448,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {SC.Pane} reciever
   */
   willLoseKeyPaneTo: function(pane) {
-    this._forwardKeyChange(this.get('isKeyPane'), 'willLoseKeyResponderTo', pane, NO);
+    this._forwardKeyChange(this.get('isKeyPane'), 'willLoseKeyResponderTo', pane, false);
     return this ;
   },
   
@@ -477,7 +477,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   */
   didLoseKeyPaneTo: function(pane) {
     var isKeyPane = this.get('isKeyPane');
-    this.set('isKeyPane', NO);
+    this.set('isKeyPane', false);
     this._forwardKeyChange(isKeyPane, 'didLoseKeyResponderTo', pane);
     return this ;
   },
@@ -509,7 +509,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     
     @property {Boolean}
   */
-  isMainPane: NO,
+  isMainPane: false,
   
   /**
     Invoked when the pane is about to become the focused pane.  Override to
@@ -538,7 +538,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {void}
   */
   blurMainTo: function(pane) {
-    this.set('isMainPane', NO) ;
+    this.set('isMainPane', false) ;
   },
   
   /** 
@@ -597,7 +597,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     this.rootResponder = null ;
   
     // clean up some of my own properties
-    this.set('isPaneAttached', NO) ;
+    this.set('isPaneAttached', false) ;
     this.parentViewDidChange();
     return this ;
   },
@@ -709,12 +709,12 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @property {Boolean}
     @readOnly
   */
-  isPaneAttached: NO,
+  isPaneAttached: false,
   
   /**
     If true, a touch itnercept pane will be added above this pane.
   */
-  hasTouchIntercept: NO,
+  hasTouchIntercept: false,
   
   /**
     The Z-Index of the pane. Currently, you have to match this in CSS.

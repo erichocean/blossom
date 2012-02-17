@@ -78,8 +78,8 @@ var pane = SC.ControlTestPane.design({ height: 32 })
     contentCheckboxKey:  "checkbox"
   }))
 
-  .add("checkbox - NO", SC.ListItemView.design({ 
-    content: SC.Object.create({ title: "List Item", checkbox: NO }),
+  .add("checkbox - false", SC.ListItemView.design({ 
+    content: SC.Object.create({ title: "List Item", checkbox: false }),
     contentValueKey: "title",
     contentCheckboxKey:  "checkbox"
   }))
@@ -191,7 +191,7 @@ suite("SC.ListItemView UI", pane.standardSetup());
 test("basic", function() {
   var view = pane.view('basic');
 
-  basic(view, NO, NO);
+  basic(view, false, false);
   icon(view, null);
   label(view, 'List Item');
   checkbox(view, null);
@@ -201,7 +201,7 @@ test("basic", function() {
 
 test("full", function() {
   var view = pane.view('full');
-  basic(view, NO, NO);
+  basic(view, false, false);
   icon(view, 'sc-icon-folder-16');
   label(view, 'List Item');
   checkbox(view, true);
@@ -211,7 +211,7 @@ test("full", function() {
 
 test("full - sel", function() {
   var view = pane.view('full - sel');
-  basic(view, true, NO);
+  basic(view, true, false);
   icon(view, 'sc-icon-folder-16');
   label(view, 'List Item');
   checkbox(view, true);
@@ -226,7 +226,7 @@ test("icon", function() {
 
 test('checkbox', function() {
   checkbox(pane.view('checkbox - true'), true);
-  checkbox(pane.view('checkbox - NO'), NO);
+  checkbox(pane.view('checkbox - false'), false);
 });
 
 test('count', function() {
@@ -272,8 +272,8 @@ test("changing label should change display", function() {
 
 test("changing checkbox value should update display", function() {
   var view = pane.view('full');
-  adjustContent(view, 'checkbox', NO);
-  checkbox(view, NO); // verify change
+  adjustContent(view, 'checkbox', false);
+  checkbox(view, false); // verify change
 });
 
 test("changing count value should update display", function() {

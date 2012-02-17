@@ -17,7 +17,7 @@ var items = [
   { separator: true },
   { title: 'Selected Menu Item…', isChecked: true, keyEquivalent: 'ctrl_shift_o' },
   { title: 'Item with Submenu', subMenu: [{ title: 'Submenu item 1' }, { title: 'Submenu item 2'}] },
-  { title: 'Disabled Menu Item', isEnabled: NO }//,
+  { title: 'Disabled Menu Item', isEnabled: false }//,
   // { isSeparator: true },
   // { groupTitle: 'Menu Label', items: [{ title: 'Nested Item' }, { title: 'Nested Item' }] }
 ];

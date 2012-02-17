@@ -56,18 +56,18 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   /**
     This type of store is not nested.
 
-		@default NO
+		@default false
     @type Boolean
   */
-  isNested: NO,
+  isNested: false,
 
   /**
     This type of store is not nested.
 
-		@default NO
+		@default false
     @type Boolean
   */
-  commitRecordsAutomatically: NO,
+  commitRecordsAutomatically: false,
 
   // ..........................................................
   // DATA SOURCE SUPPORT
@@ -612,7 +612,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     storeKeys.forEach(function(storeKey) {
       if (records.contains(storeKey)) {
-        statusOnly = hasDataChanges.contains(storeKey) ? NO : true;
+        statusOnly = hasDataChanges.contains(storeKey) ? false : true;
         rec = this.records[storeKey];
         keys = propertyForStoreKeys ? propertyForStoreKeys[storeKey] : null;
 
@@ -669,11 +669,11 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     if (records) {
       for(storeKey in records) {
         if (!records.hasOwnProperty(storeKey)) continue ;
-        this._notifyRecordPropertyChange(parseInt(storeKey, 10), NO);
+        this._notifyRecordPropertyChange(parseInt(storeKey, 10), false);
       }
     }
 
-    this.set('hasChanges', NO);
+    this.set('hasChanges', false);
   },
 
   /** @private
@@ -729,7 +729,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
       myEditables[storeKey] = 0 ; // always make dataHash no longer editable
 
-      this._notifyRecordPropertyChange(storeKey, NO);
+      this._notifyRecordPropertyChange(storeKey, false);
     }
 
     // add any records to the changelog for commit handling
@@ -1589,7 +1589,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     // now retrieve storekeys from dataSource.  if there is no dataSource,
     // then act as if we couldn't retrieve.
-    ok = NO;
+    ok = false;
     if (source) ok = source.retrieveRecords.call(source, this, ret, ids);
 
     // if the data source could not retrieve or if there is no source, then
@@ -1841,7 +1841,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     on the store key.
 
     You have to pass either the id or the storeKey otherwise it will return
-    NO.
+    false.
 
     @param {SC.Record} recordType the expected record type
     @param {String} id the id of the record to commit
@@ -1854,7 +1854,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   commitRecord: function(recordType, id, storeKey, params, callback) {
     var array = this._TMP_RETRIEVE_ARRAY,
         ret ;
-    if (id === undefined && storeKey === undefined ) return NO;
+    if (id === undefined && storeKey === undefined ) return false;
     if (storeKey !== undefined) {
       array[0] = storeKey;
       storeKey = array;
@@ -2152,7 +2152,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     if (dataHash) this.writeDataHash(storeKey, dataHash, status) ;
     if (newId) SC.Store.replaceIdFor(storeKey, newId);
 
-    statusOnly = dataHash || newId ? NO : true;
+    statusOnly = dataHash || newId ? false : true;
     this.dataHashDidChange(storeKey, null, statusOnly);
 
     // Force record to refresh its cached properties based on store key
@@ -2247,7 +2247,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     @param {Object} id the record id or null
     @param {Hash} dataHash data hash to load
     @param {Number} storeKey optional store key.
-    @returns {Number|Boolean} storeKey if push was allowed, NO if not
+    @returns {Number|Boolean} storeKey if push was allowed, false if not
   */
   pushRetrieve: function(recordType, id, dataHash, storeKey) {
     var K = SC.Record, status;
@@ -2266,7 +2266,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       return storeKey;
     }
     //conflicted (ready)
-    return NO;
+    return false;
   },
 
   /**
@@ -2276,7 +2276,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     @param {Class} recordType the SC.Record subclass
     @param {Object} id the record id or null
     @param {Number} storeKey optional store key.
-    @returns {Number|Boolean} storeKey if push was allowed, NO if not
+    @returns {Number|Boolean} storeKey if push was allowed, false if not
   */
   pushDestroy: function(recordType, id, storeKey) {
     var K = SC.Record, status;
@@ -2292,7 +2292,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       return storeKey;
     }
     //conflicted (destroy)
-    return NO;
+    return false;
   },
 
   /**
@@ -2303,7 +2303,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     @param {Object} id the record id or null
     @param {SC.Error} error [optional] an SC.Error instance to associate with id or storeKey
     @param {Number} storeKey optional store key.
-    @returns {Number|Boolean} storeKey if push was allowed, NO if not
+    @returns {Number|Boolean} storeKey if push was allowed, false if not
   */
   pushError: function(recordType, id, error, storeKey) {
     var K = SC.Record, status, errors = this.recordErrors;
@@ -2325,7 +2325,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       return storeKey;
     }
     //conflicted (error)
-    return NO;
+    return false;
   },
 
   // ..........................................................
@@ -2359,7 +2359,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       throw new Error("Cannot load query results for a local query");
     }
 
-    var recArray = this._findQuery(query, true, NO);
+    var recArray = this._findQuery(query, true, false);
     if (recArray) recArray.set('storeKeys', storeKeys);
     this.dataSourceDidFetchQuery(query);
 
@@ -2383,7 +2383,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   },
 
   _scstore_dataSourceDidFetchQuery: function(query, createIfNeeded) {
-    var recArray     = this._findQuery(query, createIfNeeded, NO),
+    var recArray     = this._findQuery(query, createIfNeeded, false),
         nestedStores = this.get('nestedStores'),
         loc          = nestedStores ? nestedStores.get('length') : 0;
 
@@ -2392,7 +2392,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     // notify nested stores
     while(--loc >= 0) {
-      nestedStores[loc]._scstore_dataSourceDidFetchQuery(query, NO);
+      nestedStores[loc]._scstore_dataSourceDidFetchQuery(query, false);
     }
 
     return this ;
@@ -2411,7 +2411,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   },
 
   _scstore_dataSourceDidCancelQuery: function(query, createIfNeeded) {
-    var recArray     = this._findQuery(query, createIfNeeded, NO),
+    var recArray     = this._findQuery(query, createIfNeeded, false),
         nestedStores = this.get('nestedStores'),
         loc          = nestedStores ? nestedStores.get('length') : 0;
 
@@ -2420,7 +2420,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     // notify nested stores
     while(--loc >= 0) {
-      nestedStores[loc]._scstore_dataSourceDidCancelQuery(query, NO);
+      nestedStores[loc]._scstore_dataSourceDidCancelQuery(query, false);
     }
 
     return this ;
@@ -2448,7 +2448,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
   },
 
   _scstore_dataSourceDidErrorQuery: function(query, createIfNeeded) {
-    var recArray     = this._findQuery(query, createIfNeeded, NO),
+    var recArray     = this._findQuery(query, createIfNeeded, false),
         nestedStores = this.get('nestedStores'),
         loc          = nestedStores ? nestedStores.get('length') : 0;
 
@@ -2457,7 +2457,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
 
     // notify nested stores
     while(--loc >= 0) {
-      nestedStores[loc]._scstore_dataSourceDidErrorQuery(query, NO);
+      nestedStores[loc]._scstore_dataSourceDidErrorQuery(query, false);
     }
 
     return this ;

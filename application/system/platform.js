@@ -19,7 +19,7 @@ sc_require('system/core_query');
 
 SC.platform = {
   /**
-    true if the current device supports touch events, NO otherwise.
+    true if the current device supports touch events, false otherwise.
 
     You can simulate touch events in environments that don't support them by
     calling SC.platform.simulateTouchEvents() from your browser's console.
@@ -137,7 +137,7 @@ SC.platform = {
     are received.
   */
   _simtouch_mousemove: function(evt) {
-    if (!this._mousedown) return NO;
+    if (!this._mousedown) return false;
 
     var manufacturedEvt = this.manufactureTouchEvent(evt, 'touchmove');
     return SC.RootResponder.responder.touchmove(manufacturedEvt);
@@ -162,7 +162,7 @@ SC.platform = {
     var manufacturedEvt = this.manufactureTouchEvent(evt, 'touchend'),
         ret = SC.RootResponder.responder.touchend(manufacturedEvt);
 
-    this._mousedown = NO;
+    this._mousedown = false;
     this._simtouch_counter++;
     return ret;
   },
@@ -199,31 +199,31 @@ SC.platform = {
   /**
     Whether the browser supports CSS transitions. Calculated later.
   */
-  supportsCSSTransitions: NO,
+  supportsCSSTransitions: false,
 
   /**
     Whether the browser supports 2D CSS transforms. Calculated later.
   */
-  supportsCSSTransforms: NO,
+  supportsCSSTransforms: false,
 
   /**
     Whether the browser understands 3D CSS transforms.
     This does not guarantee that the browser properly handles them.
     Calculated later.
   */
-  understandsCSS3DTransforms: NO,
+  understandsCSS3DTransforms: false,
 
   /**
     Whether the browser can properly handle 3D CSS transforms. Calculated later.
   */
-  supportsCSS3DTransforms: NO,
+  supportsCSS3DTransforms: false,
   
   /**
     Whether the browser can handle accelerated layers. While supports3DTransforms tells us if they will
     work in principle, sometimes accelerated layers interfere with things like getBoundingClientRect.
     Then everything breaks.
   */
-  supportsAcceleratedLayers: NO,
+  supportsAcceleratedLayers: false,
   
   /**
     Wether the browser supports the hashchange event.
@@ -288,9 +288,9 @@ SC.platform = {
 
   // unfortunately, we need a bit more to know FOR SURE that 3D is allowed
   if (window.media && window.media.matchMedium) {
-    if (!window.media.matchMedium('(-webkit-transform-3d)')) SC.platform.supportsCSS3DTransforms = NO;
+    if (!window.media.matchMedium('(-webkit-transform-3d)')) SC.platform.supportsCSS3DTransforms = false;
   } else if(window.styleMedia && window.styleMedia.matchMedium) {
-    if (!window.styleMedia.matchMedium('(-webkit-transform-3d)')) SC.platform.supportsCSS3DTransforms = NO;    
+    if (!window.styleMedia.matchMedium('(-webkit-transform-3d)')) SC.platform.supportsCSS3DTransforms = false;    
   }
   
   // Unfortunately, this has to be manual, as I can't think of a good way to test it

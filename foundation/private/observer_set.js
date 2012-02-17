@@ -28,7 +28,7 @@ SC.ObserverSet = {
   */
   targets: 0,
 
-  _membersCacheIsValid: NO,
+  _membersCacheIsValid: false,
 
   /**
     Adds the named target/method observer to the set.  The method must be
@@ -58,7 +58,7 @@ SC.ObserverSet = {
       methods.contexts[SC.guidFor(method)] = context ;
     }
 
-    this._membersCacheIsValid = NO ;
+    this._membersCacheIsValid = false ;
   },
 
   /**
@@ -66,19 +66,19 @@ SC.ObserverSet = {
     last method for the named target, then the number of targets will also
     be reduced.
 
-    returns true if the items was removed, NO if it was not found.
+    returns true if the items was removed, false if it was not found.
   */
   remove: function(target, method) {
     var targetGuid = (target) ? SC.guidFor(target) : "__this__";
 
     // get the set of methods
     var methods = this[targetGuid] ;
-    if (!methods) return NO ;
+    if (!methods) return false ;
 
     methods.remove(method) ;
     if (methods.length <= 0) {
       methods.target = null;
-      methods.isTargetSet = NO ;
+      methods.isTargetSet = false ;
       methods.contexts = null ;
       delete this[targetGuid] ;
       this.targets-- ;
@@ -87,7 +87,7 @@ SC.ObserverSet = {
       delete methods.contexts[SC.guidFor(method)];
     }
 
-    this._membersCacheIsValid = NO;
+    this._membersCacheIsValid = false;
 
     return true ;
   },
@@ -167,7 +167,7 @@ SC.ObserverSet = {
       }
     }
     ret.targets = this.targets ;
-    ret._membersCacheIsValid = NO ;
+    ret._membersCacheIsValid = false ;
     return ret ;
   },
 

@@ -52,7 +52,7 @@ SC.routes = SC.Object.create({
     @property
     @type {Boolean}
   */
-  _didSetup: NO,
+  _didSetup: false,
   
   
   /** @private

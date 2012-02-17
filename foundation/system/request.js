@@ -49,21 +49,21 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
     Processes the request and response as JSON if possible.  You can change
     this option with the json() helper method.
 
-    Defaults to NO 
+    Defaults to false 
     
     @property {Boolean}
   */
-  isJSON: NO,
+  isJSON: false,
 
   /**
     Process the request and response as XML if possible.  You can change this
     option with the xml() helper method.
     
-    Defaults to NO
+    Defaults to false
   
     @property {Boolean}
   */
-  isXML: NO,
+  isXML: false,
   
   
   init: function() {
@@ -122,7 +122,7 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
     and the didTimeout() callback will be called.
     
     An exception will be thrown if you try to invoke send() on a request that
-    has both a timeout and isAsyncronous set to NO.
+    has both a timeout and isAsyncronous set to false.
     
     @property {Number}
   */
@@ -284,7 +284,7 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   /**
     Converts the current request to be asynchronous.
 
-    @property {Boolean} flag true to make asynchronous, NO or undefined
+    @property {Boolean} flag true to make asynchronous, false or undefined
     @returns {SC.Request} receiver
   */
   async: function(flag) {
@@ -295,24 +295,24 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   /**
     Converts the current request to use JSON.
     
-    @property {Boolean} flag true to make JSON, NO or undefined
+    @property {Boolean} flag true to make JSON, false or undefined
     @returns {SC.Request} receiver
   */
   json: function(flag) {
     if (flag === undefined) flag = true;
-    if (flag) this.set('isXML', NO);
+    if (flag) this.set('isXML', false);
     return this.set('isJSON', flag);
   },
   
   /**
     Converts the current request to use XML.
     
-    @property {Boolean} flag true to make XML, NO or undefined
+    @property {Boolean} flag true to make XML, false or undefined
     @returns {SC.Request} recevier
   */
   xml: function(flag) {
     if (flag === undefined) flag = true ;
-    if (flag) this.set('isJSON', NO);
+    if (flag) this.set('isJSON', false);
     return this.set('isXML', flag);
   },
   
@@ -407,7 +407,7 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
       action = target;
       target = status;
       status = 0 ;
-      hasStatus = NO ;
+      hasStatus = false ;
     } else params = SC.A(arguments).slice(3);
     
     var listeners = this.get('listeners');
@@ -553,7 +553,7 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
       this.fireRequestIfNeeded();
       return true;
 
-    } else return NO ;
+    } else return false ;
   },  
 
   /**
@@ -568,7 +568,7 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
       this.set('inflight', []);
       return true;
       
-    } else return NO ;
+    } else return false ;
   },
   
   /**

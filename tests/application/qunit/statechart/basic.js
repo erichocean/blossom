@@ -14,7 +14,7 @@ suite("SC.Statechart Mixin: Basic Unit test", {
   setup: function() {
     basic = SC.Object.create(SC.Statechart,{
       startStates: {'default': 'bar'},
-      startOnInit: NO,
+      startOnInit: false,
       
       foo: SC.Statechart.registerState({
         initState: function(){

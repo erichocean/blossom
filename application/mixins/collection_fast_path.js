@@ -126,7 +126,7 @@ SC.CollectionFastPath = {
     var contentDelegate = this.get("contentDelegate");
     
     // setup our properties
-    var groupIndexes = this.get('_contentGroupIndexes'), isGroupView = NO;
+    var groupIndexes = this.get('_contentGroupIndexes'), isGroupView = false;
     
     // and do our checking
     isGroupView = groupIndexes && groupIndexes.contains(index);
@@ -401,7 +401,7 @@ SC.CollectionFastPath = {
     if (!scrollOnly) {
       invalid = this._invalidIndexes;
       if (!invalid || !this.get('isVisibleInWindow')) return this;
-      this._invalidIndexes = NO; 
+      this._invalidIndexes = false; 
       
       // tell others we will be reloading
       if (invalid.isIndexSet && invalid.contains(nowShowing)) invalid = true ;
@@ -457,7 +457,7 @@ SC.CollectionFastPath = {
         
         if (this._indexMap[itemIdx] === view) delete this._indexMap[itemIdx];
         
-        view._isInCollection = NO;
+        view._isInCollection = false;
         this.removeItemView(view);
       }
     }
@@ -620,7 +620,7 @@ SC.CollectionFastPath = {
     } else {
       this.removeChild(current);
     }
-    current._isInCollection = NO;
+    current._isInCollection = false;
   },
   
   /**

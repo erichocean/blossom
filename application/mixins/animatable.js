@@ -199,11 +199,11 @@
 //       dictionary = SC.clone(dictionary);
 //     }
 // 
-//     var style = SC.clone(this.get("style")), didChangeStyle = NO, layout = SC.clone(this.get("layout")), didChangeLayout = NO;
+//     var style = SC.clone(this.get("style")), didChangeStyle = false, layout = SC.clone(this.get("layout")), didChangeLayout = false;
 //     var sprops = this._styleProperties;
 //     for (var i in dictionary)
 //     {
-//       var didChange = NO;
+//       var didChange = false;
 // 
 //       var current = (sprops.indexOf(i) >= 0) ? style : layout;
 //       var cval = current[i], nval = dictionary[i];
@@ -360,9 +360,9 @@
 //         topDuration = this.transitions['top'] && this.transitions['top'].duration;
 // 
 //     if (leftDuration !== topDuration) {
-//       return NO;
+//       return false;
 //     } else if ((topDuration || leftDuration) && !SC.platform.supportsCSSTransitions) {
-//       return NO;
+//       return false;
 //     } else {
 //       return arguments.callee.base.apply(this, arguments);
 //     }
@@ -385,7 +385,7 @@
 // 
 //     /* SPECIAL CASES (done now because they need to happen whether or not animation will take place) */
 //     ////**SPECIAL TRANSFORM CASE**////
-//     var specialTransform = NO, specialTransformValue = "";
+//     var specialTransform = false, specialTransformValue = "";
 //     if (this.get('hasAcceleratedLayer')) {
 // 
 //       var nT = newStyle['top'],
@@ -404,7 +404,7 @@
 //         specialTransform = true;
 //         this._useSpecialCaseTransform = true;
 //       } else {
-//         this._useSpecialCaseTransform = NO;
+//         this._useSpecialCaseTransform = false;
 //       }
 //     }
 //     ////**/SPECIAL TRANSFORM CASE**////
@@ -633,7 +633,7 @@
 //     if (!layer) return;
 // 
 //     // handle a specific style first: display. There is a special case because it disrupts transitions.
-//     var needsRender = NO;
+//     var needsRender = false;
 //     if (styles["display"] && layer.style["display"] !== styles["display"]) {
 //       layer.style["display"] = styles["display"];
 //       needsRender = true;
@@ -683,7 +683,7 @@
 //       // more to be added here...
 //     };
 // 
-//     var newLayout = {}, updateLayout = NO, style = layer.style;
+//     var newLayout = {}, updateLayout = false, style = layer.style;
 // 
 //     // we extract the layout portion so SproutCore can do its own thing...
 //     var transform = "";
@@ -748,7 +748,7 @@
 //   {
 //     var style = SC.clone(this.get("style"));
 //     var newLayout = this.get("layout");
-//     var i = 0, ls = this._layoutStyles, lsl = ls.length, didChange = NO;
+//     var i = 0, ls = this._layoutStyles, lsl = ls.length, didChange = false;
 //     for (i = 0; i < lsl; i++)
 //     {
 //       var key = ls[i];
@@ -783,7 +783,7 @@
 //     // SOME OPTIMIZATIONS COULD BE DONE, LIKE MOVING THIS INTO ITS OWN BIT AT BEGINNING OF ANIMATION.
 //     var epsilon = 1.0 / (200.0 * duration);
 // 
-//     // a method I have NO idea about... Newton's method
+//     // a method I have false idea about... Newton's method
 //     var t0, t1, t2, x2, d2, i;
 //     for (t2 = x, i = 0; i < 8; i++) {
 //       x2 = ((ax * t2 + bx) * t2 + cx) * t2 - x; // sample curve x for t2, - x

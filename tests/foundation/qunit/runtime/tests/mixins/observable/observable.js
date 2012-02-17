@@ -424,7 +424,7 @@ test('setting one of two computed properties that depend on a third property sho
   // setting isOff to true should clear the kvo cache
   object.set('isOff', true);
   equals(object.get('isOff'), true, 'object.isOff should be true');
-  equals(object.get('isOn'), NO, 'object.isOn should be NO');
+  equals(object.get('isOn'), false, 'object.isOn should be false');
 });
 
 // ..........................................................
@@ -445,7 +445,7 @@ suite("Observable objects & object properties ", {
       normalArray: [1,2,3,4,5],
     
       automaticallyNotifiesObserversFor : function(key) { 
-        return NO;    
+        return false;    
       },  
     
       getEach: function() {

@@ -62,19 +62,19 @@ test("The dataSource will forward calls to the appropriate methods", function ()
   ok(MyApp.store.find(SC.Query.remote(MyApp.Foo)),
      "the fetch should return a record array");
   ok(wasCalled, "`fetch` should have been called");
-  wasCalled = NO;
+  wasCalled = false;
 
   ok(MyApp.store.find(MyApp.Foo, "testing retrieve"),
      "retrieve should return a new record (because the dataSource handled the request true)");
   ok(wasCalled, "`retrieve` should have been called");
-  wasCalled = NO;
+  wasCalled = false;
 
   var rec = MyApp.store.createRecord(MyApp.Foo, {});
 
   equals(MyApp.store.commitRecord(MyApp.Foo, 'foo', rec.get('storeKey')), true,
          "commiting a new record should return true");
   ok(wasCalled, "`createRecord` should have been called");
-  wasCalled = NO;
+  wasCalled = false;
 
   MyApp.store.writeStatus(rec.get('storeKey'), SC.Record.READY_CLEAN);
 
@@ -82,7 +82,7 @@ test("The dataSource will forward calls to the appropriate methods", function ()
   equals(MyApp.store.commitRecord(MyApp.Foo, 'foo', rec.get('storeKey')), true,
          "updating a record should return true");
   ok(wasCalled, "`updateRecord` should have been called");
-  wasCalled = NO;
+  wasCalled = false;
 
   MyApp.store.writeStatus(rec.get('storeKey'), SC.Record.READY_CLEAN);
 
@@ -127,11 +127,11 @@ test("The dataSource will return true when all records committed return true", f
          "commiting records for an 'update', 'create', and 'destroy' should return true");
 });
 
-test("The dataSource will return SC.MIXED_STATE when all records committed return true and NO", function () {
+test("The dataSource will return SC.MIXED_STATE when all records committed return true and false", function () {
   var ds = MyApp.DataSource.create({
-    createRecord: function () { return NO; },
+    createRecord: function () { return false; },
     updateRecord: function () { return true; },
-    destroyRecord: function () { return NO; }
+    destroyRecord: function () { return false; }
   });
 
   MyApp.store.set('dataSource', ds);
@@ -139,8 +139,8 @@ test("The dataSource will return SC.MIXED_STATE when all records committed retur
   var rec1 = MyApp.store.createRecord(MyApp.Foo, {}),
       rec2, rec3;
 
-  equals(MyApp.store.commitRecords(), NO,
-         "commiting a single new record should return NO");
+  equals(MyApp.store.commitRecords(), false,
+         "commiting a single new record should return false");
 
   MyApp.store.writeStatus(rec1.get('storeKey'), SC.Record.READY_CLEAN);
 
@@ -161,27 +161,27 @@ test("The dataSource will return SC.MIXED_STATE when all records committed retur
          "commiting records for an 'update', 'create', and 'destroy' should return %@".fmt(SC.MIXED_STATE));
 });
 
-test("The dataSource will return NO when all records committed return NO", function () {
+test("The dataSource will return false when all records committed return false", function () {
   var ds = MyApp.DataSource.create({
-    createRecord: function () { return NO; },
-    updateRecord: function () { return NO; },
-    destroyRecord: function () { return NO; }
+    createRecord: function () { return false; },
+    updateRecord: function () { return false; },
+    destroyRecord: function () { return false; }
   });
   MyApp.store.set('dataSource', ds);
 
   var rec1 = MyApp.store.createRecord(MyApp.Foo, {}),
       rec2, rec3;
 
-  equals(MyApp.store.commitRecords(), NO,
-         "commiting a single new record should return NO");
+  equals(MyApp.store.commitRecords(), false,
+         "commiting a single new record should return false");
 
   MyApp.store.writeStatus(rec1.get('storeKey'), SC.Record.READY_CLEAN);
 
   rec1.set('zero', 0);
   rec2 = MyApp.store.createRecord(MyApp.Foo, {});
 
-  equals(MyApp.store.commitRecords(), NO,
-         "commiting records for an 'update' and 'create' should return NO");
+  equals(MyApp.store.commitRecords(), false,
+         "commiting records for an 'update' and 'create' should return false");
 
   MyApp.store.writeStatus(rec1.get('storeKey'), SC.Record.READY_CLEAN);
   MyApp.store.writeStatus(rec2.get('storeKey'), SC.Record.READY_CLEAN);
@@ -190,13 +190,13 @@ test("The dataSource will return NO when all records committed return NO", funct
   rec2.set('one', 1);
   rec3 = MyApp.store.createRecord(MyApp.Foo, {});
 
-  equals(MyApp.store.commitRecords(), NO,
-         "commiting records for an 'update', 'create', and 'destroy' should return NO");
+  equals(MyApp.store.commitRecords(), false,
+         "commiting records for an 'update', 'create', and 'destroy' should return false");
 });
 
 test("The store calls reset on the dataSource when reset", function(){
   MyApp.store.set('dataSource', MyApp.DataSource.create());
-  resetWasCalled = NO; // Just to be sure
+  resetWasCalled = false; // Just to be sure
 
   MyApp.store.reset();
   ok(resetWasCalled, "should have called reset");

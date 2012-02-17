@@ -14,7 +14,7 @@ suite("SC.SelectView",{
   //setup
   setup: function() {
     SC.RunLoop.begin();
-    var isDue = NO ;
+    var isDue = false ;
 
     //pane
     pane = SC.MainPane.create({
@@ -30,7 +30,7 @@ suite("SC.SelectView",{
         //view1
         SC.SelectView.extend({
           items: ["To","Back", "You"],
-          disableSort: NO
+          disableSort: false
         }),
 
         //view2
@@ -106,14 +106,14 @@ test("sortObjects() sorts the items of the Drop Down component", function() {
 // There was an awful test here. I can't even tell what it was supposed to do.
 
 //test7
-test("isEnabled=NO should add disabled class", function() {
+test("isEnabled=false should add disabled class", function() {
   SC.RunLoop.begin() ;
-  view1.set('isEnabled', NO) ;
+  view1.set('isEnabled', false) ;
   SC.RunLoop.end() ;
   ok(view1.$().hasClass('disabled'), 'should have disabled class') ;
 });
 
-// there is NO need to test binding.
+// there is false need to test binding.
 
 // I think this one is probably somewhat pointless as well, but perhaps some
 // buggy observers being called could break it or something...

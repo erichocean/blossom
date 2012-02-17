@@ -158,26 +158,26 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
       expectRangeChange: function(source, object, key, indexes, context) {
         equals(this.callCount, 1, 'expects one callback');
         
-        if (source !== undefined && source !== NO) {
+        if (source !== undefined && source !== false) {
           ok(this.source, source, 'source should equal array');
         }
         
-        if (object !== undefined && object !== NO) {
+        if (object !== undefined && object !== false) {
           equals(this.object, object, 'object');
         }
         
-        if (key !== undefined && key !== NO) {
+        if (key !== undefined && key !== false) {
           equals(this.key, key, 'key');
         }
         
-        if (indexes !== undefined && indexes !== NO) {
+        if (indexes !== undefined && indexes !== false) {
           if (indexes.isIndexSet) {
             ok(this.indexes && this.indexes.isIndexSet, 'indexes should be index set');
             ok(indexes.isEqual(this.indexes), 'indexes should match %@ (actual: %@)'.fmt(indexes, this.indexes));
           } else equals(this.indexes, indexes, 'indexes');
         }
           
-        if (context !== undefined && context !== NO) {
+        if (context !== undefined && context !== false) {
           equals(this.context, context, 'context should match');
         }
         
@@ -211,7 +211,7 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
     // note: we only test that the length notification happens when we expect
     // it.  If we don't expect a length notification, it is OK for a class
     // to trigger a change anyway so we don't check for this case.
-    if (enumerableDidChange !== NO) {
+    if (enumerableDidChange !== false) {
       equals(observer.didNotify("[]"), true, 'should notify []') ;
     }
     

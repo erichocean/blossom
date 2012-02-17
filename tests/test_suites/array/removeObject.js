@@ -43,7 +43,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeObject(extra);
-    T.validateAfter(obj, exp, observer, NO, NO);
+    T.validateAfter(obj, exp, observer, false, false);
   });
   
 });

@@ -21,9 +21,9 @@ sc_require('system/many_array');
   
       contacts: SC.Record.toMany('MyApp.Contact', { 
         inverse: 'group', // set the key used to represent the inverse 
-        isMaster: true|NO, // indicate whether changing this should dirty
+        isMaster: true|false, // indicate whether changing this should dirty
         transform: function(), // transforms value <=> storeKey,
-        isEditable: true|NO, make editable or not,
+        isEditable: true|false, make editable or not,
         through: 'taggings' // set a relationship this goes through
       });
   
@@ -45,7 +45,7 @@ SC.ManyAttribute = SC.RecordAttribute.extend(
   
   /**
     If `true` then modifying this relationships will mark the owner record 
-    dirty. If set to `NO`, then modifying this relationship will not alter
+    dirty. If set to `false`, then modifying this relationship will not alter
     this record.  You should use this property only if you have an inverse 
     property also set. Only one of the inverse relationships should be marked
     as master so you can control which record should be committed.

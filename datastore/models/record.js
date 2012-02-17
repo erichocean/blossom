@@ -52,9 +52,9 @@ SC.Record = SC.Object.extend(
     If you have nested records
 
     @type Boolean
-    @default NO
+    @default false
   */
-  isParentRecord: NO,
+  isParentRecord: false,
 
   // ...............................
   // PROPERTIES
@@ -152,7 +152,7 @@ SC.Record = SC.Object.extend(
 
     This property is both readable and writable.  Note however that if you
     set this property to `true` but the status of the record is anything but
-    `SC.Record.READY`, the return value of this property may remain `NO`.
+    `SC.Record.READY`, the return value of this property may remain `false`.
 
     @type Boolean
     @property
@@ -161,7 +161,7 @@ SC.Record = SC.Object.extend(
   isEditable: function(key, value) {
     if (value !== undefined) this._screc_isEditable = value;
     if (this.get('status') & SC.Record.READY) return this._screc_isEditable;
-    else return NO ;
+    else return false ;
   }.property('status').cacheable(),
 
   /**
@@ -251,7 +251,7 @@ SC.Record = SC.Object.extend(
         sk = this.get('storeKey'),
         prKey = store.parentStoreKeyExists(sk);
 
-    ret = prKey ? true : NO;
+    ret = prKey ? true : false;
     return ret;
   }.property().cacheable(),
 
@@ -626,7 +626,7 @@ SC.Record = SC.Object.extend(
               dataHash[keyForDataHash] = attrValue;
             }
             else if(!includeNull) {
-              keysToKeep[keyForDataHash] = NO;
+              keysToKeep[keyForDataHash] = false;
             }
 
           } else if (isChild) {
@@ -940,7 +940,7 @@ SC.Record = SC.Object.extend(
       existingId = hash[recordType.prototype.primaryKey];
 
       store = this.get('store');
-      if (SC.none(store)) throw 'Error: during the creation of a child record: NO STORE ON PARENT!';
+      if (SC.none(store)) throw 'Error: during the creation of a child record: false STORE ON PARENT!';
 
       if (!id && (pk = recordType.prototype.primaryKey)) {
         id = hash[pk];
@@ -994,9 +994,9 @@ SC.Record.mixin( /** @scope SC.Record */ {
 
     @static
     @type Boolean
-    @default NO
+    @default false
   */
-  ignoreUnknownProperties: NO,
+  ignoreUnknownProperties: false,
 
   // ..........................................................
   // CONSTANTS
@@ -1354,7 +1354,7 @@ SC.Record.mixin( /** @scope SC.Record */ {
 
     You can edit the contents of this relationship.
 
-    For `SC.ManyAttribute`, If you set the inverse and `isMaster: NO` key,
+    For `SC.ManyAttribute`, If you set the inverse and `isMaster: false` key,
     then editing this array will modify the underlying data, but the
     inverse key on the matching record will also be edited and that
     record will be marked as needing a change.

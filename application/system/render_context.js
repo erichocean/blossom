@@ -104,9 +104,9 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     }
     else {
       this._elem        = tagNameOrElement ;
-      this._needsTag    = NO ;
+      this._needsTag    = false ;
       this.length       = 0 ;
-      this.needsContent = NO ;
+      this.needsContent = false ;
     }
     return this ;
   },
@@ -158,7 +158,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     attributes edited.  This will be set to true anytime you push strings into
     the context or if you don't create it with an element to start with.
   */
-  needsContent: NO,
+  needsContent: false,
   
   // ..........................................................
   // CORE STRING API
@@ -325,7 +325,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
         mode = this.updateMode,
         cq, key, value, attr, styles, factory, cur, next, before;
         
-    this._innerHTMLReplaced = NO;
+    this._innerHTMLReplaced = false;
     
     if (!elem) {
       // throw "Cannot update context because there is no source element";
@@ -487,7 +487,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     // this is self closing if there is no content in between and selfClosing
     // is not set to false.
     var strings = this.strings;
-    var selfClosing = (this._selfClosing === NO) ? NO : (this.length === 1) ;
+    var selfClosing = (this._selfClosing === false) ? false : (this.length === 1) ;
     tag.push(selfClosing ? ' />' : '>') ;
     
     // console.log('selfClosing == %@'.fmt(selfClosing));
@@ -590,7 +590,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       
       if (this._cloneClassNames) {
         this._classNames = (this._classNames || []).slice();
-        this._cloneClassNames = NO ;
+        this._cloneClassNames = false ;
       }
 
       // if there are no class names, create an empty array but don't modify.
@@ -599,14 +599,14 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       return this._classNames ;
     } else {
       this._classNames = classNames ;
-      this._cloneClassNames = cloneOnModify || NO ;
+      this._cloneClassNames = cloneOnModify || false ;
       this._classNamesDidChange = true ;
       return this ;
     }
   },
   
   /**
-    Returns true if the outer tag current has the passed class name, NO 
+    Returns true if the outer tag current has the passed class name, false 
     otherwise.
     
     @param {String} className the class name
@@ -665,7 +665,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     if (classNames && (idx=classNames.indexOf(className))>=0) {
       if (this._cloneClassNames) {
         classNames = this._classNames = classNames.slice();
-        this._cloneClassNames = NO ;
+        this._cloneClassNames = false ;
       }
 
       // if className is found, just null it out.  This will end up adding an
@@ -720,10 +720,10 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     
       if (this._cloneClassNames) {
         classNames = this._classNames = classNames.slice();
-        this._cloneClassNames = NO ;
+        this._cloneClassNames = false ;
       }
 
-      didChange = NO;
+      didChange = false;
       for(key in className) {
         if (!className.hasOwnProperty(key)) continue ;
         idx = classNames.indexOf(key);
@@ -781,7 +781,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
           while(match = regex.exec(attr)) styles[this._camelizeStyleName(match[1])] = match[2];
           
           this._styles = styles;
-          this._cloneStyles = NO;
+          this._cloneStyles = false;
           
         } else {
           this._styles = {};
@@ -795,7 +795,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
         } else {
           if (this._cloneStyles) {
             this._styles = SC.beget(this._styles);
-            this._cloneStyles = NO ;
+            this._cloneStyles = false ;
           }
         }
       }
@@ -805,7 +805,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     // set the styles if passed.
     } else {
       this._styles = styles ;
-      this._cloneStyles = cloneOnModify || NO ;
+      this._cloneStyles = cloneOnModify || false ;
       this._stylesDidChange = true ;
       return this ;
     }
@@ -825,7 +825,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     // get the current hash of styles.  This will extract the styles and 
     // clone them if needed.  This will get the actual styles hash so we can
     // edit it directly.
-    var key, didChange = NO, styles = this.styles();
+    var key, didChange = false, styles = this.styles();
     
     // simple form
     if (typeof nameOrStyles === SC.T_STRING) {
@@ -889,7 +889,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     @returns {SC.RenderContext} receiver
   */
   attr: function(nameOrAttrs, value) {
-    var key, attrs = this._attrs, didChange = NO ;
+    var key, attrs = this._attrs, didChange = false ;
     if (!attrs) this._attrs = attrs = {} ;
     
     // simple form

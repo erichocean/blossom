@@ -23,7 +23,7 @@ SC.ArraySuite.define(function(T) {
 
       observer = T.observer();
       rangeObserver = array.addRangeObserver(SC.IndexSet.create(2,3), 
-                observer, observer.rangeDidChange, null, NO);
+                observer, observer.rangeDidChange, null, false);
       
     },
     
@@ -228,7 +228,7 @@ SC.ArraySuite.define(function(T) {
 
       observer = T.observer();
       rangeObserver = array.addRangeObserver(null, observer, 
-                          observer.rangeDidChange, null, NO);
+                          observer.rangeDidChange, null, false);
       
     },
     
@@ -329,16 +329,16 @@ SC.ArraySuite.define(function(T) {
   
   
   // ..........................................................
-  // MODULE: isDeep = NO 
+  // MODULE: isDeep = false 
   // 
-  suite(T.desc("RangeObserver Methods - isDeep NO"), {
+  suite(T.desc("RangeObserver Methods - isDeep false"), {
     setup: function() {
       expected = T.objects(10);
       array = T.newObject(expected);
 
       observer = T.observer();
       rangeObserver = array.addRangeObserver(SC.IndexSet.create(2,3), 
-                observer, observer.rangeDidChange, null, NO);
+                observer, observer.rangeDidChange, null, false);
       
     },
     

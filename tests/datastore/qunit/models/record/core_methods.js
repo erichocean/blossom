@@ -10,12 +10,12 @@ suite("SC.Record core methods", {
   setup: function() {
     dataSource = SC.DataSource.create({
 
-      gotParams: NO,
-      wasCommitted: NO,
+      gotParams: false,
+      wasCommitted: false,
 
       createRecord: function(store, storeKey, params) {
         this.wasCommitted = true;
-        this.gotParams = params && params['param1'] ? true: NO;
+        this.gotParams = params && params['param1'] ? true: false;
       }});
 
     MyApp = SC.Object.create({

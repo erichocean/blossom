@@ -148,7 +148,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     
     @property {Boolean}
   */
-  isDefault: NO,
+  isDefault: false,
   isDefaultBindingDefault: SC.Binding.oneWay().bool(),
   
   /**
@@ -157,7 +157,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     
     @property {Boolean}
   */  
-  isCancel: NO,
+  isCancel: false,
   isCancelBindingDefault: SC.Binding.oneWay().bool(),
 
   /**
@@ -206,7 +206,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     
     @property {Boolean}
   */
-  supportFocusRing: NO,
+  supportFocusRing: false,
   
   _labelMinWidthIE7: 0,
 
@@ -224,7 +224,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   */
   triggerAction: function(evt) {
     // If this button is disabled, we have nothing to do
-    if (!this.get('isEnabled')) return NO;
+    if (!this.get('isEnabled')) return false;
 
     // Set active state of the button so it appears highlighted
     this.set('isActive', true);
@@ -245,7 +245,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   _triggerActionAfterDelay: function(evt) {
     this._action(evt, true);
     this.didTriggerAction();
-    this.set('isActive', NO);
+    this.set('isActive', false);
   },
 
   /**
@@ -420,7 +420,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   */
   mouseExited: function(evt) {
     if (this._isMouseDown) {
-      this.set('isActive', NO);
+      this.set('isActive', false);
     }
     return true;
   },
@@ -440,7 +440,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   */  
   mouseUp: function(evt) {
     var inside;
-    if (this._isMouseDown) this.set('isActive', NO); // track independently in case isEnabled has changed
+    if (this._isMouseDown) this.set('isActive', false); // track independently in case isEnabled has changed
     this._isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
@@ -483,11 +483,11 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   
   touchesDragged: function(evt, touches) {
     if (!this.touchIsInBoundary(evt)) {
-      if (!this._touch_exited) this.set('isActive', NO);
+      if (!this._touch_exited) this.set('isActive', false);
       this._touch_exited = true;
     } else {
       if (this._touch_exited) this.set('isActive', true);
-      this._touch_exited = NO;
+      this._touch_exited = false;
     }
     
     evt.preventDefault();
@@ -495,8 +495,8 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   },
   
   touchEnd: function(touch){
-    this._touch_exited = NO;
-    this.set('isActive', NO); // track independently in case isEnabled has changed
+    this._touch_exited = false;
+    this.set('isActive', false); // track independently in case isEnabled has changed
   
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
       if (this.touchIsInBoundary(touch)) this._action();
@@ -520,7 +520,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       this.triggerAction(evt);
       return true ; // handled
     }
-    return NO; 
+    return false; 
   },
 
   /** @private  Perform an action based on the behavior of the button.
@@ -623,7 +623,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   /** tied to the isEnabled state */
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return NO;
+    else return false;
   }.property('isEnabled'),
   
   willBecomeKeyResponderFrom: function(keyView) {
@@ -639,7 +639,7 @@ BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   },
   
   willLoseKeyResponderTo: function(responder) {
-    if (this._isFocused) this._isFocused = NO ;
+    if (this._isFocused) this._isFocused = false ;
   }
   
 });

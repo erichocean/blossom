@@ -17,7 +17,7 @@ sc_require('models/record');
 
       title: SC.Record.attr(String, {
         defaultValue: 'Untitled',
-        isRequired: true|NO
+        isRequired: true|false
       })
 
   In addition to having predefined transform types, there is also a way to
@@ -105,12 +105,12 @@ SC.RecordAttribute = SC.Object.extend(
     the property is set to a non-null or undefined value.
 
     @type Boolean
-    @default NO
+    @default false
   */
-  isRequired: NO,
+  isRequired: false,
 
   /**
-    If `NO` then attempts to edit the attribute will be ignored.
+    If `false` then attempts to edit the attribute will be ignored.
 
     @type Boolean
     @default true
@@ -137,9 +137,9 @@ SC.RecordAttribute = SC.Object.extend(
     (album) dirty as well.
 
     @type Boolean
-    @default NO
+    @default false
   */
-  aggregate: NO,
+  aggregate: false,
 
 
   /**
@@ -158,9 +158,9 @@ SC.RecordAttribute = SC.Object.extend(
     once all relationships are removed from it.
 
     @property {Boolean}
-    @default NO
+    @default false
    */
-  lazilyInstantiate: NO,
+  lazilyInstantiate: false,
 
   // ..........................................................
   // HELPER PROPERTIES

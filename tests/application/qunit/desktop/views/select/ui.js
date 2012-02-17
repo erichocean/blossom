@@ -18,18 +18,18 @@ var pane = SC.ControlTestPane.design()
 
     //sample2
     .add("Disabled", SC.SelectView, {
-       isEnabled: NO, items: ['None', 'Low', 'Medium', 'High']
+       isEnabled: false, items: ['None', 'Low', 'Medium', 'High']
     })
 
     //sample3
     .add("NotVisible", SC.SelectView, {
-      isVisible: NO, items: ['None', 'Low', 'Medium', 'High']
+      isVisible: false, items: ['None', 'Low', 'Medium', 'High']
     })
 
     //sample4
     .add("SortedObjects", SC.SelectView, {
       items:['None', 'Low', 'Medium', 'High'],
-      disableSort: NO
+      disableSort: false
     })
 
     //sample5
@@ -61,7 +61,7 @@ var pane = SC.ControlTestPane.design()
         { title: "Medium", pos: 2 },
         { title: "High", pos: 4}],
       itemTitleKey: 'title',
-      disableSort: NO,
+      disableSort: false,
       itemSortKey: 'pos',
       showCheckbox: true
     })
@@ -76,11 +76,11 @@ var pane = SC.ControlTestPane.design()
     //sample10
     .add("DisableItem", SC.SelectView, {
       items: [{ title: "None", pos: 3, isEnabled: true },
-        { title: "Low", pos: 1, isEnabled: NO },
+        { title: "Low", pos: 1, isEnabled: false },
         { title: "Medium", pos: 2, isEnabled: true },
-        { title: "High", pos: 4, isEnabled: NO }],
+        { title: "High", pos: 4, isEnabled: false }],
       itemTitleKey: 'title',
-      disableSort: NO,
+      disableSort: false,
       isEnabledKey: 'isEnabled',
       itemSortKey: 'pos',
       showCheckbox: true
@@ -98,7 +98,7 @@ suite('SC.SelectView ui', pane.standardSetup()) ;
 test("Check the visiblity of the selectButtons", function() {
   ok(pane.view('Basic').get('isVisibleInWindow'), 'Basic.isVisibleInWindow should be true') ;
   ok(pane.view('Disabled').get('isVisibleInWindow'), 'Disabled.isVisibleInWindow should be true') ;
-  ok(!pane.view('NotVisible').get('isVisibleInWindow'), 'NotVisible.isVisibleInWindow should be NO') ;
+  ok(!pane.view('NotVisible').get('isVisibleInWindow'), 'NotVisible.isVisibleInWindow should be false') ;
   ok(pane.view('SortedObjects').get('isVisibleInWindow'), 'SortedObjects.isVisibleInWindow should be true') ;
   ok(pane.view('UnsortedObjects').get('isVisibleInWindow'), 'UnsortedObjects.isVisibleInWindow should be true') ;
   ok(pane.view('redraw').get('isVisibleInWindow'), 'redraw.isVisibleInWindow should be true') ;
@@ -112,10 +112,10 @@ test("Basic", function() {
   ok(view.hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
   ok(view.hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
   ok(view.hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-  ok(!view.hasClass('icon'), 'hasClass(icon) should be NO') ;
-  ok(!view.hasClass('sel'), 'hasClass(sel) should be NO') ;
-  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-  ok(!view.hasClass('def'), 'hasClass(def) should be NO') ;
+  ok(!view.hasClass('icon'), 'hasClass(icon) should be false') ;
+  ok(!view.hasClass('sel'), 'hasClass(sel) should be false') ;
+  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be false') ;
+  ok(!view.hasClass('def'), 'hasClass(def) should be false') ;
 }) ;
 
 //test3
@@ -125,9 +125,9 @@ test("Disabled", function() {
   ok(view.hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
   ok(view.hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
   ok(view.hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-  ok(!view.hasClass('icon'), 'hasClass(icon) should be NO') ;
-  ok(!view.hasClass('sel'), 'hasClass(sel) should be NO') ;
-  ok(!view.hasClass('def'), 'hasClass(def) should be NO') ;
+  ok(!view.hasClass('icon'), 'hasClass(icon) should be false') ;
+  ok(!view.hasClass('sel'), 'hasClass(sel) should be false') ;
+  ok(!view.hasClass('def'), 'hasClass(def) should be false') ;
 }) ;
 
 //test4
@@ -136,9 +136,9 @@ test("NotVisible", function() {
   ok(view.hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
   ok(view.hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
   ok(view.hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-  ok(!view.hasClass('sel'), 'hasClass(sel) should be NO') ;
-  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-  ok(!view.hasClass('def'), 'hasClass(def) should be NO') ;
+  ok(!view.hasClass('sel'), 'hasClass(sel) should be false') ;
+  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be false') ;
+  ok(!view.hasClass('def'), 'hasClass(def) should be false') ;
   ok(!view.hasClass('sel'), 'should not have sel class') ;
 }) ;
 
@@ -149,10 +149,10 @@ test("SortedObjects", function() {
    ok(view.$().hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
    ok(view.$().hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
    ok(view.$().hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-   ok(!view.$().hasClass('sel'), 'hasClass(sel) should be NO') ;
-   ok(!view.$().hasClass('icon'), 'hasClass(icon) should be NO') ;
-   ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-   ok(!view.$().hasClass('def'), 'hasClass(def) should be NO') ;
+   ok(!view.$().hasClass('sel'), 'hasClass(sel) should be false') ;
+   ok(!view.$().hasClass('icon'), 'hasClass(icon) should be false') ;
+   ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be false') ;
+   ok(!view.$().hasClass('def'), 'hasClass(def) should be false') ;
    equals(view.get("_itemList")[0].title, "High", "The first item, when sorted, should be High.");
 }) ;
 
@@ -164,10 +164,10 @@ test("UnsortedObjects", function() {
    ok(view.$().hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
    ok(view.$().hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
    ok(view.$().hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-   ok(!view.$().hasClass('sel'), 'hasClass(sel) should be NO') ;
-   ok(!view.$().hasClass('icon'), 'hasClass(icon) should be NO') ;
-   ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-   ok(!view.$().hasClass('def'), 'hasClass(def) should be NO') ;
+   ok(!view.$().hasClass('sel'), 'hasClass(sel) should be false') ;
+   ok(!view.$().hasClass('icon'), 'hasClass(icon) should be false') ;
+   ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be false') ;
+   ok(!view.$().hasClass('def'), 'hasClass(def) should be false') ;
 }) ;
 
 //test7
@@ -176,10 +176,10 @@ test("redraw", function() {
   ok(view.$().hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
   ok(view.$().hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
   ok(view.$().hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-  ok(!view.$().hasClass('sel'), 'hasClass(sel) should be NO') ;
-  ok(!view.$().hasClass('icon'), 'hasClass(icon) should be NO') ;
-  ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-  ok(!view.$().hasClass('def'), 'hasClass(def) should be NO');
+  ok(!view.$().hasClass('sel'), 'hasClass(sel) should be false') ;
+  ok(!view.$().hasClass('icon'), 'hasClass(icon) should be false') ;
+  ok(!view.$().hasClass('disabled'), 'hasClass(disabled) should be false') ;
+  ok(!view.$().hasClass('def'), 'hasClass(def) should be false');
 
   ok(view.get('items').length === 0, "Items should be empty");
   SC.RunLoop.begin();
@@ -197,9 +197,9 @@ test("SelectButtonWithIcon", function() {
   ok(view.hasClass('sc-view'), 'hasClass(sc-view) should be true') ;
   ok(view.hasClass('sc-button-view'), 'hasClass(sc-button-view) should be true') ;
   ok(view.hasClass('sc-regular-size'), 'hasClass(sc-regular-size) should be true') ;
-  ok(!view.hasClass('sel'), 'hasClass(sel) should be NO') ;
-  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be NO') ;
-  ok(!view.hasClass('def'), 'hasClass(def) should be NO') ;
+  ok(!view.hasClass('sel'), 'hasClass(sel) should be false') ;
+  ok(!view.hasClass('disabled'), 'hasClass(disabled) should be false') ;
+  ok(!view.hasClass('def'), 'hasClass(def) should be false') ;
 }) ;
 
 //test9

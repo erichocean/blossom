@@ -235,9 +235,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
     below the anchor.
 
     @private
-    @default NO
+    @default false
   */
-  isDefaultPosition: NO,
+  isDefaultPosition: false,
 
   /**
     lastMenuWidth is the width of the last menu which was created from
@@ -290,7 +290,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
   /**
     Disable context menu.
   */
-  isContextMenuEnabled: NO,
+  isContextMenuEnabled: false,
   
 
   /**
@@ -411,17 +411,17 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
         //set the itemIdx - To change the prefMatrix accordingly.
         this.set('itemIdx', idx) ;
-        isChecked = !checkboxEnabled ? NO : true ;
+        isChecked = !checkboxEnabled ? false : true ;
       }
       else {
-        isChecked = NO ;
+        isChecked = false ;
       }
 
       //Check if item is enabled
       itemEnabled = (isEnabledKey) ? (object.get ?
       object.get(isEnabledKey) : object[isEnabledKey]) : object ;
       
-      if(NO !== itemEnabled) itemEnabled = true ;
+      if(false !== itemEnabled) itemEnabled = true ;
 
       //Set the first item from the list as default selected item
       if (idx === 0) {
@@ -605,7 +605,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     }) ;
 
     // no menu to toggle... bail...
-    if (!menu) return NO ;
+    if (!menu) return false ;
     menu.popup(this, this.preferMatrix) ;
     this.set('menu', menu);
 
@@ -623,7 +623,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
   */
   displaySelectedItem: function(menuView) {
     var currentItem = this.getPath('menu.selectedItem');
-    if (!currentItem) return NO;
+    if (!currentItem) return false;
 
     this.set('value', currentItem.get('value')) ;
     this.set('title', currentItem.get('title')) ;
@@ -739,7 +739,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
       if (targetMenuItem && targetMenuItem.get('mouseHasEntered')) {
         // Have the menu item perform its action.
-        // If the menu returns NO, it had no action to
+        // If the menu returns false, it had no action to
         // perform, so we should close the menu immediately.
         if (!targetMenuItem.performAction()) menu.remove();
       } else if (!touch && (timestamp - previousTimestamp > SC.ButtonView.CLICK_AND_HOLD_DELAY)) {
@@ -766,7 +766,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
 
     // Reset state.
-    this._isMouseDown = NO;
+    this._isMouseDown = false;
     return true;
   },
 

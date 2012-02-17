@@ -51,7 +51,7 @@ test("Test Asynchronous GET Request", function() {
 
 test("Test Synchronous GET Request", function() {
 
-  request.set("isAsynchronous", NO);  
+  request.set("isAsynchronous", false);  
   var response = request.send();
   
   ok(response !== null, 'send() should return response') ;
@@ -174,7 +174,7 @@ test("Test timeouts", function() {
   
   // Sanity check 2
   try {
-    SC.Request.getUrl(url).set('isAsynchronous', NO).set('timeout', 10).send();
+    SC.Request.getUrl(url).set('isAsynchronous', false).set('timeout', 10).send();
   }
   catch (e2) {
     message = e2;
@@ -183,8 +183,8 @@ test("Test timeouts", function() {
 
 
   // Make sure timeouts actually fire, and fire when expected.
-  var changedBefore  = NO,
-      changedAfter   = NO,
+  var changedBefore  = false,
+      changedAfter   = false,
       timeoutRequest = SC.Request.getUrl("http://www.sproutcore.com"),
       checkstop;
 

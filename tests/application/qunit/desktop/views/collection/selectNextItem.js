@@ -48,13 +48,13 @@ test("selectNextItem(extend=undefined, numberOfItems=undefined)", function() {
   ok(expected.isEqual(actual), 'should select next to %@ (expected: %@ actual: %@)'.fmt(sel, expected, actual));  
 });
 
-test("selectNextItem(extend=NO, numberOfItems=undefined)", function() {
+test("selectNextItem(extend=false, numberOfItems=undefined)", function() {
   var sel = selectionFromIndex(4),
       expected = selectionFromIndex(5),
       actual;
       
   view.set('selection', sel);
-  view.selectNextItem(NO);
+  view.selectNextItem(false);
   
   actual = view.get('selection');
   ok(expected.isEqual(actual), 'should select next to %@ (expected: %@ actual: %@)'.fmt(sel, expected, actual));  

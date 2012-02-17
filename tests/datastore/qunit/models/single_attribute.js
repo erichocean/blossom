@@ -22,7 +22,7 @@ suite("SC.RecordAttribute core methods", {
 
       // test non-isEditable toOne relationships
       readOnlyRelatedTo: SC.Record.toOne('MyApp.Bar', {
-        isEditable: NO
+        isEditable: false
       }),
 
       // test toOne relationship with computed type
@@ -39,7 +39,7 @@ suite("SC.RecordAttribute core methods", {
     });
 
     MyApp.Bar = SC.Record.extend({
-      foo: SC.Record.toOne('MyApp.Foo', { inverse: 'bar', isMaster: NO })
+      foo: SC.Record.toOne('MyApp.Foo', { inverse: 'bar', isMaster: false })
     });
 
     SC.RunLoop.begin();
@@ -248,7 +248,7 @@ test("modifying a keyed toOne relationship", function(){
   equals(rec4.get('barId'), 'bar2', 'foo4.barId should == bar2');
 });
 
-test("isEditable NO should not allow editing", function() {
+test("isEditable false should not allow editing", function() {
   var bar1 = MyApp.store.find(MyApp.Bar, 'bar1');
   var bar2 = MyApp.store.find(MyApp.Bar, 'bar2');
   var rec5 = MyApp.store.find(MyApp.Foo, 'foo5');
@@ -262,14 +262,14 @@ test("isEditable NO should not allow editing", function() {
   equals(rec5.get('status'), SC.Record.READY_CLEAN, 'foo5 status is still READY_CLEAN');
 });
 
-test("isEditable NO should not fire property change observer", function() {
+test("isEditable false should not fire property change observer", function() {
   var bar1 = MyApp.store.find(MyApp.Bar, 'bar1');
   var bar2 = MyApp.store.find(MyApp.Bar, 'bar2');
   var rec5 = MyApp.store.find(MyApp.Foo, 'foo5');
 
   equals(rec5.get('readOnlyRelatedTo'), bar1, 'precond - should find bar1');
 
-  var readOnlyWasModified = NO;
+  var readOnlyWasModified = false;
   var modifierListener = function() {
     readOnlyWasModified = true;
   };
@@ -277,7 +277,7 @@ test("isEditable NO should not fire property change observer", function() {
 
   rec5.set('readOnlyRelatedTo', bar2);
 
-  equals(readOnlyWasModified, NO, 'property change observer should not have fired');
+  equals(readOnlyWasModified, false, 'property change observer should not have fired');
 
   rec5.removeObserver('readOnlyRelatedTo', modifierListener);
 });
@@ -320,7 +320,7 @@ suite("modifying a keyed toOne relationship via the inverse", {
 
     MyApp.Bar = SC.Record.extend({
       foo: SC.Record.toOne('MyApp.Foo', {
-        isMaster: NO, key: 'foo_id', inverse: 'bar'
+        isMaster: false, key: 'foo_id', inverse: 'bar'
       })
     });
   }

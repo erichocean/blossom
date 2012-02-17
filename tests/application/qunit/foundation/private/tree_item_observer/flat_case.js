@@ -289,12 +289,12 @@ test("replace object in middle", function() {
 // 
 
 test("contentGroupIndexes - not grouped", function() {
-  equals(delegate.get('treeItemIsGrouped'), NO, 'precond - delegate.treeItemIsGrouped == NO');
+  equals(delegate.get('treeItemIsGrouped'), false, 'precond - delegate.treeItemIsGrouped == false');
   equals(obs.contentGroupIndexes(null, obs), null, 'contentGroupIndexes should be null');
   
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
-    equals(obs.contentIndexIsGroup(null, obs, idx), NO, 'obs.contentIndexIsGroup(null, obs, %@) should be NO'.fmt(idx));
+    equals(obs.contentIndexIsGroup(null, obs, idx), false, 'obs.contentIndexIsGroup(null, obs, %@) should be false'.fmt(idx));
   }
 });
 

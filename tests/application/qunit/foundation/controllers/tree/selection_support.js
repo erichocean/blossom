@@ -49,7 +49,7 @@ suite("Test SC.SelectionSupport mixin with TreeController.", {
     });
     
     controller = SC.TreeController.create({
-      treeItemIsGrouped: NO,
+      treeItemIsGrouped: false,
       content: content
     });
   },
@@ -97,7 +97,7 @@ function() {
   ok(indexSet === null, 'selection set should not have an indexSet');
 
   // Disable allowing empty selection
-  controller.set('allowsEmptySelection', NO);
+  controller.set('allowsEmptySelection', false);
 
   selectionSet = controller.get('selection');
   indexSet = selectionSet.indexSetForSource(source);
@@ -130,7 +130,7 @@ function() {
   ok(selectionSet.containsObject(content.treeItemChildren[1].treeItemChildren[4]), 'selection should contain the fifth content object');
 
   // Disable allowing multiple selection
-  controller.set('allowsMultipleSelection', NO);
+  controller.set('allowsMultipleSelection', false);
 
   selectionSet = controller.get('selection');
   indexSet = selectionSet.indexSetForSource(source);

@@ -50,7 +50,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   content: null,
 
   /**
-    Makes the array editable or not.  If this is set to NO, then any attempts
+    Makes the array editable or not.  If this is set to false, then any attempts
     at changing the array content itself will throw an exception.
     
     @property {Boolean}
@@ -101,13 +101,13 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     deleted.  This is a convenient way to manage lists of items owned
     by a parent record object.
     
-    Note that even if this is set to NO, calling destroyObject() instead of
+    Note that even if this is set to false, calling destroyObject() instead of
     removeObject() will still destroy the object in question as well as 
     removing it from the parent array.
     
     @property {Boolean}
   */
-  destroyOnRemoval: NO,
+  destroyOnRemoval: false,
 
   /**
     Returns an SC.Array object suitable for use in a CollectionView.  
@@ -133,7 +133,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     if (ret) {
       return !content.isEnumerable || 
              (SC.typeOf(content.removeObject) === SC.T_FUNCTION);
-    } else return NO ;
+    } else return false ;
   }.property('content', 'isEditable', 'hasContent'),
   
   /**
@@ -167,13 +167,13 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     if (ret) {
       return (SC.typeOf(content.addObject) === SC.T_FUNCTION) || 
              (SC.typeOf(content.pushObject) === SC.T_FUNCTION); 
-    } else return NO ;
+    } else return false ;
   }.property('content', 'isEditable'),
   
   /**
     Set to true if the controller has valid content that can be displayed,
-    even an empty array.  Returns NO if the content is null or not enumerable
-    and allowsSingleContent is NO.
+    even an empty array.  Returns false if the content is null or not enumerable
+    and allowsSingleContent is false.
     
     @property {Boolean}
   */
@@ -317,10 +317,10 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   },
   
   /** @private
-    Cached observable content property.  Set to NO to indicate cache is 
+    Cached observable content property.  Set to false to indicate cache is 
     invalid.
   */
-  _scac_cached: NO,
+  _scac_cached: false,
   
   /**
     @private
@@ -335,7 +335,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   */
   _scac_observableContent: function() {
     var ret = this._scac_cached;
-    if (ret !== NO) return ret;
+    if (ret !== false) return ret;
     
     var content = this.get('content'),
         orderBy, func, t, len;
@@ -379,7 +379,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
         var idx=0, status=0, key, aValue, bValue, descending;
         for(idx=0;(idx<len)&&(status===0);idx++) {
           key = orderBy.objectAt(idx);
-          descending = NO;
+          descending = false;
           
           if (key.indexOf('ASC') > -1) {
             key = key.split('ASC ')[1];
@@ -417,7 +417,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   */
   _scac_contentDidChange: function() {
 
-    this._scac_cached = NO; // invalidate observable content
+    this._scac_cached = false; // invalidate observable content
     
     var cur    = this.get('content'),
         orders = !!this.get('orderBy'),
@@ -441,7 +441,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     ro = null;
     
     // save new cached values 
-    this._scac_cached = NO;
+    this._scac_cached = false;
     this._scac_content = cur ;
     
     // setup new observers
@@ -479,7 +479,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
         
     this._scac_length = newlen;
     this.beginPropertyChanges();
-    this._scac_cached = NO; // invalidate
+    this._scac_cached = false; // invalidate
     this.enumerableContentDidChange(0, newlen, newlen-oldlen);
     this.endPropertyChanges();
     this.updateSelectionAfterContentChange();
@@ -495,7 +495,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     
     var content = this.get('content');
     this._scac_length = content.get('length');
-    this._scac_cached = NO; // invalidate
+    this._scac_cached = false; // invalidate
     
     // if array length has changed, just notify every index from min up
     if (indexes) {

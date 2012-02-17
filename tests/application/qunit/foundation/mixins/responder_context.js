@@ -15,7 +15,7 @@ suite("ResponderContext", {
       },
       willLoseFirstResponder: function() {
         this.didLose = true;
-        this.hasFirst = NO;
+        this.hasFirst = false;
       }
     });
     
@@ -58,7 +58,7 @@ test("Setting responder to the current responder does not reenter.", function() 
   ok(A.didBecome, "A did become first responder.");
   ok(A.hasFirst, "A has first responder.");
 
-  A.didBecome = NO;
+  A.didBecome = false;
   Manager.makeFirstResponder(A);
   ok(!A.didBecome, "A did become first responder.");
 });
@@ -68,7 +68,7 @@ test("Calling 'resetFirstResponder' reenters the first responder.", function() {
   ok(A.didBecome, "A did become first responder.");
   ok(A.hasFirst, "A has first responder.");
 
-  A.didBecome = NO;
+  A.didBecome = false;
   Manager.resetFirstResponder();
   ok(A.didLose, "A did leave.");
   ok(A.didBecome, "A did reenter.");

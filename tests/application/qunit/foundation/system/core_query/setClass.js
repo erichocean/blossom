@@ -4,12 +4,12 @@
 
 suite("CoreQuery.setClass()");
 
-test("setClass(existing, NO) should remove the class", function() {
+test("setClass(existing, false) should remove the class", function() {
   var cq = SC.$('<div class="existing"></div>') ;
   equals(cq.hasClass('existing'), true, "cq has existing");
   
-  cq.setClass("existing", NO) ;
-  equals(cq.hasClass('existing'), NO, 'cq should not have existing');
+  cq.setClass("existing", false) ;
+  equals(cq.hasClass('existing'), false, 'cq should not have existing');
 });
 
 test("setClass(existing, true) should do nothing", function() {
@@ -22,18 +22,18 @@ test("setClass(existing, true) should do nothing", function() {
 
 test("setClass(new, true) should add the class", function() {
   var cq = SC.$('<div class="existing"></div>') ;
-  equals(cq.hasClass('new'), NO, "cq does not have new");
+  equals(cq.hasClass('new'), false, "cq does not have new");
   
   cq.setClass("new", true) ;
   equals(cq.hasClass('new'), true, 'cq should have new');
 });
 
-test("setClass(new, NO) should do nothing", function() {
+test("setClass(new, false) should do nothing", function() {
   var cq = SC.$('<div class="existing"></div>') ;
-  equals(cq.hasClass('new'), NO, "cq does not have new");
+  equals(cq.hasClass('new'), false, "cq does not have new");
   
-  cq.setClass("new", NO) ;
-  equals(cq.hasClass('new'), NO, "cq does not have new");
+  cq.setClass("new", false) ;
+  equals(cq.hasClass('new'), false, "cq does not have new");
 });
 
 test("setClass(mixed, true) should work across multiple", function() {
@@ -42,7 +42,7 @@ test("setClass(mixed, true) should work across multiple", function() {
     <div class="match"></div>\
   </div>').find('.match');
   equals(cq.length, 2, 'should have two items');
-  equals(cq.hasClass("mixed"), NO, "should not all have mixed class");
+  equals(cq.hasClass("mixed"), false, "should not all have mixed class");
   
   cq.setClass("mixed", true);
   equals(cq.hasClass("mixed"), true, "now all should have mixed class") ;

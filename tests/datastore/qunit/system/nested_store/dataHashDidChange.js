@@ -40,7 +40,7 @@ suite("SC.NestedStore#dataHashDidChange", {
 function testStateTransition(fromState, toState) {
 
   // verify preconditions
-  equals(store.get('hasChanges'), NO, 'should not have changes');
+  equals(store.get('hasChanges'), false, 'should not have changes');
   equals(store.storeKeyEditState(storeKey), fromState, 'precond - storeKey edit state');
   if (store.chainedChanges) {
     ok(!store.chainedChanges.contains(storeKey), 'changedChanges should NOT include storeKey');
@@ -61,7 +61,7 @@ function testStateTransition(fromState, toState) {
   equals(store.get('hasChanges'), true, 'should have changes');
 } 
 
-test("edit state = INHERITED, parent editable = NO", function() {
+test("edit state = INHERITED, parent editable = false", function() {
 
   // verify preconditions
   equals(parent.storeKeyEditState(storeKey), SC.Store.LOCKED, 'precond - parent store edit state is not EDITABLE');

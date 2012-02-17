@@ -25,18 +25,18 @@ suite("SC.CascadeDataSource", {
 
       retriveRecords: function () {
         ok(true, "retriveRecords should be handled by baz");
-        return NO;
+        return false;
       },
 
       fetch: function (store, query) {
         ok(true, "fetch should be handled by bar");
-        return NO;
+        return false;
       },
 
       cancel: function (st, storeKeys) {
         equals(store, st, "should equal store");
         equals(1, storeKeys[0], "should equal [1]");
-        return NO;
+        return false;
       }
     });
     Sample.fooDataSource = Sample.FooDataSource.create();
@@ -44,12 +44,12 @@ suite("SC.CascadeDataSource", {
     Sample.BarDataSource = SC.DataSource.extend({
       commitRecords: function () {
         ok(false, "should never be called, since foo handles commitRecords first");
-        return NO;
+        return false;
       },
 
       retriveRecords: function () {
         ok(true, "retriveRecords should be handled by baz");
-        return NO;
+        return false;
       },
 
       fetch: function (st, query) {
@@ -63,7 +63,7 @@ suite("SC.CascadeDataSource", {
     Sample.BazDataSource = SC.DataSource.extend({
       commitRecords: function () {
         ok(false, "should never be called, since foo handles commitRecords first");
-        return NO;
+        return false;
       },
 
       retrieveRecords: function (st, storeKeys, ids) {
@@ -75,7 +75,7 @@ suite("SC.CascadeDataSource", {
 
       fetch: function () {
         ok(false, "should never be called, since bar handles fetch first");
-        return NO;
+        return false;
       }
     });
     Sample.bazDataSource = Sample.BazDataSource.create();
@@ -128,6 +128,6 @@ test("Verify dataSource returns `true` when handled by a child dataSource for re
   ok(Sample.dataSource.retrieveRecords(store, [0], ['id']), "retrieveRecords should be handled by baz");
 });
 
-test("Verify dataSource returns 'NO' when not handled by a child dataSource", function () {
+test("Verify dataSource returns 'false' when not handled by a child dataSource", function () {
   ok(!Sample.dataSource.cancel(store, [1]), "cancel should be handled by no data source");
 });

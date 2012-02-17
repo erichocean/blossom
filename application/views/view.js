@@ -79,7 +79,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   isEnabledBindingDefault: SC.Binding.oneWay().bool(),
 
   /** @private
-    Observes the isEnabled property and resigns first responder if set to NO.
+    Observes the isEnabled property and resigns first responder if set to false.
     This will avoid cases where, for example, a disabled text field retains
     its focus rings.
 
@@ -98,8 +98,8 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   /**
     The isVisible property determines if the view is shown in the view
     hierarchy it is a part of. A view can have isVisible == true and still have
-    isVisibleInWindow == NO. This occurs, for instance, when a parent view has
-    isVisible == NO. Default is true.
+    isVisibleInWindow == false. This occurs, for instance, when a parent view has
+    isVisible == false. Default is true.
 
     The isVisible property is considered part of the layout and so changing it
     will trigger a layout update.
@@ -148,7 +148,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @property {Boolean}
     @test in updateLayer
   */
-  layerNeedsUpdate: NO,
+  layerNeedsUpdate: false,
 
   /** @private
     Schedules the updateLayerIfNeeded method to run at the end of the runloop
@@ -204,7 +204,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     Set to true if your view is willing to accept first responder status.  This
     is used when calculcating key responder loop.
   */
-  acceptsFirstResponder: NO,
+  acceptsFirstResponder: false,
 
   // ..........................................................
   // TEXT HANDLING AND KEYBOARD SUPPORT
@@ -212,7 +212,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     Determines if the user can select text within the view.  Normally this is
-    set to NO to disable text selection.  You should set this to true if you
+    set to false to disable text selection.  You should set this to true if you
     are creating a view that includes editable text.  Otherwise, settings this
     to true will probably make your controls harder to use and it is not
     recommended.
@@ -275,7 +275,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
       // of the text.  Since this is not an action, do not send it up the
       // responder chain.
       ret = this.insertText(chr, event);
-      return ret ? (ret===true ? this : ret) : null ; // map true|NO => this|nil
+      return ret ? (ret===true ? this : ret) : null ; // map true|false => this|nil
     }
 
     return null ; //nothing to do.
@@ -290,7 +290,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @returns {Object} receiver or object that handled event
   */
   insertText: function(chr) {
-    return NO ;
+    return false ;
   },
 
   /**
@@ -308,7 +308,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     @returns {Boolean}
   */
   performKeyEquivalent: function(keystring, evt) {
-    var ret = NO,
+    var ret = false,
         childViews = this.get('childViews'),
         len = childViews.length,
         idx = -1 ;
@@ -440,7 +440,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     if (pv) {
       pv.scrollToVisible();
       return pv.scrollToVisible(this);
-    } else return NO ;
+    } else return false ;
   },
 
   // ..........................................................
@@ -622,7 +622,7 @@ SC.View = SC.View.extend(
     belongs to is also the input surface.  While this property is set, you 
     should expect to receive text input and keyboard events.
   */
-  isInputResponder: NO,
+  isInputResponder: false,
 
   // ..........................................................
   // CHILD VIEW SUPPORT
@@ -657,7 +657,7 @@ SC.View = SC.View.extend(
       // it's an optimization), then calculate it.
       if (parentViewIsVisible === undefined) {
         parentView = this.get('parentView');
-        parentViewIsVisible = parentView ? parentView.get('isVisibleInWindow') : NO;
+        parentViewIsVisible = parentView ? parentView.get('isVisibleInWindow') : false;
       }
       current = current && parentViewIsVisible;
     }
@@ -821,7 +821,7 @@ SC.View = SC.View.extend(
 
   /**
     Returns true if the receiver is a subview of a given view or if it’s
-    identical to that view. Otherwise, it returns NO.
+    identical to that view. Otherwise, it returns false.
 
     @property {SC.View} view
   */
@@ -1059,7 +1059,7 @@ SC.View = SC.View.extend(
     // 
     // parentNode = parentView = node = nextNode = null ; // avoid memory leaks
     // 
-    // this.set('layerLocationNeedsUpdate', NO) ;
+    // this.set('layerLocationNeedsUpdate', false) ;
     // 
     // return this ;
   },
@@ -1349,7 +1349,7 @@ SC.View = SC.View.extend(
 
     @property {Boolean}
   */
-  useStaticLayout: NO,
+  useStaticLayout: false,
 
   /**
     Optional background color.  Will be applied to the view's element if
@@ -1386,7 +1386,7 @@ SC.View = SC.View.extend(
     to is also key pane.  While this property is set, you should expect to
     receive keyboard events.
   */
-  isKeyResponder: NO,
+  isKeyResponder: false,
 
   /**
     The current pane this view is a child of (may be null).
@@ -1653,7 +1653,7 @@ SC.View = SC.View.extend(
 
   /**
     Returns true if the receiver is a subview of a given view or if it’s
-    identical to that view. Otherwise, it returns NO.
+    identical to that view. Otherwise, it returns false.
 
     @property {SC.View} view
   */
@@ -1662,7 +1662,7 @@ SC.View = SC.View.extend(
 
     if(this===view) return true;
     else if(parentView) return parentView.isDescendantOf(view);
-    else return NO;
+    else return false;
   },
 
   /**
@@ -1692,7 +1692,7 @@ SC.View = SC.View.extend(
       // it's an optimization), then calculate it.
       if (parentViewIsVisible === undefined) {
         parentView = this.get('parentView');
-        parentViewIsVisible = parentView ? parentView.get('isVisibleInWindow') : NO;
+        parentViewIsVisible = parentView ? parentView.get('isVisibleInWindow') : false;
       }
       current = current && parentViewIsVisible;
     }
@@ -1728,7 +1728,7 @@ SC.View = SC.View.extend(
     // we are out of sync with the layer, then we need to update our state
     // now.
     //
-    // For example, say we're isVisible=NO, but we have not yet added the
+    // For example, say we're isVisible=false, but we have not yet added the
     // 'hidden' class to the layer because of the "don't update the layer if
     // we're not visible in the window" check.  If any of our parent views
     // became visible, our layer would incorrectly be shown!
@@ -1906,7 +1906,7 @@ SC.View = SC.View.extend(
   updateLayer: function() {
     // console.log('SC.View#updateLayer()');
     var context = this.renderContext(this.get('layer')) ;
-    this.prepareContext(context, NO) ;
+    this.prepareContext(context, false) ;
     context.update() ;
     if (context._innerHTMLReplaced) {
       var pane = this.get('pane');
@@ -2118,7 +2118,7 @@ SC.View = SC.View.extend(
     context.addClass(classNames);
 
     this.beginPropertyChanges() ;
-    this.set('layerNeedsUpdate', NO) ;
+    this.set('layerNeedsUpdate', false) ;
     this.render(context, firstTime) ;
     if (mixins = this.renderMixin) {
       len = mixins.length;
@@ -2247,7 +2247,7 @@ SC.View = SC.View.extend(
 
   /**
     A child view without a cursor of its own inherits its parent's cursor by
-    default.  Set this to NO to prevent this behavior.
+    default.  Set this to false to prevent this behavior.
 
     @property {Boolean}
   */
@@ -2263,7 +2263,7 @@ SC.View = SC.View.extend(
 
     @property {Boolean}
   */
-  layerLocationNeedsUpdate: NO,
+  layerLocationNeedsUpdate: false,
 
   /**
     Calls updateLayerLocation(), but only if the view's layer location
@@ -2341,7 +2341,7 @@ SC.View = SC.View.extend(
 
     parentNode = parentView = node = nextNode = null ; // avoid memory leaks
 
-    this.set('layerLocationNeedsUpdate', NO) ;
+    this.set('layerLocationNeedsUpdate', false) ;
 
     return this ;
   },
@@ -2506,7 +2506,7 @@ SC.View = SC.View.extend(
     @returns {SC.View} receiver
   */
   adjust: function(key, value) {
-    var layout = SC.clone(this.get('layout')), didChange = NO, cur ;
+    var layout = SC.clone(this.get('layout')), didChange = false, cur ;
 
     if (key === undefined) return this ; // nothing to do.
 
@@ -3140,7 +3140,7 @@ SC.View = SC.View.extend(
     Setting wantsAcceleratedLayer to true will use 3d transforms to move the
     layer when available.
   */
-  wantsAcceleratedLayer: NO,
+  wantsAcceleratedLayer: false,
 
   /**
     Specifies whether 3d transforms can be used to move the layer.
@@ -3428,7 +3428,7 @@ SC.View = SC.View.extend(
           previousHeight = previousLayout.height;
           if (previousLayout !== undefined) {
             currentHeight = currentLayout.height;
-            if (previousHeight === currentHeight) didResize = NO;
+            if (previousHeight === currentHeight) didResize = false;
           }
         }
       }
@@ -3466,7 +3466,7 @@ SC.View = SC.View.extend(
 
     @property {Boolean}
   */
-  childViewsNeedLayout: NO,
+  childViewsNeedLayout: false,
 
   /**
     One of two methods that are invoked whenever one of your childViews
@@ -3481,7 +3481,7 @@ SC.View = SC.View.extend(
 
     Note that if as a result of running this method you decide that you do not
     need your layoutChildViews() method run later, you can set the
-    childViewsNeedsLayout property to NO from this method and the layout
+    childViewsNeedsLayout property to false from this method and the layout
     method will not be called layer.
 
     @param {SC.View} childView the view whose layout has changed.
@@ -3504,7 +3504,7 @@ SC.View = SC.View.extend(
   layoutChildViewsIfNeeded: function(isVisible) {
     if (!isVisible) isVisible = this.get('isVisibleInWindow');
     if (isVisible && this.get('childViewsNeedLayout')) {
-      this.set('childViewsNeedLayout', NO);
+      this.set('childViewsNeedLayout', false);
       this.layoutChildViews();
     }
     return this ;
@@ -3620,7 +3620,7 @@ SC.View = SC.View.extend(
       maxY = 1;
     }
 
-    if (x > 100 || y > 100) return NO;
+    if (x > 100 || y > 100) return false;
     return true;
   },
 

@@ -119,19 +119,19 @@ SC.CollectionViewDelegate = {
     @returns {Boolean} true if the deletion was a success.
   */
   collectionViewDeleteContent: function(view, content, indexes) {
-    if (!content) return NO ;
+    if (!content) return false ;
 
     if (SC.typeOf(content.destroyAt) === SC.T_FUNCTION) {
       content.destroyAt(indexes);
-      view.selectPreviousItem(NO, 1) ;
+      view.selectPreviousItem(false, 1) ;
       return true ;
       
     } else if (SC.typeOf(content.removeAt) === SC.T_FUNCTION) {
       content.removeAt(indexes);
-      view.selectPreviousItem(NO, 1) ;
+      view.selectPreviousItem(false, 1) ;
       return true;
       
-    } else return NO ;
+    } else return false ;
   },
   
   // ..........................................................
@@ -150,7 +150,7 @@ SC.CollectionViewDelegate = {
     The default implementation always returns true.
     
     @param view {SC.CollectionView} the collection view
-    @returns {Boolean} true to alow, NO to prevent it
+    @returns {Boolean} true to alow, false to prevent it
   */
   collectionViewShouldBeginDrag: function(view) { return true; },
   
@@ -163,7 +163,7 @@ SC.CollectionViewDelegate = {
     
     If you return null or an empty array, can you have set canReorderContent
     to true on the CollectionView, then the drag will go ahead but only 
-    reordering will be allowed.  If canReorderContent is NO, then the drag
+    reordering will be allowed.  If canReorderContent is false, then the drag
     will not be allowed to start.
     
     If you simply want to control whether a drag is allowed or not, you
@@ -290,6 +290,6 @@ SC.CollectionViewDelegate = {
     
     @property {Boolean} ghost view acts like a cursor
   */
-  ghostActsLikeCursor: NO
+  ghostActsLikeCursor: false
   
 };

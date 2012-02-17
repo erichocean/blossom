@@ -17,7 +17,7 @@ if (! BLOSSOM) {
   takes a lot of the same properties as a button:
   
   - isEnabled: whether disclosure triangle is clickable or not
-  - value: true or NO (where true implies expanded/open)
+  - value: true or false (where true implies expanded/open)
   
   @extends SC.ButtonView
   @since SproutCore
@@ -39,7 +39,7 @@ SC.DisclosureView = SC.ButtonView.extend(
   /**
     The value that will be set when the disclosure triangle is toggled closed.
   */
-  toggleOffValue: NO,
+  toggleOffValue: false,
   
   /** @private */
   valueBindingDefault: SC.Binding.bool() ,

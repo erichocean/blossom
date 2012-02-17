@@ -108,7 +108,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   /**
     If you want the inline editor to be multiline set this property to true.
   */
-  isInlineEditorMultiline: NO,
+  isInlineEditorMultiline: false,
   
   /**
     [RO] The value that will actually be displayed.
@@ -172,13 +172,13 @@ SC.LabelView = SC.View.extend(SC.Control,
   /**
     Enables editing using the inline editor.
   */
-  isEditable: NO,
+  isEditable: false,
   isEditableBindingDefault: SC.Binding.bool(),
 
   /**
     true if currently editing label view.
   */
-  isEditing: NO,
+  isEditing: false,
   
   /**
     Validator to use during inline editing.
@@ -208,7 +208,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   */
   beginEditing: function() {
     if (this.get('isEditing')) return true ;
-    if (!this.get('isEditable')) return NO ;
+    if (!this.get('isEditable')) return false ;
 
     var el = this.$(),
         value = this.get('value'),
@@ -223,7 +223,7 @@ SC.LabelView = SC.View.extend(SC.Control,
       exampleElement: el,
       value: value, 
       multiline: this.get('isInlineEditorMultiline'), 
-      isCollection: NO,
+      isCollection: false,
       validator: this.get('validator'),
       exampleInlineTextFieldView: this.get('exampleInlineTextFieldView')
     });
@@ -232,7 +232,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   /**
     Cancels the current inline editor and then exits editor. 
     
-    @return {Boolean} NO if the editor could not exit.
+    @return {Boolean} false if the editor could not exit.
   */
   discardEditing: function() {
     if (!this.get('isEditing')) return true ;
@@ -242,7 +242,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   /**
     Commits current inline editor and then exits editor.
     
-    @return {Boolean} NO if the editor could not exit
+    @return {Boolean} false if the editor could not exit
   */
   commitEditing: function() {
     if (!this.get('isEditing')) return true ;
@@ -286,7 +286,7 @@ SC.LabelView = SC.View.extend(SC.Control,
     this.setIfChanged('value', finalValue) ;
     this.$().css('opacity', this._oldOpacity);
     this._oldOpacity = null ;
-    this.set('isEditing', NO) ;
+    this.set('isEditing', false) ;
   },
 
   displayProperties: 'displayValue textAlign fontWeight icon'.w(),

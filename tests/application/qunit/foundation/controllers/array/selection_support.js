@@ -76,7 +76,7 @@ function() {
   ok(indexSet === null, 'selection set should not have an indexSet');
 
   // Disable allowing empty selection
-  controller.set('allowsEmptySelection', NO);
+  controller.set('allowsEmptySelection', false);
 
   selectionSet = controller.get('selection');
   indexSet = selectionSet.indexSetForSource(source);
@@ -96,7 +96,7 @@ function() {
   indexSet;
 
   // Select 3 items
-  controller.selectObjects([content[0], content[2], content[4]], NO);
+  controller.selectObjects([content[0], content[2], content[4]], false);
 
   selectionSet = controller.get('selection');
   indexSet = selectionSet.indexSetForSource(source);
@@ -109,7 +109,7 @@ function() {
   ok(selectionSet.containsObject(content[4]), 'selection should contain the fifth content object');
 
   // Disable allowing multiple selection
-  controller.set('allowsMultipleSelection', NO);
+  controller.set('allowsMultipleSelection', false);
 
   selectionSet = controller.get('selection');
   indexSet = selectionSet.indexSetForSource(source);
@@ -128,7 +128,7 @@ function() {
   var selectionSet, source, newObject, indexSet;
 
   // Select 3 items
-  controller.selectObjects([content[1], content[2], content[3]], NO);
+  controller.selectObjects([content[1], content[2], content[3]], false);
 
   // Add an item to the content
   newObject = TestObject.create({
@@ -157,7 +157,7 @@ function() {
   var selectionSet, source, indexSet;
 
   // Select 3 items
-  controller.selectObjects([content[1], content[2], content[3]], NO);
+  controller.selectObjects([content[1], content[2], content[3]], false);
 
   // Remove an item from the content without effecting the selection
   controller.removeObject(content[0]);
@@ -198,7 +198,7 @@ function() {
   var selectionSet, source, indexSet;
 
   // Select 3 items
-  controller.selectObjects([content[1], content[2], content[3]], NO);
+  controller.selectObjects([content[1], content[2], content[3]], false);
 
   // Remove an item from the content effecting the selection
   controller.removeObject(content[2]);
@@ -236,7 +236,7 @@ function() {
   var newObject1, newObject2, selectionSet, source, indexSet;
 
   // Select 2 items
-  controller.selectObjects([content[1], content[2]], NO);
+  controller.selectObjects([content[1], content[2]], false);
 
   newObject1 = TestObject.create({
     title: 'Figs'
@@ -282,7 +282,7 @@ function() {
   var newObject1, newObject2, selectionSet, source, indexSet;
 
   // Select 3 items
-  controller.selectObjects([content[1], content[2], content[3]], NO);
+  controller.selectObjects([content[1], content[2], content[3]], false);
 
   newObject1 = TestObject.create({
     title: 'Figs'

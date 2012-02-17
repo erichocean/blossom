@@ -30,9 +30,9 @@ SC.NestedStore = SC.Store.extend(
     yet.
 
     @type Boolean
-    @default NO
+    @default false
   */
-  hasChanges: NO,
+  hasChanges: false,
 
   /**
     The parent store this nested store is chained to.  Nested stores must have
@@ -59,7 +59,7 @@ SC.NestedStore = SC.Store.extend(
     then change the record in the parent store, the changes will not be 
     visible to your nested store until you commit or discard changes.
     
-    If `NO`, then the attribute hash will lock only when you write data.
+    If `false`, then the attribute hash will lock only when you write data.
     
     Normally you want to lock your attribute hash the first time you read it.
     This will make your nested store behave most consistently.  However, if
@@ -209,7 +209,7 @@ SC.NestedStore = SC.Store.extend(
 
     // TODO: Notify record instances
     
-    this.set('hasChanges', NO);
+    this.set('hasChanges', false);
   },
   
   /** @private
@@ -350,7 +350,7 @@ SC.NestedStore = SC.Store.extend(
     much. 
   */
   writeDataHash: function(storeKey, hash, status) {
-    var locks = this.locks, didLock = NO, rev ;
+    var locks = this.locks, didLock = false, rev ;
 
     // Update our dataHash and/or status, depending on what was passed in.
     // Note that if no new hash was passed in, we'll lock the storeKey to
@@ -517,8 +517,8 @@ SC.NestedStore = SC.Store.extend(
               editables  = this.editables,
               locks      = this.locks;
 
-          var changed    = NO;
-          var statusOnly = NO;
+          var changed    = false;
+          var statusOnly = false;
   
           if (dataHashes  &&  dataHashes.hasOwnProperty(storeKey)) {
             delete dataHashes[storeKey];

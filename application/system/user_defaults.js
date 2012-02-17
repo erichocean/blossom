@@ -38,7 +38,7 @@ if (BLOSSOM) {
 SC.UserDefaults = SC.Object.extend(
   /** @scope SC.UserDefaults.prototype */ {
 
-  ready: NO,
+  ready: false,
 
   /** 
     The default domain for the user.  This will be used to store keys in
@@ -291,7 +291,7 @@ if (! BLOSSOM) {
 */
 SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   
-  ready: NO,
+  ready: false,
   
   /** 
     the default domain for the user.  This will be used to store keys in
@@ -550,7 +550,7 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   },
   
   _domainDidChange: function() {
-    var didChange = NO;
+    var didChange = false;
     if (this.get("userDomain") !== this._scud_userDomain) {
       this._scud_userDomain = this.get('userDomain');
       didChange = true;

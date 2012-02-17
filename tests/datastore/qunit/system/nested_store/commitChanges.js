@@ -56,7 +56,7 @@ function testStateTransition(shouldIncludeStoreKey, shouldCallParent) {
   // verify result
   equals(store.storeKeyEditState(storeKey), SC.Store.INHERITED, 'data edit state');
 
-  if (shouldCallParent === NO) {
+  if (shouldCallParent === false) {
     ok(!args || args.length===0, 'should not call commitChangesFromNestedStore');    
   } else {
     equals(args.length, 1, 'should have called commitChangesFromNestedStore');
@@ -74,7 +74,7 @@ function testStateTransition(shouldIncludeStoreKey, shouldCallParent) {
     }
   }
   
-  equals(store.get('hasChanges'), NO, 'hasChanges should be cleared');
+  equals(store.get('hasChanges'), false, 'hasChanges should be cleared');
   ok(!store.chainedChanges || store.chainedChanges.length===0, 'should have empty chainedChanges set');
 }
 
@@ -86,7 +86,7 @@ test("state = INHERITED", function() {
   // check preconditions
   equals(store.storeKeyEditState(storeKey), SC.Store.INHERITED, 'precond - data edit state');
 
-  testStateTransition(NO, NO);
+  testStateTransition(false, false);
 });
 
 
@@ -101,7 +101,7 @@ test("state = LOCKED", function() {
   equals(store.storeKeyEditState(storeKey), SC.Store.LOCKED, 'precond - data edit state');
   ok(!store.chainedChanges || !store.chainedChanges.contains(storeKey), 'locked record should not be in chainedChanges set');
 
-  testStateTransition(NO, NO);
+  testStateTransition(false, false);
 });
 
 test("state = EDITABLE", function() {

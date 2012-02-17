@@ -62,9 +62,9 @@ test("should change status only if statusOnly=true", function() {
 });
 
 
-test("should change attrs  & status if statusOnly=NO", function() {
+test("should change attrs  & status if statusOnly=false", function() {
   checkPreconditions();
-  foo.storeDidChangeProperties(NO);
+  foo.storeDidChangeProperties(false);
   expect(foo,1,1);
 });
 

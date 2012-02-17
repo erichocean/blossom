@@ -10,7 +10,7 @@
 htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 
 var booleanObjects = [
-  { n: 'False', v: NO },
+  { n: 'False', v: false },
   { n: 'True', v: true }
 ];
 
@@ -26,15 +26,15 @@ var pane = SC.ControlTestPane.design()
     })
   
     .add("disabled", SC.SelectFieldView, { 
-      isEnabled: NO, objects:["1","2","3","4","5"]
+      isEnabled: false, objects:["1","2","3","4","5"]
     })
   
     .add("Not Selected", SC.SelectFieldView, { 
-      isSelected: NO, objects:["1","2","3","4","5"]
+      isSelected: false, objects:["1","2","3","4","5"]
     })
   
     .add("Not Visible", SC.SelectFieldView, { 
-      isVisible: NO, objects:["1","2","3","4","5"]
+      isVisible: false, objects:["1","2","3","4","5"]
     })
   
     .add("sortedStringOptions", SC.SelectFieldView, { 
@@ -135,9 +135,9 @@ test("redraw", function(){
 test("selectFalse", function(){
   var view = pane.view('selectBoolean');
   SC.RunLoop.begin();
-  view.set('value', NO);
+  view.set('value', false);
   SC.RunLoop.end();
-  equals(view.getFieldValue(), NO, 'the field values should change to False')
+  equals(view.getFieldValue(), false, 'the field values should change to False')
 });
 
 test("selectTrue", function(){

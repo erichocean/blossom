@@ -60,7 +60,7 @@ SC.RangeObserver = {
     ret.target = target;
     ret.method = method;
     ret.context = context ;
-    ret.isDeep  = isDeep || NO ;
+    ret.isDeep  = isDeep || false ;
     ret.beginObserving();
     return ret ;
   },
@@ -134,7 +134,7 @@ SC.RangeObserver = {
 
     // add to pending range observers queue so that if any of these objects
     // change we will have a chance to setup observing on them.
-    this.isObserving = NO ;
+    this.isObserving = false ;
     SC.Observers.addPendingRangeObserver(this);
 
     return this;
@@ -188,7 +188,7 @@ SC.RangeObserver = {
       this.indexes.forEach(func,this);
       return true ;
       
-    } else return NO ;
+    } else return false ;
   },
   
   /**
@@ -218,7 +218,7 @@ SC.RangeObserver = {
         observing.length = 0 ; // reset
       } 
       
-      this.isObserving = NO ;
+      this.isObserving = false ;
     }
     
     if (observing) observing.clear(); // empty set.

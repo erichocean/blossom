@@ -65,7 +65,7 @@ SC.FetchedAttribute = SC.RecordAttribute.extend(
     
     @property {Boolean}
   */
-  isEditable: NO,  
+  isEditable: false,  
   
   // ..........................................................
   // LOW-LEVEL METHODS

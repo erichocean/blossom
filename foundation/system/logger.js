@@ -71,7 +71,7 @@ SC.Logger = SC.Object.create({
 
     @property: {Boolean}
   */
-  debugEnabled: NO,
+  debugEnabled: false,
 
   /**
     Computed property that checks for the existence of the reporter object.
@@ -90,7 +90,7 @@ SC.Logger = SC.Object.create({
 
     @property {Boolean}
   */
-  fallBackOnAlert: NO,
+  fallBackOnAlert: false,
 
   /**
     If some function, such as console.dir, does not exist,

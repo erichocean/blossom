@@ -19,24 +19,24 @@ suite("SC.RangeObserver#objectPropertyDidChange", {
     
     observer = SC.Object.create({
 
-      verify: NO ,
+      verify: false ,
       
       callCount: 0, 
       
-      object: NO,
+      object: false,
       
-      key: NO,
+      key: false,
 
-      indexes: NO,
+      indexes: false,
       
-      context: NO,
+      context: false,
       
       setupVerify: function(object, key, indexes, context) {
         this.verify = true ;  
-        this.object = (object === undefined) ? NO : object ;
-        this.key = (key === undefined) ? NO : key ;
-        this.indexes = (indexes === undefined) ? NO :indexes ;
-        this.context = (context === undefined) ? NO : context ;
+        this.object = (object === undefined) ? false : object ;
+        this.key = (key === undefined) ? false : key ;
+        this.indexes = (indexes === undefined) ? false :indexes ;
+        this.context = (context === undefined) ? false : context ;
         return this ;
       },
       
@@ -50,7 +50,7 @@ suite("SC.RangeObserver#objectPropertyDidChange", {
             equals(inObject, this.object, 'passed object should match');  
           }
 
-          if (this.key !== NO) {
+          if (this.key !== false) {
             equals(inKey, this.key, 'passed key should match');
           }
           
@@ -63,7 +63,7 @@ suite("SC.RangeObserver#objectPropertyDidChange", {
             equals(inIndexes, null, 'passed indexes should be null');
           }
 
-          if (this.context !== NO) {
+          if (this.context !== false) {
             equals(inContext, this.context, 'passed context should match');
           }
 

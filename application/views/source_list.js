@@ -39,7 +39,7 @@ SC.SourceListView = SC.ListView.extend(
     By default source lists should not select on mouse down since you will
     often want to drag an item instead of selecting it.
   */
-  selectOnMouseDown: NO,
+  selectOnMouseDown: false,
   
   /**
     By default, SourceListView's trigger any action you set whenever the user

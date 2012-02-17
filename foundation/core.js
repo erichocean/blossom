@@ -239,7 +239,7 @@ SC.mixin(/** @scope SC */ {
   
   /**
     Returns true if the passed object is an array or array-like. Instances
-    of the NodeList class return NO.
+    of the NodeList class return false.
 
     Unlike SC.typeOf this method returns true even if the passed object is 
     not formally array but appears to be array-like (i.e. has a length 

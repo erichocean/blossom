@@ -66,10 +66,10 @@ test("should only contain records matching recordType or recordTypes", function(
   
   q = SC.Query.create({ recordType: MyApp.Foo });
   equals(q.contains(foo1), true, 'q with recordType=Foo should contain record of type Foo');
-  equals(q.contains(bar1), NO, 'q with recordType=Foo should NOT contain record of type Bar');
-  equals(q.contains(barChild), NO, 'q with recordType=Foo should NOT contain record of type BarChild');
+  equals(q.contains(bar1), false, 'q with recordType=Foo should falseT contain record of type Bar');
+  equals(q.contains(barChild), false, 'q with recordType=Foo should falseT contain record of type BarChild');
   
-  equals(q.contains(baz),  NO, 'q with recordType=Foo should NOT contain record of type Baz');
+  equals(q.contains(baz),  false, 'q with recordType=Foo should falseT contain record of type Baz');
   
   q = SC.Query.create({ recordTypes: [MyApp.Foo, MyApp.Bar] });
   equals(q.contains(foo1), true, 'q with recordTypes=Foo,Bar should contain record of type Foo');
@@ -78,7 +78,7 @@ test("should only contain records matching recordType or recordTypes", function(
   
   equals(q.contains(barChild), true, 'q with recordTypes=Foo,Bar should contain record of type BarChild');
 
-  equals(q.contains(baz),  NO, 'q with recordTypes=Foo,Bar should NOT contain record of type Baz');
+  equals(q.contains(baz),  false, 'q with recordTypes=Foo,Bar should falseT contain record of type Baz');
 
   q = SC.Query.create();
   equals(q.contains(foo1), true, 'no recordType should contain record of type Foo');
@@ -92,9 +92,9 @@ test("should only contain records within parent scope, if one is defined", funct
   
   q = SC.Query.create({ scope: SC.Set.create().add(foo1).add(bar1) });
   equals(q.contains(foo1), true, 'scope=[foo1,bar1] should return true for foo1');
-  equals(q.contains(foo2), NO, 'scope=[foo1,bar1] should return NO for foo2');
+  equals(q.contains(foo2), false, 'scope=[foo1,bar1] should return false for foo2');
   equals(q.contains(bar1), true, 'scope=[bar1] should return true for bar1');
-  equals(q.contains(bar2), NO, 'scope=[foo1,bar1] should return NO for bar2');
+  equals(q.contains(bar2), false, 'scope=[foo1,bar1] should return false for bar2');
 });
 
 test("should evaluate query against record", function() {
@@ -103,14 +103,14 @@ test("should evaluate query against record", function() {
     parameters: { firstName: 'Bert' }
   });
   
-  equals(q.contains(bar2), NO, 'q(firstName=Bert) should return NO for bar[firstName=Johnny]');
+  equals(q.contains(bar2), false, 'q(firstName=Bert) should return false for bar[firstName=Johnny]');
   equals(q.contains(baz), true, 'q(firstName=Bert) should return true for baz[firstName=Bert]');
   equals(q.contains(barChild), true, 'q(firstName=Bert) should return true for barChild[firstName=Bert]');
 
   var p  = { firstName: "Johnny" };
   equals(q.contains(bar2, p), true, 'q(firstName=Johnny) should return true for bar[firstName=Johnny]');
-  equals(q.contains(baz, p), NO, 'q(firstName=Johnny) should return NO for baz[firstName=Bert]');
-  equals(q.contains(barChild, p), NO, 'q(firstName=Johnny) should return NO for barChild[firstName=Bert]');
+  equals(q.contains(baz, p), false, 'q(firstName=Johnny) should return false for baz[firstName=Bert]');
+  equals(q.contains(barChild, p), false, 'q(firstName=Johnny) should return false for barChild[firstName=Bert]');
   
 });
 
@@ -121,10 +121,10 @@ test("should consider recordType + query conditions", function() {
     parameters: { firstName: "Bert" }
   });
   
-  equals(q.contains(bar1), NO, 'should not contain bar1 (wrong firstName)');
-  equals(q.contains(bar2), NO, 'should not contain bar2 (wrong firstName)');
+  equals(q.contains(bar1), false, 'should not contain bar1 (wrong firstName)');
+  equals(q.contains(bar2), false, 'should not contain bar2 (wrong firstName)');
   equals(q.contains(barChild), true, 'should contain barChild');
-  equals(q.contains(baz), NO, 'should contain baz (wrong type)');
+  equals(q.contains(baz), false, 'should contain baz (wrong type)');
   
 });
 

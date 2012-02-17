@@ -41,12 +41,12 @@ test("create a record", function() {
     guid: "1234abcd",
     string: "abcd",
     number: 1,
-    bool:   NO
+    bool:   false
     };
   hash2 = {
     string: "abcd",
     number: 1,
-    bool:   NO
+    bool:   false
   };
 
   rec = store.createRecord(SC.Record, hash);

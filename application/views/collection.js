@@ -27,7 +27,7 @@ SC.HORIZONTAL_ORIENTATION = 'horizontal';
 /** Selection points should be selected using vertical orientation. */
 SC.VERTICAL_ORIENTATION = 'vertical' ;
 
-SC.BENCHMARK_RELOAD = NO ;
+SC.BENCHMARK_RELOAD = false ;
 
 /**
   @class 
@@ -69,7 +69,7 @@ SC.CollectionView = SC.View.extend(
   /**
     If true, uses the VERY EXPERIMENTAL fast CollectionView path.
   */
-  useFastPath: NO,
+  useFastPath: false,
   
   /**
     An array of content objects
@@ -135,7 +135,7 @@ SC.CollectionView = SC.View.extend(
   /** 
     Allow user to select content using the mouse and keyboard.
     
-    Set this property to NO to disallow the user from selecting items. If you 
+    Set this property to false to disallow the user from selecting items. If you 
     have items in your selectedIndexes property, they will still be reflected
     visually.
     
@@ -185,7 +185,7 @@ SC.CollectionView = SC.View.extend(
     
     @type {Boolean}
   */
-  canReorderContent: NO,
+  canReorderContent: false,
   
   /** @private */
   canReorderContentBindingDefault: SC.Binding.bool(),
@@ -198,7 +198,7 @@ SC.CollectionView = SC.View.extend(
     
     @type {Boolean}
   */
-  canDeleteContent: NO,
+  canDeleteContent: false,
   
   /** @private */
   canDeleteContentBindingDefault: SC.Binding.bool(),
@@ -210,7 +210,7 @@ SC.CollectionView = SC.View.extend(
     
     @type {Boolean}
   */
-  canEditContent: NO,
+  canEditContent: false,
   
   /** @private */
   canEditContentBindingDefault: SC.Binding.bool(),
@@ -224,7 +224,7 @@ SC.CollectionView = SC.View.extend(
     
     @type {Boolean}
   */
-  isDropTarget: NO,
+  isDropTarget: false,
   
   /**
     Use toggle selection instead of normal click behavior.
@@ -235,7 +235,7 @@ SC.CollectionView = SC.View.extend(
     
     @type {Boolean}
   */
-  useToggleSelection: NO,
+  useToggleSelection: false,
   
   /**
     Trigger the action method on a single click.
@@ -251,7 +251,7 @@ SC.CollectionView = SC.View.extend(
     
     @property {Boolean}
   */  
-  actOnSelect: NO,
+  actOnSelect: false,
   
   
   /**
@@ -384,7 +384,7 @@ SC.CollectionView = SC.View.extend(
   /**
     Enables keyboard-based navigate, deletion, etc. if set to true.
   */
-  acceptsFirstResponder: NO,
+  acceptsFirstResponder: false,
   
   /**
     Changing this property value by default will cause the CollectionView to
@@ -392,7 +392,7 @@ SC.CollectionView = SC.View.extend(
     
     @type Boolean
   */
-  isActive: NO,
+  isActive: false,
   
   
   /** 
@@ -761,11 +761,11 @@ SC.CollectionView = SC.View.extend(
   
   /** @private
   
-    The indexes that need to be reloaded.  Must be one of true, NO, or an
+    The indexes that need to be reloaded.  Must be one of true, false, or an
     SC.IndexSet.
   
   */
-  _invalidIndexes: NO,
+  _invalidIndexes: false,
   
   /** 
     Regenerates the item views for the content items at the specified indexes.
@@ -818,7 +818,7 @@ SC.CollectionView = SC.View.extend(
   reloadIfNeeded: function() {
     var invalid = this._invalidIndexes;
     if (!invalid || !this.get('isVisibleInWindow')) return this ; // delay
-    this._invalidIndexes = NO ;
+    this._invalidIndexes = false ;
     
     var content = this.get('content'),
         i, len, existing,
@@ -844,9 +844,9 @@ SC.CollectionView = SC.View.extend(
     // first return all no-longer-needed views to the pool before allocating
     // new ones, because that will maximize the potential for re-use.
     exampleView = this.get('exampleView');
-    shouldReuseViews = exampleView ? exampleView.isReusableInCollections : NO;
+    shouldReuseViews = exampleView ? exampleView.isReusableInCollections : false;
     groupExampleView = this.get('groupExampleView');
-    shouldReuseGroupViews = groupExampleView ? groupExampleView.isReusableInCollections : NO;
+    shouldReuseGroupViews = groupExampleView ? groupExampleView.isReusableInCollections : false;
 
     // if an index set, just update indexes
     if (invalid.isIndexSet) {
@@ -1071,7 +1071,7 @@ SC.CollectionView = SC.View.extend(
         item = content.objectAt(idx),
         del  = this.get('contentDelegate'),
         groupIndexes = this.get('_contentGroupIndexes'),
-        isGroupView = NO,
+        isGroupView = false,
         key, E, layout, layerId,
         viewPoolKey, viewPool, reuseFunc, parentView, isEnabled, isSelected,
         outlineLevel, disclosureState, isVisibleInWindow;
@@ -1233,7 +1233,7 @@ SC.CollectionView = SC.View.extend(
   
   /**
     Extracts the content index from the passed layerID.  If the layer id does
-    not belong to the receiver or if no value could be extracted, returns NO.
+    not belong to the receiver or if no value could be extracted, returns false.
     
     @param {String} id the layer id
   */
@@ -1391,9 +1391,9 @@ SC.CollectionView = SC.View.extend(
   
   /** @private
     Contains the current item views that need their selection to be repainted.
-    This may be either NO, true, or an IndexSet.
+    This may be either false, true, or an IndexSet.
   */
-  _invalidSelection: NO,
+  _invalidSelection: false,
   
   /**
     Called whenever the selection changes.  The passed index set will contain
@@ -1441,7 +1441,7 @@ SC.CollectionView = SC.View.extend(
         content    = this.get('content'),
         sel        = this.get('selection');
     
-    this._invalidSelection = NO; // reset invalid
+    this._invalidSelection = false; // reset invalid
     
     // fast path.  if we are going to reload everything anyway, just forget
     // about it.  Also if we don't have a nowShowing, nothing to do.
@@ -1456,8 +1456,8 @@ SC.CollectionView = SC.View.extend(
     // iterate through each item and set the isSelected state.
     invalid.forEach(function(idx) {
       if (!nowShowing.contains(idx)) return; // not showing
-      var view = this.itemViewForContentIndex(idx, NO);
-      if (view) view.set('isSelected', sel ? sel.contains(content, idx) : NO);
+      var view = this.itemViewForContentIndex(idx, false);
+      if (view) view.set('isSelected', sel ? sel.contains(content, idx) : false);
     },this);
     
     return this ;
@@ -1465,7 +1465,7 @@ SC.CollectionView = SC.View.extend(
   
   /** 
     Selection primitive.  Selects the passed IndexSet of items, optionally 
-    extending the current selection.  If extend is NO or not passed then this
+    extending the current selection.  If extend is false or not passed then this
     will replace the selection with the passed value.  Otherwise the indexes
     will be added to the current selection.
     
@@ -1794,19 +1794,19 @@ SC.CollectionView = SC.View.extend(
   */
   deleteSelection: function() {
     // perform some basic checks...
-    if (!this.get('canDeleteContent')) return NO;  
+    if (!this.get('canDeleteContent')) return false;  
 
     var sel     = this.get('selection'),
         content = this.get('content'),
         del     = this.get('selectionDelegate'),
         indexes = sel&&content ? sel.indexSetForSource(content) : null;
         
-    if (!content || !indexes || indexes.get('length') === 0) return NO ;
+    if (!content || !indexes || indexes.get('length') === 0) return false ;
     
     // let the delegate decide what to actually delete.  If this returns an
     // empty index set or null, just do nothing.
     indexes = del.collectionViewShouldDeleteIndexes(this, indexes);
-    if (!indexes || indexes.get('length') === 0) return NO ;
+    if (!indexes || indexes.get('length') === 0) return false ;
     
     // now have the delegate (or us) perform the deletion. The default 
     // delegate implementation just uses standard SC.Array methods to do the
@@ -1851,7 +1851,7 @@ SC.CollectionView = SC.View.extend(
   /** @private */
   keyDown: function(evt) {
     var ret = this.interpretKeyEvents(evt) ;
-    return !ret ? NO : ret ;
+    return !ret ? false : ret ;
   },
   
   /** @private */
@@ -1867,7 +1867,7 @@ SC.CollectionView = SC.View.extend(
         this.invokeLater(this._cv_action, 0, null, evt);
       } 
       return true ;
-    } else return NO ;
+    } else return false ;
   },
   
   /** @private
@@ -1876,7 +1876,7 @@ SC.CollectionView = SC.View.extend(
   selectAll: function(evt) {
     var content = this.get('content'),
         sel = content ? SC.IndexSet.create(0, content.get('length')) : null;
-    this.select(sel, NO) ;
+    this.select(sel, false) ;
     return true ;
   },
 
@@ -1886,7 +1886,7 @@ SC.CollectionView = SC.View.extend(
   deselectAll: function() {
     var content = this.get('content'),
         sel = content ? SC.IndexSet.create(0, content.get('length')) : null;
-    this.deselect(sel, NO) ;
+    this.deselect(sel, false) ;
     return true ;
   },
 
@@ -1929,7 +1929,7 @@ SC.CollectionView = SC.View.extend(
   moveLeft: function(evt) {
     // If the control key is down, this may be a browser shortcut and
     // we should not handle the arrow key.
-    if (evt.ctrlKey || evt.metaKey) return NO;
+    if (evt.ctrlKey || evt.metaKey) return false;
 
     if ((this.get('itemsPerRow') || 1) > 1) {
       this.selectPreviousItem(false, 1);
@@ -1997,7 +1997,7 @@ SC.CollectionView = SC.View.extend(
   moveRight: function(evt) {
     // If the control key is down, this may be a browser shortcut and
     // we should not handle the arrow key.
-    if (evt.ctrlKey || evt.metaKey) return NO;
+    if (evt.ctrlKey || evt.metaKey) return false;
 
     if ((this.get('itemsPerRow') || 1) > 1) {
       this.selectNextItem(false, 1) ;
@@ -2118,7 +2118,7 @@ SC.CollectionView = SC.View.extend(
         content       = this.get('content'),
         contentIndex  = itemView ? itemView.get('contentIndex') : -1, 
         info, anchor, sel, isSelected, modifierKeyPressed,
-        allowsMultipleSel = content ? content.get('allowsMultipleSelection') : NO;
+        allowsMultipleSel = content ? content.get('allowsMultipleSelection') : false;
         
     info = this.mouseDownInfo = {
       event:        ev,  
@@ -2142,7 +2142,7 @@ SC.CollectionView = SC.View.extend(
         if (isSelected) {
           this.deselect(contentIndex) ;
         } else if (!allowsMultipleSel) {
-          this.select(contentIndex, NO) ;
+          this.select(contentIndex, false) ;
         } else {
           this.select(contentIndex, true) ;
         }
@@ -2162,7 +2162,7 @@ SC.CollectionView = SC.View.extend(
     sel = this.get('selection');
     if (sel) sel = sel.indexSetForSource(content);
     
-    isSelected = sel ? sel.contains(contentIndex) : NO;
+    isSelected = sel ? sel.contains(contentIndex) : false;
     info.modifierKeyPressed = modifierKeyPressed = ev.ctrlKey || ev.metaKey ;
     
     
@@ -2216,7 +2216,7 @@ SC.CollectionView = SC.View.extend(
         
     if (this.get('useToggleSelection')) {
       // Return if clicked outside of elements or if toggle was handled by mouseDown
-      if (!view || this.get('selectOnMouseDown')) return NO;
+      if (!view || this.get('selectOnMouseDown')) return false;
       
       // determine if item is selected. If so, then go on.
       sel = this.get('selection') ;
@@ -2226,7 +2226,7 @@ SC.CollectionView = SC.View.extend(
       if (isSelected) {
         this.deselect(contentIndex) ;
       } else if (!allowsMultipleSel) {
-        this.select(contentIndex, NO) ;
+        this.select(contentIndex, false) ;
       } else {
         this.select(contentIndex, true) ;
       }
@@ -2236,7 +2236,7 @@ SC.CollectionView = SC.View.extend(
       contentIndex = (view) ? view.get('contentIndex') : -1 ;
       
       // this will be set if the user simply clicked on an unselected item and 
-      // selectOnMouseDown was NO.
+      // selectOnMouseDown was false.
       if (info.shouldSelect) this.select(idx, info.modifierKeyPressed);
       
       // This is true if the user clicked on a selected item with a modifier
@@ -2266,7 +2266,7 @@ SC.CollectionView = SC.View.extend(
         if (canEdit) {
           itemView = this.itemViewForContentIndex(idx) ;
           canEdit = itemView && (!itemView.contentHitTest || itemView.contentHitTest(ev)) ;
-          canEdit = (canEdit && itemView.beginEditing) ? itemView.beginEditing() : NO ;
+          canEdit = (canEdit && itemView.beginEditing) ? itemView.beginEditing() : false ;
         }
         
         // if cannot edit, schedule a reselect (but give doubleClick a chance)
@@ -2282,7 +2282,7 @@ SC.CollectionView = SC.View.extend(
     // handle actions on editing
     this._cv_performSelectAction(view, ev, 0, ev.clickCount);
     
-    return NO;  // bubble event to allow didDoubleClick to be called...
+    return false;  // bubble event to allow didDoubleClick to be called...
   },
   
   /** @private */
@@ -2362,10 +2362,10 @@ SC.CollectionView = SC.View.extend(
   touchEnd: function(touch) {
     var itemView = this.itemViewForEvent(touch),
         contentIndex = itemView ? itemView.get('contentIndex') : -1,
-        isSelected = NO;
+        isSelected = false;
 
     // Remove fake selection in case our contentIndex is -1, a select event will add it back
-    if (this._touchSelectedView) { this._touchSelectedView.set('isSelected', NO); }
+    if (this._touchSelectedView) { this._touchSelectedView.set('isSelected', false); }
 
     if (this.get('useToggleSelection')) {
       var sel = this.get('selection');
@@ -2375,7 +2375,7 @@ SC.CollectionView = SC.View.extend(
     if (isSelected) {
       this.deselect(contentIndex);
     } else {
-      this.select(contentIndex, NO);
+      this.select(contentIndex, false);
 
       // If actOnSelect is implemented, the action will be fired.
       this._cv_performSelectAction(itemView, touch, 0);
@@ -2384,7 +2384,7 @@ SC.CollectionView = SC.View.extend(
 
   touchCancelled: function(evt) {
     // Remove fake selection
-    if (this._touchSelectedView) { this._touchSelectedView.set('isSelected', NO); }
+    if (this._touchSelectedView) { this._touchSelectedView.set('isSelected', false); }
   },
 
   /** @private */
@@ -2552,7 +2552,7 @@ SC.CollectionView = SC.View.extend(
           event: info.event,
           source: this,
           dragView: dragView,
-          ghost: NO,
+          ghost: false,
           ghostActsLikeCursor: del.ghostActsLikeCursor,
           slideBack: true,
           dataSource: this
@@ -2594,7 +2594,7 @@ SC.CollectionView = SC.View.extend(
       // render item view without isSelected state.  
       if (itemView) {
         isSelected = itemView.get('isSelected');
-        itemView.set('isSelected', NO);
+        itemView.set('isSelected', false);
         
         itemView.updateLayerIfNeeded();
         layer = itemView.get('layer');

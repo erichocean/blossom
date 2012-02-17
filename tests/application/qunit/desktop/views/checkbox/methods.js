@@ -57,9 +57,9 @@ test("changing the title should update the span", function() {
   equals(q.text(), view.get('displayTitle'), 'should have display title');
 });
 
-test("isEnabled=NO should add disabled class", function() {
+test("isEnabled=false should add disabled class", function() {
   SC.RunLoop.begin();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.end();
   
   ok(view.$().hasClass('disabled'), 'should have disabled class');
@@ -74,10 +74,10 @@ test("isSelected should alter sel classname and sync with value property", funct
 
   // update value -- make sure isSelected changes.  
   SC.RunLoop.begin();
-  view.set('value', 0); // make falsy. (but not NO exactly)
+  view.set('value', 0); // make falsy. (but not false exactly)
   SC.RunLoop.end();
   
-  ok(!view.get('isSelected'), 'isSelected should now be NO');
+  ok(!view.get('isSelected'), 'isSelected should now be false');
   ok(!view.$().hasClass('sel'), 'should no longer have sel class');
   equals(view.$().attr('aria-checked'), 'false', 'input should not be checked');
   
@@ -96,7 +96,7 @@ test("clicking on the checkbox will change toggle the value", function() {
   ok(view.get('value'), 'precond - value should be true');
   view.mouseDown();
   view.mouseUp();
-  ok(!view.get('value'), 'value should now be NO');
+  ok(!view.get('value'), 'value should now be false');
 });
 
 
@@ -109,18 +109,18 @@ test("pressing mouseDown and then mouseUp anywhere in the checkbox should toggle
   
   // simulate mouseUp and browser-native change to control
   SC.Event.trigger(elem,'mouseup');
-  input.attr('checked', NO);
+  input.attr('checked', false);
   SC.Event.trigger(input.get(0),'click');
   
   ok(!view.get('isActive'), 'view should no longer be active');
-  ok(!view.get('value'), 'value should change to NO');
+  ok(!view.get('value'), 'value should change to false');
   
   input = elem = null ;
 });
 
-test("isEnabled=NO should add disabled attr to input", function() {
+test("isEnabled=false should add disabled attr to input", function() {
   SC.RunLoop.begin();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.end();
   
   ok(view.get('value'), 'precond - value should be true');

@@ -241,7 +241,7 @@ SC.SelectionSupport = {
     
     // Reselect an object if required (if content length > 0)
     if ((selectionSet.get('length') === 0) && arrangedObjects && (arrangedObjects.get('length') > 0) && !allowsEmptySelection) {
-      this.selectObject(this.get('firstSelectableObject'), NO);
+      this.selectObject(this.get('firstSelectableObject'), false);
     }
 
     return this;

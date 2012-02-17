@@ -20,7 +20,7 @@ test("binding is connected", function() {
 });
 
 test("binding has actually been setup", function() {
-  equals(binding._connectionPending, NO, "binding._connectionPending") ;
+  equals(binding._connectionPending, false, "binding._connectionPending") ;
 });
 
 test("binding should have synced on connect", function() {
@@ -85,7 +85,7 @@ test("suspended observing during bindings", function() {
 
 test("binding will disconnect", function() {
   binding.disconnect();
-  equals(binding.isConnected, NO, "binding.isConnected");
+  equals(binding.isConnected, false, "binding.isConnected");
 });
 
 test("binding disconnection actually works", function() {
@@ -120,10 +120,10 @@ test("fromObject change should propogate after flush", function() {
 
 test("changing toObject should not make binding dirty", function() {
   toObject.set("value", "change") ;
-  equals(binding._changePending, NO) ;
+  equals(binding._changePending, false) ;
 });
 
-test("toObject change should NOT propogate", function() {
+test("toObject change should falseT propogate", function() {
   toObject.set("value", "change") ;
   equals(fromObject.get("value"), "start") ;
   SC.Binding.flushPendingChanges() ;
@@ -164,8 +164,8 @@ test("changing first output should propograte to third after flush", function() 
   while(didChange) didChange = SC.Binding.flushPendingChanges() ;
   
   // bindings should not have bending changes
-  equals(binding1._changePending, NO, "binding1._changePending") ;
-  equals(binding2._changePending, NO, "binding2._changePending") ;
+  equals(binding1._changePending, false, "binding1._changePending") ;
+  equals(binding2._changePending, false, "binding2._changePending") ;
   
   equals("change", first.get("output"), "first.output") ;
   equals("change", second.get("input"), "second.input") ;
@@ -285,8 +285,8 @@ suite("AND binding", {
   setup: function() {
     // temporarily set up two source objects in the SC namespace so we can
     // use property paths to access them
-    SC.testControllerA = SC.Object.create({ value: NO });
-    SC.testControllerB = SC.Object.create({ value: NO });
+    SC.testControllerA = SC.Object.create({ value: false });
+    SC.testControllerB = SC.Object.create({ value: false });
 
     toObject = SC.Object.create({
       value: null,
@@ -311,14 +311,14 @@ test("toObject.value should be true if both sources are true", function() {
   equals(toObject.get('value'), true);
 });
 
-test("toObject.value should be NO if either source is NO", function() {
+test("toObject.value should be false if either source is false", function() {
   SC.RunLoop.begin();
   SC.testControllerA.set('value', true);
-  SC.testControllerB.set('value', NO);
+  SC.testControllerB.set('value', false);
   SC.RunLoop.end();
 
   SC.Binding.flushPendingChanges();
-  equals(toObject.get('value'), NO);
+  equals(toObject.get('value'), false);
 
   SC.RunLoop.begin();
   SC.testControllerA.set('value', true);
@@ -329,12 +329,12 @@ test("toObject.value should be NO if either source is NO", function() {
   equals(toObject.get('value'), true);
 
   SC.RunLoop.begin();
-  SC.testControllerA.set('value', NO);
+  SC.testControllerA.set('value', false);
   SC.testControllerB.set('value', true);
   SC.RunLoop.end();
 
   SC.Binding.flushPendingChanges();
-  equals(toObject.get('value'), NO);
+  equals(toObject.get('value'), false);
 });
 
 suite("OR binding", {
@@ -342,7 +342,7 @@ suite("OR binding", {
   setup: function() {
     // temporarily set up two source objects in the SC namespace so we can
     // use property paths to access them
-    SC.testControllerA = SC.Object.create({ value: NO });
+    SC.testControllerA = SC.Object.create({ value: false });
     SC.testControllerB = SC.Object.create({ value: null });
 
     toObject = SC.Object.create({
@@ -370,7 +370,7 @@ test("toObject.value should be first value if first value is truthy", function()
 
 test("toObject.value should be second value if first is falsy", function() {
   SC.RunLoop.begin();
-  SC.testControllerA.set('value', NO);
+  SC.testControllerA.set('value', false);
   SC.testControllerB.set('value', 'second value');
   SC.RunLoop.end();
 

@@ -21,21 +21,21 @@
     
     .add("basic3", SC.ScrollView, {
       contentView: iv,
-      isHorizontalScrollerVisible: NO,
-      autohidesHorizontalScroller: NO,
-      autohidesVerticalScroller: NO
+      isHorizontalScrollerVisible: false,
+      autohidesHorizontalScroller: false,
+      autohidesVerticalScroller: false
     })
     
     .add("disabled", SC.ScrollView, {
-      isEnabled: NO
+      isEnabled: false
     })
     
     .add("verticalScrollerBottom",SC.ScrollView, {
       contentView: iv,
-      hasHorizontalScroller : NO,
+      hasHorizontalScroller : false,
       verticalScrollerBottom: 16,
       isVerticalScrollerVisible: true,
-      autohidesVerticalScroller: NO
+      autohidesVerticalScroller: false
       
     });
 
@@ -100,7 +100,7 @@
    
   test("basic3", function() {
     var view = pane.view('basic3');
-    view.set('isHorizontalScrollerVisible',NO);
+    view.set('isHorizontalScrollerVisible',false);
     ok(!view.get('canScrollHorizontal'),'cannot scroll in horizontal direction');
     ok(view.$().hasClass('sc-scroll-view'), 'should have sc-scroll-view class');    
     var horizontalScrollerView = view.get('horizontalScrollerView');
@@ -110,7 +110,7 @@
     var maxHScroll = view.maximumHorizontalScrollOffset();    
     equals(maxHScroll , 0, 'Max horizontal scroll should be equal to zero');
 
-    view.set('isVerticalScrollerVisible',NO);
+    view.set('isVerticalScrollerVisible',false);
     ok(!view.get('canScrollVertical'),'cannot scroll in vertical direction');
     var verticalScrollerView = view.get('verticalScrollerView');
     ok(view.get('hasVerticalScroller'), 'default scroll view wants a vertical scroller');

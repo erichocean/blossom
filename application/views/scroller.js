@@ -53,14 +53,14 @@ SC.ScrollerView = SC.View.extend(
     
     In either case, alt-clicks will perform the opposite behavior.
   */
-  shouldScrollToClick: NO,
+  shouldScrollToClick: false,
   
   
   /**
     @private
     The in-touch-scroll value.
   */
-  _touchScrollValue: NO,
+  _touchScrollValue: false,
 
   /**
     The value of the scroller.
@@ -118,7 +118,7 @@ SC.ScrollerView = SC.View.extend(
   minimum: 0,
 
   /**
-    true to enable scrollbar, NO to disable it.  Scrollbars will automatically
+    true to enable scrollbar, false to disable it.  Scrollbars will automatically
     disable if the maximum scroll width does not exceed their capacity.
 
     @property
@@ -280,7 +280,7 @@ SC.ScrollerView = SC.View.extend(
   },
   
   touchScrollDidEnd: function(value) {
-    this.set("_touchScrollValue", NO);
+    this.set("_touchScrollValue", false);
   },
   
   touchScrollDidChange: function(value) {
@@ -474,7 +474,7 @@ SC.ScrollerView = SC.View.extend(
     @private
   */
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return NO;
+    if (!this.get('isEnabled')) return false;
     
     // keep note of altIsDown for later.
     this._altIsDown = evt.altKey;
@@ -572,7 +572,7 @@ SC.ScrollerView = SC.View.extend(
     @private
   */
   mouseUp: function(evt) {
-    var active = this._scs_buttonActive, ret = NO, timer;
+    var active = this._scs_buttonActive, ret = false, timer;
 
     // If we have an element that was set as active in mouseDown,
     // remove its active state
@@ -588,9 +588,9 @@ SC.ScrollerView = SC.View.extend(
       this._mouseDownTimer = null;
     }
 
-    this._thumbDragging = NO;
-    this._isScrollingDown = NO;
-    this._isScrollingUp = NO;
+    this._thumbDragging = false;
+    this._isScrollingDown = false;
+    this._isScrollingUp = false;
 
     return ret;
   },
@@ -648,7 +648,7 @@ SC.ScrollerView = SC.View.extend(
       }
     
     } else if (isScrollingUp || isScrollingDown) {
-      var nowScrollingUp = NO, nowScrollingDown = NO;
+      var nowScrollingUp = false, nowScrollingDown = false;
       
       var topButtonRect = this.$('.button-top')[0].getBoundingClientRect();
       var bottomButtonRect = this.$('.button-bottom')[0].getBoundingClientRect();
@@ -776,7 +776,7 @@ SC.TouchScrollerView = SC.ScrollerView.extend({
   scrollbarThickness: 12,
   capLength: 5,
   capOverlap: 0,
-  hasButtons: NO,
+  hasButtons: false,
   buttonOverlap: 36,
   
   adjustThumb: function(thumb, position, length) {

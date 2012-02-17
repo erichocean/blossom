@@ -22,7 +22,7 @@ var pane = SC.ControlTestPane.design()
     value: 25,
     minimum: 0,
     maximum: 100,
-    isEnabled: NO
+    isEnabled: false
   })
   .add("progress basic value 0", SC.ProgressView, {
     layout: {top:0, bottom:0, left:0, width: 250},
@@ -55,7 +55,7 @@ var pane = SC.ControlTestPane.design()
     value: 50, 
     minimum: 0, 
     maximum: 100,
-    isEnabled: NO
+    isEnabled: false
   })
   .add("slider value 100", SC.SliderView, {
     layout: {top:0, bottom:0, left:0, width: 250},

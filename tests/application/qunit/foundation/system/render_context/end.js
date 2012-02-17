@@ -74,14 +74,14 @@ test("should return prevObject if receiver has prevObject", function() {
   equals(c2.end(), context, "should return prevObject");
 });
 
-test("emits self closing tag if tag has no content and c._selfClosing !== NO", function() {
+test("emits self closing tag if tag has no content and c._selfClosing !== false", function() {
   var c2 = context.begin('input');
   c2.end();
   equals(c2.get(0), "<input />");
 });
 
-test("emits two tags even if tag has no content if opts.selfClosing == NO", function() {
-  context._selfClosing = NO;
+test("emits two tags even if tag has no content if opts.selfClosing == false", function() {
+  context._selfClosing = false;
   
   context.end();
   equals(context.length, 2, "has two lines");

@@ -53,7 +53,7 @@ suite("SC.View#nextValidKeyView", {
     };
 
     SC.SAFARI_FOCUS_BEHAVIOR = true;
-    SC.TABBING_ONLY_INSIDE_DOCUMENT = NO;
+    SC.TABBING_ONLY_INSIDE_DOCUMENT = false;
     
   },
   
@@ -73,7 +73,7 @@ suite("SC.View#nextValidKeyView", {
 
 test("Navigate between textfields- going forward", function() {
   SC.SAFARI_FOCUS_BEHAVIOR = true;
-  SC.TABBING_ONLY_INSIDE_DOCUMENT = NO;
+  SC.TABBING_ONLY_INSIDE_DOCUMENT = false;
   
   var v = view2.nextValidKeyView();
   same(v, textfield_view3, "The next view should be " + textfield_view3.toString());

@@ -67,7 +67,7 @@ SC.Locale = SC.Object.extend({
   },
   
   /** Set to true when strings have been added to this locale. */
-  hasStrings: NO,
+  hasStrings: false,
   
   /** The strings hash for this locale. */
   strings: {},
@@ -103,7 +103,7 @@ SC.Locale.mixin(/** @scope SC.Locale */ {
     If true, localization will favor the detected language instead of the
     preferred one.
   */
-  useAutodetectedLanguage: NO,
+  useAutodetectedLanguage: false,
   
   /**
     This property is set by the build tools to the current build language.

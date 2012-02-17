@@ -1014,12 +1014,12 @@ SC.CoreQuery = (function() {
                 
                 // if this is IE, verify that it didn't search by name
                 if (SC.browser.msie && found && found.getAttribute('id')!==val){
-                  found = NO; // clear
+                  found = false; // clear
                 } else {
                   if (found) next.push(found) ;
                   found = true ; // do not do slow search
                 }
-              } else found = NO;
+              } else found = false;
               
               // Otherwise, we have to do a slow search
               if (!found) {
@@ -1047,7 +1047,7 @@ SC.CoreQuery = (function() {
           }
           delete ret; 
           ret = next ; // swap array
-          inFindMode = NO;
+          inFindMode = false;
           
         // if we are not in findMode then simply filter the results.
         } else ret = CQ.filter(t, ret) ;
@@ -1927,7 +1927,7 @@ SC.mixin(SC.$.fn, /** @scope SC.CoreQuery.prototype */ {
       if (this.nodeType !== 1) return; // nothing to do
       
       // collect the class name from the element and build an array
-      var classNames = this.className.split(/\s+/), didChange = NO;
+      var classNames = this.className.split(/\s+/), didChange = false;
       
       // loop through hash or just fix single className
       if (isHash) {
@@ -1952,7 +1952,7 @@ SC.mixin(SC.$.fn, /** @scope SC.CoreQuery.prototype */ {
       
     // otherwise, null out class name (this will leave some extra spaces)
     } else if (indexOf >= 0) { classNames[indexOf]=null; return true; }
-    return NO ;
+    return false ;
   },
   
   /**

@@ -79,7 +79,7 @@ SC.SelectFieldView = SC.FieldView.extend(
     if true, it means that no sorting will occur, objects will appear 
     in the same order as in the array
   */
-  disableSort: NO,
+  disableSort: false,
   
   
   
@@ -89,7 +89,7 @@ SC.SelectFieldView = SC.FieldView.extend(
     
     @param itemValue the value for the item to validate
     @param itemName the name of the menu item to validate
-    @returns true if the item should be enabled, NO otherwise
+    @returns true if the item should be enabled, false otherwise
   */  
   validateMenuItem: function(itemValue, itemName) {
     return true ;
@@ -121,7 +121,7 @@ SC.SelectFieldView = SC.FieldView.extend(
 
   render: function(context, firstTime) {
     if (this.get('cpDidChange')) {
-      this.set('cpDidChange', NO);
+      this.set('cpDidChange', false);
       // get list of objects.
       var nameKey = this.get('nameKey') ;
       var valueKey = this.get('valueKey') ;

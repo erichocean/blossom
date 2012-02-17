@@ -127,8 +127,8 @@ SC.Surface = SC.Responder.extend({
   /**
     The isVisible property determines if the view is shown in the view
     hierarchy it is a part of. A view can have isVisible == true and still have
-    isVisibleInWindow == NO. This occurs, for instance, when a parent view has
-    isVisible == NO. Default is true.
+    isVisibleInWindow == false. This occurs, for instance, when a parent view has
+    isVisible == false. Default is true.
 
     The isVisible property is considered part of the layout and so changing it
     will trigger a layout update.
@@ -1097,7 +1097,7 @@ SC.Surface = SC.Responder.extend({
       }
     }
 
-    return NO;
+    return false;
   },
 
   // .......................................................

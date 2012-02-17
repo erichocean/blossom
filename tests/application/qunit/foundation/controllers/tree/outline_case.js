@@ -29,7 +29,7 @@ suite("SC.TreeController - tree_case", {
 
           TestObject.create({ title: "A.ii",
             outline: 1,
-            isExpanded: NO,
+            isExpanded: false,
             children: [
               TestObject.create({ title: "A.ii.1", outline: 2 }),
               TestObject.create({ title: "A.ii.2", outline: 2 }),

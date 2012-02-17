@@ -76,18 +76,18 @@ SC.ObjectController = SC.Controller.extend(
     the enumerable and return it.  set() will set the property on every item
     in the enumerable. 
     
-    If NO, then setting content to an enumerable with multiple items will be
-    treated like setting a null value.  hasContent will be NO.
+    If false, then setting content to an enumerable with multiple items will be
+    treated like setting a null value.  hasContent will be false.
     
     @property {Boolean}
   */
-  allowsMultipleContent: NO,
+  allowsMultipleContent: false,
 
   /**
     Becomes true whenever this object is managing content.  Usually this means
     the content property contains a single object or an array or enumerable
     with a single item.  Array's or enumerables with multiple items will 
-    normally make this property NO unless allowsMultipleContent is true.
+    normally make this property false unless allowsMultipleContent is true.
     
     @property {Boolean}
   */
@@ -113,7 +113,7 @@ SC.ObjectController = SC.Controller.extend(
     when setting content to an enumerable, this may return a different object.
     
     Note that if you set the content to an enumerable which itself contains
-    enumerables and allowsMultipleContent is NO, this will become null.
+    enumerables and allowsMultipleContent is false, this will become null.
     
     @property {Object}
   */
@@ -219,7 +219,7 @@ SC.ObjectController = SC.Controller.extend(
           isSame = true;
           cur = value.objectAt(0);
           while((--loc > 0) && isSame) {
-            if (cur !== value.objectAt(loc)) isSame = NO ;
+            if (cur !== value.objectAt(loc)) isSame = false ;
           }
           if (isSame) value = cur;
         } else value = undefined; // empty array.

@@ -55,7 +55,7 @@ SC.ListItemView = SC.View.extend(
     If false, the icon on the list item view will be hidden.  Otherwise,
     space will be left for the icon next to the list item view.
   */
-  hasContentIcon: NO,
+  hasContentIcon: false,
 
   /**
     (displayDelegate) True if you want the item view to display a right icon.
@@ -63,7 +63,7 @@ SC.ListItemView = SC.View.extend(
     If false, the icon on the list item view will be hidden.  Otherwise,
     space will be left for the icon next to the list item view.
   */
-  hasContentRightIcon: NO,
+  hasContentRightIcon: false,
   
   /**
     (displayDelegate) True if you want space to be allocated for a branch 
@@ -71,7 +71,7 @@ SC.ListItemView = SC.View.extend(
     
     If false, the space for the branch arrow will be collapsed.
   */
-  hasContentBranch: NO,
+  hasContentBranch: false,
   
   /**
     (displayDelegate) The name of the property used for the checkbox value.
@@ -136,7 +136,7 @@ SC.ListItemView = SC.View.extend(
   /**
     true if the item view is currently editing.
   */
-  isEditing: NO,
+  isEditing: false,
   
   /**
     Indent to use when rendering a list item with an outline level > 0.  The
@@ -177,7 +177,7 @@ SC.ListItemView = SC.View.extend(
   */
   contentIsEditable: function() {
     var content = this.get('content');
-    return content && (content.get ? content.get('isEditable')!==NO : NO);
+    return content && (content.get ? content.get('isEditable')!==false : false);
   }.property('content').cacheable(),
   
   /**
@@ -215,7 +215,7 @@ SC.ListItemView = SC.View.extend(
     // handle checkbox
     key = this.getDelegateProperty('contentCheckboxKey', del) ;
     if (key) {
-      value = content ? (content.get ? content.get(key) : content[key]) : NO ;
+      value = content ? (content.get ? content.get(key) : content[key]) : false ;
       this.renderCheckbox(working, value);
       classArray.push('has-checkbox');
     }
@@ -268,7 +268,7 @@ SC.ListItemView = SC.View.extend(
     // handle branch
     if (this.getDelegateProperty('hasContentBranch', del)) {
       key = this.getDelegateProperty('contentIsBranchKey', del);
-      value = (key && content) ? (content.get ? content.get(key) : content[key]) : NO ;
+      value = (key && content) ? (content.get ? content.get(key) : content[key]) : false ;
       this.renderBranch(working, value);
       classArray.push('has-branch');
     }
@@ -282,7 +282,7 @@ SC.ListItemView = SC.View.extend(
     something other than SC.LEAF_NODE.
 
     @param {SC.RenderContext} context the render context
-    @param {Boolean} state true, NO or SC.MIXED_STATE
+    @param {Boolean} state true, false or SC.MIXED_STATE
     @returns {void}
   */
   renderDisclosure: function(context, state) {
@@ -306,7 +306,7 @@ SC.ListItemView = SC.View.extend(
     checkbox.
     
     @param {SC.RenderContext} context the render context
-    @param {Boolean} state true, NO or SC.MIXED_STATE
+    @param {Boolean} state true, false or SC.MIXED_STATE
     @returns {void}
   */
   renderCheckbox: function(context, state) {
@@ -469,10 +469,10 @@ SC.ListItemView = SC.View.extend(
   */
   _isInsideElementWithClassName: function(className, evt) {
     var layer = this.get('layer');
-    if (!layer) return NO ; // no layer yet -- nothing to do
+    if (!layer) return false ; // no layer yet -- nothing to do
     
     var el = SC.$(evt.target) ;
-    var ret = NO, classNames ;
+    var ret = false, classNames ;
     while(!ret && el.length>0 && (el[0] !== layer)) {
       if (el.hasClass(className)) ret = true ;
       el = el.parent() ;
@@ -496,7 +496,7 @@ SC.ListItemView = SC.View.extend(
     occurred inside of it.
   */
   _isInsideDisclosure: function(evt) {
-    if (this.get('disclosureState')===SC.LEAF_NODE) return NO;
+    if (this.get('disclosureState')===SC.LEAF_NODE) return false;
     return this._isInsideElementWithClassName('disclosure', evt);
   },
   
@@ -518,7 +518,7 @@ SC.ListItemView = SC.View.extend(
     
     // if content is not editable, then always let collection view handle the
     // event.
-    if (!this.get('contentIsEditable')) return NO ; 
+    if (!this.get('contentIsEditable')) return false ; 
     
     // if occurred inside checkbox, item view should handle the event.
     if (this._isInsideCheckbox(evt)) {
@@ -539,11 +539,11 @@ SC.ListItemView = SC.View.extend(
       return true;
     }
     
-    return NO ; // let the collection view handle this event
+    return false ; // let the collection view handle this event
   },
   
   mouseUp: function(evt) {
-    var ret= NO, del, checkboxKey, content, state, idx, set;
+    var ret= false, del, checkboxKey, content, state, idx, set;
 
     // if mouse was down in checkbox -- then handle mouse up, otherwise 
     // allow parent view to handle event.
@@ -596,9 +596,9 @@ SC.ListItemView = SC.View.extend(
     } 
    
     // clear cached info
-    this._isMouseInsideCheckbox = this._isMouseDownOnCheckbox = NO ;
-    this._isMouseDownOnDisclosure = this._isMouseInsideDisclosure = NO ;
-    this._isMouseInsideRightIcon = this._isMouseDownOnRightIcon = NO ;
+    this._isMouseInsideCheckbox = this._isMouseDownOnCheckbox = false ;
+    this._isMouseDownOnDisclosure = this._isMouseInsideDisclosure = false ;
+    this._isMouseInsideRightIcon = this._isMouseDownOnRightIcon = false ;
     return ret ;
   },
   
@@ -608,21 +608,21 @@ SC.ListItemView = SC.View.extend(
       this._isMouseInsideCheckbox = true ;
     } else if (this._isMouseDownOnCheckbox) {
       this._removeCheckboxActiveState() ;
-      this._isMouseInsideCheckbox = NO ;
+      this._isMouseInsideCheckbox = false ;
     } else if (this._isMouseDownOnDisclosure && this._isInsideDisclosure(evt)) {
       this._addDisclosureActiveState();
       this._isMouseInsideDisclosure = true;
     } else if (this._isMouseDownOnDisclosure) {
       this._removeDisclosureActiveState();
-      this._isMouseInsideDisclosure = NO ;
+      this._isMouseInsideDisclosure = false ;
     } else if (this._isMouseDownOnRightIcon && this._isInsideRightIcon(evt)) {
       this._addRightIconActiveState();
       this._isMouseInsideRightIcon = true;
     } else if (this._isMouseDownOnRightIcon) {
       this._removeRightIconActiveState();
-      this._isMouseInsideRightIcon = NO ;
+      this._isMouseInsideRightIcon = false ;
     }
-    return NO ;
+    return false ;
   },
   
   touchStart: function(evt){
@@ -682,11 +682,11 @@ SC.ListItemView = SC.View.extend(
     // if not content value is returned, not much to do.
     var del = this.displayDelegate ;
     var labelKey = this.getDelegateProperty('contentValueKey', del) ;
-    if (!labelKey) return NO ;
+    if (!labelKey) return false ;
 
     // get the element to check for.
     var el = this.$label()[0] ;
-    if (!el) return NO ; // no label to check for.
+    if (!el) return false ; // no label to check for.
 
     var cur = evt.target, layer = this.get('layer') ;
     while(cur && (cur !== layer) && (cur !== window)) {
@@ -694,12 +694,12 @@ SC.ListItemView = SC.View.extend(
       cur = cur.parentNode ;
     }
 
-    return NO;
+    return false;
   },
   
   beginEditing: function() {
     if (this.get('isEditing')) return true ;
-    //if (!this.get('contentIsEditable')) return NO ;
+    //if (!this.get('contentIsEditable')) return false ;
     return this._beginEditing(true);
   },
   
@@ -722,13 +722,13 @@ SC.ListItemView = SC.View.extend(
       var collectionView = this.get('owner'), idx = this.get('contentIndex');
       this.invokeLast(function() {
         var item = collectionView.itemViewForContentIndex(idx);
-        if (item && item._beginEditing) item._beginEditing(NO);
+        if (item && item._beginEditing) item._beginEditing(false);
       });
       return true; // let the scroll happen then begin editing...
     }
     
     // nothing to do...    
-    if (!parent || !el || el.get('length')===0) return NO ;
+    if (!parent || !el || el.get('length')===0) return false ;
     v = (labelKey && content && content.get) ? content.get(labelKey) : null ;
     
     f = this.computeFrameWithParentFrame(null);
@@ -766,7 +766,7 @@ SC.ListItemView = SC.View.extend(
       exampleElement: el, 
       delegate: this, 
       value: v,
-      multiline: NO,
+      multiline: false,
       isCollection: true,
       validator: validator,
       escapeHTML: escapeHTML
@@ -828,7 +828,7 @@ SC.ListItemView = SC.View.extend(
    Update the field value and make it visible again.
   */
   inlineEditorDidEndEditing: function(inlineEditor, finalValue) {
-    this.set('isEditing', NO) ;
+    this.set('isEditing', false) ;
     
     var content = this.get('content') ;
     var del = this.displayDelegate ;

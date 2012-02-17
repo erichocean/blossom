@@ -6,7 +6,7 @@
 // ==========================================================================
 
 SC.VALIDATE_OK = true;
-SC.VALIDATE_NO_CHANGE = NO;
+SC.VALIDATE_NO_CHANGE = false;
 
 /**
   @class
@@ -89,8 +89,8 @@ SC.Validator = SC.Object.extend(
     Validate the field value.  
     
     You can implement standard behavior for your validator by using the validate()
-    and validateError() methods.  validate() should return NO if the field is not
-    valid, true otherwise.  If you return NO from this method, then the validateError()
+    and validateError() methods.  validate() should return false if the field is not
+    valid, true otherwise.  If you return false from this method, then the validateError()
     method will be called so you can generate an error object describing the specific problem.
 
     @param {SC.FormView} form the form this view belongs to
@@ -104,7 +104,7 @@ SC.Validator = SC.Object.extend(
   
     This is the other standard validator method that can be used to impement basic validation.
     Return an error object explaining why the field is not valid.  It will only be called if
-    validate() returned NO.
+    validate() returned false.
     
     The default implementation of htis method returns a generic error message with the loc
     string "Invalid.Generate({fieldValue})".  You can simply define this loc string in
@@ -131,7 +131,7 @@ SC.Validator = SC.Object.extend(
     methods (validate() and validateError()) if you prefer.
     
     The default implementation calls your validate() method and then validateError()
-    if valiate() returns NO.  This method should return SC.VALIDATE_OK if validation
+    if valiate() returns false.  This method should return SC.VALIDATE_OK if validation
     succeeded or an error object if it fails.
   
     @param {SC.FormView} form the form for the field
@@ -195,7 +195,7 @@ SC.Validator = SC.Object.extend(
     @param {SC.View} field the field to validate
     @param {String} char the characters being added
     
-    @returns {Boolean} true if allowed, NO otherwise
+    @returns {Boolean} true if allowed, false otherwise
   */
   validateKeyDown: function(form, field,charStr) { return true; },
 

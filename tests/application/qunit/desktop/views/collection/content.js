@@ -40,7 +40,7 @@ suite("SC.CollectionView.content", {
             if (args[1] === null) return true ;
             if (args[0].get('nowShowing').contains(args[1])) return true ;            
           }
-          return NO ;
+          return false ;
         },
 
         // join all reload indexes passed excluding null or undefined
@@ -76,7 +76,7 @@ suite("SC.CollectionView.content", {
 
           if (indexes === true) {
             equals(this.shouldReloadAll(), true, 'reload() should reload all');
-          } else if (indexes !== NO) {
+          } else if (indexes !== false) {
             var expected = this.indexes();
             var passed = indexes.isEqual(expected);
             ok(passed, "expected reload(%@), actual: reload(%@)".fmt(indexes, expected));
@@ -236,9 +236,9 @@ test("editing properties", function() {
   ok(obj !== null, 'precond -has object to edit');
   
   obj.set('title', 'FOO');
-  view.reload.expect(NO, 0);
+  view.reload.expect(false, 0);
   view.contentPropertyDidChange.expect(0);
-  view.computeLayout.expect(NO);
+  view.computeLayout.expect(false);
 });
 
 

@@ -12,10 +12,10 @@ var Rec = SC.Record.extend({
   
   title: SC.Record.attr(String),
   
-  fired: NO,
+  fired: false,
   
   reset: function() { 
-    this.fired = NO;
+    this.fired = false;
   },
   
   titleDidChange: function() {
@@ -116,7 +116,7 @@ test("chained store changes should propagate reliably", function() {
   equals(rec2.get('title'), 'bar', 'chained rec.title should changed');
   equals(rec.get('title'), 'foo', 'original rec.title should NOT change');
   equals(store.get('hasChanges'), true, 'chained store.hasChanges');
-  equals(rec.fired, NO, 'original rec.title should not have notified');
+  equals(rec.fired, false, 'original rec.title should not have notified');
   
   SC.RunLoop.begin();
   rec.reset();
@@ -141,7 +141,7 @@ test("chained store changes should propagate reliably", function() {
   equals(rec2.get('title'), 'baz', 'chained rec.title should changed');
   equals(rec.get('title'), 'bar', 'original rec.title should NOT change');
   equals(store.get('hasChanges'), true, 'chained store.hasChanges');
-  equals(rec.fired, NO, 'original rec.title should not have notified');
+  equals(rec.fired, false, 'original rec.title should not have notified');
   
   SC.RunLoop.begin();
   rec.reset();
@@ -166,7 +166,7 @@ test("chained store changes should propagate reliably", function() {
   equals(rec2.get('title'), 'FOO2', 'chained rec.title should changed');
   equals(rec.get('title'), 'baz', 'original rec.title should NOT change');
   equals(store.get('hasChanges'), true, 'chained store.hasChanges');
-  equals(rec.fired, NO, 'original rec.title should not have notified');
+  equals(rec.fired, false, 'original rec.title should not have notified');
   
   SC.RunLoop.begin();
   rec.reset();

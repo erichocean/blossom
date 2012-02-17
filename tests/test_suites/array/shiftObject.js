@@ -23,7 +23,7 @@ SC.ArraySuite.define(function(T) {
   test("[].shiftObject() => [] + returns undefined + NO notify", function() {
     observer.observe('[]', 'length') ;
     equals(obj.shiftObject(), undefined, 'should return undefined') ;
-    T.validateAfter(obj, [], observer, NO, NO);
+    T.validateAfter(obj, [], observer, false, false);
   });
 
   test("[X].shiftObject() => [] + notify", function() {

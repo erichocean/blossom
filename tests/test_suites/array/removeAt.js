@@ -31,7 +31,7 @@ SC.ArraySuite.define(function(T) {
   });
   
   test("[].removeAt(200) => OUT_OF_RANGE_EXCEPTION exception", function() {
-    var didThrow = NO ;
+    var didThrow = false ;
     try {
       obj.removeAt(200);
     } catch (e) {

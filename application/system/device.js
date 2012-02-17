@@ -50,16 +50,16 @@ SC.Device = SC.Object.extend({
   
   /**
     Indicates whether the device is currently online or offline. For browsers
-    that do not support this feature, the default value is NO.
+    that do not support this feature, the default value is false.
     
     Is currently inverse of the navigator.onLine property. Most modern browsers
     will update this property when switching to or from the browser's Offline 
     mode, and when losing/regaining network connectivity.
     
     @property {Boolean}
-    @default NO
+    @default false
   */
-  isOffline: NO,
+  isOffline: false,
 
   /**
     Returns a Point containing the last known X and Y coordinates of the
@@ -111,16 +111,16 @@ SC.Device = SC.Object.extend({
         or = this.get('orientation');
     if(or === "portrait") {
       body.setClass('portrait', true);
-      body.setClass('landscape', NO);
+      body.setClass('landscape', false);
     }
     if( or === "landscape" ) {
-      body.setClass('portrait', NO);
+      body.setClass('portrait', false);
       body.setClass('landscape', true);
     }
   }.observes('orientation'),
   
   online: function(evt) {
-    this.set('isOffline', NO);
+    this.set('isOffline', false);
   },
   
   offline: function(evt) {

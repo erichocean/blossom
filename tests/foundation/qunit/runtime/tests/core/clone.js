@@ -90,7 +90,7 @@ test("should return deep clones of hashes", function() {
 
 test("should use copy() if isCopyable", function() {
   var obj = SC.Object.create(SC.Copyable, {
-    isCopy: NO,
+    isCopy: false,
     
     copy: function() {
       return SC.Object.create(SC.Copyable, { isCopy: true });

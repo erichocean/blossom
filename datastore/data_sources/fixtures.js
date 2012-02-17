@@ -26,12 +26,12 @@ SC.FixturesDataSource = SC.DataSource.extend(
     more accurately simulate your remote data source.
 
     If you plan to replace this data source with something that works with 
-    local storage, for example, then you should set this property to NO to 
+    local storage, for example, then you should set this property to false to 
     accurately simulate the behavior of your actual data source.
     
     @property {Boolean}
   */
-  simulateRemoteResponse: NO,
+  simulateRemoteResponse: false,
   
   /**
     If you set simulateRemoteResponse to true, then the fixtures source will
@@ -54,7 +54,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
   
   /** @private */
   cancel: function(store, storeKeys) {
-    return NO;
+    return false;
   },
   
   
@@ -340,9 +340,9 @@ SC.FixturesDataSource = SC.DataSource.extend(
     @returns {Boolean} storeKeys
   */
   fixturesLoadedFor: function(recordType) {
-    if (!this._fixtures) return NO;
+    if (!this._fixtures) return false;
     var ret = [], fixtures = this._fixtures[SC.guidFor(recordType)];
-    return fixtures ? true: NO;
+    return fixtures ? true: false;
   },
 
   /**
@@ -363,13 +363,13 @@ SC.FixturesDataSource = SC.DataSource.extend(
     @returns {Boolean} true if all handled, MIXED_STATE if some handled
   */
   hasFixturesFor: function(storeKeys) {
-    var ret = NO ;
+    var ret = false ;
     storeKeys.forEach(function(storeKey) {
       if (ret !== SC.MIXED_STATE) {
         var recordType = SC.Store.recordTypeFor(storeKey),
             fixtures   = recordType ? recordType.FIXTURES : null ;
         if (fixtures && fixtures.length && fixtures.length>0) {
-          if (ret === NO) ret = true ;
+          if (ret === false) ret = true ;
         } else if (ret === true) ret = SC.MIXED_STATE ;
       }
     }, this);

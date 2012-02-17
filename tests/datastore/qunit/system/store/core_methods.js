@@ -11,10 +11,10 @@ suite("SC.Store Core Methods", {
   setup: function() {
     dataSource = SC.DataSource.create({ 
       
-      gotParams: NO,
+      gotParams: false,
       
       updateRecord: function(store, storeKey, params) {
-        this.gotParams = params && params['param1'] ? true: NO;
+        this.gotParams = params && params['param1'] ? true: false;
       }
     });
     

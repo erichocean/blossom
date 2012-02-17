@@ -61,10 +61,10 @@ test("isEnabled should alter group classname and sync with isEnabled property", 
 
   // update value -- make sure isEnabled changes.  
   SC.RunLoop.begin();
-  view.set('isEnabled', 0); // make falsy. (but not NO exactly)
+  view.set('isEnabled', 0); // make falsy. (but not false exactly)
   SC.RunLoop.end();
   
-  ok(!view.get('isEnabled'), 'isEnabled should now be NO');
+  ok(!view.get('isEnabled'), 'isEnabled should now be false');
   ok(view.$().hasClass('disabled'), 'should have disabled class');
 
   // update isEnabled -- make sure it edits the value
@@ -94,7 +94,7 @@ test("pressing mouseDown and then mouseUp anywhere in a radio button should togg
   
   // simulate mouseUp and browser-native change to control
   SC.Event.trigger(r[0],'mouseup');
-  //input.attr('checked', NO);
+  //input.attr('checked', false);
   // loose focus of the element since it was changed
   SC.Event.trigger(r[1],'mousedown');
   SC.Event.trigger(r[1],'mouseup');
@@ -105,9 +105,9 @@ test("pressing mouseDown and then mouseUp anywhere in a radio button should togg
   elem = null ;
 });
 
-test("isEnabled=NO should add disabled attr to input", function() {
+test("isEnabled=false should add disabled attr to input", function() {
   SC.RunLoop.begin();
-  view.set('isEnabled', NO);
+  view.set('isEnabled', false);
   SC.RunLoop.end();
   
   ok(view.$().hasClass('disabled'), 'should have disabled attr');

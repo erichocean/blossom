@@ -7,7 +7,7 @@ suite("SC.Object.invokeLater") ;
 
 test("should invoke method string after specified time", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var o = SC.Object.create({
     func: function() { fired = true; }
   });
@@ -30,7 +30,7 @@ test("should invoke method string after specified time", function() {
 
 test("should invoke method instance after specified time", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var o = SC.Object.create({
     func: function() { fired = true; }
   });
@@ -53,7 +53,7 @@ test("should invoke method instance after specified time", function() {
 
 test("should invoke method string immediately if no time passed", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var o = SC.Object.create({
     func: function() { fired = true; }
   });
@@ -76,7 +76,7 @@ test("should invoke method string immediately if no time passed", function() {
 
 test("should automatically bind with arguments if passed", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var g1 = null, g2 = null ;
   
   var o = SC.Object.create({
@@ -107,7 +107,7 @@ suite("Function.invokeLater") ;
 
 test("should invoke function with target after specified time", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var target = null;
   var o = SC.Object.create() ;
   var func = function() { fired = true; target = this; } ; 
@@ -131,7 +131,7 @@ test("should invoke function with target after specified time", function() {
 
 test("should invoke object with no target after specified time", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var func = function() { fired = true; } ; 
   func.invokeLater(null, 200) ;
   SC.RunLoop.end() ;
@@ -152,7 +152,7 @@ test("should invoke object with no target after specified time", function() {
 
 test("should invoke function immediately if no time passed", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var o = SC.Object.create() ;
   var func = function() { fired = true; } ; 
   func.invokeLater(o) ;
@@ -174,7 +174,7 @@ test("should invoke function immediately if no time passed", function() {
 
 test("should automatically bind with arguments if passed", function() {
   SC.RunLoop.begin() ;
-  var fired = NO ;
+  var fired = false ;
   var g1 = null, g2 = null ;
   
   var o = SC.Object.create() ;

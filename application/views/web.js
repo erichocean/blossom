@@ -36,7 +36,7 @@ SC.WebView = SC.View.extend(SC.Control, {
   domain as the parent domain.
   @property{Boolean}
   */
-  shouldAutoResize: NO,
+  shouldAutoResize: false,
 
   render: function(context, firstTime) {
     var src = this.get('value');

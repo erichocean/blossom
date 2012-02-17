@@ -24,13 +24,13 @@ test("handle index in set", function() {
 });
 
 test("handle index not in set", function() {
-  equals(set.intersects(0), NO, 'index 0 should not be in set');
-  equals(set.intersects(10), NO, 'index 10 should not be in set');
-  equals(set.intersects(1100), NO, 'index 1100 should not be in set');
+  equals(set.intersects(0), false, 'index 0 should not be in set');
+  equals(set.intersects(10), false, 'index 10 should not be in set');
+  equals(set.intersects(1100), false, 'index 1100 should not be in set');
 });
 
 test("handle index past end of set", function() {
-  equals(set.intersects(3000), NO, 'index 3000 should not be in set');
+  equals(set.intersects(3000), false, 'index 3000 should not be in set');
 });
 
 // ..........................................................
@@ -42,7 +42,7 @@ test("handle range inside set", function() {
 });
 
 test("handle range outside of set", function() {
-  equals(set.intersects(100,4), NO, '100..1003 should NOT be in set');
+  equals(set.intersects(100,4), false, '100..1003 should NOT be in set');
 });
 
 test("handle range partially inside set", function() {
@@ -60,7 +60,7 @@ test("handle set inside set", function() {
 
 test("handle range outside of set", function() {
   var test = SC.IndexSet.create().add(100,4).add(105,2);
-  equals(set.intersects(test), NO, '%@ should be in %@'.fmt(test, set));
+  equals(set.intersects(test), false, '%@ should be in %@'.fmt(test, set));
 });
 
 test("handle range partially inside set", function() {

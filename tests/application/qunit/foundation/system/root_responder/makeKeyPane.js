@@ -16,7 +16,7 @@ test("returns receiver", function() {
 });
 
 test("changes keyPane to new pane if pane accepts key focus", function() {
-  var p1 = SC.Pane.create({ acceptsKeyPane: NO }) ;
+  var p1 = SC.Pane.create({ acceptsKeyPane: false }) ;
   var p2 = SC.Pane.create({ acceptsKeyPane: true });
   var r = SC.RootResponder.create();
   
@@ -38,14 +38,14 @@ test("setting nil sets key pane to mainPane if mainPane accepts key focus", func
   equals(r.get('keyPane'), main, 'keyPane should be main pane');
   
   r.makeKeyPane(key); // reset
-  main.acceptsKeyPane = NO ;
+  main.acceptsKeyPane = false ;
   r.makeKeyPane(null); // try to clean - mainPane does not accept key
   equals(r.get('keyPane'), null, 'keyPane should be null, not main');
   
   // try another variety.  if keyPane is currently null and we try to set to
   // null do nothing, even if main DOES accept key.
   r.keyPane = null ;
-  main.acceptsKeyPane = NO;
+  main.acceptsKeyPane = false;
   r.makeKeyPane(null);
   equals(r.get('keyPane'), null, 'keyPane should remain null');
 });

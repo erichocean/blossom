@@ -41,7 +41,7 @@ var del = SC.Object.create();
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.ScrollView.design({
     layout: { left: 0, right: 0, top: 0, height: 300 },
-    hasHorizontalScroller: NO,
+    hasHorizontalScroller: false,
     contentView: SC.ListView.design({
       content: SC.TreeItemObserver.create({ item: root, delegate: del }),
       contentValueKey: "title",

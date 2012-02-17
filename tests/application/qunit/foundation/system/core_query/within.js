@@ -18,7 +18,7 @@ test("should return if passed RAW element that is child", function() {
   equals(cq.within(child.get(0)), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
-  equals(cq.within(notChild.get(0)), NO, "cq.hadChild(DOMElement) = NO");
+  equals(cq.within(notChild.get(0)), false, "cq.hadChild(DOMElement) = false");
   child = notChild = cq = null ;
 }) ;
 
@@ -34,7 +34,7 @@ test("should return if passed CQ with element that is child", function() {
   equals(cq.within(child), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
-  equals(cq.within(notChild), NO, "cq.hadChild(DOMElement) = NO");
+  equals(cq.within(notChild), false, "cq.hadChild(DOMElement) = false");
   child = notChild = cq = null ;
 }) ;
 
@@ -55,7 +55,7 @@ test("should work if matched set has multiple element", function() {
   equals(cq.within(child), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
-  equals(cq.within(notChild), NO, "cq.hadChild(DOMElement) = NO");
+  equals(cq.within(notChild), false, "cq.hadChild(DOMElement) = false");
   child = notChild = cq = null ;
 }) ;
 

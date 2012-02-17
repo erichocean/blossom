@@ -27,13 +27,13 @@
   //   })
   //   
   //   .add("disabled", SC.ListView, {
-  //     isEnabled: NO,
+  //     isEnabled: false,
   //     content: content,
   //     contentValueKey: 'title'
   //   })
   //   
   //   .add("disabled - single selection", SC.ListView, {
-  //     isEnabled: NO,
+  //     isEnabled: false,
   //     content: content,
   //     contentValueKey: 'title',
   //     selection: singleSelection

@@ -85,7 +85,7 @@ test("animatable should handle concatenated transitions properly", function(){
 
 test("animatable handler for layer update should ensure both layout and styles are set in the 'current style'.", function() {
   var original_transition_enabled = SC.platform.supportsCSSTransitions;
-  SC.platform.supportsCSSTransitions = NO;
+  SC.platform.supportsCSSTransitions = false;
   
   // we should have a style (it is inside a pane)
   var current = view.getCurrentJavaScriptStyles();

@@ -67,7 +67,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     If true and the menu is a class, this will cause a task that will instantiate the menu
     to be added to SC.backgroundTaskQueue.
   */
-  shouldLoadInBackground: NO,
+  shouldLoadInBackground: false,
 
   // ..........................................................
   // INTERNAL SUPPORT
@@ -110,9 +110,9 @@ SC.PopupButtonView = SC.ButtonView.extend(
   }.observes('menu'),
 
   /** @private
-    isActive is NO, but when the menu is instantiated, it is bound to the menu's isVisibleInWindow property.
+    isActive is false, but when the menu is instantiated, it is bound to the menu's isVisibleInWindow property.
   */
-  isActive: NO,
+  isActive: false,
   
   /**
     @private
@@ -167,7 +167,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
       //@ if (debug)
       SC.Logger.warn("SC.PopupButton - Unable to show menu because the menu property is set to %@.".fmt(menu));
       //@ endif
-      return NO ;
+      return false ;
     }
 
     menu.popup(this, this.get('preferMatrix')) ;
@@ -240,7 +240,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
 
       if (targetMenuItem) {
         // Have the menu item perform its action.
-        // If the menu returns NO, it had no action to
+        // If the menu returns false, it had no action to
         // perform, so we should close the menu immediately.
         if (!targetMenuItem.performAction()) menu.remove();
       } else {
@@ -255,7 +255,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     }
 
     // Reset state.
-    this._isMouseDown = NO;
+    this._isMouseDown = false;
     arguments.callee.base.apply(this, arguments);
     return true;
   },
@@ -282,7 +282,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
   */
   performKeyEquivalent: function( charCode, evt )
   {
-    if (!this.get('isEnabled')) return NO ;
+    if (!this.get('isEnabled')) return false ;
     var menu = this.get('instantiatedMenu') ;
     return (!!menu && menu.performKeyEquivalent(charCode, evt)) ;
   },
@@ -290,7 +290,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
   /** @private */
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return NO;
+    else return false;
   }.property('isEnabled')
 
 });

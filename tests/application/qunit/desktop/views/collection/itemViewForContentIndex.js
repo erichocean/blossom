@@ -52,7 +52,7 @@ suite("SC.CollectionView.itemViewForContentIndex", {
       
       exampleView: SC.View.extend(), // custom for testing
       
-      testAsGroup: NO,
+      testAsGroup: false,
       
       contentIndexIsGroup: function() { return this.testAsGroup; },
       

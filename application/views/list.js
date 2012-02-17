@@ -72,7 +72,7 @@ SC.ListView = SC.CollectionView.extend(
   *
   * @property {Boolean} 
   */
-  showAlternatingRows: NO,
+  showAlternatingRows: false,
   
   // ..........................................................
   // METHODS
@@ -474,7 +474,7 @@ SC.ListView = SC.CollectionView.extend(
     } else {
 
       if (this._lastDropOnView) {
-        this._lastDropOnView.set('isSelected', NO);
+        this._lastDropOnView.set('isSelected', false);
         this._lastDropOnView = null;
       }
       
@@ -492,7 +492,7 @@ SC.ListView = SC.CollectionView.extend(
   
   hideInsertionPoint: function() {
     if (this._lastDropOnView) {
-      this._lastDropOnView.set('isSelected', NO);
+      this._lastDropOnView.set('isSelected', false);
       this._lastDropOnView = null;
     }
     
@@ -624,7 +624,7 @@ SC.ListView = SC.CollectionView.extend(
         SC.InlineTextFieldView.commitEditing();
       }
     }
-    return NO ;  
+    return false ;  
   },
   
   // ..........................................................

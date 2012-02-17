@@ -13,11 +13,11 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
   var pane = SC.ControlTestPane.design()
     .add("horizontal", SC.SplitView, { 
 	  layout: { right: 20, bottom: 20, width: 100, height: 23 },
-      layoutDirection: SC.LAYOUT_HORIZONTAL,canCollapseViews: NO
+      layoutDirection: SC.LAYOUT_HORIZONTAL,canCollapseViews: false
     })
   
     .add("vertical", SC.SplitView, { 
-      layoutDirection: SC.LAYOUT_VERTICAL,canCollapseViews: NO
+      layoutDirection: SC.LAYOUT_VERTICAL,canCollapseViews: false
     })
   	.add("collapsable", SC.SplitView, { 
       layoutDirection: SC.LAYOUT_HORIZONTAL,canCollapseViews: true

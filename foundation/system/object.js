@@ -16,7 +16,7 @@ sc_require('system/set');
 var SC = global.SC; // Required to allow foundation to be re-namespaced as BT 
                     // when loaded by the buildtools.
 
-SC.BENCHMARK_OBJECTS = NO;
+SC.BENCHMARK_OBJECTS = false;
 
 // ..........................................................
 // PRIVATE HELPER METHODS
@@ -69,15 +69,15 @@ SC._object_extend = function _object_extend(base, ext) {
   // setup arrays for bindings, observers, and properties.  Normally, just
   // save the arrays from the base.  If these need to be changed during 
   // processing, then they will be cloned first.
-  var bindings = base._bindings, clonedBindings = NO;
-  var observers = base._observers, clonedObservers = NO;
-  var properties = base._properties, clonedProperties = NO;
+  var bindings = base._bindings, clonedBindings = false;
+  var observers = base._observers, clonedObservers = false;
+  var properties = base._properties, clonedProperties = false;
   var paths, pathLoc, local ;
 
   // outlets are treated a little differently because you can manually 
   // name outlets in the passed in hash. If this is the case, then clone
   // the array first.
-  var outlets = base.outlets, clonedOutlets = NO ;
+  var outlets = base.outlets, clonedOutlets = false ;
   if (ext.outlets) { 
     outlets = (outlets || SC.EMPTY_ARRAY).concat(ext.outlets);
     clonedOutlets = true ;
@@ -340,7 +340,7 @@ SC.mixin(SC.Object, /** @scope SC.Object */ {
 
   /** 
     Returns true if the receiver is a subclass of the named class.  If the 
-    receiver is the class passed, this will return NO since the class is not
+    receiver is the class passed, this will return false since the class is not
     a subclass of itself.  See also kindOf().
 
     h2. Example
@@ -350,17 +350,17 @@ SC.mixin(SC.Object, /** @scope SC.Object */ {
       ClassB = ClassA.extend();
 
       ClassB.subclassOf(ClassA) => true
-      ClassA.subclassOf(ClassA) => NO
+      ClassA.subclassOf(ClassA) => false
     }}}
     
     @param {Class} scClass class to compare
     @returns {Boolean} 
   */
   subclassOf: function(scClass) {
-    if (this === scClass) return NO ;
+    if (this === scClass) return false ;
     var t = this ;
     while(t = t.superclass) if (t === scClass) return true ;
-    return NO ;
+    return false ;
   },
   
   /**
@@ -371,7 +371,7 @@ SC.mixin(SC.Object, /** @scope SC.Object */ {
     @returns {Boolean}
   */
   hasSubclass: function(scClass) {
-    return (scClass && scClass.subclassOf) ? scClass.subclassOf(this) : NO;
+    return (scClass && scClass.subclassOf) ? scClass.subclassOf(this) : false;
   },
 
   /**
@@ -513,11 +513,11 @@ SC.Object.prototype = {
   },
 
   /**
-    Set to NO once this object has been destroyed. 
+    Set to false once this object has been destroyed. 
     
     @property {Boolean}
   */
-  isDestroyed: NO,
+  isDestroyed: false,
 
   /**
     Call this method when you are finished with an object to teardown its
@@ -565,8 +565,8 @@ SC.Object.prototype = {
   
   /**
     Attemps to invoke the named method, passing the included two arguments.  
-    Returns NO if the method is either not implemented or if the handler 
-    returns NO (indicating that it did not handle the event).  This method 
+    Returns false if the method is either not implemented or if the handler 
+    returns false (indicating that it did not handle the event).  This method 
     is invoked to deliver actions from menu items and to deliver events.  
     You can override this method to provide additional handling if you 
     prefer.
@@ -574,10 +574,10 @@ SC.Object.prototype = {
     @param {String} methodName
     @param {Object} arg1
     @param {Object} arg2
-    @returns {Boolean} true if handled, NO if not handled
+    @returns {Boolean} true if handled, false if not handled
   */
   tryToPerform: function(methodName, arg1, arg2) {
-    return this.respondsTo(methodName) && (this[methodName](arg1, arg2) !== NO);
+    return this.respondsTo(methodName) && (this[methodName](arg1, arg2) !== false);
   },
 
   /**  
@@ -636,7 +636,7 @@ SC.Object.prototype = {
       var instB = ClassB.create();
       
       instA.instanceOf(ClassA) => true
-      instB.instanceOf(ClassA) => NO
+      instB.instanceOf(ClassA) => false
     }}}
     
     @param {Class} scClass the class
@@ -890,7 +890,7 @@ SC.kindOf = function(scObject, scClass) {
   This method is used to allow classes to determine their own name.
 */
 SC._object_className = function(obj) {
-  if (SC.isReady === NO) return ''; // class names are not available until ready
+  if (SC.isReady === false) return ''; // class names are not available until ready
   if (!obj._object_className) findClassNames() ;
   if (obj._object_className) return obj._object_className ;
 

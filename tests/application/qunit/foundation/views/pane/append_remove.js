@@ -16,7 +16,7 @@ suite("SC.Pane#appendTo");
 test("adding to document for first time", function() {
   var pane = SC.Pane.create();
   ok(!pane.get('layer'), 'precond - does not yet have layer');
-  ok(!pane.get('isVisibleInWindow'), 'precond - isVisibleInWindow = NO');
+  ok(!pane.get('isVisibleInWindow'), 'precond - isVisibleInWindow = false');
   
   var elem = Q$('body').get(0);
   ok(elem, 'precond - found element to add to');
@@ -72,7 +72,7 @@ test("adding/remove/adding pane", function() {
   equals(layer.parentNode, elem1, 'layer belongs to parent');
   ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow is true before remove');
   pane.remove();
-  ok(!pane.get('isVisibleInWindow'), 'isVisibleInWindow is NO');
+  ok(!pane.get('isVisibleInWindow'), 'isVisibleInWindow is false');
   
   pane.appendTo(elem2);
   layer = pane.get('layer');
@@ -97,7 +97,7 @@ test("removes pane from DOM", function() {
   
   pane.remove();
   ok(layer.parentNode !== elem, 'layer no longer belongs to parent');
-  ok(!pane.get('isVisibleInWindow'), 'isVisibleInWindow is NO');
+  ok(!pane.get('isVisibleInWindow'), 'isVisibleInWindow is false');
 });
 
 

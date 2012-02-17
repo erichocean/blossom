@@ -73,7 +73,7 @@ SC.Plugin = SC.Object.extend(
 
     @type {Boolean}
   */
-  isRegistered: NO,
+  isRegistered: false,
 
   //..........................................
   // Bindings

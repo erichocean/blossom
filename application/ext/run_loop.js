@@ -84,10 +84,10 @@ SC.RunLoop = SC.RunLoop.extend(
     Usually you will not call this method directly, but it will be invoked 
     automatically at the end of the run loop.
     
-    @returns {Boolean} true if timers were fired, NO otherwise
+    @returns {Boolean} true if timers were fired, false otherwise
   */
   fireExpiredTimers: function() {
-    if (!this._timerQueue || this._firing) return NO; // nothing to do
+    if (!this._timerQueue || this._firing) return false; // nothing to do
 
     // max time we are allowed to run timers
     var now = this.get('startTime'),
@@ -109,7 +109,7 @@ SC.RunLoop = SC.RunLoop.extend(
     // cleanup
     didFire = timers.length > 0 ;
     timers.length = 0 ; // reset for later use...
-    this._firing = NO ;
+    this._firing = false ;
     return didFire; 
   },
   
@@ -124,7 +124,7 @@ SC.RunLoop = SC.RunLoop.extend(
   scheduleNextTimeout: function() {
     var timer = this._timerQueue ;
     
-    var ret = NO ;
+    var ret = false ;
     // if no timer, and there is an existing timeout, cancel it
     if (!timer) {
       if (this._timeout) clearTimeout(this._timeout);

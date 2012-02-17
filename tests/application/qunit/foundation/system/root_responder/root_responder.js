@@ -50,7 +50,7 @@ test("root_responder.makeMainPane() : Should notify other panes about the change
 		
 	//Notify other panes about the changes
 	equals(newPane.get('isMainPane'),true);
-	equals(oldPane.get('isMainPane'),NO);
+	equals(oldPane.get('isMainPane'),false);
 	
 });
 

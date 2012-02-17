@@ -33,7 +33,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
   /**
    Used to set the scrolling direction of the scroller.
   */
-  scrollDown: NO,
+  scrollDown: false,
   
   /** 
     The scroller offset value.  This value will adjust between the minimum
@@ -64,7 +64,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
   maximum: 0,
   
   /**
-    true if enable scrollbar, NO to disable it.  Scrollbars will automatically 
+    true if enable scrollbar, false to disable it.  Scrollbars will automatically 
     disable if the maximum scroll width does not exceed their capacity.
     
     @property
@@ -157,7 +157,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
   },
   
   mouseExited: function(evt) {
-    this.set('isMouseOver', NO);
+    this.set('isMouseOver', false);
   },
   
   /** @private */
@@ -291,12 +291,12 @@ SC.MenuScrollView = SC.ScrollView.extend({
     
     @property {Boolean}
   */
-  hasHorizontalScroller: NO,
+  hasHorizontalScroller: false,
   
   /**
     The horizontal scroller view class. This will be replaced with a view 
     instance when the ScrollView is created unless hasHorizontalScroller is 
-    NO.
+    false.
     
     @property {SC.View}
   */
@@ -306,12 +306,12 @@ SC.MenuScrollView = SC.ScrollView.extend({
     true if the horizontal scroller should be visible.  You can change this 
     property value anytime to show or hide the horizontal scroller.  If you 
     do not want to use a horizontal scroller at all, you should instead set 
-    hasHorizontalScroller to NO to avoid creating a scroller view in the 
+    hasHorizontalScroller to false to avoid creating a scroller view in the 
     first place.
     
     @property {Boolean}
   */
-  isHorizontalScrollerVisible: NO,
+  isHorizontalScrollerVisible: false,
 
   /**
     Returns true if the view both has a horizontal scroller, the scroller is
@@ -319,14 +319,14 @@ SC.MenuScrollView = SC.ScrollView.extend({
     
     @property {Boolean}
   */
-  canScrollHorizontal: NO,
+  canScrollHorizontal: false,
    
   /**
     If true, the horizontal scroller will autohide if the contentView is
     smaller than the visible area.  You must set hasHorizontalScroller to true 
     for this property to have any effect.  
   */
-  autohidesHorizontalScroller: NO,
+  autohidesHorizontalScroller: false,
   
   /** 
     true if the view shuld maintain a vertical scroller.   This property must 
@@ -338,7 +338,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
   
   /**
     The vertical scroller view class. This will be replaced with a view 
-    instance when the ScrollView is created unless hasVerticalScroller is NO.
+    instance when the ScrollView is created unless hasVerticalScroller is false.
     
     @property {SC.View}
   */

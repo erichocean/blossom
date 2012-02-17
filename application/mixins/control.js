@@ -109,12 +109,12 @@ SC.Control = {
   },
   
   /** 
-    The selected state of this control.  Possible options are true, NO or 
+    The selected state of this control.  Possible options are true, false or 
     SC.MIXED_STATE.
     
     @property {Boolean}
   */
-  isSelected: NO,
+  isSelected: false,
   
   /** @private */
   isSelectedBindingDefault: SC.Binding.oneWay().bool(),
@@ -129,7 +129,7 @@ SC.Control = {
     
     @property {Boolean}
   */
-  isActive: NO,
+  isActive: false,
   
   /** @private */
   isActiveBindingDefault: SC.Binding.oneWay().bool(),

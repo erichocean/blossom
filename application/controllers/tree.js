@@ -36,7 +36,7 @@ SC.TreeController = SC.ObjectController.extend(SC.SelectionSupport,
     
     @property {Boolean}
   */
-  treeItemIsGrouped: NO,
+  treeItemIsGrouped: false,
   
   /**
     If your content support expanding and collapsing of content, then set this

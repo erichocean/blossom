@@ -64,7 +64,7 @@ SC.Cookie = SC.Object.extend({
     
     @property {Boolean}
   */
-  secure: NO,
+  secure: false,
   
   /**
     Walk like a duck

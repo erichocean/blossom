@@ -111,7 +111,7 @@ test("computed custom row height indexes", function() {
   
   delegate = Delegate.create({
     indexes: Delegate.prototype.customRowHeightIndexes,
-    useIndexes: NO,
+    useIndexes: false,
     
     customRowHeightIndexes: function() {
       return this.get('useIndexes') ? this.get('indexes') : null;

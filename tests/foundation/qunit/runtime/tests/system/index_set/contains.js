@@ -24,13 +24,13 @@ test("handle index in set", function() {
 });
 
 test("handle index not in set", function() {
-  equals(set.contains(0), NO, 'index 0 should not be in set');
-  equals(set.contains(10), NO, 'index 10 should not be in set');
-  equals(set.contains(1100), NO, 'index 1100 should not be in set');
+  equals(set.contains(0), false, 'index 0 should not be in set');
+  equals(set.contains(10), false, 'index 10 should not be in set');
+  equals(set.contains(1100), false, 'index 1100 should not be in set');
 });
 
 test("handle index past end of set", function() {
-  equals(set.contains(3000), NO, 'index 3000 should not be in set');
+  equals(set.contains(3000), false, 'index 3000 should not be in set');
 });
 
 // ..........................................................
@@ -42,11 +42,11 @@ test("handle range inside set", function() {
 });
 
 test("handle range outside of set", function() {
-  equals(set.contains(100,4), NO, '100..1003 should NOT be in set');
+  equals(set.contains(100,4), false, '100..1003 should NOT be in set');
 });
 
 test("handle range partially inside set", function() {
-  equals(set.contains(998,4), NO,'998..1001 should be in set');
+  equals(set.contains(998,4), false,'998..1001 should be in set');
 });
 
 // ..........................................................
@@ -60,12 +60,12 @@ test("handle set inside set", function() {
 
 test("handle range outside of set", function() {
   var test = SC.IndexSet.create().add(100,4).add(105,2);
-  equals(set.contains(test), NO, '%@ should be in %@'.fmt(test, set));
+  equals(set.contains(test), false, '%@ should be in %@'.fmt(test, set));
 });
 
 test("handle range partially inside set", function() {
   var test = SC.IndexSet.create().add(1001,4).add(100,2);
-  equals(set.contains(test), NO, '%@ should be in %@'.fmt(test, set));
+  equals(set.contains(test), false, '%@ should be in %@'.fmt(test, set));
 });
 
 test("handle self", function() {

@@ -158,17 +158,17 @@ function testStates(canLoad) {
 }  
 
 test("Retrieve a record without a data source", function() {
-  testStates(NO);
+  testStates(false);
 });
 
 test("Retrieve a record without a working data source and check for different errors and states", function() {
   // build a fake data source that claims to NOT handle retrieval
   var source = SC.DataSource.create({
-    retrieveRecords: function() { return NO ; }
+    retrieveRecords: function() { return false ; }
   });
   store.set('dataSource', source);
 
-  testStates(NO);
+  testStates(false);
 
 });
 
@@ -189,7 +189,7 @@ test("Retrieve a record with callback", function() {
     retrieveRecords: function() { return true ; }
   });
   store.set('dataSource', source);
-  var callback = NO;
+  var callback = false;
   store.retrieveRecord(undefined, undefined, storeKey1, true, function(){callback = true;});
   
   ok(store._callback_queue[storeKey1], "The callback exists in the queue");

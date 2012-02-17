@@ -150,7 +150,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
     @type {Boolean}
   */
-  isFirstResponder: NO,
+  isFirstResponder: false,
 
   /** @property
   
@@ -159,9 +159,9 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     
     @type {Boolean}
   */
-  hasFirstResponder: NO,    
+  hasFirstResponder: false,    
   
-  becomingFirstResponder: NO,
+  becomingFirstResponder: false,
   
   /** 
     Call this method on your view or responder to make it become first 

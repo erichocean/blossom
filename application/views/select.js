@@ -235,9 +235,9 @@ SC.SelectView = SC.ButtonView.extend(
     below the anchor.
 
     @private
-    @default NO
+    @default false
   */
-  positionMenuBelow: NO,
+  positionMenuBelow: false,
 
   /**
     lastMenuWidth is the width of the last menu which was created from
@@ -283,7 +283,7 @@ SC.SelectView = SC.ButtonView.extend(
   /**
     Disable context menu.
   */
-  isContextMenuEnabled: NO,
+  isContextMenuEnabled: false,
   
 
   /**
@@ -392,14 +392,14 @@ SC.SelectView = SC.ButtonView.extend(
 
         //set the _itemIdx - To change the prefMatrix accordingly.
         this.set('_itemIdx', idx) ;
-        isChecked = !showCheckbox ? NO : true ;
+        isChecked = !showCheckbox ? false : true ;
       }
       else {
-        isChecked = NO ;
+        isChecked = false ;
       }
       
       // get the separator
-      isSeparator = separatorKey ? (object.get ? object.get(separatorKey) : object[separatorKey]) : NO;
+      isSeparator = separatorKey ? (object.get ? object.get(separatorKey) : object[separatorKey]) : false;
 
       //Set the first item from the list as default selected item
       if (idx === 0) {
@@ -554,7 +554,7 @@ SC.SelectView = SC.ButtonView.extend(
     }) ;
 
     // no menu to toggle... bail...
-    if (!menu) return NO ;
+    if (!menu) return false ;
     menu.popup(this, this.preferMatrix) ;
     menu.set('currentSelectedMenuItem', currSel) ;
     return true ;

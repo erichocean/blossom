@@ -41,7 +41,7 @@ test("copies changed data hashes, statuses, and revisions", function() {
   ok(child.chainedChanges.contains(storeKey), 'precond - child changes should include storeKey');
 
   // perform action
-  equals(store.commitChangesFromNestedStore(child, child.chainedChanges, NO), store, 'should return receiver');
+  equals(store.commitChangesFromNestedStore(child, child.chainedChanges, false), store, 'should return receiver');
 
   // verify new status
   equals(store.readDataHash(storeKey), json, 'now should have json');
@@ -62,7 +62,7 @@ test("adds items in changelog to receiver changelog", function() {
 
   ok(child.changelog.contains(storeKey), 'precond - child.changelog should contain store key');
 
-  equals(store.commitChangesFromNestedStore(child, child.chainedChanges, NO), store, 'should return receiver');
+  equals(store.commitChangesFromNestedStore(child, child.chainedChanges, false), store, 'should return receiver');
 
   // changelog should merge nested store & existing
   ok(store.changelog.contains(key1), 'changelog should still contain key1');
@@ -77,7 +77,7 @@ test("ignores changed data hashes not passed in changes set", function() {
   equals(store.readDataHash(storeKey), null, 'precond - should not have data yet');
 
   // perform action
-  equals(store.commitChangesFromNestedStore(child, SC.Set.create(), NO), store, 'should return receiver');
+  equals(store.commitChangesFromNestedStore(child, SC.Set.create(), false), store, 'should return receiver');
 
   // verify results
   equals(store.readDataHash(storeKey), null, 'should not copy data hash for storeKey');
@@ -126,7 +126,7 @@ function createConflict(force) {
 }
 
 test("throws exception if any record fails optimistic locking test", function() {
-  var errorCount = createConflict(NO);
+  var errorCount = createConflict(false);
   equals(errorCount, 1, 'should have raised error');
 });
 

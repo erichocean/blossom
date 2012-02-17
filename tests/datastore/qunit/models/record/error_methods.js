@@ -46,7 +46,7 @@ test("Verify error methods behave correctly", function() {
   SC.RunLoop.end();
 
   ok((thing1.get('isError') === true), "isError on thing1 should be true");
-  ok((thing2.get('isError') === NO), "isError on thing2 should be NO");
+  ok((thing2.get('isError') === false), "isError on thing2 should be NO");
 
   equals(thing1.get('errorObject'), SC.Record.GENERIC_ERROR,
     "get('errorObject') on thing1 should return the correct error object");

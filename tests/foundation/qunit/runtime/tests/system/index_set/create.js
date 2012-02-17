@@ -17,7 +17,7 @@ test("create with just index", function() {
   var set = SC.IndexSet.create(4);
   equals(set.get('length'),1, 'should have 1 index');
   equals(set.contains(4), true, 'should contain index');
-  equals(set.contains(5), NO, 'should not contain 5');
+  equals(set.contains(5), false, 'should not contain 5');
 });
 
 test("create with index and length", function() {

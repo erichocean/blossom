@@ -67,7 +67,7 @@ SC.TreeItemContent = {
     
     @property {Boolean}
   */
-  treeItemIsGrouped: NO,
+  treeItemIsGrouped: false,
   
   /**
     Returns the disclosure state for the tree item, which appears at the 
@@ -101,7 +101,7 @@ SC.TreeItemContent = {
     @returns {void}
   */
   treeItemCollapse: function(parent, idx) {
-    this.setIfChanged('treeItemIsExpanded', NO);    
+    this.setIfChanged('treeItemIsExpanded', false);    
   },
 
   /**

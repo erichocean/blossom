@@ -105,7 +105,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;
@@ -182,7 +182,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;

@@ -25,14 +25,14 @@ test("SC.$error creates an error instance with description,label and code",funct
 
 test("SC.$ok should return true if the passed value is an error object or false", function() {
   ok(SC.$ok(true), '$ok(true) should be true');
-  ok(!SC.$ok(false), '$ok(false) should be NO');
+  ok(!SC.$ok(false), '$ok(false) should be false');
   ok(SC.$ok(null), '$ok(null) should be true');
   ok(SC.$ok(undefined), '$ok(undefined) should be true');
   ok(SC.$ok("foo"), '$ok(foo) should be true');
-  ok(!SC.$ok(SC.$error("foo")), '$ok(SC.Error) should be NO');
+  ok(!SC.$ok(SC.$error("foo")), '$ok(SC.Error) should be false');
 
-  ok(!SC.$ok(new SC.Error()), '$ok(Error) should be NO');
-  ok(!SC.$ok(SC.Object.create({ isError: true })), '$ok({ isError: true }) should be NO');
+  ok(!SC.$ok(new SC.Error()), '$ok(Error) should be false');
+  ok(!SC.$ok(SC.Object.create({ isError: true })), '$ok({ isError: true }) should be false');
 });
 
 test("SC.$val should return the error value if it has one", function() {

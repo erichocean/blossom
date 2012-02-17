@@ -48,13 +48,13 @@ test("selectPreviousItem(extend=undefined, numberOfItems=undefined)", function()
   ok(expected.isEqual(actual), 'should select previous to %@ (expected: %@ actual: %@)'.fmt(sel, expected, actual));  
 });
 
-test("selectPreviousItem(extend=NO, numberOfItems=undefined)", function() {
+test("selectPreviousItem(extend=false, numberOfItems=undefined)", function() {
   var sel = selectionFromIndex(4),
       expected = selectionFromIndex(3),
       actual;
       
   view.set('selection', sel);
-  view.selectPreviousItem(NO);
+  view.selectPreviousItem(false);
   
   actual = view.get('selection');
   ok(expected.isEqual(actual), 'should select previous to %@ (expected: %@ actual: %@)'.fmt(sel, expected, actual));  
@@ -159,7 +159,7 @@ test("anchor test 2", function() {
   sel = actual;
   
   // TRY 3: don't extend.  jumps to previous item and resets selection
-  view.selectPreviousItem(NO); 
+  view.selectPreviousItem(false); 
   expected = selectionFromIndex(3); 
   actual = view.get('selection');
   ok(expected.isEqual(actual), 'TRY 3: not extending clears selection and anchor (sel: %@ expected: %@ actual: %@)'.fmt(sel, expected, actual));  

@@ -10,16 +10,16 @@
 (function() {
 	var pane = SC.ControlTestPane.design()
 		.add("diclosure", SC.DisclosureView, {
-	      value: NO, isEnabled: true		
+	      value: false, isEnabled: true		
 		})
 		.add("selected", SC.DisclosureView, {
 	      value: true	
 		})
 		.add("disabled", SC.DisclosureView, {
-	      isEnabled: NO
+	      isEnabled: false
 		})
 		.add("selected - disabled", SC.DisclosureView, {
-	      value: true, isEnabled: NO
+	      value: true, isEnabled: false
 		});
 	pane.show();
 	

@@ -57,7 +57,7 @@ suite("Sample Model from an address book app", {
 
       // firstName, lastName, middleName
       // companyName
-      isCompany: SC.Record.property(Boolean, { defaultValue: NO }),
+      isCompany: SC.Record.property(Boolean, { defaultValue: false }),
       
       // contact has one or more phones stored in a hash.  
       phones: SC.Collection.inline({ recordType: 'AB.PhoneNumber' })

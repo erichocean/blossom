@@ -52,7 +52,7 @@ SC.StatechartMonitor = SC.Object.extend({
         matched = 0,
         statechart = this.get('statechart');
     
-    if (expected.length !== actual.length) return NO;
+    if (expected.length !== actual.length) return false;
     
     expected.forEach(function(item) {
       if (SC.typeOf(item) === SC.T_STRING) item = statechart.getState(item);

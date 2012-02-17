@@ -28,7 +28,7 @@ suite("SC.NestedStore#readEditableDataHash", {
   }
 });
 
-test("data state=INHERITED, parent editable = NO", function() {
+test("data state=INHERITED, parent editable = false", function() {
   
   // test preconditions
   equals(parent.storeKeyEditState(storeKey), SC.Store.LOCKED, 'precond - parent edit state should be LOCKED');

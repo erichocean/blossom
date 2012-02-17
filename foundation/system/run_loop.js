@@ -101,7 +101,7 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     } 
     
     SC.RunLoop.lastRunLoopEnd = Date.now();
-    this._runLoopInProgress = NO;
+    this._runLoopInProgress = false;
     
     return this ; 
   },
@@ -175,13 +175,13 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     
     This method must return true if it found any items pending in its queues
     to take action on.  endRunLoop will invoke this method repeatedly until
-    the method returns NO.  This way if any if your final executing code
+    the method returns false.  This way if any if your final executing code
     causes additional queues to trigger, then can be flushed again.
     
-    @returns {Boolean} true if items were found in any queue, NO otherwise
+    @returns {Boolean} true if items were found in any queue, false otherwise
   */
   flushApplicationQueues: function() {
-    var hadContent = NO,
+    var hadContent = false,
         // execute any methods in the invokeQueue.
         queue = this._invokeQueue;
     if (queue && queue.targets > 0) {
@@ -196,7 +196,7 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
   },
   
   _flushinvokeLastQueue: function() {
-    var queue = this._invokeLastQueue, hadContent = NO ;
+    var queue = this._invokeLastQueue, hadContent = false ;
     if (queue && queue.targets > 0) {
       this._invokeLastQueue = null; // reset queue.
       hadContent = true; // has targets!
@@ -258,7 +258,7 @@ SC.RunLoop.end = function() {
 */
 SC.RunLoop.isRunLoopInProgress = function() {
   if(this.currentRunLoop) return this.currentRunLoop.get('isRunLoopInProgress');
-  return NO;
+  return false;
 };
 
 /**

@@ -579,7 +579,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @param {Object} sender The sender of the action
     @param {SC.Pane} pane optional pane to start search with
     @param {Object} context optional. only passed to ResponderContexts
-    @returns {Boolean} true if action was performed, NO otherwise
+    @returns {Boolean} true if action was performed, false otherwise
     @test in targetForAction
   */
   sendAction: function( action, target, sender, pane, context) {
@@ -884,10 +884,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // If the target view implements mouseDragged, then we want to ignore the
     // 'selectstart' event.
     if (targetView && targetView.respondsTo('mouseDragged')) {
-      return (result !==null ? true: NO) && !this._sc_mouseCanDrag;
+      return (result !==null ? true: false) && !this._sc_mouseCanDrag;
     }
     else {
-      return (result !==null ? true: NO);
+      return (result !==null ? true: false);
     }
   },
 
@@ -1085,7 +1085,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         target = evt.target || evt.srcElement,
         forceBlock = (evt.which === 8) && !SC.allowsBackspaceToPreviousPage && (target === document.body);
 
-    if (this._sc_isModifierKey(evt)) return (forceBlock ? NO : ret);
+    if (this._sc_isModifierKey(evt)) return (forceBlock ? false : ret);
 
     // if this is a function or non-printable key, try to use this as a key
     // equivalent.  Otherwise, send as a keyDown event so that the focused
@@ -1107,11 +1107,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         ret = !this.attemptKeyEquivalent(evt) ;
       } else {
         ret = evt.hasCustomEventHandling ;
-        if (ret) forceBlock = NO ; // code asked explicitly to let delete go
+        if (ret) forceBlock = false ; // code asked explicitly to let delete go
       }
     }
 
-    return forceBlock ? NO : ret ;
+    return forceBlock ? false : ret ;
   },
 
   /** @private
@@ -1147,7 +1147,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     IE's default behavior to blur textfields and other controls can only be
-    blocked by returning NO to this event. However we don't want to block
+    blocked by returning false to this event. However we don't want to block
     its default behavior otherwise textfields won't loose focus by clicking on 
     an empty area as it's expected. If you want to block IE from bluring another 
     control set blockIEDeactivate to true on the especific view in which you 
@@ -1160,7 +1160,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   var view = SC.$(toElement).view()[0];
     //   //The following line is neccesary to allow/block text selection for IE,
     //   // in combination with the selectstart event.
-    //   if (view && view.get('blocksIEDeactivate')) return NO;
+    //   if (view && view.get('blocksIEDeactivate')) return false;
     // }
     return true;
   },

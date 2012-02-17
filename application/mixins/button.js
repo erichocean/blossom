@@ -35,7 +35,7 @@ SC.Button = {
     change as the user selects or deselects.  You can control which values
     the button will treat as isSelected by setting the toggleOnValue and 
     toggleOffValue.  Alternatively, if you leave these properties set to
-    true or NO, the button will do its best to convert a value to an 
+    true or false, the button will do its best to convert a value to an 
     appropriate state:
   
     - null, false, 0  -> isSelected = false
@@ -67,11 +67,11 @@ SC.Button = {
     user toggle's the button off, the value of the button will be set to this
     value.
   
-    default is NO 
+    default is false 
   
     @property {Object}
   */
-  toggleOffValue: NO,
+  toggleOffValue: false,
   
   // ..........................................................
   // TITLE 
@@ -82,7 +82,7 @@ SC.Button = {
     
     @property {Boolean}
   */
-  localize: NO,
+  localize: false,
   
   /** @private */
   localizeBindingDefault: SC.Binding.bool(),
@@ -246,13 +246,13 @@ SC.Button = {
     
     @param {String} keystring
     @param {SC.Event} evt
-    @returns {Boolean}  true if handled, NO otherwise
+    @returns {Boolean}  true if handled, false otherwise
   */
   performKeyEquivalent: function(keystring, evt) {
     //If this is not visible
-    if (!this.get('isVisibleInWindow')) return NO;
+    if (!this.get('isVisibleInWindow')) return false;
 
-    if (!this.get('isEnabled')) return NO;
+    if (!this.get('isEnabled')) return false;
     var equiv = this.get('keyEquivalent');
 
     // button has defined a keyEquivalent and it matches!
@@ -269,7 +269,7 @@ SC.Button = {
           return this.triggerAction(evt);
     }
 
-    return NO; // did not handle it; keep searching
+    return false; // did not handle it; keep searching
   },
 
   /**
@@ -291,7 +291,7 @@ SC.Button = {
   /**
     This is the standard logic to compute a proposed isSelected state for a
     new value.  This takes into account the toggleOnValue/toggleOffValue 
-    properties, among other things.  It may return true, NO, or SC.MIXED_STATE.
+    properties, among other things.  It may return true, false, or SC.MIXED_STATE.
     
     @param {Object} value
     @returns {Boolean} return state

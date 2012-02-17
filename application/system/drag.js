@@ -31,11 +31,11 @@ SC.DRAG_AUTOSCROLL_ZONE_THICKNESS = 20;
     The drag view is not moved from its original location during a drag.
     If the dragView is not provided, the source is used as dragView.
   
-  - *ghost:  true | NO*  If NO, the drag view image will show, but the source 
+  - *ghost:  true | false*  If false, the drag view image will show, but the source 
     dragView will not be hidden.  Set to true to make it appear that the 
     dragView itself is being dragged around.
   
-  - *slideBack: true | NO*  If true and the drag operation is cancelled, the 
+  - *slideBack: true | false*  If true and the drag operation is cancelled, the 
     dragView will slide back to its source origin.
   
   - *origin:*  If passed, this will be used as the origin point for the 
@@ -85,7 +85,7 @@ SC.Drag = SC.Object.extend(
     @readOnly
     @type Boolean
   */
-  ghostActsLikeCursor: NO,
+  ghostActsLikeCursor: false,
   
   /**  
     The view that was used as the source of the ghostView.  
@@ -304,7 +304,7 @@ SC.Drag = SC.Object.extend(
     if (this.get('ghost')) {
       // Hide the dragView
       this._dragViewWasVisible = dv.get('isVisible') ;
-      dv.set('isVisible', NO) ;
+      dv.set('isVisible', false) ;
     }
 
     if (this.ghostActsLikeCursor) this.ghostOffset = { x: 14, y: 14 };
@@ -352,7 +352,7 @@ SC.Drag = SC.Object.extend(
     if (source && source.dragDidEnd) source.dragDidEnd(this, loc, SC.DRAG_NONE);
 
     this._lastTarget = null;
-    this._dragInProgress = NO;
+    this._dragInProgress = false;
   },
   
   // ..........................................
@@ -479,7 +479,7 @@ SC.Drag = SC.Object.extend(
     if (source && source.dragDidEnd) source.dragDidEnd(this, loc, op) ;
     
     this._lastTarget = null ;
-    this._dragInProgress = NO ; // required by autoscroll (invoked by a timer)
+    this._dragInProgress = false ; // required by autoscroll (invoked by a timer)
   },
 
   /** @private
@@ -543,9 +543,9 @@ SC.Drag = SC.Object.extend(
     
     @private 
     @type {Boolean}
-    @default NO
+    @default false
   */
-  _ghostViewHidden: NO,
+  _ghostViewHidden: false,
   
   /**
     Hide the ghostView.
@@ -562,7 +562,7 @@ SC.Drag = SC.Object.extend(
   */
   unhideGhostView: function() {
     if(this._ghostViewHidden) {
-      this._ghostViewHidden = NO;
+      this._ghostViewHidden = false;
       this._createGhostView();
     }
   },
@@ -572,7 +572,7 @@ SC.Drag = SC.Object.extend(
     if (this.ghostView) {
       this.ghostView.remove() ;
       this.ghostView = null ; // this will allow the GC to collect it.
-      this._ghostViewHidden = NO;
+      this._ghostViewHidden = false;
     }
   },
   
@@ -678,7 +678,7 @@ SC.Drag = SC.Object.extend(
     if (!evt) evt = this._lastAutoscrollEvent ;
     
     // If drag has ended, exit
-    if (!this._dragInProgress) return NO;
+    if (!this._dragInProgress) return false;
     
     // STEP 1: Find the first view that we can actually scroll.  This view 
     // must be:
@@ -783,7 +783,7 @@ SC.Drag = SC.Object.extend(
       return true ;
     } else {
       this._lastAutoscrollEvent = null;
-      return NO ;
+      return false ;
     }
   },
   

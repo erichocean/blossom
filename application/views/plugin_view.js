@@ -40,7 +40,7 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
   bottomPadding: SC.DEFAULT_BOTTOM_PADDING,
 
   /** @property */
-  isShowing: NO,
+  isShowing: false,
 
   //..........................................
   // Public Methods
@@ -158,7 +158,7 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
   _sc_remove: function(direction) {
     var frame = this.getPath("parentView.frame"),
         leftAdjust = this._sc_leftAdjustmentForRemove(direction, frame);
-    this.set("isShowing", NO);
+    this.set("isShowing", false);
     this.adjust("left", leftAdjust); 
   },
 

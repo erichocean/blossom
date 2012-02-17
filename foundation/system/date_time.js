@@ -741,7 +741,7 @@ SC.DateTime.mixin(SC.Comparable,
     // new value if there is one.
     tz = (opts.timezone !== undefined) ? opts.timezone : timezone; // watch out for zero, which is acceptable as a time zone
 
-    return this._adjust(opts, start, tz, NO);
+    return this._adjust(opts, start, tz, false);
   },
   
   /* @private

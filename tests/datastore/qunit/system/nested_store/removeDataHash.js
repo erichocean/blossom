@@ -44,7 +44,7 @@ function testRemoveDataHash() {
   // verify
   equals(store.storeKeyEditState(storeKey), SC.Store.LOCKED, 'new edit state should be locked');
   
-  equals(store.readDataHash(storeKey), null, 'should have NO json data');
+  equals(store.readDataHash(storeKey), null, 'should have false json data');
   equals(store.readStatus(storeKey), SC.Record.DESTROYED_CLEAN, 'should have new status');
 
   equals(store.revisions[storeKey], oldrev, 'should not change revision');

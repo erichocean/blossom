@@ -29,7 +29,7 @@ suite("SC.CollectionView.nowShowing", {
       },
       
       expectReload: function(indexes, callCount) {
-        if (indexes !== NO) {
+        if (indexes !== false) {
           var pass = (indexes === null) ? (this.reloadIndexes === null) : indexes.isEqual(this.reloadIndexes);
           if (!pass) {
             indexes.isEqual(this.reloadIndexes);
@@ -37,7 +37,7 @@ suite("SC.CollectionView.nowShowing", {
           ok(pass, 'should have called reload(%@), actual reload(%@)'.fmt(indexes, this.reloadIndexes));
         }  
         
-        if (callCount !== NO) {
+        if (callCount !== false) {
           equals(this.reloadCallCount, callCount, 'reload() should be called X times');
         }
       },
@@ -86,7 +86,7 @@ test("if nowShowing changes but actual value stays the same, should do nothing",
   // trigger any observers
   view.notifyPropertyChange('nowShowing');
   view.observer.expect(1);
-  view.expectReload(NO, 0);
+  view.expectReload(false, 0);
   view.updateContentRangeObserver.expect(0);
 });
 

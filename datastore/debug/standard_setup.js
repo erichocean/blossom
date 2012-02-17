@@ -24,7 +24,7 @@ var StandardTestSetup = {
           case "Galen Tyrol":
             return true;
           default: 
-            return NO;
+            return false;
         }
       }.property('fullName').cacheable()
     });

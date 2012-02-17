@@ -85,12 +85,12 @@ SC.CascadeDataSource = SC.DataSource.extend(
   fetch: function(store, query) {
     var sources = this.get('dataSources'), 
         len     = sources ? sources.length : 0,
-        ret     = NO,
+        ret     = false,
         cur, source, idx;
     
     for(idx=0; (ret !== true) && idx<len; idx++) {
       source = sources.objectAt(idx);
-      cur = source.fetch ? source.fetch.apply(source, arguments) : NO;
+      cur = source.fetch ? source.fetch.apply(source, arguments) : false;
       ret = this._handleResponse(ret, cur);
     }
     
@@ -102,7 +102,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
   retrieveRecords: function(store, storeKeys, ids) {
     var sources = this.get('dataSources'), 
         len     = sources ? sources.length : 0,
-        ret     = NO,
+        ret     = false,
         cur, source, idx;
     
     for(idx=0; (ret !== true) && idx<len; idx++) {
@@ -118,7 +118,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
   commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
     var sources = this.get('dataSources'), 
         len     = sources ? sources.length : 0,
-        ret     = NO,
+        ret     = false,
         cur, source, idx;
     
     for(idx=0; (ret !== true) && idx<len; idx++) {
@@ -134,7 +134,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
   cancel: function(store, storeKeys) {
     var sources = this.get('dataSources'), 
         len     = sources ? sources.length : 0,
-        ret     = NO,
+        ret     = false,
         cur, source, idx;
     
     for(idx=0; (ret !== true) && idx<len; idx++) {
@@ -169,7 +169,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
   /** @private - Determine the proper return value. */
   _handleResponse: function(current, response) {
     if (response === true) return true ;
-    else if (current === NO) return (response === NO) ? NO : SC.MIXED_STATE ;
+    else if (current === false) return (response === false) ? false : SC.MIXED_STATE ;
     else return SC.MIXED_STATE ;
   }
     

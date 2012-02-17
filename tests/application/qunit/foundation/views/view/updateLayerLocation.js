@@ -40,7 +40,7 @@ function parentHasChild(parent, child) {
 		if (cur === child) return true;
 		cur = cur.nextSibling ;
 	}
-	return NO ;
+	return false ;
 }
 
 test("CASE 1: remove child from parent - remove child layer from parent layer", function() {
@@ -176,18 +176,18 @@ test("invokes updateLayerLocation if layerLocationNeedsUpdate is true", function
   equals(runCount, 1, 'did invoke');  
 });
 
-test("does NOT invoke updateLayerLocation if layerLocationNeedsUpdate is NO", function() {
+test("does NOT invoke updateLayerLocation if layerLocationNeedsUpdate is false", function() {
   
-  view.set('layerLocationNeedsUpdate', NO);
+  view.set('layerLocationNeedsUpdate', false);
   view.updateLayerLocationIfNeeded();
   equals(runCount, 0, 'did NOT invoke');  
 });
 
-test("sets layerLocationNeedsUpdate to NO when run", function() {
+test("sets layerLocationNeedsUpdate to false when run", function() {
   var view = SC.View.create(); // this needs to _not_ override updateLayerLocation.
   view.set('layerLocationNeedsUpdate', true);
   view.updateLayerLocationIfNeeded();
-  equals(view.get('layerLocationNeedsUpdate'), NO, 'did reset');
+  equals(view.get('layerLocationNeedsUpdate'), false, 'did reset');
 });
 
 

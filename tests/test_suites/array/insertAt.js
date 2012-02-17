@@ -30,7 +30,7 @@ SC.ArraySuite.define(function(T) {
   });
   
   test("[].insertAt(200,X) => OUT_OF_RANGE_EXCEPTION exception", function() {
-    var didThrow = NO ;
+    var didThrow = false ;
     try {
       obj.insertAt(200, T.expected(1));
     } catch (e) {
@@ -69,7 +69,7 @@ SC.ArraySuite.define(function(T) {
   test("[A].insertAt(200,X) => OUT_OF_RANGE exception", function() {
     obj.replace(0,0, T.expected(1)); // add an item
     
-    var didThrow = NO ;
+    var didThrow = false ;
     try {
       obj.insertAt(200, T.expected(1));
     } catch (e) {

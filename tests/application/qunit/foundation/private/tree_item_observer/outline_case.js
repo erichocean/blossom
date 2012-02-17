@@ -80,7 +80,7 @@ suite("SC.TreeItemObserver - Outline Use Case", {
 
           TestObject.create({ title: "A.ii",
             outline: 1,
-            isExpanded: NO,
+            isExpanded: false,
             children: [
               TestObject.create({ title: "A.ii.1", outline: 2 }),
               TestObject.create({ title: "A.ii.2", outline: 2 }),
@@ -255,7 +255,7 @@ test("replacing nested children array", function() {
 
 test("changing expansion property on nested", function() {
   var base = content[1].children[0];
-  SC.run(function() { base.set('isExpanded', NO); });
+  SC.run(function() { base.set('isExpanded', false); });
   flattened.removeAt(6,3);
   
   // changed reflect nearest top-level group
@@ -265,7 +265,7 @@ test("changing expansion property on nested", function() {
 
 test("changing expansion property on top level", function() {
   var base = content[1];
-  SC.run(function() { base.set('isExpanded', NO); });
+  SC.run(function() { base.set('isExpanded', false); });
   flattened.removeAt(5,6);
   
   // changed reflect nearest top-level group
@@ -407,12 +407,12 @@ test("removing regular item to middle", function() {
 // 
 
 test("contentGroupIndexes - not grouped", function() {
-  equals(delegate.get('treeItemIsGrouped'), NO, 'precond - delegate.treeItemIsGrouped == NO');
+  equals(delegate.get('treeItemIsGrouped'), false, 'precond - delegate.treeItemIsGrouped == false');
   equals(obs.contentGroupIndexes(null, obs), null, 'contentGroupIndexes should be null');
   
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
-    equals(obs.contentIndexIsGroup(null, obs, idx), NO, 'obs.contentIndexIsGroup(null, obs, %@) should be NO'.fmt(idx));
+    equals(obs.contentIndexIsGroup(null, obs, idx), false, 'obs.contentIndexIsGroup(null, obs, %@) should be false'.fmt(idx));
   }
 });
 
@@ -442,7 +442,7 @@ test("contentIndexDisclosureState", function() {
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
     var expected = flattened[idx].isExpanded;
-    expected = (expected === NO) ? SC.BRANCH_CLOSED : (expected ? SC.BRANCH_OPEN : SC.LEAF_NODE);
+    expected = (expected === false) ? SC.BRANCH_CLOSED : (expected ? SC.BRANCH_OPEN : SC.LEAF_NODE);
     
     var str ;
     switch(expected) {

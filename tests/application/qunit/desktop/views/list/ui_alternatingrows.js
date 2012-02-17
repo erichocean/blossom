@@ -37,7 +37,7 @@ var ContentArray = SC.Object.extend(SC.Array, {
 var pane = SC.ControlTestPane.design()
   .add("basic-even", SC.ScrollView.design({
     layout: { left: 0, right: 0, top: 0, height: 180 },
-    hasHorizontalScroller: NO,
+    hasHorizontalScroller: false,
     contentView: SC.ListView.design({
       content: ContentArray.create({ length: 10 }),
       showAlternatingRows: true,
@@ -46,7 +46,7 @@ var pane = SC.ControlTestPane.design()
   }))
   .add("basic-odd", SC.ScrollView.design({
     layout: { left: 0, right: 0, top: 0, height: 180 },
-    hasHorizontalScroller: NO,
+    hasHorizontalScroller: false,
     contentView: SC.ListView.design({
       content: ContentArray.create({ length: 11 }),
       showAlternatingRows: true,

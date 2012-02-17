@@ -62,12 +62,12 @@ test("invokes layoutChildViewsIfNeeded() on layoutView once per runloop", functi
 });
 
 
-test("should not invoke layoutChildViewsIfNeeded() if layoutDidChangeFor() sets childViewsNeedLayout to NO each time", function() {
+test("should not invoke layoutChildViewsIfNeeded() if layoutDidChangeFor() sets childViewsNeedLayout to false each time", function() {
 
 	var callCount = 0 ;
 	var layoutView = SC.View.create({
 		layoutDidChangeFor: function() {
-			this.set('childViewsNeedLayout', NO);
+			this.set('childViewsNeedLayout', false);
 		},
 		
 		layoutChildViewsIfNeeded: function(){

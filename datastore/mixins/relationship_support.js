@@ -19,7 +19,7 @@
         name: SC.Record.attr(String),
 
         power: SC.Record.toOne('App.Power', {
-          isMaster: NO,
+          isMaster: false,
           inverse: 'person'
         })
       });

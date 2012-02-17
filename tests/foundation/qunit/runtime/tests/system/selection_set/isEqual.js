@@ -20,7 +20,7 @@ test("set.isEqual(same instance)", function() {
 });
 
 test("set.isEqual(null)", function() {
-  ok(!set1.isEqual(null), 'null should return NO');
+  ok(!set1.isEqual(null), 'null should return false');
 });
 
 

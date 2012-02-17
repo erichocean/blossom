@@ -63,8 +63,8 @@ function verifyItemViews(view, content, shouldShowAllContent, testName) {
 
 test("should only reload when isVisibleInWindow", function() {
 
-  view.set('isVisibleInWindow', NO);
-  //view.isVisibleInWindow = NO ;
+  view.set('isVisibleInWindow', false);
+  //view.isVisibleInWindow = false ;
   
   var len = view.getPath('childViews.length');
   

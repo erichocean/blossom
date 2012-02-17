@@ -123,7 +123,7 @@ SC.SliderView = SC.View.extend(SC.Control,
     
   },
   
-  _isMouseDown: NO,
+  _isMouseDown: false,
   
   mouseDown: function(evt) {
     if (!this.get('isEnabled')) return true; // nothing to do...
@@ -139,9 +139,9 @@ SC.SliderView = SC.View.extend(SC.Control,
   
   // remove active class
   mouseUp: function(evt) {
-    if (this._isMouseDown) this.set('isActive', NO);
+    if (this._isMouseDown) this.set('isActive', false);
     var ret = this._isMouseDown ? this._triggerHandle(evt) : true ;
-    this._isMouseDown = NO;
+    this._isMouseDown = false;
     return ret ;
   },
   
@@ -205,7 +205,7 @@ SC.SliderView = SC.View.extend(SC.Control,
   /** tied to the isEnabled state */
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return NO;
+    else return false;
   }.property('isEnabled'),
   
   willBecomeKeyResponderFrom: function(keyView) {
@@ -220,7 +220,7 @@ SC.SliderView = SC.View.extend(SC.Control,
   },
   
   willLoseKeyResponderTo: function(responder) {
-    if (this._isFocused) this._isFocused = NO ;
+    if (this._isFocused) this._isFocused = false ;
   },
   
   keyDown: function(evt) {

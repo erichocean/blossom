@@ -17,7 +17,7 @@ suite("SC.ObjectController - single_enumerable_case - OBSERVABLE OBJECT", {
     content    = SC.Set.create().add(src); // use generic enumerable
     controller = SC.ObjectController.create({ 
       content: content,
-      allowsMultipleContent: NO 
+      allowsMultipleContent: false 
     });
   },
   
@@ -83,7 +83,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;
@@ -168,7 +168,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;
@@ -254,7 +254,7 @@ test("hasContent", function() {
   controller.addObserver("hasContent", function() { callCount++; });
   
   controller.set("content", null);
-  equals(controller.get("hasContent"), NO, "hasContent should == NO after setting to null");
+  equals(controller.get("hasContent"), false, "hasContent should == false after setting to null");
   ok(callCount > 0, 'hasContent observer should fire when setting to null');
   
   callCount = 0;

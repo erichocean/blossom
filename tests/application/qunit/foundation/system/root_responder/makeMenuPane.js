@@ -42,7 +42,7 @@ test("menuPane does not affect keyPane", function() {
 });
 
 test("Pane should not become menu pane if acceptsMenuPane is not true", function() {
-  menu.set('acceptsMenuPane', NO);
+  menu.set('acceptsMenuPane', false);
   responder.makeMenuPane(menu);
   equals(responder.get('menuPane'), null, 'menuPane should remain null');
 });

@@ -36,9 +36,9 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
      If true then we use textarea instead of input. 
      WARNING: Use only with textField** Juan
   */
-  isTextArea: NO,
+  isTextArea: false,
 
-  _field_isMouseDown: NO,
+  _field_isMouseDown: false,
 
   /**
     The raw value of the field itself.  This is computed from the 'value'
@@ -107,7 +107,7 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
   
   _field_fieldValueDidChange: function(evt) {
     SC.run(function() {
-      this.fieldValueDidChange(NO);      
+      this.fieldValueDidChange(false);      
     }, this);
   },
   
@@ -230,7 +230,7 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
     Remove the active class on mouseExited if mouse is down.
   */  
   mouseExited: function(evt) {
-    if (this._field_isMouseDown) this.set('isActive', NO);
+    if (this._field_isMouseDown) this.set('isActive', false);
     evt.allowDefault();
     return true;
   },
@@ -250,8 +250,8 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
   */  
   mouseUp: function(evt) {
     // track independently in case isEnabled has changed
-    if (this._field_isMouseDown) this.set('isActive', NO); 
-    this._field_isMouseDown = NO;
+    if (this._field_isMouseDown) this.set('isActive', false); 
+    this._field_isMouseDown = false;
     evt.allowDefault();
     return true ;
   },
@@ -284,7 +284,7 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
   /** tied to the isEnabled state */
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return NO;
+    else return false;
   }.property('isEnabled'),
   
   willBecomeKeyResponderFrom: function(keyView) {
@@ -299,7 +299,7 @@ SC.FieldView = SC.View.extend(SC.Control, SC.Validatable,
   },
   
   willLoseKeyResponderTo: function(responder) {
-    if (this._isFocused) this._isFocused = NO ;
+    if (this._isFocused) this._isFocused = false ;
   },
     
   // these methods use the validator to convert the raw field value returned

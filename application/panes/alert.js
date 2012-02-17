@@ -244,7 +244,7 @@ SC.AlertPane = SC.PanelPane.extend({
             title: "Cancel", 
             isCancel: true,
             action: "dismiss",
-            isVisible: NO
+            isVisible: false
           }),
 
         okButton : SC.ButtonView.extend({
@@ -262,7 +262,7 @@ SC.AlertPane = SC.PanelPane.extend({
       
       SC.View.extend({
         layout: { bottom: 13, height: 24, left: 18, width: 150 },
-        isVisible: NO,
+        isVisible: false,
         childViews: [
           SC.ButtonView.extend({
             useStaticLayout: true,
@@ -273,7 +273,7 @@ SC.AlertPane = SC.PanelPane.extend({
             theme: 'capsule',
             title: "Extra", 
             action: "dismiss",
-            isVisible: NO
+            isVisible: false
           })]
       })]
   }),

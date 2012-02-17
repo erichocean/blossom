@@ -25,7 +25,7 @@ test("should gain active class if isActive", function() {
   ok(view.$().hasClass('active'), 'should have active class');
 
   SC.RunLoop.begin();
-  view.set('isActive', NO);
+  view.set('isActive', false);
   SC.RunLoop.end();
   ok(!view.$().hasClass('active'), 'should remove active class');
 });

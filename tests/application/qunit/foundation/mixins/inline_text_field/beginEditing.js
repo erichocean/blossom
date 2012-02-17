@@ -10,8 +10,8 @@ var pane, optionsForLabel1, optionsForLabel2, delegate, optionsForLabelFromView;
 
 pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
   value: 'Some Text',
-  notifiedWillBegin: NO,
-  notifiedDidBegin: NO,
+  notifiedWillBegin: false,
+  notifiedDidBegin: false,
 
   inlineEditorShouldBeginEditing: function(inlineEditor) {
     return true;
@@ -41,13 +41,13 @@ pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
 
   inlineEditorShouldBeginEditing: function(inlineEditor) {
     console.log('inlineEditorShouldBeginEditing');
-    return NO;
+    return false;
   }
 });
 
 pane.resetView = function(view) {
-  view.set('notifiedWillBegin', NO);
-  view.set('notifiedDidBegin', NO);
+  view.set('notifiedWillBegin', false);
+  view.set('notifiedDidBegin', false);
 };
 
 
@@ -65,7 +65,7 @@ optionsForLabelFromView = function(view) {
     exampleElement: view.$(),
     value: view.get('value'),
     multiline: view.get('isInlineEditorMultiline'),
-    isCollection: NO,
+    isCollection: false,
     validator: view.get('validator'),
     exampleInlineTextFieldView: view.get('exampleInlineTextFieldView')
   };
@@ -105,7 +105,7 @@ function() {
 
   try {
     SC.InlineTextFieldView.beginEditing();
-    ok(NO, "should fail if parameters missing");
+    ok(false, "should fail if parameters missing");
   } catch(e) {
     ok(true, "should fail if parameters missing");
   }
@@ -116,7 +116,7 @@ function() {
   try {
     optionsForLabel1["frame"] = null;
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if frame missing");
+    ok(false, "should fail if frame missing");
   } catch(e1) {
     ok(true, "should fail if frame missing: %@".fmt(e1));
   }
@@ -124,7 +124,7 @@ function() {
   try {
     optionsForLabel1["delegate"] = null;
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if delegate missing");
+    ok(false, "should fail if delegate missing");
   } catch(e2) {
     ok(true, "should fail if delegate missing: %@".fmt(e2));
   }
@@ -132,7 +132,7 @@ function() {
   try {
     optionsForLabel1["exampleElement"] = null;
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if exampleElement missing");
+    ok(false, "should fail if exampleElement missing");
   } catch(e3) {
     ok(true, "should fail if exampleElement missing: %@".fmt(e3));
   }
@@ -153,7 +153,7 @@ function() {
   equals(editor.get('value'), view.get('value'), "editor should have the same initial value as its label");
 });
 
-test("use input element when options.multiline is set to NO",
+test("use input element when options.multiline is set to false",
 function() {
   SC.RunLoop.begin();
   SC.InlineTextFieldView.beginEditing(optionsForLabel1);
@@ -181,7 +181,7 @@ function() {
   ok(editor.$("textarea").length > 0, "should be using a textarea element");
 });
 
-test("inline editor aborts if delegate returns NO to inlineEditorShouldBeginEditing()",
+test("inline editor aborts if delegate returns false to inlineEditorShouldBeginEditing()",
 function() {
   SC.InlineTextFieldView.beginEditing(optionsForLabel2);
 
@@ -189,7 +189,7 @@ function() {
   var length = pane._pane.childViews.length,
   editor = pane._pane.childViews[length - 1];
 
-  ok(!editor.get('isEditing'), "editor should have isEditing set to NO");
+  ok(!editor.get('isEditing'), "editor should have isEditing set to false");
 });
 
 test("inline editor notifies delegate with inlineEditorWillBeginEditing() before becoming responder",

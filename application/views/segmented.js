@@ -64,26 +64,26 @@ SC.SegmentedView = SC.View.extend(SC.Control,
   value: null,
 
   /**
-    Set to true to enabled the segmented view, NO to disabled it.
+    Set to true to enabled the segmented view, false to disabled it.
   */
   isEnabled: true, 
 
   /**
     If true, clicking a selected button again will deselect it, setting the
-    segmented views value to null.  Defaults to NO.
+    segmented views value to null.  Defaults to false.
   */
-  allowsEmptySelection: NO,  
+  allowsEmptySelection: false,  
   
   /**
     If true, then clicking on a tab will not deselect the other segments, it
     will simply add or remove it from the selection.
   */
-  allowsMultipleSelection: NO,
+  allowsMultipleSelection: false,
 
   /**
     If true, it will set the segment value even if an action is defined.
   */
-  selectSegmentWhenTriggeringAction: NO,
+  selectSegmentWhenTriggeringAction: false,
 
   /**
     If true, titles will be localized before display.
@@ -289,14 +289,14 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       this._seg_displayItems = items; // save for future
       this.renderDisplayItems(context, items) ;
       context.addStyle('text-align', this.get('align'));
-      this.set('renderLikeFirstTime',NO);
+      this.set('renderLikeFirstTime',false);
     }else{
     // update selection and active state
       var activeIndex = this.get('activeIndex'),
           value = this.get('value'),
           isArray = SC.isArray(value);
       if (isArray && value.get('length')===1) {
-        value = value.objectAt(0); isArray = NO ;
+        value = value.objectAt(0); isArray = false ;
       }
       var names = {}, // reuse  
           loc = items.length, cq = this.$('.sc-segment'), item;
@@ -483,7 +483,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     if (this._isMouseDown && (idx>=0)) this.triggerItemAtIndex(idx);
     
     // cleanup
-    this._isMouseDown = NO ;
+    this._isMouseDown = false ;
     this.set('activeIndex', -1);
     return true ;
   },
@@ -536,7 +536,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     if (this._isTouching && (idx>=0)) this.triggerItemAtIndex(idx);
     
     // cleanup
-    this._isTouching = NO ;
+    this._isTouching = false ;
     this.set('activeIndex', -1);
     return true ;
   },
@@ -656,7 +656,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
   /** tied to the isEnabled state */
    acceptsFirstResponder: function() {
      if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-     else return NO;
+     else return false;
    }.property('isEnabled'),
 
    willBecomeKeyResponderFrom: function(keyView) {
@@ -671,7 +671,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
    },
    
    willLoseKeyResponderTo: function(responder) {
-     if (this._isFocused) this._isFocused = NO ;
+     if (this._isFocused) this._isFocused = false ;
    }
     
 }) ;

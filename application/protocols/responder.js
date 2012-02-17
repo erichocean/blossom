@@ -28,7 +28,7 @@ SC.ResponderProtocol = {
     mouseDragged and mouseUp in the future.
     
     @param evt {SC.Event} the mousedown event
-    @returns {Boolean} true to receive additional mouse events, NO otherwise
+    @returns {Boolean} true to receive additional mouse events, false otherwise
   */
   mouseDown: function(evt) {},
   
@@ -36,7 +36,7 @@ SC.ResponderProtocol = {
     Called when the mouse is released.
     
     @param evt {SC.Event} the mouseup event
-    @returns {Boolean} true to handle the mouseUp, NO to allow click() and doubleClick() to be called
+    @returns {Boolean} true to handle the mouseUp, false to allow click() and doubleClick() to be called
   */
   mouseUp: function(evt) {},
   
@@ -106,7 +106,7 @@ SC.ResponderProtocol = {
     Insert the text or act on the key.
     
     @param {String} the text to insert or respond to
-    @returns {Boolean} true if you handled the method; NO otherwise
+    @returns {Boolean} true if you handled the method; false otherwise
   */
   insertText: function(text) {},
   
@@ -116,7 +116,7 @@ SC.ResponderProtocol = {
     
     @param charCode {String} the character code
     @param evt {SC.Event} the keydown event
-    @returns {Boolean} true if you handled th emethod; NO otherwise
+    @returns {Boolean} true if you handled th emethod; false otherwise
   */
   performKeyEquivalent: function(charCode, evt) { return false; },
   
@@ -127,7 +127,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered; may be null
     @param evt {SC.Event} the event that triggered the method
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   cancel: function(sender, evt) {},
   
@@ -137,7 +137,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   deleteBackward: function(sender, evt) {},
   
@@ -147,7 +147,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   deleteForward: function(sender, evt) {},
   
@@ -156,7 +156,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   insertBacktab: function(sender, evt) {},
   
@@ -165,7 +165,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   insertNewline: function(sender, evt) {},
   
@@ -174,7 +174,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   insertTab: function(sender, evt) {},
   
@@ -183,7 +183,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveLeft: function(sender, evt) {},
   
@@ -193,7 +193,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveRight: function(sender, evt) {},
   
@@ -202,7 +202,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveUp: function(sender, evt) {},
   
@@ -211,7 +211,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveDown: function(sender, evt) {},
   
@@ -220,7 +220,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveLeftAndModifySelection: function(sender, evt) {},
   
@@ -229,7 +229,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveRightAndModifySelection: function(sender, evt) {},
   
@@ -238,7 +238,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveUpAndModifySelection: function(sender, evt) {},
   
@@ -247,7 +247,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveDownAndModifySelection: function(sender, evt) {},
   
@@ -256,7 +256,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveToBeginningOfDocument: function(sender, evt) {},
   
@@ -265,7 +265,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   moveToEndOfDocument: function(sender, evt) {},
   
@@ -274,7 +274,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   pageDown: function(sender, evt) {},
   
@@ -283,7 +283,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   pageUp: function(sender, evt) {},
   
@@ -292,7 +292,7 @@ SC.ResponderProtocol = {
     
     @param sender {Object} the object that triggered the method; may be null
     @param evt {SC.Event} the event that triggered the method; may be null
-    @returns {Boolean} true if you handle the event; NO otherwise
+    @returns {Boolean} true if you handle the event; false otherwise
   */
   selectAll: function(sender, evt) {}
   

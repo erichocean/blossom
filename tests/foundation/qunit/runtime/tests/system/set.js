@@ -122,13 +122,13 @@ test("should add a function", function() {
 test("should NOT add a null", function() {
   set.add(null) ;
   equals(set.length, 0) ;
-  equals(set.contains(null), NO) ;
+  equals(set.contains(null), false) ;
 });
 
 test("should NOT add an undefined", function() {
   set.add(undefined) ;
   equals(set.length, 0) ;
-  equals(set.contains(undefined), NO) ;
+  equals(set.contains(undefined), false) ;
 });
 
 test("adding an item, removing it, adding another item", function() {
@@ -139,7 +139,7 @@ test("adding an item, removing it, adding another item", function() {
   set.remove(item1) ; //remove from set
   set.add(item2) ;
   
-  equals(NO, set.contains(item1), "set.contains(item1)") ;
+  equals(false, set.contains(item1), "set.contains(item1)") ;
   
   set.add(item1) ; // re-add to set
   equals(2, set.length, "set.length") ;
@@ -170,7 +170,7 @@ test("should remove an SC.Object and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 
@@ -181,7 +181,7 @@ test("should remove a regular hash and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 
@@ -192,7 +192,7 @@ test("should remove a string and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 
@@ -203,7 +203,7 @@ test("should remove a number and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 
@@ -214,7 +214,7 @@ test("should remove a bool and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 
@@ -225,7 +225,7 @@ test("should remove a function and reduce length", function() {
   var oldLength = set.length ;
   
   set.remove(obj) ;
-  equals(NO, set.contains(obj), "should be removed") ;
+  equals(false, set.contains(obj), "should be removed") ;
   equals(oldLength-1, set.length, "should be 1 shorter") ;
 });
 

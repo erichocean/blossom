@@ -44,11 +44,11 @@ SC.Editable = {
   /**
     Indicates whether a view is editable or not.  You can optionally 
     implement the methods in this mixin to disallow editing is isEditable is
-    NO.
+    false.
     
     @property {Boolean}
   */
-  isEditable: NO,
+  isEditable: false,
   
   /**
     Indicates whether editing is currently in progress.  The methods you
@@ -57,7 +57,7 @@ SC.Editable = {
     
     @property {Boolean}
   */
-  isEditing: NO,
+  isEditing: false,
   
   /**
     Begins editing on the view.
@@ -67,7 +67,7 @@ SC.Editable = {
     additional setup needed to begin editing and then return true.
     
     If for some reason you do not want to allow editing right now, you can
-    also return NO.  If your view is already editing, then you should not
+    also return false.  If your view is already editing, then you should not
     restart editing again but just return true.
 
     The default implementation checks to see if editing is allowed, then
@@ -75,10 +75,10 @@ SC.Editable = {
     Generally you will want to replace this method with your own 
     implementation and not call the default.
     
-    @returns {Boolean} true if editing began or is in progress, NO otherwise
+    @returns {Boolean} true if editing began or is in progress, false otherwise
   */
   beginEditing: function() {
-    if (!this.get('isEditable')) return NO ;
+    if (!this.get('isEditable')) return false ;
     if (this.get('isEditing')) return true ;
     
     // begin editing
@@ -98,7 +98,7 @@ SC.Editable = {
     responder, restore the original value of the view and return true.
     
     If your view cannot revert back to its original state before editing began
-    then you can implement this method to simply return NO.  A properly
+    then you can implement this method to simply return false.  A properly
     implemented client may try to call commitEditing() instead to force your
     view to end editing anyway.
     
@@ -106,12 +106,12 @@ SC.Editable = {
     should always just return true.
     
     The default implementation does not support discarding changes and always
-    returns NO.
+    returns false.
     
     @returns {Boolean} true if changes were discarded and editing ended.
   */
   discardEditing: function() {
-    // if we are not editing, return true, otherwise NO.
+    // if we are not editing, return true, otherwise false.
     return !this.get('isEditing') ;
   },
   
@@ -125,7 +125,7 @@ SC.Editable = {
     value of the view and return true.
     
     If your view cannot save the current state of the view for some reason 
-    (for example if validation fails), then you should return NO.  Properly
+    (for example if validation fails), then you should return false.  Properly
     implemented clients may then try to call discardEditing() to force your
     view to resign first responder anyway.
     
@@ -137,7 +137,7 @@ SC.Editable = {
     If this method is called on a view that is not currently editing, you
     should always just reutrn true.
     
-    The default implementation sets isEditing to NO, resigns first responder
+    The default implementation sets isEditing to false, resigns first responder
     and returns true.
     
     @returns {Boolean} true if changes were discarded and editing ended.

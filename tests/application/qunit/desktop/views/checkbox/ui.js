@@ -11,7 +11,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 (function() {
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.CheckboxView, { 
-    value: NO, isEnabled: true, title: "Hello World" 
+    value: false, isEnabled: true, title: "Hello World" 
   })
 
   .add("selected", SC.CheckboxView, { 
@@ -19,11 +19,11 @@ var pane = SC.ControlTestPane.design()
   })
 
   .add("disabled", SC.CheckboxView, { 
-    isEnabled: NO, title: "Hello World" 
+    isEnabled: false, title: "Hello World" 
   })
 
   .add("disabled - selected", SC.CheckboxView, { 
-    isEnabled: NO, value: true, title: "Hello World" 
+    isEnabled: false, value: true, title: "Hello World" 
   })
 
   .add("static layout 1", SC.CheckboxView, {

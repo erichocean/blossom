@@ -134,7 +134,7 @@ SC.Observers = {
       // remove any that have setup
       if (out.length > 0) set.removeEach(out);
       out.length = 0; // reset
-      object._kvo_needsRangeObserver = NO ;
+      object._kvo_needsRangeObserver = false ;
     }
     
   },

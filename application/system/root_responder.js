@@ -14,8 +14,8 @@ sc_require('system/browser');
 sc_require('system/event');
 sc_require('system/ready');
 
-/** Set to NO to leave the backspace key under the control of the browser.*/
-SC.CAPTURE_BACKSPACE_KEY = NO ;
+/** Set to false to leave the backspace key under the control of the browser.*/
+SC.CAPTURE_BACKSPACE_KEY = false ;
 
 if (! BLOSSOM) {
 
@@ -278,7 +278,7 @@ SC.RootResponder = SC.Object.extend({
     appropriate.  If you only care about changing the appearance of your
     controls, you should use those classes in your CSS rules instead.
   */
-  hasFocus: NO,
+  hasFocus: false,
 
   dragDidStart: function(drag) {
     this._sc_mouseDownView = drag ;
@@ -315,7 +315,7 @@ SC.RootResponder = SC.Object.extend({
     @param {Object} sender The sender of the action
     @param {SC.Pane} pane optional pane to start search with
     @param {Object} context optional. only passed to ResponderContexts
-    @returns {Boolean} true if action was performed, NO otherwise
+    @returns {Boolean} true if action was performed, false otherwise
     @test in targetForAction
   */
   sendAction: function( action, target, sender, pane, context) {
@@ -616,10 +616,10 @@ SC.RootResponder = SC.Object.extend({
     // If the target view implements mouseDragged, then we want to ignore the
     // 'selectstart' event.
     if (targetView && targetView.respondsTo('mouseDragged')) {
-      return (result !==null ? true: NO) && !this._sc_mouseCanDrag;
+      return (result !==null ? true: false) && !this._sc_mouseCanDrag;
     }
     else {
-      return (result !==null ? true: NO);
+      return (result !==null ? true: false);
     }
   },
 
@@ -758,7 +758,7 @@ SC.RootResponder = SC.Object.extend({
         // end of every runloop, check to see if the target of any touches has been removed
         // from the DOM. If so, we re-append it to the DOM and hide it. We then mark the target
         // as having been moved, and it is de-allocated in the corresponding touchend event.
-        var touches = SC.RootResponder.responder._touches, touch, elem, target, textNode, view, found = NO;
+        var touches = SC.RootResponder.responder._touches, touch, elem, target, textNode, view, found = false;
         if (touches) {
           // Iterate through the touches we're currently tracking
           for (touch in touches) {
@@ -883,7 +883,7 @@ SC.RootResponder = SC.Object.extend({
       SC.$('body').addClass('sc-blur').removeClass('sc-focus');
 
       SC.run(function() {
-        this.set('hasFocus', NO);
+        this.set('hasFocus', false);
       }, this);
     }
     return true ; // allow default
@@ -1075,7 +1075,7 @@ SC.RootResponder = SC.Object.extend({
 
     // remove view entry if needed
     if (viewEntry.touchCount < 1) {
-      view.set("hasTouch", NO);
+      view.set("hasTouch", false);
       viewEntry.view = null;
       delete this._touchedViews[SC.guidFor(view)];
     }
@@ -1270,7 +1270,7 @@ SC.RootResponder = SC.Object.extend({
       map[presentTouches[idx].identifier] = true;
     }
     
-    // check if any of the touches we have recorded are NOT present
+    // check if any of the touches we have recorded are falseT present
     for (idx in this._touches) {
       var id = this._touches[idx].identifier;
       if (!map[id]) end.push(this._touches[idx]);
@@ -1370,7 +1370,7 @@ SC.RootResponder = SC.Object.extend({
     @returns {Boolean}
   */
   touchstart: function(evt) {
-    var hidingTouchIntercept = NO;
+    var hidingTouchIntercept = false;
 
     SC.run(function() {
       // sometimes WebKit is a bit... iffy:
@@ -1437,7 +1437,7 @@ SC.RootResponder = SC.Object.extend({
       // pretty much all we gotta do is update touches, and figure out which views need updating.
       var touches = evt.changedTouches, touch, touchEntry,
           idx, len = touches.length, view, changedTouches, viewTouches, firstTouch,
-          changedViews = {}, loc, guid, hidingTouchIntercept = NO;
+          changedViews = {}, loc, guid, hidingTouchIntercept = false;
 
       if (this._sc_drag) {
         touch = SC.Touch.create(evt.changedTouches[0], this);
@@ -1517,7 +1517,7 @@ SC.RootResponder = SC.Object.extend({
   },
 
   touchend: function(evt) {
-    var hidesTouchIntercept = NO;
+    var hidesTouchIntercept = false;
 
     SC.run(function() {
       var touches = evt.changedTouches, touch, touchEntry,
@@ -1611,7 +1611,7 @@ SC.RootResponder = SC.Object.extend({
       return true;
     }
 
-    // Firefox does NOT handle delete here...
+    // Firefox does falseT handle delete here...
     if (SC.browser.mozilla && (evt.which === 8)) return true ;
 
     // modifier keys are handled separately by the 'flagsChanged' event
@@ -1621,7 +1621,7 @@ SC.RootResponder = SC.Object.extend({
         target = evt.target || evt.srcElement,
         forceBlock = (evt.which === 8) && !SC.allowsBackspaceToPreviousPage && (target === document.body);
 
-    if (this._sc_isModifierKey(evt)) return (forceBlock ? NO : ret);
+    if (this._sc_isModifierKey(evt)) return (forceBlock ? false : ret);
 
     // if this is a function or non-printable key, try to use this as a key
     // equivalent.  Otherwise, send as a keyDown event so that the focused
@@ -1643,11 +1643,11 @@ SC.RootResponder = SC.Object.extend({
         ret = !this.attemptKeyEquivalent(evt) ;
       } else {
         ret = evt.hasCustomEventHandling ;
-        if (ret) forceBlock = NO ; // code asked explicitly to let delete go
+        if (ret) forceBlock = false ; // code asked explicitly to let delete go
       }
     }
 
-    return forceBlock ? NO : ret ;
+    return forceBlock ? false : ret ;
   },
 
   /** @private
@@ -1683,7 +1683,7 @@ SC.RootResponder = SC.Object.extend({
 
   /**
     IE's default behavior to blur textfields and other controls can only be
-    blocked by returning NO to this event. However we don't want to block
+    blocked by returning false to this event. However we don't want to block
     its default behavior otherwise textfields won't loose focus by clicking on 
     an empty area as it's expected. If you want to block IE from bluring another 
     control set blockIEDeactivate to true on the especific view in which you 
@@ -1696,7 +1696,7 @@ SC.RootResponder = SC.Object.extend({
       var view = SC.$(toElement).view()[0];
       //The following line is neccesary to allow/block text selection for IE,
       // in combination with the selectstart event.
-      if (view && view.get('blocksIEDeactivate')) return NO;
+      if (view && view.get('blocksIEDeactivate')) return false;
     }
     return true;
   },
@@ -1762,7 +1762,7 @@ SC.RootResponder = SC.Object.extend({
     }
 
     // cleanup
-    this._sc_mouseCanDrag = NO; this._sc_mouseDownView = null ;
+    this._sc_mouseCanDrag = false; this._sc_mouseDownView = null ;
   
     return (handler) ? evt.hasCustomEventHandling : true ;
   },
@@ -1930,7 +1930,7 @@ SC.Touch = function(touch, touchContext) {
     target = document.elementFromPoint(touch.pageX, touch.pageY);
     if (target) targetView = SC.$(target).view()[0];
     
-    this.hidesTouchIntercept = NO;
+    this.hidesTouchIntercept = false;
     if (target.tagName === "INPUT") {
       this.hidesTouchIntercept = touch.target;
     } else {
@@ -1941,7 +1941,7 @@ SC.Touch = function(touch, touchContext) {
   }
   this.targetView = targetView;
   this.target = target;
-  this.hasEnded = NO;
+  this.hasEnded = false;
   this.type = touch.type;
   this.clickCount = 1;
 

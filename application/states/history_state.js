@@ -47,7 +47,7 @@ SC.HistoryState = SC.Object.extend(
     
     @property {Boolean}
   */
-  isRecursive: NO,
+  isRecursive: false,
   
   /**
     The default state to enter if the parent state does not

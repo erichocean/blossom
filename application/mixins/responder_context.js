@@ -40,7 +40,7 @@ SC.ResponderContext = {
     When set to true, logs tracing information about all actions sent and 
     responder changes.
   */
-  trace: NO,
+  trace: false,
   
   /** @property
     The default responder.  Set this to point to a responder object that can 
@@ -159,7 +159,7 @@ SC.ResponderContext = {
     
     // Cleanup old first responder
     this._notifyWillLoseFirstResponder(current, current, common, evt);
-    if (current) current.set('isFirstResponder', NO);
+    if (current) current.set('isFirstResponder', false);
 
     // Set new first responder.  If new firstResponder does not have its 
     // responderContext property set, then set it.
@@ -175,13 +175,13 @@ SC.ResponderContext = {
     // now, tell everyone the good news!
     this.endPropertyChanges();
     
-    this._locked = NO ;
+    this._locked = false ;
     if (this._pendingResponder) {
       this.makeFirstResponder(this._pendingResponder);
       this._pendingResponder = null;
     }
     
-    if (responder) responder.set("becomingFirstResponder", NO);
+    if (responder) responder.set("becomingFirstResponder", false);
     
     return this ;
   },
@@ -190,7 +190,7 @@ SC.ResponderContext = {
     if (cur === root) return ; // nothing to do
 
     cur.willLoseFirstResponder(responder, evt);  
-    cur.set('hasFirstResponder', NO);
+    cur.set('hasFirstResponder', false);
 
     var next = this.nextResponderFor(cur);
     if (next) this._notifyWillLoseFirstResponder(responder, next, root);
@@ -231,7 +231,7 @@ SC.ResponderContext = {
     var working = this.get('firstResponder'),
         last    = this.get('nextResponder'),
         trace   = this.get('trace'),
-        handled = NO,
+        handled = false,
         responder;
 
     this._locked = true;
@@ -258,7 +258,7 @@ SC.ResponderContext = {
       else console.log("%@: action '%@' handled by %@".fmt(this, action, this.responderNameFor(working)));
     }
     
-    this._locked = NO ;
+    this._locked = false ;
     
     if (responder = this._pendingResponder) {
       this._pendingResponder= null ;

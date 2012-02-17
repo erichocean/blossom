@@ -3,7 +3,7 @@
 // ========================================================================
 /*globals module test ok isObj equals expects */
 
-var revMatches = NO , ObjectA;
+var revMatches = false , ObjectA;
 
 suite("object.propertyChanges", {  
   setup: function() {

@@ -302,23 +302,23 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   }.property('location').cacheable(),
 
   /**
-    Indicates whether a record is editable or not.  Defaults to `NO`.  Local
+    Indicates whether a record is editable or not.  Defaults to `false`.  Local
     queries should never be made editable.  Remote queries may be editable or
     not depending on the data source.
   */
-  isEditable: NO,
+  isEditable: false,
 
   // ..........................................................
   // PRIMITIVE METHODS
   //
 
   /**
-    Returns `true` if record is matched by the query, `NO` otherwise.  This is
+    Returns `true` if record is matched by the query, `false` otherwise.  This is
     used when computing a query locally.
 
     @param {SC.Record} record the record to check
     @param {Hash} parameters optional override parameters
-    @returns {Boolean} true if record belongs, NO otherwise
+    @returns {Boolean} true if record belongs, false otherwise
   */
   contains: function(record, parameters) {
 
@@ -330,15 +330,15 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
       ret = SC.kindOf(record, rtype);
     }
 
-    if (!ret) return NO ; // if either did not pass, does not contain
+    if (!ret) return false ; // if either did not pass, does not contain
 
     // if we have a scope - check for that as well
     var scope = this.get('scope');
-    if (scope && !scope.contains(record)) return NO ;
+    if (scope && !scope.contains(record)) return false ;
 
     // now try parsing
     if (!this._isReady) this.parse(); // prepare the query if needed
-    if (!this._isReady) return NO ;
+    if (!this._isReady) return false ;
     if (parameters === undefined) parameters = this.parameters || this;
 
     // if parsing worked we check if record is contained
@@ -433,7 +433,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   /** @private
       Becomes true once the query has been successfully parsed
   */
-  _isReady:     NO,
+  _isReady:     false,
 
   /**
     This method has to be called before the query object can be used.

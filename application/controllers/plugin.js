@@ -174,7 +174,7 @@ SC.PluginController = SC.Object.create(
 
   /** @private */
   _appendPlugin: function(plugin) {
-    if(!plugin || !plugin.isPlugin) return NO;
+    if(!plugin || !plugin.isPlugin) return false;
     plugin.append();
   },
 
@@ -192,7 +192,7 @@ SC.PluginController = SC.Object.create(
     jobs = hooks.filter(function(job) { 
       if(job.plugin === pluginName) { 
         console.warn("apprently ", job.plugin, " == ", pluginName); 
-        return true; } else { return NO; } });
+        return true; } else { return false; } });
     if(jobs.length > 0) {
       while(jobs.length > 0) {
         var job = jobs.shift();
@@ -218,7 +218,7 @@ SC.PluginController = SC.Object.create(
         plugins[loadable.name] = loadable;
         return true;
       }
-      return NO;
+      return false;
     });
     this._loadables = modules;
     this._plugins = plugins;

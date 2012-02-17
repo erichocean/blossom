@@ -23,7 +23,7 @@ SC.ArraySuite.define(function(T) {
   test("[].popObject() => [] + returns undefined + NO notify", function() {
     observer.observe('[]', 'length') ;
     equals(obj.popObject(), undefined, 'should return undefined') ;
-    T.validateAfter(obj, [], observer, NO, NO);
+    T.validateAfter(obj, [], observer, false, false);
   });
 
   test("[X].popObject() => [] + notify", function() {

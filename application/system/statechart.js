@@ -181,7 +181,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
 
     @property {Boolean}
   */
-  statechartIsInitialized: NO,
+  statechartIsInitialized: false,
   
   /**
     Optional name you can provide the statechart with. If set this will be included
@@ -220,7 +220,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   /** 
     Indicates what state should be the initial state of this statechart. The value
     assigned must be the name of a property on this object that represents a state.
-    As well, the statesAreConcurrent must be set to NO.
+    As well, the statesAreConcurrent must be set to false.
     
     This property will only be used if the rootState property is not assigned.
   
@@ -241,7 +241,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
     @property {Boolean}
   */
-  statesAreConcurrent: NO,
+  statesAreConcurrent: false,
   
   /** 
     Indicates whether to use a monitor to monitor that statechart's activities. If true then
@@ -250,7 +250,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     @property {Boolean}
   */
-  monitorIsActive: NO,
+  monitorIsActive: false,
   
   /**
     A statechart monitor that can be used to monitor this statechart. Useful for debugging purposes.
@@ -276,7 +276,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
 
     @property {Boolean}
   */
-  trace: NO,
+  trace: false,
   
   /**
     Used to specify what property (key) on the statechart should be used as the owner property. By
@@ -314,7 +314,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     @property {Boolean}
   */
-  suppressStatechartWarnings: NO,
+  suppressStatechartWarnings: false,
   
   /**
     A statechart delegate used by the statechart and the states that the statechart 
@@ -362,8 +362,8 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   initStatechart: function() {
     if (this.get('statechartIsInitialized')) return;
     
-    this._gotoStateLocked = NO;
-    this._sendEventLocked = NO;
+    this._gotoStateLocked = false;
+    this._sendEventLocked = false;
     this._pendingStateTransitions = [];
     this._pendingSentEvents = [];
     
@@ -613,7 +613,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       if (SC.none(fromCurrentState) || !fromCurrentState.get('isCurrentState')) {
         msg = "Can not to goto state %@. %@ is not a recognized current state in statechart";
         this.statechartLogError(msg.fmt(paramState, paramFromCurrentState));
-        this._gotoStateLocked = NO;
+        this._gotoStateLocked = false;
         return;
       }
     } 
@@ -650,7 +650,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       if (trace) this.statechartLogTrace("pivot state = %@".fmt(pivotState));
       if (pivotState.get('substatesAreConcurrent') && pivotState !== state) {
         this.statechartLogError("Can not go to state %@ from %@. Pivot state %@ has concurrent substates.".fmt(state, fromCurrentState, pivotState));
-        this._gotoStateLocked = NO;
+        this._gotoStateLocked = false;
         return;
       }
     }
@@ -762,7 +762,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     this._currentGotoStateAction = null;
     this._gotoStateSuspendedPoint = null;
     this._gotoStateActions = null;
-    this._gotoStateLocked = NO;
+    this._gotoStateLocked = false;
     this._flushPendingStateTransition();
   },
   
@@ -796,7 +796,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     if (this.get('monitorIsActive')) this.get('monitor').pushExitedState(state);
     
-    state._traverseStatesToExit_skipState = NO;
+    state._traverseStatesToExit_skipState = false;
     
     return result;
   },
@@ -962,8 +962,8 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       return;
     }
     
-    var statechartHandledEvent = NO,
-        eventHandled = NO,
+    var statechartHandledEvent = false,
+        eventHandled = false,
         currentStates = this.get('currentStates').slice(),
         checkedStates = {},
         len = 0,
@@ -992,7 +992,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     len = currentStates.get('length');
     for (; i < len; i += 1) {
-      eventHandled = NO;
+      eventHandled = false;
       state = currentStates[i];
       if (!state.get('isCurrentState')) continue;
       while (!eventHandled && state) {
@@ -1007,7 +1007,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     // Now that all the states have had a chance to process the 
     // first event, we can go ahead and flush any pending sent events.
-    this._sendEventLocked = NO;
+    this._sendEventLocked = false;
     
     if (trace) {
       if (!statechartHandledEvent) this.statechartLogTrace("No state was able handle event %@".fmt(event));
@@ -1147,7 +1147,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     // If no more explicit enter path instructions, then default to enter states based on 
     // other criteria
     else if (!enterStatePath || enterStatePath.length === 0) {
-      var gotoStateAction = { action: SC.ENTER_STATE, state: state, currentState: NO };
+      var gotoStateAction = { action: SC.ENTER_STATE, state: state, currentState: false };
       gotoStateActions.push(gotoStateAction);
       
       var initialSubstate = state.get('initialSubstate'),
@@ -1223,19 +1223,19 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
     Attempts to handle a given event against any of the statechart's current states and the
     statechart itself. If any current state can handle the event or the statechart itself can
-    handle the event then true is returned, otherwise NO is returned.
+    handle the event then true is returned, otherwise false is returned.
   
     @param event {String} what to perform
     @param arg1 {Object} Optional
     @param arg2 {Object} Optional
-    @returns {Boolean} true if handled, NO if not handled
+    @returns {Boolean} true if handled, false if not handled
   */
   tryToPerform: function(event, arg1, arg2) {
-    if (!this.respondsTo(event)) return NO;
+    if (!this.respondsTo(event)) return false;
 
     if (SC.typeOf(this[event]) === SC.T_FUNCTION) {
       var result = this[event](arg1, arg2);
-      if (result !== NO) return true;
+      if (result !== false) return true;
     }
     
     return !!this.sendEvent(event, arg1, arg2);
@@ -1699,7 +1699,7 @@ SC.ENTER_STATE = 1;
   A Startchart class. 
 */
 SC.Statechart = SC.Object.extend(SC.StatechartManager, {
-  autoInitStatechart: NO
+  autoInitStatechart: false
 });
 
 SC.Statechart.design = SC.Statechart.extend;

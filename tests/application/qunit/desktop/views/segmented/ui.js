@@ -46,7 +46,7 @@ var pane;
     .add("3_items,1_sel,disabled", SC.SegmentedView, { 
       items: "Item1 Item2 Item3".w(),
       value: "Item2",
-      isEnabled: NO,
+      isEnabled: false,
       layout: { height: 25 }
     })
     .add("3_items,icon,2_sel", SC.SegmentedView, { 
@@ -58,7 +58,7 @@ var pane;
       itemValueKey: 'value',
       itemIconKey: 'icon',
       value: "Item1 Item3".w(),
-      allowsEmptySelection: NO,
+      allowsEmptySelection: false,
       layout: { height: 25 }
     })
     .add("3_items,2_sel,disabled", SC.SegmentedView, { 
@@ -69,7 +69,7 @@ var pane;
         itemTitleKey: 'value',
         itemValueKey: 'value',
         itemIconKey: 'icon',
-        isEnabled: NO,
+        isEnabled: false,
         value: "Item1 Item3".w(),
         layout: { height: 25 }
     })   

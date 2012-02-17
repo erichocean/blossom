@@ -19,7 +19,7 @@ var MyApp = {};
 MyApp.Todo = SC.Record.extend({
   title: SC.Record.attr(String),
   project: SC.Record.toOne("MyApp.Project", {
-    inverse: "todos", isMaster: NO
+    inverse: "todos", isMaster: false
   })
 });
 

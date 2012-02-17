@@ -31,7 +31,7 @@ test("the views are collapsible", function() {
 	equals(true,view.canCollapseView(view.get('topLeftView')),'the top left view is collapsable');
 	equals(true,view.canCollapseView(view.get('bottomRightView')),'the bottom right view is collapsable');	
 	equals(true,view.splitViewCanCollapse(view,view.get('topLeftView')),'should return true');
-	view.set('canCollapseViews','NO');
+	view.set('canCollapseViews','false');
 });
 
 test("the thickness of the views",function(){

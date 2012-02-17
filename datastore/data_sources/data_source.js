@@ -98,7 +98,7 @@ SC.MIXED_STATE = '__MIXED__';
 
   All of the methods you implement must return one of three values:
    - `true` &mdash; all the records were handled.
-   - `NO` &mdash; none of the records were handled.
+   - `false` &mdash; none of the records were handled.
    - `SC.MIXED_STATE` &mdash; some, but not all of the records were handled.
 
 
@@ -138,7 +138,7 @@ SC.MIXED_STATE = '__MIXED__';
   responsibility to invoke a callback on the store for each record or query that
   was passed to it and that the data source handled. To reduce the amount of work
   that a data source must do, the data store will automatically unlock the relevant
-  records if the the data source method returned `NO`, indicating that the records
+  records if the the data source method returned `false`, indicating that the records
   were unhandled.
 
   Although a data source can invoke callback methods at any time, they should
@@ -274,16 +274,16 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     ### Return Values
 
     When you return from this method, be sure to return a Boolean.  true means
-    you handled the query, NO means you can't handle the query.  When using
-    a cascading data source, returning NO will mean the next data source will
+    you handled the query, false means you can't handle the query.  When using
+    a cascading data source, returning false will mean the next data source will
     be asked to fetch the same results as well.
 
     @param {SC.Store} store the requesting store
     @param {SC.Query} query query describing the request
-    @returns {Boolean} true if you can handle fetching the query, NO otherwise
+    @returns {Boolean} true if you can handle fetching the query, false otherwise
   */
   fetch: function(store, query) {
-    return NO ; // do not handle anything!
+    return false ; // do not handle anything!
   },
 
   /**
@@ -297,7 +297,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @param {SC.Store} store the requesting store
     @param {Array} storeKeys
     @param {Array} ids - optional
-    @returns {Boolean} true if handled, NO otherwise
+    @returns {Boolean} true if handled, false otherwise
   */
   retrieveRecords: function(store, storeKeys, ids) {
     return this._handleEach(store, storeKeys, this.retrieveRecord, ids);
@@ -320,7 +320,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     However, if your server API can sync multiple changes at once, you may
     prefer to override this method instead.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle any of the keys, `true` if you can handle all of the keys, or
     `SC.MIXED_STATE` if you can handle some of them.
 
@@ -348,7 +348,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
       ret = SC.none(ret) ? dret : (ret === dret) ? ret : SC.MIXED_STATE;
     }
 
-    return ret || NO;
+    return ret || false;
   },
 
   /**
@@ -360,7 +360,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     If you implement an in-memory data source that immediately services the
     other requests, then this method will never be called on your data source.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     retrieve any of the keys, `true` if you can retrieve all of the, or
     `SC.MIXED_STATE` if you can retrieve some of the.
 
@@ -369,7 +369,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @returns {Boolean} true if data source can handle keys
   */
   cancel: function(store, storeKeys) {
-    return NO;
+    return false;
   },
 
   // ..........................................................
@@ -382,7 +382,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     records to your store.  The default version will simply call
     `updateRecord()` for each storeKey.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle any of the keys, `true` if you can handle all of the keys, or
     `SC.MIXED_STATE` if you can handle some of them.
 
@@ -392,7 +392,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
       to be passed down to data source. originated from the commitRecords()
       call on the store
 
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
 
   */
   updateRecords: function(store, storeKeys, params) {
@@ -405,7 +405,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     records to your store.  The default version will simply call
     `createRecord()` for each storeKey.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle any of the keys, `true` if you can handle all of the keys, or
     `SC.MIXED_STATE` if you can handle some of them.
 
@@ -416,7 +416,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
       to be passed down to data source. originated from the commitRecords()
       call on the store
 
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
 
   */
   createRecords: function(store, storeKeys, params) {
@@ -429,7 +429,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     records to your store.  The default version will simply call
     `destroyRecord()` for each storeKey.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle any of the keys, `true` if you can handle all of the keys, or
     `SC.MIXED_STATE` if you can handle some of them.
 
@@ -438,7 +438,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @param {Hash} params to be passed down to data source. originated
       from the commitRecords() call on the store
 
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
 
   */
   destroyRecords: function(store, storeKeys, params) {
@@ -459,8 +459,8 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
         ret = cur ;
       } else if (ret === true) {
         ret = (cur === true) ? true : SC.MIXED_STATE ;
-      } else if (ret === NO) {
-        ret = (cur === NO) ? NO : SC.MIXED_STATE ;
+      } else if (ret === false) {
+        ret = (cur === false) ? false : SC.MIXED_STATE ;
       }
     }
     return !SC.none(ret) ? ret : null ;
@@ -475,7 +475,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     Called from `updatesRecords()` to update a single record.  This is the
     most basic primitive to can implement to support updating a record.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle the passed storeKey or `true` if you can.
 
     @param {SC.Store} store the requesting store
@@ -485,7 +485,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @returns {Boolean} true if handled
   */
   updateRecord: function(store, storeKey, params) {
-    return NO ;
+    return false ;
   },
 
   /**
@@ -497,14 +497,14 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @returns {Boolean} true if handled
   */
   retrieveRecord: function(store, storeKey, id) {
-    return NO ;
+    return false ;
   },
 
   /**
     Called from `createdRecords()` to created a single record.  This is the
     most basic primitive to can implement to support creating a record.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle the passed storeKey or `true` if you can.
 
     @param {SC.Store} store the requesting store
@@ -514,14 +514,14 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @returns {Boolean} true if handled
   */
   createRecord: function(store, storeKey, params) {
-    return NO ;
+    return false ;
   },
 
   /**
     Called from `destroyRecords()` to destroy a single record.  This is the
     most basic primitive to can implement to support destroying a record.
 
-    To support cascading data stores, be sure to return `NO` if you cannot
+    To support cascading data stores, be sure to return `false` if you cannot
     handle the passed storeKey or `true` if you can.
 
     @param {SC.Store} store the requesting store
@@ -531,7 +531,7 @@ SC.DataSource = SC.Object.extend( /** @scope SC.DataSource.prototype */ {
     @returns {Boolean} true if handled
   */
   destroyRecord: function(store, storeKey, params) {
-    return NO ;
+    return false ;
   }
 
 });

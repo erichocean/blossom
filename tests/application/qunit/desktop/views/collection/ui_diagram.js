@@ -123,7 +123,7 @@ var ShapeCanvasView = SC.CollectionView.extend({
           ypoints.push(item.get('y'));
         }, this); 
       
-        info.shouldReselect = NO; // once we drag, don't alter selection
+        info.shouldReselect = false; // once we drag, don't alter selection
         
       // if no content or no selection or selection is empty, just disable
       } else anchor = info.dragAnchor = null ;

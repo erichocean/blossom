@@ -88,7 +88,7 @@ SC.Freezable = {
     
     @property {Boolean}
   */
-  isFrozen: NO,
+  isFrozen: false,
   
   /**
     Freezes the object.  Once this method has been called the object should

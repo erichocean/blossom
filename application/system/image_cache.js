@@ -156,7 +156,7 @@ SC.imageCache = SC.Object.create(/** @scope SC.imageCache.prototype */ {
     
     // get entry.  if there is no entry, just return as there is nothing to 
     // do.
-    var entry = this._imageEntryFor(url, NO) ;
+    var entry = this._imageEntryFor(url, false) ;
     if (!entry) return this ;
     
     // there is an entry, decrement the retain count.  If <=0, delete!
@@ -183,7 +183,7 @@ SC.imageCache = SC.Object.create(/** @scope SC.imageCache.prototype */ {
     Forces the image to reload the next time you try to load it.
   */
   reloadImage: function(url) {
-    var entry = this._imageEntryFor(url, NO); 
+    var entry = this._imageEntryFor(url, false); 
     if (entry && entry.status===this.IMAGE_LOADED) {
       entry.status = this.IMAGE_WAITING;
     }

@@ -55,11 +55,11 @@ SC.CollectionContent = {
     @param {SC.CollectionView} view the collection view
     @param {SC.Array} content the content object
     @param {Number} idx the content index
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
   */
   contentIndexIsSelected: function(view, content, idx) {
     var sel = view.get('selection');
-    return sel ? sel.contains(content, idx) : NO ;
+    return sel ? sel.contains(content, idx) : false ;
   },
   
   /**
@@ -70,7 +70,7 @@ SC.CollectionContent = {
     @param {SC.CollectionView} view the collection view
     @param {SC.Array} content the content object
     @param {Number} idx the content index
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
   */
   contentIndexIsEnabled: function(view, content, idx) {
     return view.get('isEnabled');
@@ -101,15 +101,15 @@ SC.CollectionContent = {
     a group view is different from a branch/leaf view.  Group views often 
     appear with different layout and a different look and feel.
 
-    Default always returns NO.
+    Default always returns false.
     
     @param {SC.CollectionView} view the collection view
     @param {SC.Array} content the content object
     @param {Number} idx the content index
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
   */
   contentIndexIsGroup: function(view, content, idx) {
-    return NO ;
+    return false ;
   },
   
   // ..........................................................
@@ -125,7 +125,7 @@ SC.CollectionContent = {
     @param {SC.CollectionView} view the collection view
     @param {SC.Array} content the content object
     @param {Number} idx the content index
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
   */
   contentIndexOutlineLevel: function(view, content, idx) {
     return -1;
@@ -143,7 +143,7 @@ SC.CollectionContent = {
     @param {SC.CollectionView} view the collection view
     @param {SC.Array} content the content object
     @param {Number} idx the content index
-    @returns {Boolean} true, NO, or SC.MIXED_STATE
+    @returns {Boolean} true, false, or SC.MIXED_STATE
   */
   contentIndexDisclosureState: function(view, content, idx) {
     return SC.LEAF_NODE;    

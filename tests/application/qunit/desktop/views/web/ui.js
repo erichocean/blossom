@@ -29,7 +29,7 @@
       height: 150
     }
   }).add("don\'t auto resize", SC.WebView, {
-    shouldAutoResize: NO,
+    shouldAutoResize: false,
     //set the value later when you need it
     layout: {
       width: 250,
@@ -50,7 +50,7 @@
     var rootElement = view.$();
     ok(view, 'view should exist');
     ok(view.get('value'), 'should have value property');
-    equals(view.get('shouldAutoResize'), NO, 'should have autoresize off by default, shouldAutoResize');
+    equals(view.get('shouldAutoResize'), false, 'should have autoresize off by default, shouldAutoResize');
     ok(rootElement.hasClass('sc-view'), 'should have sc-view css class');
     ok(rootElement.hasClass('sc-web-view'), 'should have sc-web-view css class');
     equals(rootElement.height(), 150, 'should have height');
@@ -88,10 +88,10 @@
     });
   });
 
-  test('auto resize tests, shouldAutoResize:NO',
+  test('auto resize tests, shouldAutoResize:false',
   function() {
     var view = pane.view('don\'t auto resize');
-    equals(view.get('shouldAutoResize'), NO, 'should have auto resize flag as false');
+    equals(view.get('shouldAutoResize'), false, 'should have auto resize flag as false');
     
     /** set the src a bit late so that the following onload event get's hooked 
     up before it actually loads

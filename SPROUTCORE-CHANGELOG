@@ -191,7 +191,7 @@ MISCELLANEOUS
 * FocusRings for SC.ButtonView
 * Adding a handy escapeForRegExp method to String
 * Alignment support for SC.SegmentedView
-* allowing text fields to only apply changes on blur via applyImmediately: NO
+* allowing text fields to only apply changes on blur via applyImmediately: false
 * Added a property to enable/disable textfield tabbing.
 * Removed mobile framework as it was unnecessary
 * Update all encodings to be valid UTF-8

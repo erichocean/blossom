@@ -50,7 +50,7 @@ SC.Benchmark = {
   
     @property {Boolean}
   */
-  verbose: NO,
+  verbose: false,
   
   /**
     If false, benchmarking will be disabled.  You might want to disable this

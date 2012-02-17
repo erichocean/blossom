@@ -38,7 +38,7 @@ suite('SC.Validatable ui', pane.standardSetup());
 
 test("with valid value", function() {
   var view = pane.view('with valid value');
-  pane.verifyInvalid(view, NO);
+  pane.verifyInvalid(view, false);
 });
 
 test("with invalid value", function() {
@@ -58,7 +58,7 @@ test("changing from invalid to valid", function() {
   view.set('value', 'not an SC.Error instance');
   SC.RunLoop.end();
   
-  pane.verifyInvalid(view, NO);
+  pane.verifyInvalid(view, false);
 });
 
 test("changing from valid to invalid", function() {
