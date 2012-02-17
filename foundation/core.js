@@ -25,8 +25,8 @@ var sc_assert = function(assertion, msg) {
 // Most global constants should be defined inside of the SC namespace.  
 // However the following two are useful enough and generally benign enough
 // to put into the global object.
-var YES = true ; 
-var NO = false ;
+// var YES = true ; 
+// var NO = false ;
 
 // prevent a console.log from blowing things up if we are on a browser that
 // does not support it
