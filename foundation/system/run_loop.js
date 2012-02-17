@@ -283,7 +283,7 @@ SC.run = function(callback, target, useExistingRunLoop) {
       if (callback) callback.call(target);
       SC.RunLoop.end();
     } catch (e) {
-      if (SC.isNode) debugger;
+      // if (SC.isNode) debugger;
       if (SC.ExceptionHandler) {
         SC.ExceptionHandler.handleException(e);
       }
