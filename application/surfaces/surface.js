@@ -629,7 +629,7 @@ SC.Surface = SC.Responder.extend({
     this.foo = el;
 
     // HACK: Make sure SproutCore can find this surface.
-    SC.View.views[id] = this;
+    SC.Surface.surfaces[id] = this;
   },
 
   init: function() {
@@ -1362,7 +1362,7 @@ SC.Surface = SC.Responder.extend({
 //         // }
 // 
 //         // Make sure SproutCore can find this view.
-//         SC.View.views[this.get('containerId')] = this;
+//         SC.Surface.surfaces[this.get('containerId')] = this;
 //       }
 //     }
 //     return element ;
@@ -1665,5 +1665,7 @@ SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
 };
 
 SC.Surface.prototype.updateLayoutRules = SC.Layer.prototype.updateLayoutRules;
+
+SC.Surface.surfaces = {};
 
 } // BLOSSOM

@@ -1022,14 +1022,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.Application#targetViewForEvent()');
     // FIXME: this only works for panes for now...
     // debugger;
-    // var surface = evt.target ? SC.View.views[evt.target.id] : null,
+    // var surface = evt.target ? SC.Surface.surfaces[evt.target.id] : null,
     //     ret = surface? surface.targetViewForEvent(evt) : null ;
 
-    var parentNode = evt.target, id, ret, views = SC.View.views;
+    var parentNode = evt.target, id, ret, surfaces = SC.Surface.surfaces;
 
     while (parentNode && !ret) {
       id = parentNode.id;
-      if (id) ret = views[id];
+      if (id) ret = surfaces[id];
       parentNode = parentNode.parentNode;
     }
 

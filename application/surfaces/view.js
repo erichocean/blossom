@@ -340,7 +340,6 @@ SC.View = SC.LeafSurface.extend({
 });
 
 // HACK: FIXME
-SC.View.views = {};
 SC.LAYOUT_AUTO = 'auto';
 SC._VIEW_DEFAULT_DIMS = 'marginTop marginLeft'.w();
 
