@@ -213,14 +213,15 @@ SC.Observable = {
     
   */
   get: function(key) {
-    var ret = this[key], cache ;
+    var ret = this[key], cache, cacheKey ;
     if (ret === undefined) {
       return this.unknownProperty(key) ;
     } else if (ret && ret.isProperty) {
       if (ret.isCacheable) {
         cache = this._kvo_cache ;
         if (!cache) cache = this._kvo_cache = {};
-        return (cache[ret.cacheKey] !== undefined) ? cache[ret.cacheKey] : (cache[ret.cacheKey] = ret.call(this,key)) ;
+        cacheKey = ret.cacheKey;
+        return (cache[cacheKey] !== undefined) ? cache[cacheKey] : (cache[cacheKey] = ret.call(this, key));
       } else return ret.call(this,key);
     } else return ret ;
   },
