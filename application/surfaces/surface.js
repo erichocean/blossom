@@ -1609,11 +1609,11 @@ SC.Surface = SC.Responder.extend({
       if (ret[x]===0) ret[x]=null;
     }
 
-    if (hasAcceleratedLayer) {
-      var transform = 'translateX('+translateLeft+'px) translateY('+translateTop+'px)';
-      if (SC.platform.supportsCSS3DTransforms) transform += ' translateZ(0px)'
-      ret[SC.platform.domCSSPrefix+'Transform'] = transform;
-    }
+    // if (hasAcceleratedLayer) {
+    //   var transform = 'translateX('+translateLeft+'px) translateY('+translateTop+'px)';
+    //   if (SC.platform.supportsCSS3DTransforms) transform += ' translateZ(0px)'
+    //   ret[SC.platform.domCSSPrefix+'Transform'] = transform;
+    // }
 
     // convert any numbers into a number + "px".
     for(key in ret) {

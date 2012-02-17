@@ -4,9 +4,12 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 sc_require('system/event');
+
+if (! BLOSSOM) {
 
 /**
   SC.routes manages the browser location. You can change the hash part of the
@@ -44,6 +47,13 @@ sc_require('system/event');
   @since SproutCore 1.1
 */
 SC.routes = SC.Object.create({
+
+  supportsHashChange: function() {
+    // Code copied from Modernizr which copied code from YUI (MIT licenses)
+    // documentMode logic from YUI to filter out IE8 Compat Mode which false positives
+    return ('onhashchange' in window) && (document.documentMode === undefined || document.documentMode > 7);
+  }(),
+
     
   /** @private
     A boolean value indicating whether or the ping method has been called
@@ -204,7 +214,7 @@ SC.routes = SC.Object.create({
     if (!this._didSetup) {
       this._didSetup = true;
       
-      if (SC.platform.supportsHashChange) {
+      if (this.get('supportsHashChange')) {
         this.hashChange();
         SC.Event.add(window, 'hashchange', this, this.hashChange);
       
@@ -419,3 +429,5 @@ SC.routes = SC.Object.create({
   })
   
 });
+
+} // ! BLOSSOM

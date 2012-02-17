@@ -17,6 +17,7 @@ function main() {
   var qd = new QuadDemo(sz.width, sz.height);
 
   var surface = SC.View.create({
+
     updateDisplay: function() {
       // console.log('updateDisplay');
       var ctx = this.getPath('layer.context');
