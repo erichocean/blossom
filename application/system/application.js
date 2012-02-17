@@ -301,9 +301,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   perspective: 1000,
 
   _sc_perspectiveDidChange: function() {
-    var perspective = this.get('perspective')+0;
-    sc_assert(!isNaN(perspective));   // Must be a number.
-    sc_assert(perspective % 1 === 0); // Must be an Integer.
+    var perspective = this.get('perspective');
+    sc_assert(!isNaN(perspective));   // Must be a Number.
+    sc_assert(perspective % 1 === 0); // Must be an Integer (can be negative).
     document.body.style.webkitPerspective = perspective+'px';
   }.observes('perspective'),
 
