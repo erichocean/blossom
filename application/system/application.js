@@ -155,6 +155,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this.get('ui').performLayoutAndRenderingIfNeeded(timestamp);
 
     SC.isAnimating = false;
+    SC.viewportSizeDidChange = false;
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
   },
 
@@ -357,9 +358,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         bounds: this.computeViewportSize(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
-        orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay(),
-
-        viewportSizeDidChange: function(size) { this.set('bounds', size); }
+        orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
       });
 
       uiContainer.set('isPresentInViewport', true);
@@ -490,7 +489,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var old = this.get('viewportSize'),
         cur = SC.MakeSize(window.innerWidth, window.innerHeight);
 
-    if (!SC.EqualSize(old, cur)) this.set('viewportSize', cur);
+    if (!SC.EqualSize(old, cur)) {
+      this.set('viewportSize', cur);
+      SC.viewportSizeDidChange = true;
+      // TODO: Update the constraint solver!
+    }
 
     return cur;
   },
@@ -507,6 +510,30 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (!SC.EqualSize(old, cur)) this.requestLayoutAndRendering();
 
     return true; // Allow normal processing to continue. FIXME: Is this correct?
+  },
+
+  /**
+    The most-recently computed orientation.  Calling `computeOrientation` 
+    updates this value, and `SC.app` will also update this value whenever an 
+    orientation change is detected.
+
+    Note: Desktop web browsers always have a 'horizontal' orientation.
+
+    @type String either 'horizontal' or 'vertical'
+    @isReadOnly
+  */
+  orientation: 'horizontal',
+
+  /**
+    Computes the viewport size. Also notifies surfaces if the computed value 
+    has changed.
+
+    @returns SC.Size
+  */
+  computeOrientation: function() {
+    // Desktop browsers are always 'horizontal'. Mobile clients support 
+    // the 'vertical' orientation as well, computed with native code.
+    return 'horizontal';
   },
 
   // .......................................................
