@@ -919,7 +919,7 @@ SC.Observable = {
     var log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===NO),
         observers, changes, dependents, starObservers, idx, keys, rev,
         members, membersLength, member, memberLoc, target, method, loc, func,
-        context, spaces, cache ;
+        context, spaces, cache, hasPropertyObserver = !!this.propertyObserver ;
 
     if (log) {
       spaces = SC.KVO_SPACES = (SC.KVO_SPACES || '') + '  ';
@@ -1043,7 +1043,7 @@ SC.Observable = {
         }
 
         // if there is a default property observer, call that also
-        if (this.propertyObserver) {
+        if (hasPropertyObserver) {
           if (log) console.log('%@...firing %@.propertyObserver for key "%@"'.fmt(spaces, this, key));
           this.propertyObserver(this, key, null, rev);
         }
