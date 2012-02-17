@@ -694,16 +694,16 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     Attempts to send an event down the responder chain.  This method will
-    invoke the sendEvent() method on either the keyPane or on the pane owning
-    the target view you pass in.  It will also automatically begin and end
-    a new run loop.
+    invoke the sendEvent() method on either the surface you pass in, the 
+    owning surface for a responder, or the `menuSurface`, `inputSurface`, or 
+    `ui` (only one, chosen in that order).
 
     If you want to trap additional events, you should use this method to
     send the event down the responder chain.
 
     @param {String} action
     @param {SC.Event} evt
-    @param {Object} target
+    @param {SC.Resonder} target
     @returns {Object} object that handled the event or null if not handled
   */
   sendEvent: function(action, evt, target) {
@@ -777,7 +777,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     Invoked on a keyDown event that is not handled by any actual value.  This
     will get the key equivalent string and then walk down the keyPane, then
     the focusedPane, then the mainPane, looking for someone to handle it.
-    Note that this will walk DOWN the view hierarchy, not up it like most.
+    Note that this will walk DOWN the surface hierarchy, not up it like most.
 
     @returns {Object} Object that handled evet or null
   */
@@ -875,12 +875,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_mouseCanDrag: true,
 
   selectstart: function(evt) {
-    var targetView = this.targetSurfaceForEvent(evt),
-        result = this.sendEvent('selectStart', evt, targetView);
+    var surface = this.targetSurfaceForEvent(evt),
+        result = this.sendEvent('selectStart', evt, surface);
 
-    // If the target view implements mouseDragged, then we want to ignore the
-    // 'selectstart' event.
-    if (targetView && targetView.respondsTo('mouseDragged')) {
+    // If the target surface implements mouseDragged, then we want to ignore 
+    // the 'selectstart' event.
+    if (surface && surface.respondsTo('mouseDragged')) {
       return (result !==null ? true: false) && !this._sc_mouseCanDrag;
     }
     else {
@@ -1011,8 +1011,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   /**
-    Finds the view that appears to be targeted by the passed event.  This only
-    works on events with a valid target property.
+    Finds the surface that appears to be targeted by the passed event.  This 
+    only works on events with a valid target property.
 
     @param {SC.Event} evt
     @returns {SC.Surface} surface instance or null
@@ -1140,11 +1140,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   /**
     IE's default behavior to blur textfields and other controls can only be
     blocked by returning false to this event. However we don't want to block
-    its default behavior otherwise textfields won't loose focus by clicking on 
-    an empty area as it's expected. If you want to block IE from bluring another 
-    control set blockIEDeactivate to true on the especific view in which you 
-    want to avoid this. Think of an autocomplete menu, you want to click on 
-    the menu but don't loose focus. 
+    its default behavior otherwise textfields won't loose focus by clicking 
+    on an empty area as it's expected. If you want to block IE from bluring 
+    another control set blockIEDeactivate to true on the specific surface in 
+    which you want to avoid this. Think of an autocomplete menu, you want to 
+    click on the menu but don't loose focus. 
   */
   beforedeactivate: function(evt) {
     // var toElement = evt.toElement;
@@ -1162,11 +1162,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   /**
-    mouseUp only gets delivered to the view that handled the mouseDown evt.
-    we also handle click and double click notifications through here to
-    ensure consistant delivery.  Note that if mouseDownView is not
-    implemented, then no mouseUp event will be sent, but a click will be
-    sent.
+    `mouseUp` only gets delivered to the surface that handled the `mouseDown` 
+    event.  We also handle `click` and `doubleClick` events here to ensure 
+    consistent delivery.  Note that if `_sc_mouseDownSurface` is `null`, no 
+    `mouseUp` event will be sent, but a `click` or `doubleClick` event *will* 
+    be sent as appropriate.
   */
   mouseup: function(evt) {
     if (this._sc_drag) {
@@ -1175,8 +1175,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // FIXME: Shouldn't we return at this point?
     }
 
-    var handler = null, view = this._sc_mouseDownSurface,
-        targetView = this.targetSurfaceForEvent(evt);
+    var handler = null, mouseDownSurface = this._sc_mouseDownSurface,
+        surface = this.targetSurfaceForEvent(evt);
 
     this._sc_lastMouseUpAt = Date.now(); // Why not evt.timeStamp?
 
@@ -1185,17 +1185,17 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // Attempt a mouseup call only when there is a target. We don't want a 
     // mouseup going to anyone unless they also handled the mousedown.
-    if (view) {
-      handler = this.sendEvent('mouseUp', evt, view);
+    if (mouseDownSurface) {
+      handler = this.sendEvent('mouseUp', evt, mouseDownSurface);
 
       // Didn't handle it, try doubleClick.
       if (!handler && (this._sc_clickCount === 2)) {
-        handler = this.sendEvent('doubleClick', evt, view);
+        handler = this.sendEvent('doubleClick', evt, mouseDownSurface);
       }
 
       // Hmm. Try single click.
       if (!handler) {
-        handler = this.sendEvent('click', evt, view);
+        handler = this.sendEvent('click', evt, mouseDownSurface);
       }
     }
 
@@ -1204,12 +1204,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
       // Try doubleClick.
       if (this._sc_clickCount === 2) {
-        handler = this.sendEvent('doubleClick', evt, targetView);
+        handler = this.sendEvent('doubleClick', evt, surface);
       }
 
       // No handler, try singleClick.
       if (!handler) {
-        handler = this.sendEvent('click', evt, targetView);
+        handler = this.sendEvent('click', evt, surface);
       }
     }
 
@@ -1244,7 +1244,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this._sc_lastMouseDownX = evt.clientX;
     this._sc_lastMouseDownY = evt.clientY;
 
-    var fr, view = this.targetSurfaceForEvent(evt);
+    var fr, surface = this.targetSurfaceForEvent(evt), handler;
 
     // HACK: InlineTextField needs to loose firstResponder whenever you click 
     // outside the view.  This is a special case as textfields are not 
@@ -1255,20 +1255,20 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   fr.resignFirstResponder();
     // }
 
-    view = this._sc_mouseDownSurface = this.sendEvent('mouseDown', evt, view);
-    if (view && view.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
+    handler = this._sc_mouseDownSurface = this.sendEvent('mouseDown', evt, surface);
+    if (handler && handler.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
 
-    return view ? evt.hasCustomEventHandling : true ;
+    return handler ? evt.hasCustomEventHandling : true ;
   },
 
   /**
-   This will send mouseEntered, mouseExited, mousedDragged and mouseMoved
-   to the views you hover over.  To receive these events, you must implement
-   the method. If any subviews implement them and return true, then you won't
-   receive any notices.
+   This will send the `mouseEntered`, `mouseExited`, `mousedDragged` and 
+   `mouseMoved` actions to the surfaces you hover over.  To receive these 
+   actions, you must implement the action method. If any subsurfaces 
+   implement them and return true, then your action won't be called.
 
-   If there is a target mouseDown view, then mouse moved events will also
-   trigger calls to mouseDragged.
+   If there is an `_sc_mouseDownSurface` surface, then mouse moved events 
+   will also trigger calls to the `mouseDragged` action on that surface.
   */
   mousemove: function(evt) {
     // We'll record the last positions in all browsers, in case a special pane
@@ -1282,41 +1282,41 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         this._sc_drag.tryToPerform('mouseDragged', evt);
     } else {
       var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
-          view = this.targetSurfaceForEvent(evt);
+          surface = this.targetSurfaceForEvent(evt);
 
-      // First, collect all the responding view starting with the target view 
-      // from the given mouse move event.
-      while (view && (view !== this)) {
-        nh.push(view);
-        view = view.get('nextResponder');
+      // First, collect all the responding surfaces starting with the target 
+      // surface  from the given mouse move event.
+      while (surface && (surface !== this)) {
+        nh.push(surface);
+        surface = surface.get('nextResponder');
       }
 
-      // Next, exit views that are no longer part of the responding chain.
+      // Next, exit surfaces that are no longer part of the responding chain.
       for (loc=0, len=lh.length; loc<len; ++loc) {
-        view = lh[loc];
-        exited = view.respondsTo('mouseExited');
-        if (exited && nh.indexOf(view) === -1) {
-          view.tryToPerform('mouseExited', evt);
+        surface = lh[loc];
+        exited = surface.respondsTo('mouseExited');
+        if (exited && nh.indexOf(surface) === -1) {
+          surface.tryToPerform('mouseExited', evt);
         }
       }
 
       // Finally, either perform mouse moved or mouse entered depending on
-      // whether a responding view was or was not part of the last hovered 
-      // views.
+      // whether a responding surface was or was not part of the last hovered 
+      // surfaces.
       for (loc=0, len=nh.length; loc < len; loc++) {
-        view = nh[loc];
-        if (lh.indexOf(view) !== -1) {
-          view.tryToPerform('mouseMoved', evt);
+        surface = nh[loc];
+        if (lh.indexOf(surface) !== -1) {
+          surface.tryToPerform('mouseMoved', evt);
         } else {
-          view.tryToPerform('mouseEntered', evt);
+          surface.tryToPerform('mouseEntered', evt);
         }
       }
 
-      // Keep track of the view that were last hovered.
+      // Keep track of the surfaces that were last hovered.
       this._sc_lastHovered = nh;
 
-      // Also, if a mouseDownView exists, call the mouseDragged action, if
-      // it exists.
+      // Also, if _sc_mouseDownSurface exists, call the mouseDragged action, 
+      // if it exists.
       if (this._sc_mouseDownSurface) {
         this._sc_mouseDownSurface.tryToPerform('mouseDragged', evt);
       }
