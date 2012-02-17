@@ -236,19 +236,13 @@ SC.Record = SC.Object.extend(
     
     @returns {SC.Record} receiver
   */
-  destroy: function() {
-    var store = this.get('store'),
-        storeKey = this.get('storeKey');
-
-    store.destroyRecord(null, null, storeKey);
+  destroy: function() { 
+    this.get('store').destroyRecord(null, null, this.get('storeKey'));
+    this.notifyPropertyChange('status');
 
     // If there are any aggregate records, we might need to propagate our new
     // status to them.
-    this.propagateToAggregates(store.readStatus(storeKey));
-
-    // Do this after our children, so their status is in-sync with their parent
-    // when it changes.
-    this.notifyPropertyChange('status');
+    this.propagateToAggregates();
 
     return this ;
   },
@@ -268,18 +262,12 @@ SC.Record = SC.Object.extend(
     @returns {SC.Record} receiver
   */
   recordDidChange: function(key) {
-    var store = this.get('store'),
-        storeKey = this.get('storeKey');
-
-    store.recordDidChange(null, null, storeKey, key);
+    this.get('store').recordDidChange(null, null, this.get('storeKey'), key);
+    this.notifyPropertyChange('status');
 
     // If there are any aggregate records, we might need to propagate our new
     // status to them.
-    this.propagateToAggregates(store.readStatus(storeKey));
-
-    // Do this after our children, so their status is in-sync with their parent
-    // when it changes.
-    this.notifyPropertyChange('status');
+    this.propagateToAggregates();
 
     return this ;
   },
@@ -384,7 +372,7 @@ SC.Record = SC.Object.extend(
     
     Should not have to be called manually.
   */
-  propagateToAggregates: function(parentStatus) {
+  propagateToAggregates: function() {
     var storeKey = this.get('storeKey'),
         recordType = SC.Store.recordTypeFor(storeKey), 
         idx, len, key, val, recs;
@@ -424,6 +412,7 @@ SC.Record = SC.Object.extend(
         childStatus = this.get('status');
         if ((childStatus & dirty)  ||  
             (childStatus & readyNew)  ||  (childStatus & destroyed)) {
+          parentStatus = rec.get('status');
           if (parentStatus === readyClean) {
             // Note:  storeDidChangeProperties() won't put it in the
             //        changelog!

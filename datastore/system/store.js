@@ -1120,7 +1120,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // Finally return materialized record, after we propagate the status to
     // any aggregrate records.
     ret = this.materializeRecord(storeKey);
-    if (ret) ret.propagateToAggregates(status);
+    if (ret) ret.propagateToAggregates();
     return ret;
   },
   
