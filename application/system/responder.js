@@ -22,10 +22,10 @@
 */
 SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
 
-  isResponder: YES, // Walk like a duck.
+  isResponder: true, // Walk like a duck.
   
   /** @property
-    Set to YES if your responder is willing to accept first responder status.
+    Set to true if your responder is willing to accept first responder status.
     This is used when calculcating the key responder loop.
   */
   acceptsFirstResponder: true
@@ -145,7 +145,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   nextResponder: null,
   
   /** @property 
-    YES if the responder is currently the first responder.  This property is 
+    true if the responder is currently the first responder.  This property is 
     always updated by a pane during its makeFirstResponder() method.
 
     @type {Boolean}
@@ -154,7 +154,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
   /** @property
   
-    YES the responder is somewhere in the responder chain.  This currently
+    true the responder is somewhere in the responder chain.  This currently
     only works when used with a ResponderContext.
     
     @type {Boolean}
@@ -191,7 +191,7 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
     if (pane && (pane.get('firstResponder') === this)) {
       pane.makeFirstResponder(null, evt);
     }
-    return YES;
+    return true;
   },
 
   /**

@@ -9,16 +9,16 @@
 
 var items = [
   { title: 'Menu Item', keyEquivalent: 'ctrl_shift_n' },
-  { title: 'Checked Menu Item', isChecked: YES, keyEquivalent: 'ctrl_a' },
+  { title: 'Checked Menu Item', isChecked: true, keyEquivalent: 'ctrl_a' },
   { title: 'Selected Menu Item', keyEquivalent: 'backspace' },
-  { separator: YES },
+  { separator: true },
   { title: 'Menu Item with Icon', icon: 'inbox', keyEquivalent: 'ctrl_m' },
   { title: 'Menu Item with Icon', icon: 'folder', keyEquivalent: 'ctrl_p' },
-  { separator: YES },
-  { title: 'Selected Menu Item…', isChecked: YES, keyEquivalent: 'ctrl_shift_o' },
+  { separator: true },
+  { title: 'Selected Menu Item…', isChecked: true, keyEquivalent: 'ctrl_shift_o' },
   { title: 'Item with Submenu', subMenu: [{ title: 'Submenu item 1' }, { title: 'Submenu item 2'}] },
   { title: 'Disabled Menu Item', isEnabled: NO }//,
-  // { isSeparator: YES },
+  // { isSeparator: true },
   // { groupTitle: 'Menu Label', items: [{ title: 'Nested Item' }, { title: 'Nested Item' }] }
 ];
 
@@ -55,7 +55,7 @@ suite('SC.MenuPane UI', {
 });
 
 /*
-  Simulates clicking on the specified index.  If you pass verify as YES or NO
+  Simulates clicking on the specified index.  If you pass verify as true or NO
   also verifies that the item view is subsequently selected or not.
 
   @param {SC.View} view the view
@@ -106,7 +106,7 @@ test('Basic UI', function(){
 test('Control size', function() {
   var smallPane, largePane, views, items = [
     { title: 'Can I get get get' },
-    { title: 'To know know know know', separator: YES },
+    { title: 'To know know know know', separator: true },
     { title: 'Ya better better baby' }
   ];
 
@@ -177,7 +177,7 @@ test('Basic Submenus', function() {
   stop();
   setTimeout(function() {
     ok(subMenu.get('isVisibleInWindow'), 'submenu should open after 100ms delay');
-    ok(subMenu.get('isSubMenu'), 'isSubMenu should be YES on submenus');
+    ok(subMenu.get('isSubMenu'), 'isSubMenu should be true on submenus');
     ok(subMenu.get('controlSize'), SC.SMALL_CONTROL_SIZE, "submenu should inherit parent's controlSize");
     smallMenu.remove();
     ok(!subMenu.get('isVisibleInWindow'), 'submenus should close if their parent menu is closed');
@@ -203,10 +203,10 @@ test('Menu Item Localization', function() {
 
   locMenu = SC.MenuPane.create({
     items: items,
-    localize: YES
+    localize: true
   });
   locMenu.popup();
-  equals('LOCALIZED TEXT', locMenu.$('.sc-menu-item .value').text(), 'Menu item titles should be localized if localize is YES');
+  equals('LOCALIZED TEXT', locMenu.$('.sc-menu-item .value').text(), 'Menu item titles should be localized if localize is true');
   locMenu.remove();
 });
 

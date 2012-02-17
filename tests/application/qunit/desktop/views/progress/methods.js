@@ -34,7 +34,7 @@ test("changing a progress view value to maximum", function() {
   equals(view.get('value'), 25, 'precon - value should be 25');
   equals(view.get('isIndeterminate'), NO, 'precon - value should be NO');
   equals(view.get('isRunning'), NO, 'precon - value should be NO');
-  equals(view.get('isEnabled'), YES, 'precon - value should be YES');
+  equals(view.get('isEnabled'), true, 'precon - value should be true');
   
   SC.RunLoop.begin();
   view.set('value', 100);
@@ -45,7 +45,7 @@ test("changing a progress view value to maximum", function() {
 
 test("changing value of a disabled progress view", function() {
   equals(view.get('value'), 25, 'precon - value should be 25');
-  equals(view.get('isEnabled'), YES, 'precon - value should be YES');
+  equals(view.get('isEnabled'), true, 'precon - value should be true');
   
   SC.RunLoop.begin();
   view.set('isEnabled', NO);

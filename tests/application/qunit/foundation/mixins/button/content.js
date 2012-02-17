@@ -40,7 +40,7 @@ test("invoked with key = foo whenever a propery on content is changed", function
   };
   view.set('content', content);
   
-  isTesting = YES ;
+  isTesting = true ;
   
   curKey= 'foo';
   content.set('foo', 'foo');
@@ -60,7 +60,7 @@ test("should no longer be invoked when a key is changed on a former content obje
   content.set('foo', 'foo');
   view.set('content', null);
   
-  isTesting= YES ;
+  isTesting= true ;
   content.set('bar', 'bar');
 });
 

@@ -47,14 +47,14 @@ test("setting any unknown value should have no effect", function() {
 // MULTIPLE CONTENT
 // 
 
-suite("SC.ObjectController - multiple_case - ALLOWSMULTIPLE = YES", {
+suite("SC.ObjectController - multiple_case - ALLOWSMULTIPLE = true", {
   setup: function() {
     src        = SC.Object.create({ foo: "foo1", bar: "bar1" });
     src2       = SC.Object.create({ foo: "foo2", bar: "bar1" });
     content    = [src, src2];
     controller = SC.ObjectController.create({ 
       content: content,
-      allowsMultipleContent: YES 
+      allowsMultipleContent: true 
     });
   },
   
@@ -94,7 +94,7 @@ test("changing a property on a content object", function() {
 });
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), YES, 'should have content');
+  equals(controller.get("hasContent"), true, 'should have content');
   
   var callCount = 0;
   controller.addObserver("hasContent", function() { callCount++; });
@@ -105,7 +105,7 @@ test("hasContent", function() {
   
   callCount = 0;
   controller.set("content", content);
-  equals(controller.get("hasContent"), YES, "hasContent should == YES after setting back to content");
+  equals(controller.get("hasContent"), true, "hasContent should == true after setting back to content");
   ok(callCount > 0, "hasContent observer should fire");
 });
 

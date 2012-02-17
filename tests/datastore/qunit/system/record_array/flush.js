@@ -30,7 +30,7 @@ suite("SC.RecordArray core methods", {
       content: recs,
       bigCost: NO,
       veryExpensiveObserver: function() {
-        this.set('bigCost', YES);
+        this.set('bigCost', true);
       }.observes('.content.[]')
     });
 
@@ -41,7 +41,7 @@ suite("SC.RecordArray core methods", {
       content: fooRecs,
       bigCost: NO,
       veryExpensiveObserver: function() {
-        this.set('bigCost', YES);
+        this.set('bigCost', true);
       }.observes('.content.[]')
     });
   }
@@ -161,7 +161,7 @@ test("calling storeDidChangeStoreKeys() with a matching recordType should not un
   recs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(SC.Record));
   fooRecs.storeDidChangeStoreKeys([storeKey], SC.Set.create().add(SC.Record));
 
-  equals(recsController.get('bigCost'), YES, 'recsController should have spent big cost');
+  equals(recsController.get('bigCost'), true, 'recsController should have spent big cost');
   equals(fooRecsController.get('bigCost'), NO, 'fooRecsController should not have spent big cost');
 });
 
@@ -216,7 +216,7 @@ test("local query should notify changes", function() {
   // any cache
   same(recs.mapProperty('id'), ['bar', 'foo'], 'PRECOND - bar should appear before foo');
 
-  SC.stopIt = YES;
+  SC.stopIt = true;
 
   SC.RunLoop.begin();
   bar.set('name', 'zzbar');

@@ -74,7 +74,7 @@ SC.StaticContentView = SC.View.extend(SC.StaticLayout, {
   /** @private
     Disable SproutCore management of view positioning.
   */
-  useStaticLayout: YES,
+  useStaticLayout: true,
 
   /** @private
     Overrides SC.View's frame computed property, and returns a value from the
@@ -129,12 +129,12 @@ SC.StaticContentView = SC.View.extend(SC.StaticLayout, {
   
   touchStart: function(evt){
     evt.allowDefault();
-    return YES;
+    return true;
   },
   
   touchEnd: function(evt){
     evt.allowDefault();
-    return YES;
+    return true;
   }
   
 });

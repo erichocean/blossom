@@ -47,7 +47,7 @@ BlossomTest.clipDragExample = function(stage) {
 
       this.draggingRectOffsetX = mousePos.x - this._x;
       this.draggingRectOffsetY = mousePos.y - this._y;
-      return YES;
+      return true;
     },
 
     mouseDragged: function(evt) {

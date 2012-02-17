@@ -111,7 +111,7 @@ SC.ListItemView = SC.View.extend(
     display content that is already escaped and you need the added 
     performance gain.
   */
-  escapeHTML: YES,
+  escapeHTML: true,
   
   /**
     (displayDelegate) The name of the property used to find the count of 
@@ -134,7 +134,7 @@ SC.ListItemView = SC.View.extend(
   
 
   /**
-    YES if the item view is currently editing.
+    true if the item view is currently editing.
   */
   isEditing: NO,
   
@@ -282,7 +282,7 @@ SC.ListItemView = SC.View.extend(
     something other than SC.LEAF_NODE.
 
     @param {SC.RenderContext} context the render context
-    @param {Boolean} state YES, NO or SC.MIXED_STATE
+    @param {Boolean} state true, NO or SC.MIXED_STATE
     @returns {void}
   */
   renderDisclosure: function(context, state) {
@@ -306,7 +306,7 @@ SC.ListItemView = SC.View.extend(
     checkbox.
     
     @param {SC.RenderContext} context the render context
-    @param {Boolean} state YES, NO or SC.MIXED_STATE
+    @param {Boolean} state true, NO or SC.MIXED_STATE
     @returns {void}
   */
   renderCheckbox: function(context, state) {
@@ -451,7 +451,7 @@ SC.ListItemView = SC.View.extend(
    return your own custom HTML
    
    @param {SC.RenderContext} context the render context
-   @param {Boolean} hasBranch YES if the item has a branch
+   @param {Boolean} hasBranch true if the item has a branch
    @returns {void}
   */
   renderBranch: function(context, hasBranch) {
@@ -474,7 +474,7 @@ SC.ListItemView = SC.View.extend(
     var el = SC.$(evt.target) ;
     var ret = NO, classNames ;
     while(!ret && el.length>0 && (el[0] !== layer)) {
-      if (el.hasClass(className)) ret = YES ;
+      if (el.hasClass(className)) ret = true ;
       el = el.parent() ;
     }
     el = layer = null; //avoid memory leaks
@@ -482,7 +482,7 @@ SC.ListItemView = SC.View.extend(
   },
   
   /** @private
-    Returns YES if the list item has a checkbox and the event occurred 
+    Returns true if the list item has a checkbox and the event occurred 
     inside of it.
   */
   _isInsideCheckbox: function(evt) {
@@ -492,7 +492,7 @@ SC.ListItemView = SC.View.extend(
   },
   
   /** @private 
-    Returns YES if the list item has a disclosure triangle and the event 
+    Returns true if the list item has a disclosure triangle and the event 
     occurred inside of it.
   */
   _isInsideDisclosure: function(evt) {
@@ -501,7 +501,7 @@ SC.ListItemView = SC.View.extend(
   },
   
   /** @private 
-    Returns YES if the list item has a right icon and the event 
+    Returns true if the list item has a right icon and the event 
     occurred inside of it.
   */
   _isInsideRightIcon: function(evt) {
@@ -523,20 +523,20 @@ SC.ListItemView = SC.View.extend(
     // if occurred inside checkbox, item view should handle the event.
     if (this._isInsideCheckbox(evt)) {
       this._addCheckboxActiveState() ;
-      this._isMouseDownOnCheckbox = YES ;
-      this._isMouseInsideCheckbox = YES ;
-      return YES ; // listItem should handle this event
+      this._isMouseDownOnCheckbox = true ;
+      this._isMouseInsideCheckbox = true ;
+      return true ; // listItem should handle this event
 
     } else if (this._isInsideDisclosure(evt)) {
       this._addDisclosureActiveState();
-      this._isMouseDownOnDisclosure = YES;
-      this._isMouseInsideDisclosure = YES ;
-      return YES;
+      this._isMouseDownOnDisclosure = true;
+      this._isMouseInsideDisclosure = true ;
+      return true;
     } else if (this._isInsideRightIcon(evt)) {
       this._addRightIconActiveState();
-      this._isMouseDownOnRightIcon = YES;
-      this._isMouseInsideRightIcon = YES ;
-      return YES;
+      this._isMouseDownOnRightIcon = true;
+      this._isMouseInsideRightIcon = true ;
+      return true;
     }
     
     return NO ; // let the collection view handle this event
@@ -556,14 +556,14 @@ SC.ListItemView = SC.View.extend(
         content = this.get('content') ;
         if (content && content.get) {
           var value = content.get(checkboxKey) ;
-          value = (value === SC.MIXED_STATE) ? YES : !value ;
+          value = (value === SC.MIXED_STATE) ? true : !value ;
           content.set(checkboxKey, value) ; // update content
           this.displayDidChange(); // repaint view...
         }
       }
  
       this._removeCheckboxActiveState() ;
-      ret = YES ;
+      ret = true ;
     
     // if mouse as down on disclosure -- handle mosue up.  otherwise pass on
     // to parent.
@@ -587,12 +587,12 @@ SC.ListItemView = SC.View.extend(
       }
      
       this._removeDisclosureActiveState();
-      ret = YES ;
+      ret = true ;
     // if mouse was down in right icon -- then handle mouse up, otherwise 
     // allow parent view to handle event.
     } else if (this._isMouseDownOnRightIcon) {
       this._removeRightIconActiveState() ;
-      ret = YES ;
+      ret = true ;
     } 
    
     // clear cached info
@@ -605,19 +605,19 @@ SC.ListItemView = SC.View.extend(
   mouseMoved: function(evt) {
     if (this._isMouseDownOnCheckbox && this._isInsideCheckbox(evt)) {
       this._addCheckboxActiveState() ;
-      this._isMouseInsideCheckbox = YES ;
+      this._isMouseInsideCheckbox = true ;
     } else if (this._isMouseDownOnCheckbox) {
       this._removeCheckboxActiveState() ;
       this._isMouseInsideCheckbox = NO ;
     } else if (this._isMouseDownOnDisclosure && this._isInsideDisclosure(evt)) {
       this._addDisclosureActiveState();
-      this._isMouseInsideDisclosure = YES;
+      this._isMouseInsideDisclosure = true;
     } else if (this._isMouseDownOnDisclosure) {
       this._removeDisclosureActiveState();
       this._isMouseInsideDisclosure = NO ;
     } else if (this._isMouseDownOnRightIcon && this._isInsideRightIcon(evt)) {
       this._addRightIconActiveState();
-      this._isMouseInsideRightIcon = YES;
+      this._isMouseInsideRightIcon = true;
     } else if (this._isMouseDownOnRightIcon) {
       this._removeRightIconActiveState();
       this._isMouseInsideRightIcon = NO ;
@@ -661,7 +661,7 @@ SC.ListItemView = SC.View.extend(
   },
 
   _addRightIconActiveState: function() {
-    this.$('img.right-icon').setClass('active', YES);
+    this.$('img.right-icon').setClass('active', true);
   },
   
   _removeRightIconActiveState: function() {
@@ -676,7 +676,7 @@ SC.ListItemView = SC.View.extend(
     returned.
   
     @param evt {Event} the mouseUp event.
-    @returns {Boolean} YES if the mouse was on the content element itself.
+    @returns {Boolean} true if the mouse was on the content element itself.
   */
   contentHitTest: function(evt) {
     // if not content value is returned, not much to do.
@@ -690,7 +690,7 @@ SC.ListItemView = SC.View.extend(
 
     var cur = evt.target, layer = this.get('layer') ;
     while(cur && (cur !== layer) && (cur !== window)) {
-      if (cur === el) return YES ;
+      if (cur === el) return true ;
       cur = cur.parentNode ;
     }
 
@@ -698,9 +698,9 @@ SC.ListItemView = SC.View.extend(
   },
   
   beginEditing: function() {
-    if (this.get('isEditing')) return YES ;
+    if (this.get('isEditing')) return true ;
     //if (!this.get('contentIsEditable')) return NO ;
-    return this._beginEditing(YES);
+    return this._beginEditing(true);
   },
   
   _beginEditing: function(scrollIfNeeded) {
@@ -724,7 +724,7 @@ SC.ListItemView = SC.View.extend(
         var item = collectionView.itemViewForContentIndex(idx);
         if (item && item._beginEditing) item._beginEditing(NO);
       });
-      return YES; // let the scroll happen then begin editing...
+      return true; // let the scroll happen then begin editing...
     }
     
     // nothing to do...    
@@ -767,7 +767,7 @@ SC.ListItemView = SC.View.extend(
       delegate: this, 
       value: v,
       multiline: NO,
-      isCollection: YES,
+      isCollection: true,
       validator: validator,
       escapeHTML: escapeHTML
     }) ;
@@ -781,12 +781,12 @@ SC.ListItemView = SC.View.extend(
   },
   
   commitEditing: function() {
-   if (!this.get('isEditing')) return YES ;
+   if (!this.get('isEditing')) return true ;
    return SC.InlineTextFieldView.commitEditing();
   },
   
   discardEditing: function() {
-   if (!this.get('isEditing')) return YES ;
+   if (!this.get('isEditing')) return true ;
    return SC.InlineTextFieldView.discardEditing();
   },
   
@@ -794,7 +794,7 @@ SC.ListItemView = SC.View.extend(
    Set editing to true so edits will no longer be allowed.
   */
   inlineEditorWillBeginEditing: function(inlineEditor) {
-   this.set('isEditing', YES);
+   this.set('isEditing', true);
   },
   
   /** @private 
@@ -810,18 +810,18 @@ SC.ListItemView = SC.View.extend(
    Could check with a validator someday...
   */
   inlineEditorShouldBeginEditing: function(inlineEditor) {
-   return YES ;
+   return true ;
   },
 
   /** @private
    Could check with a validator someday...
   */
   inlineEditorShouldBeginEditing: function(inlineEditor, finalValue) {
-    return YES ;
+    return true ;
   },
 
   inlineEditorShouldEndEditing: function(inlineEditor, finalValue) {
-   return YES ;
+   return true ;
   },
   
   /** @private

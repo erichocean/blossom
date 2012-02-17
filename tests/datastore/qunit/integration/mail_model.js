@@ -19,18 +19,18 @@ suite("Sample Model from a webmail app", {
     Mail.Mailbox = SC.Record.extend({
 
       name:    SC.Record.attr(String, {
-        isRequired: YES
+        isRequired: true
       }),
 
       // here is the mailbox type.  must be one of INBOX, TRASH, OTHER
       mailbox: SC.Record.attr(String, {
-        isRequired: YES,
+        isRequired: true,
         only: 'INBOX TRASH OTHER'.w()
       }),
       
       // this is the sortKey that should be used to order the mailbox.
       sortKey: SC.Record.attr(String, {
-        isRequired: YES,
+        isRequired: true,
         only: 'subject date from to'.w()
       }),
       
@@ -49,18 +49,18 @@ suite("Sample Model from a webmail app", {
     // guids.
     Mail.Message = SC.Record.extend({
 
-      date:        SC.Record.attr(Date, { isRequired: YES }),
+      date:        SC.Record.attr(Date, { isRequired: true }),
       
       mailboxes:   SC.Record.toMany('Mail.Mailbox', {
         inverse: 'messages',
-        isMaster: YES,
+        isMaster: true,
         minimum: 1 // you cannot have less than one mailbox.
       }),
       
       // describe the message detail.
       messageDetail: SC.Record.toOne('Mail.MessageDetail', {
         inverse: "message", // MessageDetail.message should == this.primaryKey
-        isDependent: YES 
+        isDependent: true 
       }),
 
       // access the named property through another property.

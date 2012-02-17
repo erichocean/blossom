@@ -65,10 +65,10 @@ SC.InlineEditorDelegate = {
       
       @param inlineEditor {SC.InlineTextFieldView} the inline editor
       @param finalValue {Object} the final value
-      @returns {Boolean} YES to allow the editor to end editing.
+      @returns {Boolean} true to allow the editor to end editing.
     */
     inlineEditorShouldEndEditing: function(inlineEditor, finalValue) {
-      return YES ;
+      return true ;
     },
     
     /**

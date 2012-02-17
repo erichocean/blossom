@@ -26,7 +26,7 @@ sc_require('models/record_attribute');
 SC.ChildAttribute = SC.RecordAttribute.extend(
   /** @scope SC.ChildAttribute.prototype */ {
     
-  isNestedRecordTransform: YES,
+  isNestedRecordTransform: true,
       
   // ..........................................................
   // LOW-LEVEL METHODS

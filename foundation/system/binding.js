@@ -372,9 +372,9 @@ SC.Binding = {
   connect: function() {
     // If the binding is already connected, do nothing.
     if (this.isConnected) return this ;
-    this.isConnected = YES ;
-    this._connectionPending = YES ; // its connected but not really...    
-    this._syncOnConnect = YES ;
+    this.isConnected = true ;
+    this._connectionPending = true ; // its connected but not really...    
+    this._syncOnConnect = true ;
     SC.Binding._connectQueue.add(this) ;
     return this; 
   },
@@ -480,7 +480,7 @@ SC.Binding = {
       if (this.noDelay) {
         this.applyBindingValue();
       } else {
-        this._changePending = YES ;
+        this._changePending = true ;
         SC.Binding._changeQueue.add(this) ; // save for later.
       }
     }
@@ -508,7 +508,7 @@ SC.Binding = {
       if (this.noDelay) {
         this.applyBindingValue();
       } else {
-        this._changePending = YES ;
+        this._changePending = true ;
         SC.Binding._changeQueue.add(this) ; // save for later.
       }
     }
@@ -561,13 +561,13 @@ SC.Binding = {
   /**
     Call this method on SC.Binding to flush all bindings with changed pending.
     
-    @returns {Boolean} YES if changes were flushed.
+    @returns {Boolean} true if changes were flushed.
   */
   flushPendingChanges: function() {
     
     // don't allow flushing more than one at a time
     if (this._isFlushing) return NO; 
-    this._isFlushing = YES ;
+    this._isFlushing = true ;
     SC.Observers.suspendPropertyObserving();
 
     var didFlush = NO,
@@ -584,7 +584,7 @@ SC.Binding = {
     while ((queue = this._changeQueue).length > 0) {
       if (log) console.log("Begin: Trigger changed bindings") ;
       
-      didFlush = YES ;
+      didFlush = true ;
       
       // first, swap the change queues.  This way any binding changes that
       // happen while we flush the current queue can be queued up.
@@ -659,7 +659,7 @@ SC.Binding = {
     
     // connection is pending, just note that we should sync also
     if (this._connectionPending) {
-      this._syncOnConnect = YES ;
+      this._syncOnConnect = true ;
       
     // we are connected, go ahead and sync
     } else {
@@ -678,7 +678,7 @@ SC.Binding = {
         if (this.noDelay) {
           this.applyBindingValue();
         } else {
-          this._changePending = YES ;
+          this._changePending = true ;
           SC.Binding._changeQueue.add(this) ; // save for later.  
         }
       }
@@ -748,7 +748,7 @@ SC.Binding = {
     // beget if needed.
     var binding = this.from(fromPath) ;
     if (binding === SC.Binding) binding = binding.beget() ;
-    binding._oneWay = (aFlag === undefined) ? YES : aFlag ;
+    binding._oneWay = (aFlag === undefined) ? true : aFlag ;
     return binding ;
   },
   
@@ -830,7 +830,7 @@ SC.Binding = {
     // beget if needed.
     var binding = this.from(fromPath) ;
     if (binding === SC.Binding) binding = binding.beget() ;
-    binding._noError = (aFlag === undefined) ? YES : aFlag ;
+    binding._noError = (aFlag === undefined) ? true : aFlag ;
     return binding ;
   },
   
@@ -918,8 +918,8 @@ SC.Binding = {
   
   /**
     Adds a transform to convert the value to a bool value.  If the value is
-    an array it will return YES if array is not empty.  If the value is a string
-    it will return YES if the string is not empty.
+    an array it will return true if array is not empty.  If the value is a string
+    it will return true if the string is not empty.
   
     @param fromPath {String} optional from path
     @returns {SC.Binding} this
@@ -1002,7 +1002,7 @@ SC.Binding = {
   },
   
   /**
-    Adds a transform that will return YES if the value is null, NO otherwise.
+    Adds a transform that will return true if the value is null, NO otherwise.
     
     @returns {SC.Binding} this
   */

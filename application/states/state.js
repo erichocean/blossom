@@ -325,10 +325,10 @@ SC.State = SC.Object.extend(
         state = this._addSubstate(key, value);
         if (key === initialSubstate) {
           this.set('initialSubstate', state);
-          matchedInitialSubstate = YES;
+          matchedInitialSubstate = true;
         } else if (historyState && historyState.get('defaultState') === key) {
           historyState.set('defaultState', state);
-          matchedInitialSubstate = YES;
+          matchedInitialSubstate = true;
         }
       }
     }
@@ -353,7 +353,7 @@ SC.State = SC.Object.extend(
     this.notifyPropertyChange('substates');
     this.set('currentSubstates', []);
     this.set('enteredSubstates', []);
-    this.set('stateIsInitialized', YES);
+    this.set('stateIsInitialized', true);
   },
   
   /** @private 
@@ -612,7 +612,7 @@ SC.State = SC.Object.extend(
     var i = 0, 
         args = handler.args, 
         len = args.length, 
-        arg, validHandlers = YES;
+        arg, validHandlers = true;
     
     for (; i < len; i += 1) {
       arg = args[i];
@@ -1019,7 +1019,7 @@ SC.State = SC.Object.extend(
   
   /**
     Called by the statechart to allow a state to try and handle the given event. If the
-    event is handled by the state then YES is returned, otherwise NO.
+    event is handled by the state then true is returned, otherwise NO.
     
     There is a particular order in how an event is handled by a state:
     
@@ -1171,7 +1171,7 @@ SC.State = SC.Object.extend(
     @see #enterState
   */
   stateWillBecomeEntered: function(context) { 
-    this._isEnteringState = YES;
+    this._isEnteringState = true;
   },
   
   /**
@@ -1222,7 +1222,7 @@ SC.State = SC.Object.extend(
     @see #exitState
   */
   stateWillBecomeExited: function(context) { 
-    this._isExitingState = YES;
+    this._isExitingState = true;
     this._teardownAllStateObserveHandlers();
   },
   
@@ -1317,7 +1317,7 @@ SC.State = SC.Object.extend(
   
   /** @override
   
-    Returns YES if this state can respond to the given event, otherwise
+    Returns true if this state can respond to the given event, otherwise
     NO is returned
   
     @param event {String} the value to check
@@ -1448,7 +1448,7 @@ SC.State.plugin = function(value) {
     }
     return klass.extend.apply(klass, args);
   };
-  func.statePlugin = YES;
+  func.statePlugin = true;
   return func;
 };
 

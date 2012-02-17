@@ -19,7 +19,7 @@ suite("SC.CollectionView.deleteSelection", {
     view = SC.CollectionView.create({
       content: content,
       selection: sel,
-      canDeleteContent: YES
+      canDeleteContent: true
     });
     
     beforeLen = content.get('length');
@@ -38,15 +38,15 @@ test("canDeleteContent", function() {
   equals(content.get('length'), beforeLen, 'content.length should not change');
   equals(view.get('selection').get('length'), 2, 'should not change selection');
   
-  view.set('canDeleteContent', YES);
-  equals(view.deleteSelection(), YES, 'should return YES if allowed');
+  view.set('canDeleteContent', true);
+  equals(view.deleteSelection(), true, 'should return true if allowed');
   equals(content.get('length'), afterLen, 'content.length should change');
   equals(view.get('selection').indexSetForSource(content).get('min'), 3, 'should select an adjacent item');
 });
 
 test("empty selection case", function() {
   view.select(null); // clear selection
-  view.set('canDeleteContent', YES);
+  view.set('canDeleteContent', true);
   equals(view.get('selection').get('length'), 0, 'precond - should have empty selection');
 
   equals(view.deleteSelection(), NO, 'should return NO if not allowed');
@@ -54,7 +54,7 @@ test("empty selection case", function() {
 });
 
 test("delegate.collectionViewShouldDeleteIndexes", function() {
-  view.set('canDeleteContent', YES);
+  view.set('canDeleteContent', true);
   view.delegate = SC.Object.create(SC.CollectionViewDelegate, {
     
     v: null,
@@ -70,7 +70,7 @@ test("delegate.collectionViewShouldDeleteIndexes", function() {
   // delegate returns partial
   view.delegate.v = SC.IndexSet.create(4,1);
   equals(view.get('selectionDelegate'), view.delegate, 'selection delegate should be delegate object');
-  equals(view.deleteSelection(), YES, 'should return YES if allowed');
+  equals(view.deleteSelection(), true, 'should return true if allowed');
   equals(content.get('length'), afterLen+1, 'content.length should change');
   equals(view.get('selection').get('length'), 1, 'non-deleted parts should remain selected %@'.fmt(view.get('selection')));
 });

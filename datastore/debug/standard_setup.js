@@ -22,7 +22,7 @@ var StandardTestSetup = {
         switch(this.get('fullName')) {
           case "Saul Tigh":
           case "Galen Tyrol":
-            return YES;
+            return true;
           default: 
             return NO;
         }

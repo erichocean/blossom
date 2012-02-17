@@ -17,7 +17,7 @@ test("adds displayDidChange observer on all display properties", function() {
   var didChange = NO ;
   var v = SC.View.create({
     // override just to make sure the registration works...
-    displayDidChange: function() { didChange = YES ; },
+    displayDidChange: function() { didChange = true ; },
     
     displayProperties: 'foo bar'.w(),
     
@@ -37,7 +37,7 @@ test("invokes createChildViews()", function() {
   var didInvoke = NO ;
   var v = SC.View.create({
     // override just for test
-    createChildViews: function() { didInvoke = YES; }
+    createChildViews: function() { didInvoke = true; }
   });
   ok(didInvoke, 'did invoke createChildViews()');
 });

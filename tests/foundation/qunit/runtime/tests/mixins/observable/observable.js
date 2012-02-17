@@ -418,12 +418,12 @@ test("allPropertiesDidChange should clear cache", function() {
 
 test('setting one of two computed properties that depend on a third property should clear the kvo cache', function() {
   // we have to call set twice to fill up the cache
-  object.set('isOff', YES);
-  object.set('isOn', YES);
+  object.set('isOff', true);
+  object.set('isOn', true);
   
-  // setting isOff to YES should clear the kvo cache
-  object.set('isOff', YES);
-  equals(object.get('isOff'), YES, 'object.isOff should be YES');
+  // setting isOff to true should clear the kvo cache
+  object.set('isOff', true);
+  equals(object.get('isOff'), true, 'object.isOff should be true');
   equals(object.get('isOn'), NO, 'object.isOn should be NO');
 });
 

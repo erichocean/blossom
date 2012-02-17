@@ -69,7 +69,7 @@ test("SC.Binding.bool(TestNamespace.fromObject.bar)) should create binding with 
   fromObject.set("bar", 1) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
   
   fromObject.set("bar", 0) ;
   
@@ -175,7 +175,7 @@ test("fooBinding: SC.Binding.bool(TestNamespace.fromObject.bar should create bin
   fromObject.set("bar", 1) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
   
   fromObject.set("bar", 0) ;
   
@@ -262,7 +262,7 @@ test("fooBinding: TestNamespace.fromObject.bar should have bool binding", functi
   fromObject.set("bar", 1) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
   
   fromObject.set("bar", 0) ;
   
@@ -286,7 +286,7 @@ test("fooBinding: SC.Binding.not(TestNamespace.fromObject.bar should override de
   fromObject.set("bar", 0) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
 });
 
 suite("fooBindingDefault: SC.Binding.bool() (new style)", {
@@ -328,7 +328,7 @@ test("fooBinding: TestNamespace.fromObject.bar should have bool binding", functi
   fromObject.set("bar", 1) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
   
   fromObject.set("bar", 0) ;
   
@@ -352,7 +352,7 @@ test("fooBinding: SC.Binding.not(TestNamespace.fromObject.bar should override de
   fromObject.set("bar", 0) ;
   
   SC.Binding.flushPendingChanges();
-  equals(YES, testObject.get("foo"), "testObject.foo == YES");
+  equals(true, testObject.get("foo"), "testObject.foo == true");
 });
 
 test("Chained binding should be null if intermediate object in chain is null", function() {

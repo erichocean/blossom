@@ -13,7 +13,7 @@
   var pane = SC.ControlTestPane.design({ height: 100 });
   
   pane.add("basic", SC.ContainerView, {
-      isEnabled: YES
+      isEnabled: true
     });
     
   pane.add("disabled", SC.ContainerView, {

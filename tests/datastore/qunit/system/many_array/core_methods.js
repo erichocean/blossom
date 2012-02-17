@@ -43,7 +43,7 @@ suite("SC.ManyArray core methods", {
       record: arrayRec,
       propertyName: "fooMany", 
       recordType: MyApp.Foo,
-      isEditable: YES
+      isEditable: true
     });
     arrayRec.relationships = [recs]; 
   },

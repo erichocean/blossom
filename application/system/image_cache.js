@@ -237,7 +237,7 @@ SC.imageCache = SC.Object.create(/** @scope SC.imageCache.prototype */ {
 
   /** @private Find or create an entry for the URL. */
   _imageEntryFor: function(url, createIfNeeded) {
-    if (createIfNeeded === undefined) createIfNeeded = YES;
+    if (createIfNeeded === undefined) createIfNeeded = true;
     var entry = this._images[url] ;
     if (!entry && createIfNeeded) {
       var img = new Image() ;
@@ -317,7 +317,7 @@ SC.imageCache = SC.Object.create(/** @scope SC.imageCache.prototype */ {
     
     // if the image loader is not already running, start it...
     if (!this.isLoading) this.invokeLater(this.loadNextImage, 100);
-    this.set('isLoading', YES);
+    this.set('isLoading', true);
     
     return this ; // done!
   },

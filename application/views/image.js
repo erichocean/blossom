@@ -82,24 +82,24 @@ SC.ImageView = SC.View.extend(SC.Control,
   value: null,
 
   /**
-    If YES, image view will use the imageCache to control loading.  This 
+    If true, image view will use the imageCache to control loading.  This 
     setting is generally preferred.
     
     @property {String}
   */
-  useImageCache: YES,
+  useImageCache: true,
   
   /**
-    If YES, this image can load in the background.  Otherwise, it is treated
+    If true, this image can load in the background.  Otherwise, it is treated
     as a foreground image.  If the image is not visible on screen, it will
     always be treated as a background image.
   */
   canLoadInBackground: NO,
   
   /**
-    If YES, any specified toolTip will be localized before display.
+    If true, any specified toolTip will be localized before display.
   */
-  localize: YES,
+  localize: true,
   
   displayProperties: 'status toolTip'.w(),
   
@@ -176,7 +176,7 @@ SC.ImageView = SC.View.extend(SC.Control,
 }) ;
 
 /**
-  Returns YES if the passed value looks like an URL and not a CSS class
+  Returns true if the passed value looks like an URL and not a CSS class
   name.
 */
 SC.ImageView.valueIsUrl = function(value) {

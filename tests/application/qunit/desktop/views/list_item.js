@@ -16,13 +16,13 @@ var pane = SC.ControlTestPane.design({ height: 32 })
     content: SC.Object.create({ 
       icon: "sc-icon-folder-16",
       title: "List Item", 
-      checkbox: YES,
+      checkbox: true,
       count: 23,
-      branch: YES 
+      branch: true 
     }),
     
-    hasContentIcon:  YES,
-    hasContentBranch: YES,
+    hasContentIcon:  true,
+    hasContentBranch: true,
 
     contentValueKey: "title",
     contentCheckboxKey: 'checkbox',
@@ -36,15 +36,15 @@ var pane = SC.ControlTestPane.design({ height: 32 })
     content: SC.Object.create({ 
       icon: "sc-icon-folder-16",
       title: "List Item", 
-      checkbox: YES,
+      checkbox: true,
       count: 23,
-      branch: YES
+      branch: true
     }),
 
-    isSelected: YES,
+    isSelected: true,
         
-    hasContentIcon:  YES,
-    hasContentBranch: YES,
+    hasContentIcon:  true,
+    hasContentBranch: true,
 
     contentValueKey: "title",
     contentLeftActionKey: 'checkbox',
@@ -68,12 +68,12 @@ var pane = SC.ControlTestPane.design({ height: 32 })
     contentValueKey: "title",
 
     contentIconKey:  "icon",
-    hasContentIcon:  YES
+    hasContentIcon:  true
 
   }))
 
-  .add("checkbox - YES", SC.ListItemView.design({ 
-    content: SC.Object.create({ title: "List Item", checkbox: YES }),
+  .add("checkbox - true", SC.ListItemView.design({ 
+    content: SC.Object.create({ title: "List Item", checkbox: true }),
     contentValueKey: "title",
     contentCheckboxKey:  "checkbox"
   }))
@@ -204,19 +204,19 @@ test("full", function() {
   basic(view, NO, NO);
   icon(view, 'sc-icon-folder-16');
   label(view, 'List Item');
-  checkbox(view, YES);
+  checkbox(view, true);
   count(view, 23);
-  branch(view, YES);
+  branch(view, true);
 });
 
 test("full - sel", function() {
   var view = pane.view('full - sel');
-  basic(view, YES, NO);
+  basic(view, true, NO);
   icon(view, 'sc-icon-folder-16');
   label(view, 'List Item');
-  checkbox(view, YES);
+  checkbox(view, true);
   count(view, 23);
-  branch(view, YES);
+  branch(view, true);
 });
 
 test("icon", function() {
@@ -225,7 +225,7 @@ test("icon", function() {
 });
 
 test('checkbox', function() {
-  checkbox(pane.view('checkbox - YES'), YES);
+  checkbox(pane.view('checkbox - true'), true);
   checkbox(pane.view('checkbox - NO'), NO);
 });
 

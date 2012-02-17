@@ -87,7 +87,7 @@ SC.Device = SC.Object.extend({
     if(SC.platform.touch) this.orientationchange();
     
     if(navigator && navigator.onLine===false) {
-      this.set('isOffline', YES);
+      this.set('isOffline', true);
     }
     
     this.panes = SC.Set.create();
@@ -110,12 +110,12 @@ SC.Device = SC.Object.extend({
     var body = SC.$(document.body),
         or = this.get('orientation');
     if(or === "portrait") {
-      body.setClass('portrait', YES);
+      body.setClass('portrait', true);
       body.setClass('landscape', NO);
     }
     if( or === "landscape" ) {
       body.setClass('portrait', NO);
-      body.setClass('landscape', YES);
+      body.setClass('landscape', true);
     }
   }.observes('orientation'),
   
@@ -124,7 +124,7 @@ SC.Device = SC.Object.extend({
   },
   
   offline: function(evt) {
-    this.set('isOffline', YES);
+    this.set('isOffline', true);
   }
 
 });

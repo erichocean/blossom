@@ -14,7 +14,7 @@ suite("SC.Record#writeAttribute", {
     json = { 
       foo: "bar", 
       number: 123,
-      bool: YES,
+      bool: true,
       array: [1,2,3],
       guid: 1
     };

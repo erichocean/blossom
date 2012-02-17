@@ -18,7 +18,7 @@ suite("SC.CollectionView Mouse Events", {
     
     contentController = SC.ArrayController.create({
       content: content,
-      allowsMultipleSelection: YES
+      allowsMultipleSelection: true
     });
 
     view = SC.CollectionView.create({
@@ -30,8 +30,8 @@ suite("SC.CollectionView Mouse Events", {
         return { left: 0, right: 0, top: idx * 50, height: 50 };
       },
       
-      isVisibleInWindow: YES,
-      acceptsFirstResponder: YES
+      isVisibleInWindow: true,
+      acceptsFirstResponder: true
     });
     
     pane = SC.MainPane.create();
@@ -49,7 +49,7 @@ suite("SC.CollectionView Mouse Events", {
 });
 
 /* 
-  Simulates clicking on the specified index.  If you pass verify as YES or NO
+  Simulates clicking on the specified index.  If you pass verify as true or NO
   also verifies that the item view is subsequently selected or not.
   
   @param {SC.CollectionView} view the view
@@ -146,7 +146,7 @@ test("clicking on unselected item should clear selection and select it", functio
 
 test("first responder", function() {
   clickOn(view, 3);
-  equals(view.get('isFirstResponder'), YES, 'view.isFirstResponder should be YES after mouse down');
+  equals(view.get('isFirstResponder'), true, 'view.isFirstResponder should be true after mouse down');
 });
 
 // ..........................................................
@@ -154,15 +154,15 @@ test("first responder", function() {
 // 
 
 test("ctrl-clicking on unselected item should add to selection", function() {
-  clickOn(view,3, NO, YES, selectionFromIndex(3));
-  clickOn(view,5, NO, YES, selectionFromIndex(3).addObject(content.objectAt(5)));
+  clickOn(view,3, NO, true, selectionFromIndex(3));
+  clickOn(view,5, NO, true, selectionFromIndex(3).addObject(content.objectAt(5)));
 });
 
 test("ctrl-clicking on selected item should remove from selection", function() {
-  clickOn(view,3, NO, YES, selectionFromIndex(3));
-  clickOn(view,5, NO, YES, selectionFromIndex(3).addObject(content.objectAt(5)));
-  clickOn(view,3, NO, YES, selectionFromIndex(5));
-  clickOn(view,5, NO, YES, SC.SelectionSet.create());
+  clickOn(view,3, NO, true, selectionFromIndex(3));
+  clickOn(view,5, NO, true, selectionFromIndex(3).addObject(content.objectAt(5)));
+  clickOn(view,3, NO, true, selectionFromIndex(5));
+  clickOn(view,5, NO, true, SC.SelectionSet.create());
 });
 
 // ..........................................................
@@ -171,69 +171,69 @@ test("ctrl-clicking on selected item should remove from selection", function() {
 
 test("shift-clicking on an item below should extend the selection", function() {
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
-  clickOn(view, 5, YES, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
+  clickOn(view, 5, true, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
 });
 
 
 test("shift-clicking on an item above should extend the selection", function() {
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
-  clickOn(view, 1, YES, NO, selectionFromIndexSet(SC.IndexSet.create(1,3)));
+  clickOn(view, 1, true, NO, selectionFromIndexSet(SC.IndexSet.create(1,3)));
 });
 
 test("shift-clicking inside selection first time should reduce selection from top", function() {
   view.select(SC.IndexSet.create(3,4));
-  clickOn(view,4, YES, NO, selectionFromIndexSet(SC.IndexSet.create(3,2)));
+  clickOn(view,4, true, NO, selectionFromIndexSet(SC.IndexSet.create(3,2)));
 });
 
 test("shift-click below to extend selection down then shift-click inside selection should reduce selection", function() {
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
-  clickOn(view, 5, YES, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
-  clickOn(view,4, YES, NO, selectionFromIndexSet(SC.IndexSet.create(3,2)));
+  clickOn(view, 5, true, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
+  clickOn(view,4, true, NO, selectionFromIndexSet(SC.IndexSet.create(3,2)));
 });
 
 test("shift-click above to extend selection down then shift-click inside selection should reduce top of selection", function() {
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
-  clickOn(view, 1, YES, NO, selectionFromIndexSet(SC.IndexSet.create(1,3)));
-  clickOn(view,2, YES, NO, selectionFromIndexSet(SC.IndexSet.create(2,2)));
+  clickOn(view, 1, true, NO, selectionFromIndexSet(SC.IndexSet.create(1,3)));
+  clickOn(view,2, true, NO, selectionFromIndexSet(SC.IndexSet.create(2,2)));
 });
 
 test("shift-click below bottom of selection then shift click on top of selection should select only top item", function() {
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
-  clickOn(view, 5, YES, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
-  clickOn(view,3, YES, NO, selectionFromIndex(3));
+  clickOn(view, 5, true, NO, selectionFromIndexSet(SC.IndexSet.create(3,3)));
+  clickOn(view,3, true, NO, selectionFromIndex(3));
 });
 
 test("clicking on an item should select it when useToggleSelection is true", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
 });
 
 test("clicking on an unselected item should select it when useToggleSelection is true", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   clickOn(view, 3, NO, NO, selectionFromIndex(3));
 });
 
 test("clicking on a selected item should deselect it when useToggleSelection is true", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   view.select(SC.IndexSet.create(3,1));
   clickOn(view, 3, NO, NO, SC.SelectionSet.create());
 });
 
 test("clicking on an unselected item should select it and add it to the selection when useToggleSelection is true", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   clickOn(view, 1, NO, NO, selectionFromIndex(1));
   clickOn(view, 3, NO, NO, selectionFromIndex(1).addObject(content.objectAt(3)));
 });
 
 test("clicking on a selected item should remove it from the selection when useToggleSelection is true", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   view.select(SC.IndexSet.create(1,5));
   clickOn(view, 5, NO, NO, selectionFromIndexSet(SC.IndexSet.create(1,4)));
 });
 
 
 test("clicking on an unselected item should select it and clear the previous selection when useToggleSelection is true and allowsMultipleSelection is not", function() {
-  view.set('useToggleSelection', YES);
+  view.set('useToggleSelection', true);
   contentController.set('allowsMultipleSelection', NO);
   clickOn(view, 1, NO, NO, selectionFromIndex(1));
   clickOn(view, 3, NO, NO, selectionFromIndex(3));

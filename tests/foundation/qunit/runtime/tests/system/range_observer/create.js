@@ -27,7 +27,7 @@ suite("SC.RangeObserver#create", {
       
     });
 
-    obj = SC.RangeObserver.create(source, indexes, observer, observer.rangeDidChange, "context", YES);
+    obj = SC.RangeObserver.create(source, indexes, observer, observer.rangeDidChange, "context", true);
     
   }
 });

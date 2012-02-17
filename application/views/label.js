@@ -79,7 +79,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   
   /**
     The hint to display if no value is set.  Should be used only if isEditable
-    is set to YES.
+    is set to true.
   */
   hint: null,
 
@@ -106,7 +106,7 @@ SC.LabelView = SC.View.extend(SC.Control,
   textAlign: SC.ALIGN_LEFT,
   
   /**
-    If you want the inline editor to be multiline set this property to YES.
+    If you want the inline editor to be multiline set this property to true.
   */
   isInlineEditorMultiline: NO,
   
@@ -176,14 +176,14 @@ SC.LabelView = SC.View.extend(SC.Control,
   isEditableBindingDefault: SC.Binding.bool(),
 
   /**
-    YES if currently editing label view.
+    true if currently editing label view.
   */
   isEditing: NO,
   
   /**
     Validator to use during inline editing.
     
-    If you have set isEditing to YES, then any validator you set on this
+    If you have set isEditing to true, then any validator you set on this
     property will be used when the label view is put into edit mode.
     
     @type {SC.Validator}
@@ -204,10 +204,10 @@ SC.LabelView = SC.View.extend(SC.Control,
     Opens the inline text editor (closing it if it was already open for 
     another view).
     
-    @return {Boolean} YES if did begin editing
+    @return {Boolean} true if did begin editing
   */
   beginEditing: function() {
-    if (this.get('isEditing')) return YES ;
+    if (this.get('isEditing')) return true ;
     if (!this.get('isEditable')) return NO ;
 
     var el = this.$(),
@@ -235,7 +235,7 @@ SC.LabelView = SC.View.extend(SC.Control,
     @return {Boolean} NO if the editor could not exit.
   */
   discardEditing: function() {
-    if (!this.get('isEditing')) return YES ;
+    if (!this.get('isEditing')) return true ;
     return SC.InlineTextFieldView.discardEditing() ;
   },
   
@@ -245,7 +245,7 @@ SC.LabelView = SC.View.extend(SC.Control,
     @return {Boolean} NO if the editor could not exit
   */
   commitEditing: function() {
-    if (!this.get('isEditing')) return YES ;
+    if (!this.get('isEditing')) return true ;
     return SC.InlineTextFieldView.commitEditing() ;
   },
 
@@ -253,7 +253,7 @@ SC.LabelView = SC.View.extend(SC.Control,
     Set editing to true so edits will no longer be allowed.
   */
   inlineEditorWillBeginEditing: function(inlineEditor) {
-    this.set('isEditing', YES);
+    this.set('isEditing', true);
   },
 
   /** @private 
@@ -276,7 +276,7 @@ SC.LabelView = SC.View.extend(SC.Control,
     Could check with a validator someday...
   */
   inlineEditorShouldEndEditing: function(inlineEditor, finalValue) {
-    return YES ;
+    return true ;
   },
 
   /** @private

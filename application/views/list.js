@@ -64,10 +64,10 @@ SC.ListView = SC.CollectionView.extend(
   
   classNames: ['sc-list-view'],
 
-  acceptsFirstResponder: YES,
+  acceptsFirstResponder: true,
   
   /**
-  * If set to YES, the default theme will show alternating rows
+  * If set to true, the default theme will show alternating rows
   * for the views this ListView created through exampleView property.
   *
   * @property {Boolean} 
@@ -469,7 +469,7 @@ SC.ListView = SC.CollectionView.extend(
     
     if (dropOperation & SC.DROP_ON) {
       this.hideInsertionPoint();
-      itemView.set('isSelected', YES);
+      itemView.set('isSelected', true);
       this._lastDropOnView = itemView;
     } else {
 

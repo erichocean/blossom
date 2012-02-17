@@ -23,7 +23,7 @@
     }
   }).add("auto resize", SC.WebView, {
     value: sc_static('iframe'),
-    shouldAutoResize: YES,
+    shouldAutoResize: true,
     layout: {
       width: 250,
       height: 150
@@ -73,12 +73,12 @@
     equals(iframe.attr('src'), "/store_configurator", "should have source in the iframe as \'/store_configurator\'");
   });
 
-  test('auto resize tests, shouldAutoResize:YES',
+  test('auto resize tests, shouldAutoResize:true',
   function() {
     var view = pane.view('auto resize');
     //set the test wrapper element's overflow to auto so that you can see the resize magic'
     view.$()[0].parentNode.style.overflow = "auto";
-    equals(view.get('shouldAutoResize'), YES, 'should have auto resize flag as true');
+    equals(view.get('shouldAutoResize'), true, 'should have auto resize flag as true');
     stop();
     SC.Event.add(view.$('iframe')[0], 'load', this,
     function() {

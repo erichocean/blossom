@@ -23,7 +23,7 @@ test("should return different guid for different instances", function() {
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(objectA), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(objectA), 0))) ;
 });
 
 var stringA, stringACopy, stringB ; // global variables
@@ -51,7 +51,7 @@ test("two instances with different value should have different guid", function()
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(stringA), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(stringA), 0))) ;
 });
 
 var numberA, numberACopy, numberB ; // global variables
@@ -79,7 +79,7 @@ test("two instances with different value should have different guid", function()
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(numberA), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(numberA), 0))) ;
 });
 
 suite("Boolean") ;
@@ -94,8 +94,8 @@ test("true should have different guid than false", function() {
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(true), 0)), 'guid for boolean-true') ;
-  equals(YES, isNaN(parseInt(SC.guidFor(false), 0)), 'guid for boolean-false') ;
+  equals(true, isNaN(parseInt(SC.guidFor(true), 0)), 'guid for boolean-true') ;
+  equals(true, isNaN(parseInt(SC.guidFor(false), 0)), 'guid for boolean-false') ;
 });
 
 suite("Null and Undefined") ;
@@ -110,8 +110,8 @@ test("null should have different guid than undefined", function() {
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(null), 0))) ;
-  equals(YES, isNaN(parseInt(SC.guidFor(undefined), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(null), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(undefined), 0))) ;
 });
 
 var array1, array1copy, array2, array2copy;
@@ -145,7 +145,7 @@ test("two instances with different value should have different guid", function()
 });
 
 test("guid should not parse to a number", function() {
-  equals(YES, isNaN(parseInt(SC.guidFor(array1), 0))) ;
+  equals(true, isNaN(parseInt(SC.guidFor(array1), 0))) ;
 });
 
 var obj1, obj2, str, arr;

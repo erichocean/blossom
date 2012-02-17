@@ -14,7 +14,7 @@ SC.ArraySuite.define(function(T) {
   var expected, array, observer, rangeObserver ;
 
   // ..........................................................
-  // MODULE: isDeep = YES 
+  // MODULE: isDeep = true 
   // 
   suite(T.desc("RangeObserver Methods"), {
     setup: function() {

@@ -44,9 +44,9 @@ SC.Record = SC.Object.extend(
     Walk like a duck
 
     @type Boolean
-    @default YES
+    @default true
   */
-  isRecord: YES,
+  isRecord: true,
 
   /**
     If you have nested records
@@ -135,7 +135,7 @@ SC.Record = SC.Object.extend(
   storeKey: null,
 
   /**
-    YES when the record has been destroyed
+    true when the record has been destroyed
 
     @type Boolean
     @property
@@ -146,12 +146,12 @@ SC.Record = SC.Object.extend(
   }.property('status').cacheable(),
 
   /**
-    `YES` when the record is in an editable state.  You can use this property to
+    `true` when the record is in an editable state.  You can use this property to
     quickly determine whether attempting to modify the record would raise an
     exception or not.
 
     This property is both readable and writable.  Note however that if you
-    set this property to `YES` but the status of the record is anything but
+    set this property to `true` but the status of the record is anything but
     `SC.Record.READY`, the return value of this property may remain `NO`.
 
     @type Boolean
@@ -169,10 +169,10 @@ SC.Record = SC.Object.extend(
 
     Backing value for isEditable
   */
-  _screc_isEditable: YES, // default
+  _screc_isEditable: true, // default
 
   /**
-    `YES` when the record's contents have been loaded for the first time.  You
+    `true` when the record's contents have been loaded for the first time.  You
     can use this to quickly determine if the record is ready to display.
 
     @type Boolean
@@ -227,7 +227,7 @@ SC.Record = SC.Object.extend(
         storeKey = this.storeKey,
         ret      = store.readDataHash(storeKey);
 
-    if (ret) ret = SC.clone(ret, YES);
+    if (ret) ret = SC.clone(ret, true);
 
     return ret;
   }.property(),
@@ -251,7 +251,7 @@ SC.Record = SC.Object.extend(
         sk = this.get('storeKey'),
         prKey = store.parentStoreKeyExists(sk);
 
-    ret = prKey ? YES : NO;
+    ret = prKey ? true : NO;
     return ret;
   }.property().cacheable(),
 
@@ -303,7 +303,7 @@ SC.Record = SC.Object.extend(
   /**
     Deletes the record along with any dependent records.  This will mark the
     records destroyed in the store as well as changing the isDestroyed
-    property on the record to YES.  If this is a new record, this will avoid
+    property on the record to true.  If this is a new record, this will avoid
     creating the record in the first place.
 
     @param {boolean} recordOnly optional param if you want to only THIS record
@@ -481,7 +481,7 @@ SC.Record = SC.Object.extend(
       aggregates = [];
       for (key in this) {
         prop = this[key];
-        if (prop  &&  prop.isRecordAttribute  &&  prop.aggregate === YES) {
+        if (prop  &&  prop.isRecordAttribute  &&  prop.aggregate === true) {
           aggregates.push(key);
         }
       }
@@ -524,7 +524,7 @@ SC.Record = SC.Object.extend(
           if (parentStatus === readyClean) {
             // Note:  storeDidChangeProperties() won't put it in the
             //        changelog!
-            rec.get('store').recordDidChange(rec.constructor, null, rec.get('storeKey'), null, YES);
+            rec.get('store').recordDidChange(rec.constructor, null, rec.get('storeKey'), null, true);
           }
         }
       }
@@ -611,7 +611,7 @@ SC.Record = SC.Object.extend(
           // As we go, we'll build up a key —> attribute mapping table that we
           // can use when purging keys from the data hash that are not defined
           // in the schema, below.
-          keysToKeep[keyForDataHash] = YES;
+          keysToKeep[keyForDataHash] = true;
 
           isRecord = SC.typeOf(typeClass.call(valueForKey))===SC.T_CLASS;
           isChild  = valueForKey.isNestedRecordTransform;
@@ -698,7 +698,7 @@ SC.Record = SC.Object.extend(
       var storeKey = this.get('storeKey'),
         recordType = SC.Store.recordTypeFor(storeKey);
 
-      if(recordType.ignoreUnknownProperties===YES) {
+      if(recordType.ignoreUnknownProperties===true) {
         this[key] = value;
         return value;
       }
@@ -752,7 +752,7 @@ SC.Record = SC.Object.extend(
   //
 
   /**
-    Returns `YES` whenever the status is SC.Record.ERROR.  This will allow you
+    Returns `true` whenever the status is SC.Record.ERROR.  This will allow you
     to put the UI into an error state.
 
     @type Boolean
@@ -799,7 +799,7 @@ SC.Record = SC.Object.extend(
 
     This version will first check to see if the property is an
     `SC.RecordAttribute`, and if so, will ensure that its isEditable property
-    is `YES` before attempting to change the value.
+    is `true` before attempting to change the value.
 
     @param key {String} the property to set
     @param value {Object} the value to set or null.
@@ -873,7 +873,7 @@ SC.Record = SC.Object.extend(
       childRecord = this.createNestedRecord(recordType, value);
     }
     if (childRecord){
-      this.isParentRecord = YES;
+      this.isParentRecord = true;
       store = this.get('store');
       psk = this.get('storeKey');
       csk = childRecord.get('storeKey');
@@ -1314,7 +1314,7 @@ SC.Record.mixin( /** @scope SC.Record */ {
     Use this helper when you define SC.Record subclasses.
 
         MyApp.Contact = SC.Record.extend({
-          firstName: SC.Record.attr(String, { isRequired: YES })
+          firstName: SC.Record.attr(String, { isRequired: true })
         });
 
     @param {Class} type the attribute type

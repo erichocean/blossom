@@ -79,21 +79,21 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     // if tagName is string, just setup for rendering new tagName
     if (tagNameOrElement === undefined) {
       tagNameOrElement = 'div' ;
-      tagNameOrElementIsString = YES ;
+      tagNameOrElementIsString = true ;
     }
     else if (tagNameOrElement === 'div'  ||  tagNameOrElement === 'label'  ||  tagNameOrElement === 'a') {
       // Fast path for common tags.
-      tagNameOrElementIsString = YES ;
+      tagNameOrElementIsString = true ;
     }
     else if (SC.typeOf(tagNameOrElement) === SC.T_STRING) {
       tagNameOrElement = tagNameOrElement.toLowerCase() ;
-      tagNameOrElementIsString = YES ;
+      tagNameOrElementIsString = true ;
     }
     
     if (tagNameOrElementIsString) {
       this._tagName     = tagNameOrElement ;
-      this._needsTag    = YES ; // used to determine if end() needs to wrap tag
-      this.needsContent = YES ;
+      this._needsTag    = true ; // used to determine if end() needs to wrap tag
+      this.needsContent = true ;
       
       // increase length of all contexts to leave space for opening tag
       var c = this;
@@ -154,8 +154,8 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
   updateMode: SC.MODE_REPLACE,
 
   /**
-    YES if the context needs its content filled in, not just its outer 
-    attributes edited.  This will be set to YES anytime you push strings into
+    true if the context needs its content filled in, not just its outer 
+    attributes edited.  This will be set to true anytime you push strings into
     the context or if you don't create it with an element to start with.
   */
   needsContent: NO,
@@ -196,7 +196,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     var c = this;
     while(c) { c.length += len; c = c.prevObject; }
     
-    this.needsContent = YES; 
+    this.needsContent = true; 
     
     return this;
   },
@@ -340,7 +340,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     
     // replace innerHTML
     if (this.length>0) {
-      this._innerHTMLReplaced = YES;
+      this._innerHTMLReplaced = true;
       if (mode === SC.MODE_REPLACE) {
         elem.innerHTML = this.join();
       } else {
@@ -540,7 +540,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       return this._tagName;
     } else {
       this._tagName = tagName;
-      this._tagNameDidChange = YES;
+      this._tagNameDidChange = true;
       return this ;
     }
   },
@@ -557,7 +557,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       return this._id ;
     } else {
       this._id = idName;
-      this._idDidChange = YES;
+      this._idDidChange = true;
       return this;
     }
   },
@@ -572,7 +572,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     call this method again to set the array or else it may not be copied to
     the element.
 
-    If you do pass a classNames array, you can also pass YES for the 
+    If you do pass a classNames array, you can also pass true for the 
     cloneOnModify param.  This will cause the context to clone the class names
     before making any further edits.  This is useful is you have a shared 
     array of class names you want to start with but edits should not change
@@ -600,13 +600,13 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     } else {
       this._classNames = classNames ;
       this._cloneClassNames = cloneOnModify || NO ;
-      this._classNamesDidChange = YES ;
+      this._classNamesDidChange = true ;
       return this ;
     }
   },
   
   /**
-    Returns YES if the outer tag current has the passed class name, NO 
+    Returns true if the outer tag current has the passed class name, NO 
     otherwise.
     
     @param {String} className the class name
@@ -633,14 +633,14 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     if(SC.typeOf(nameOrClasses) === SC.T_STRING){
       if (classNames.indexOf(nameOrClasses)<0) {
         classNames.push(nameOrClasses);
-        this._classNamesDidChange = YES ;
+        this._classNamesDidChange = true ;
       }
     } else {
       for(var i = 0, iLen= nameOrClasses.length; i<iLen; i++){
         var cl = nameOrClasses[i];
         if (classNames.indexOf(cl)<0) {
           classNames.push(cl);
-          this._classNamesDidChange = YES ;
+          this._classNamesDidChange = true ;
         }
       }
     }
@@ -672,7 +672,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       // extra space to the generated HTML but it is faster than trying to 
       // recompact the array.
       classNames[idx] = null;
-      this._classNamesDidChange = YES ;
+      this._classNamesDidChange = true ;
     }
     
     return this;
@@ -685,7 +685,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
   */
   resetClassNames: function() {
     this._classNames = [];
-    this._classNamesDidChange = YES ;
+    this._classNamesDidChange = true ;
     return this;
   },
   
@@ -728,12 +728,12 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
         if (!className.hasOwnProperty(key)) continue ;
         idx = classNames.indexOf(key);
         if (className[key]) {
-          if (idx<0) { classNames.push(key); didChange = YES; }
+          if (idx<0) { classNames.push(key); didChange = true; }
         } else {
-          if (idx>=0) { classNames[idx] = null; didChange = YES; }
+          if (idx>=0) { classNames[idx] = null; didChange = true; }
         }
       }
-      if (didChange) this._classNamesDidChange = YES;
+      if (didChange) this._classNamesDidChange = true;
     }
     
     return this ;
@@ -750,7 +750,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     the styles hash to edit it, you must set the hash again in order for it 
     to be applied to the element on rendering.
     
-    Optionally you can also pass YES to the cloneOnModify param to cause the
+    Optionally you can also pass true to the cloneOnModify param to cause the
     styles has to be cloned before it is edited.  This is useful if you want
     to start with a shared style hash and then optionally modify it for each
     context.
@@ -806,7 +806,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     } else {
       this._styles = styles ;
       this._cloneStyles = cloneOnModify || NO ;
-      this._stylesDidChange = YES ;
+      this._stylesDidChange = true ;
       return this ;
     }
   },
@@ -834,7 +834,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       } else { // writer
         if (styles[nameOrStyles] !== value) {
           styles[nameOrStyles] = value ;
-          this._stylesDidChange = YES ;
+          this._stylesDidChange = true ;
         }
       }
       
@@ -845,10 +845,10 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
         value = nameOrStyles[key];
         if (styles[key] !== value) {
           styles[key] = value;
-          didChange = YES;
+          didChange = true;
         }
       }
-      if (didChange) this._stylesDidChange = YES ;
+      if (didChange) this._stylesDidChange = true ;
     }
     
     return this ;
@@ -871,7 +871,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
     var styles = this.styles();
     if (styles[styleName]) {
       styles[styleName] = null;
-      this._stylesDidChange = YES ;
+      this._stylesDidChange = true ;
     }
   },
   
@@ -899,7 +899,7 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
       } else { // setter
         if (attrs[nameOrAttrs] !== value) {
           attrs[nameOrAttrs] = value ;
-          this._attrsDidChange = YES ;
+          this._attrsDidChange = true ;
         }
       }
       
@@ -910,10 +910,10 @@ SC.RenderContext = SC.Builder.create(/** SC.RenderContext.fn */ {
         value = nameOrAttrs[key];
         if (attrs[key] !== value) {
           attrs[key] = value ;
-          didChange = YES ;
+          didChange = true ;
         }
       }
-      if (didChange) this._attrsDidChange = YES ;
+      if (didChange) this._attrsDidChange = true ;
     }
     
     return this ;
@@ -963,7 +963,7 @@ SC.RenderContext.fn.css = SC.RenderContext.fn.addStyle;
 
 
 if (!SC.browser.isSafari || parseInt(SC.browser.version, 10) < 526) {
-  SC.RenderContext._safari3 = YES;
+  SC.RenderContext._safari3 = true;
 }
 
 SC.RenderContext.escapeHTML = function(text) {

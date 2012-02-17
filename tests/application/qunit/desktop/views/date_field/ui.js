@@ -33,19 +33,19 @@
   .add("date & time - empty", SC.DateFieldView, { 
     hint: "dd/mm/yyyy hh:mm AM/PM", 
     value: null,
-    showTime: YES
+    showTime: true
   })
   
   .add("date & time - with value", SC.DateFieldView, { 
     hint: "dd/mm/yyyy hh:mm AM/PM", 
     value: SC.DateTime.create({ day: 1, month: 1, year: 2010, hour: 10, minute: 20 }),
-    showTime: YES
+    showTime: true
   })
   
   .add("time - disabled - empty", SC.DateFieldView, { 
     hint: "hh:mm AM/PM", 
     value: null,
-    showTime: YES,
+    showTime: true,
     showDate: NO,
     isEnabled: NO
   })
@@ -53,7 +53,7 @@
   .add("time - disabled - with value", SC.DateFieldView, { 
     hint: "hh:mm AM/PM", 
     value: SC.DateTime.create({ hour: 10, minute: 20 }),
-    showTime: YES,
+    showTime: true,
     showDate: NO,
     isEnabled: NO
   });
@@ -141,13 +141,13 @@ test("with value", function() {
 test("disabled - empty", function() {
   var view = pane.view('disabled - empty');
   pane.verifyEmpty(view, 'dd/mm/yyyy');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("disabled - with value", function() {
   var view = pane.view('disabled - with value');
   pane.verifyNotEmpty(view, '01/01/2010', 'dd/mm/yyyy');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("date & time - empty", function() {
@@ -165,13 +165,13 @@ test("date & time - with value", function() {
 test("time - disabled - empty", function() {
   var view = pane.view('time - disabled - empty');
   pane.verifyEmpty(view, 'hh:mm AM/PM');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("time - disabled - with value", function() {
   var view = pane.view('time - disabled - with value');
   pane.verifyNotEmpty(view, '10:20 AM', 'hh:mm AM/PM');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 // ..........................................................
@@ -195,7 +195,7 @@ test("disabling view", function() {
   SC.RunLoop.begin();
   view.set('isEnabled', NO);
   SC.RunLoop.end();
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("changing value to null", function() {
@@ -214,7 +214,7 @@ test("enabling disabled view", function() {
 
   // test changing enabled state updates like it should
   SC.RunLoop.begin();
-  view.set('isEnabled', YES);
+  view.set('isEnabled', true);
   SC.RunLoop.end();
   pane.verifyDisabled(view, NO);
 });
@@ -407,7 +407,7 @@ test("focus and blurring text field", function() {
   SC.Event.trigger(input, 'focus');
   
   // verify editing state changed...
-  ok(view.get('isEditing'), 'view.isEditing should be YES');
+  ok(view.get('isEditing'), 'view.isEditing should be true');
   ok(view.$().hasClass('focus'), 'view layer should have focus class');
   
   // simulate typing a letter

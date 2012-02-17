@@ -31,11 +31,11 @@ SC.DRAG_AUTOSCROLL_ZONE_THICKNESS = 20;
     The drag view is not moved from its original location during a drag.
     If the dragView is not provided, the source is used as dragView.
   
-  - *ghost:  YES | NO*  If NO, the drag view image will show, but the source 
-    dragView will not be hidden.  Set to YES to make it appear that the 
+  - *ghost:  true | NO*  If NO, the drag view image will show, but the source 
+    dragView will not be hidden.  Set to true to make it appear that the 
     dragView itself is being dragged around.
   
-  - *slideBack: YES | NO*  If YES and the drag operation is cancelled, the 
+  - *slideBack: true | NO*  If true and the drag operation is cancelled, the 
     dragView will slide back to its source origin.
   
   - *origin:*  If passed, this will be used as the origin point for the 
@@ -79,7 +79,7 @@ SC.Drag = SC.Object.extend(
   ghostView: null,
   
   /**
-    If YES, then the ghostView will acts like a cursor and attach directly
+    If true, then the ghostView will acts like a cursor and attach directly
     to the mouse location.
     
     @readOnly
@@ -93,7 +93,7 @@ SC.Drag = SC.Object.extend(
     The drag view is not moved from its original location during a drag.
     Instead, the DOM content of the view is cloned and managed by the 
     ghostView.  If you want to visually indicate that the view is being 
-    moved, you should set ghost to YES.
+    moved, you should set ghost to true.
     If dragView is not provided the source is used instead.
     
     @readOnly
@@ -102,21 +102,21 @@ SC.Drag = SC.Object.extend(
   dragView: null,
   
   /**
-    If YES, the dragView is automatically hidden while dragging around the 
+    If true, the dragView is automatically hidden while dragging around the 
     ghost.
     
     @readOnly
     @type Boolean
   */
-  ghost: YES,
+  ghost: true,
   
   /**
-    If YES, then the ghostView will slide back to its original location if 
+    If true, then the ghostView will slide back to its original location if 
     drag is cancelled.
     
     @type Boolean
   */
-  slideBack: YES,
+  slideBack: true,
   
   /**
     The original mouse down event.
@@ -191,7 +191,7 @@ SC.Drag = SC.Object.extend(
     Checks for a named data type in the drag.
     
     @param dataType {String} the data type
-    @returns {Boolean} YES if data type is present in dataTypes array.
+    @returns {Boolean} true if data type is present in dataTypes array.
   */
   hasDataType: function(dataType) {
     return (this.get('dataTypes').indexOf(dataType) >= 0) ;
@@ -273,7 +273,7 @@ SC.Drag = SC.Object.extend(
   allowedDragOperations: SC.DRAG_ANY,
   
   /** @private required by autoscroll */
-  _dragInProgress: YES,
+  _dragInProgress: true,
 
   /** @private
     Stores the initial visibililty state of the dragView so it can be restored
@@ -344,7 +344,7 @@ SC.Drag = SC.Object.extend(
     this._destroyGhostView();
 
     if (this.get('ghost')) {
-      if (this._dragViewWasVisible) this._getDragView().set('isVisible', YES);
+      if (this._dragViewWasVisible) this._getDragView().set('isVisible', true);
       this._dragViewWasVisible = null;
     }
 
@@ -470,7 +470,7 @@ SC.Drag = SC.Object.extend(
 
     if (this.get('ghost')) {
       // Show the dragView if it was visible
-      if (this._dragViewWasVisible) this._getDragView().set('isVisible', YES) ;
+      if (this._dragViewWasVisible) this._getDragView().set('isVisible', true) ;
       this._dragViewWasVisible = null;
     }
 
@@ -539,7 +539,7 @@ SC.Drag = SC.Object.extend(
   },
   
   /**
-    YES if the ghostView has been manually hidden.
+    true if the ghostView has been manually hidden.
     
     @private 
     @type {Boolean}
@@ -553,7 +553,7 @@ SC.Drag = SC.Object.extend(
   hideGhostView: function() {
     if(this.ghostView && !this._ghostViewHidden) {
       this.ghostView.remove();
-      this._ghostViewHidden = YES;
+      this._ghostViewHidden = true;
     }
   },
 
@@ -672,7 +672,7 @@ SC.Drag = SC.Object.extend(
     the user keeps the mouse within a few pixels of one location for a little
     while.
     
-    Returns YES if a scroll was performed.
+    Returns true if a scroll was performed.
   */
   _autoscroll: function(evt) {
     if (!evt) evt = this._lastAutoscrollEvent ;
@@ -780,7 +780,7 @@ SC.Drag = SC.Object.extend(
         this._lastAutoscrollEvent = { pageX: evt.pageX, pageY: evt.pageY };
       }
       this.invokeLater(this._autoscroll, 100, null);
-      return YES ;
+      return true ;
     } else {
       this._lastAutoscrollEvent = null;
       return NO ;
@@ -879,7 +879,7 @@ SC.Drag.mixin(
     Register the view object as a drop target.
     
     This method is called automatically whenever a view is created with the
-    isDropTarget property set to YES.  You generally will not need to call it
+    isDropTarget property set to true.  You generally will not need to call it
     yourself.
     
     @param {SC.View} target a view implementing the SC.DropTarget protocol

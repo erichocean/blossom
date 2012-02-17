@@ -22,7 +22,7 @@
 SC.StatechartDelegate = /** @scope SC.StatechartDelegate.prototype */ {
   
   // Walk like a duck
-  isStatechartDelegate: YES,
+  isStatechartDelegate: true,
   
   // Route Handling Management
   
@@ -84,7 +84,7 @@ SC.StatechartDelegate = /** @scope SC.StatechartDelegate.prototype */ {
     `statechartStateCancelledHandlingTriggeredRoute` method. If yes then the state will 
     continue with handling the triggered route.
     
-    By default `YES` is returned.
+    By default `true` is returned.
     
     @param {SC.StatechartManager} statechart the statechart
     @param {SC.State} state the state making the request
@@ -94,7 +94,7 @@ SC.StatechartDelegate = /** @scope SC.StatechartDelegate.prototype */ {
     @see #statechartStateCancelledHandlingTriggeredRoute
   */
   statechartShouldStateHandleTriggeredRoute: function(statechart, state, context) {
-    return YES;
+    return true;
   },
   
   /**

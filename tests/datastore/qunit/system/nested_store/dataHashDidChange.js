@@ -16,7 +16,7 @@ suite("SC.NestedStore#dataHashDidChange", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey = SC.Store.generateStoreKey();
@@ -58,7 +58,7 @@ function testStateTransition(fromState, toState) {
   ok(oldrev !== store.revisions[storeKey], 'revisions should change. was: %@ - now: %@'.fmt(oldrev, store.revisions[storeKey]));
   ok(store.chainedChanges.contains(storeKey), 'changedChanges should now include storeKey');
   
-  equals(store.get('hasChanges'), YES, 'should have changes');
+  equals(store.get('hasChanges'), true, 'should have changes');
 } 
 
 test("edit state = INHERITED, parent editable = NO", function() {
@@ -69,7 +69,7 @@ test("edit state = INHERITED, parent editable = NO", function() {
   testStateTransition(SC.Store.INHERITED, SC.Store.LOCKED);
 }) ;
 
-test("edit state = INHERITED, parent editable = YES", function() {
+test("edit state = INHERITED, parent editable = true", function() {
 
   // verify preconditions
   parent.readEditableDataHash(storeKey);

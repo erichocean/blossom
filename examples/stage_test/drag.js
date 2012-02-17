@@ -66,7 +66,7 @@ BlossomTest.dragExample = function(stage) {
       this.moveToTop();
       this.draggingRectOffsetX = mousePos.x - this.get('x');
       this.draggingRectOffsetY = mousePos.y - this.get('y');
-      return YES;
+      return true;
     },
 
     mouseDragged: function(evt) {

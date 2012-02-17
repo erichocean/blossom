@@ -26,7 +26,7 @@ if (! BLOSSOM) {
 SC.SelectButtonView = SC.ButtonView.extend(
 /** @scope SC.SelectButtonView.prototype */ {
 
-  escapeHTML: YES,
+  escapeHTML: true,
 
   /**
     An array of items that will be form the menu you want to show.
@@ -92,9 +92,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
     @property
     @type {Boolean}
-    @default YES
+    @default true
   */
-  localize: YES,
+  localize: true,
 
   /**
     if true, it means that no sorting will occur, objects will appear
@@ -102,9 +102,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
     @property
     @type {Boolean}
-    @default YES
+    @default true
   */
-  disableSort: YES,
+  disableSort: true,
 
   /**
 
@@ -146,13 +146,13 @@ SC.SelectButtonView = SC.ButtonView.extend(
   value: null ,
 
   /**
-    if this property is set to 'YES', a checbox is shown next to the
+    if this property is set to `true`, a checbox is shown next to the
     selected menu item.
 
     @private
-    @default YES
+    @default true
   */
-  checkboxEnabled: YES,
+  checkboxEnabled: true,
 
   /**
     Set this property to required display positon of separtor from bottom
@@ -231,7 +231,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
   isActiveBinding: '*menu.isVisibleInWindow',
 
   /**
-    If this property is set to 'YES', the menu pane will be positioned
+    If this property is set to `true`, the menu pane will be positioned
     below the anchor.
 
     @private
@@ -266,9 +266,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
     This is a property for enabling/disabling ellipsis
 
     @private
-    @default YES
+    @default true
   */
-  needsEllipsis: YES,
+  needsEllipsis: true,
 
   /**
     This property allows you at add extra padding to the height
@@ -283,9 +283,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
     This is a property to enable/disable focus rings in buttons.
     For select_button we are making it a default.
 
-    @default YES
+    @default true
   */
-  supportFocusRing: YES,
+  supportFocusRing: true,
   
   /**
     Disable context menu.
@@ -374,7 +374,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     itemList = [] ;
 
     //to set the 'checkbox' property of menu items
-    isChecked = YES ;
+    isChecked = true ;
 
     //index for finding the first item in the list
     idx = 0 ;
@@ -411,7 +411,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
         //set the itemIdx - To change the prefMatrix accordingly.
         this.set('itemIdx', idx) ;
-        isChecked = !checkboxEnabled ? NO : YES ;
+        isChecked = !checkboxEnabled ? NO : true ;
       }
       else {
         isChecked = NO ;
@@ -421,7 +421,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
       itemEnabled = (isEnabledKey) ? (object.get ?
       object.get(isEnabledKey) : object[isEnabledKey]) : object ;
       
-      if(NO !== itemEnabled) itemEnabled = YES ;
+      if(NO !== itemEnabled) itemEnabled = true ;
 
       //Set the first item from the list as default selected item
       if (idx === 0) {
@@ -449,7 +449,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     // display the separator if specified by the user
     if (separatorPostion && idx === (len-separatorPostion)) {
       var separator = SC.Object.create({
-        separator: YES
+        separator: true
       }) ;
       itemList.push(separator);
     }
@@ -577,7 +577,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
       exampleView: customMenuView,
 
-      isEnabled: YES,
+      isEnabled: true,
       preferType: SC.PICKER_MENU,
       itemHeightKey: 'height',
       layout: { width: largestMenuWidth },
@@ -590,14 +590,14 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
         @param {String} keystring
         @param {SC.Event} evt
-        @returns {Boolean}  YES if handled
+        @returns {Boolean}  true if handled
       */
 
       performKeyEquivalent: function( keystring, evt ) {
         switch (keystring) {
           case 'tab':
           case 'shift_tab':
-            return YES ;
+            return true ;
           default:
             return arguments.callee.base.apply(this, arguments);
         }
@@ -613,8 +613,8 @@ SC.SelectButtonView = SC.ButtonView.extend(
     menu.set('currentMenuItem', customView) ;
     if (customView) customView.becomeFirstResponder();
 
-    this.set('isActive', YES);
-    return YES ;
+    this.set('isActive', true);
+    return true ;
   },
 
   /**
@@ -629,7 +629,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     this.set('title', currentItem.get('title')) ;
     this.set('itemIdx', currentItem.get('contentIndex')) ;
 
-    return YES;
+    return true;
   },
 
   /**
@@ -686,9 +686,9 @@ SC.SelectButtonView = SC.ButtonView.extend(
     Holding down the button should display the menu pane.
   */
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return YES ; // handled event, but do nothing
-    this.set('isActive', YES);
-    this._isMouseDown = YES;
+    if (!this.get('isEnabled')) return true ; // handled event, but do nothing
+    this.set('isActive', true);
+    this._isMouseDown = true;
     this.becomeFirstResponder() ;
     this._action() ;
 
@@ -699,7 +699,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
     // One mouseUp, we'll use this value to determine how long the mouse was
     // pressed.
     this.invokeLast(this._recordMouseDownTimestamp);
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -712,7 +712,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
   },
 
   /** @private
-    Because we responded YES to the mouseDown event, we have responsibility
+    Because we responded true to the mouseDown event, we have responsibility
     for handling the corresponding mouseUp event.
 
     However, the user may click on this button, then drag the mouse down to a
@@ -767,14 +767,14 @@ SC.SelectButtonView = SC.ButtonView.extend(
 
     // Reset state.
     this._isMouseDown = NO;
-    return YES;
+    return true;
   },
 
   /**
     Override mouseExited to not remove the active state on mouseexit.
   */
   mouseExited: function() {
-    return YES;
+    return true;
   },
 
   /**
@@ -784,7 +784,7 @@ SC.SelectButtonView = SC.ButtonView.extend(
   */
   keyDown: function(event) {
     if ( this.interpretKeyEvents(event) ) {
-      return YES;
+      return true;
     }
     else {
       return arguments.callee.base.apply(this, arguments);

@@ -11,11 +11,11 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 (function() {
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.CheckboxView, { 
-    value: NO, isEnabled: YES, title: "Hello World" 
+    value: NO, isEnabled: true, title: "Hello World" 
   })
 
   .add("selected", SC.CheckboxView, { 
-    value: YES, title: "Hello World" 
+    value: true, title: "Hello World" 
   })
 
   .add("disabled", SC.CheckboxView, { 
@@ -23,17 +23,17 @@ var pane = SC.ControlTestPane.design()
   })
 
   .add("disabled - selected", SC.CheckboxView, { 
-    isEnabled: NO, value: YES, title: "Hello World" 
+    isEnabled: NO, value: true, title: "Hello World" 
   })
 
   .add("static layout 1", SC.CheckboxView, {
-    useStaticLayout: YES, 
+    useStaticLayout: true, 
     layout: { width: 'auto', right: 'auto' },
     title: 'Static Layout'
   })
 
   .add("static layout 2", SC.CheckboxView, {
-    useStaticLayout: YES, 
+    useStaticLayout: true, 
     layout: { width: 'auto', right: 'auto' },
     title: 'Different Length Title'
   });

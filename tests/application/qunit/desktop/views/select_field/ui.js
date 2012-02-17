@@ -11,7 +11,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 
 var booleanObjects = [
   { n: 'False', v: NO },
-  { n: 'True', v: YES }
+  { n: 'True', v: true }
 ];
 
 var integerObjects = [
@@ -39,36 +39,36 @@ var pane = SC.ControlTestPane.design()
   
     .add("sortedStringOptions", SC.SelectFieldView, { 
       objects:["Apple","Sproutcore 1.0","Development","Charles"],
-  useStaticLayout: YES, 
+  useStaticLayout: true, 
       layout: { width: 'auto', right: 'auto' }
     })
       .add("unSortedStringOptions", SC.SelectFieldView, { 
         objects:["Apple","Sproutcore 1.0","Development","Charles"],
-    useStaticLayout: YES, 
-    disableSort: YES,
+    useStaticLayout: true, 
+    disableSort: true,
         layout: { width: 'auto', right: 'auto' }
       })
   
     .add("Width 150 Right 0", SC.SelectFieldView, { 
       objects: [1,6,11,2,8],
-      useStaticLayout: YES, 
+      useStaticLayout: true, 
       layout: { width: '150', right: '0' }
     })
     .add("redraw", SC.SelectFieldView, {
-      useStaticLayout: YES,
+      useStaticLayout: true,
       layout: { width: '150', right: '0' }
     })
     .add("selectBoolean", SC.SelectFieldView, {
       objects: booleanObjects,
       nameKey: 'n',
       valueKey: 'v',
-      disableSort: YES
+      disableSort: true
     })
     .add("selectInteger", SC.SelectFieldView, {
       objects: integerObjects,
       nameKey: 'n',
       valueKey: 'v',
-      disableSort: YES
+      disableSort: true
     });
 
   
@@ -143,9 +143,9 @@ test("selectFalse", function(){
 test("selectTrue", function(){
   var view = pane.view('selectBoolean');
   SC.RunLoop.begin();
-  view.set('value', YES);
+  view.set('value', true);
   SC.RunLoop.end();
-  equals(view.getFieldValue(), YES, 'the field values should change to False')
+  equals(view.getFieldValue(), true, 'the field values should change to False')
 });
 
 test("selectZero", function(){

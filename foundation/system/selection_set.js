@@ -33,7 +33,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
     
     @property {Boolean}
   */
-  isSelectionSet: YES,
+  isSelectionSet: true,
   
   /**
     Total number of indexes in the selection set
@@ -124,7 +124,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
     that have been added directly.
   */
   _indexSetForSource: function(source, canCreate) {
-    if (canCreate === undefined) canCreate = YES;
+    if (canCreate === undefined) canCreate = true;
 
     var guid  = SC.guidFor(source),
         index = this[guid],
@@ -191,7 +191,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
       }
     }
 
-    set    = this._indexSetForSource(source, YES);
+    set    = this._indexSetForSource(source, true);
     oldlen = this.get('length');
     setlen = set.get('length');
     newlen = oldlen - setlen;
@@ -251,7 +251,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
     }
     
     // save starter info
-    set    = this._indexSetForSource(source, YES);
+    set    = this._indexSetForSource(source, true);
     oldlen = this.get('length');
     newlen = oldlen - set.get('length');
 
@@ -292,7 +292,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
 
   
   /**
-    Returns YES if the selection contains the named index, range of indexes.
+    Returns true if the selection contains the named index, range of indexes.
     
     @param {Object} source source object for range
     @param {Number} start index, start of range, range object, or indexSet
@@ -310,7 +310,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
   },
 
   /**
-    Returns YES if the index set contains any of the passed indexes.  You
+    Returns true if the index set contains any of the passed indexes.  You
     can pass a single index, a range or an index set.
     
     @param {Object} source source object for range
@@ -429,7 +429,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
   },
 
   /**
-    Returns YES if the selection contains the passed object.  This will search
+    Returns true if the selection contains the passed object.  This will search
     selected ranges in all source objects.
     
     @param {Object} object the object to search for
@@ -438,14 +438,14 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
   containsObject: function(object) {
     // fast path
     var objects = this._objects ;
-    if (objects && objects.contains(object)) return YES ;
+    if (objects && objects.contains(object)) return true ;
     
     var sets = this._sets,
         len  = sets ? sets.length : 0,
         idx, set;
     for(idx=0;idx<len;idx++) {
       set = sets[idx];
-      if (set && set.indexOf(object)>=0) return YES;
+      if (set && set.indexOf(object)>=0) return true;
     }
     
     return NO ;
@@ -495,7 +495,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
   },
   
   /**
-    Returns YES if the passed index set or selection set contains the exact 
+    Returns true if the passed index set or selection set contains the exact 
     same source objects and indexes as  the receiver.  If you pass any object 
     other than an IndexSet or SelectionSet, returns NO.
     
@@ -507,8 +507,8 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
     
     // fast paths
     if (!obj || !obj.isSelectionSet) return NO ;
-    if (obj === this) return YES;
-    if ((this._sets === obj._sets) && (this._objects === obj._objects)) return YES;
+    if (obj === this) return true;
+    if ((this._sets === obj._sets) && (this._objects === obj._objects)) return true;
     if (this.get('length') !== obj.get('length')) return NO;
     
     // check objects
@@ -532,7 +532,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
       if (left && !left.isEqual(right)) return NO ;
     }
     
-    return YES ;
+    return true ;
   },
 
   /**

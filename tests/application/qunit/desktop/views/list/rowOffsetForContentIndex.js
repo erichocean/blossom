@@ -125,7 +125,7 @@ test("computed custom row height indexes", function() {
   verifyRowOffsets(view, 40);
 
 
-  delegate.set('useIndexes', YES);
+  delegate.set('useIndexes', true);
   verifyRowOffsets(view, 40, delegate.expected(view));  
 });
 

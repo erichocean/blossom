@@ -15,7 +15,7 @@ suite("SC.Store#commitChangesFromNestedStore", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
 
     storeKey = SC.Store.generateStoreKey();
@@ -131,7 +131,7 @@ test("throws exception if any record fails optimistic locking test", function() 
 });
 
 test("does not throw exception if optimistic locking fails but force option is passed", function() {
-  var errorCount = createConflict(YES);
+  var errorCount = createConflict(true);
   equals(errorCount, 0, 'should not raise error');
 });
 

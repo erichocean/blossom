@@ -64,29 +64,29 @@ SC.Editable = {
     
     This method is called by other views when they want you to begin editing.
     You should write this method to become first responder, perform any 
-    additional setup needed to begin editing and then return YES.
+    additional setup needed to begin editing and then return true.
     
     If for some reason you do not want to allow editing right now, you can
     also return NO.  If your view is already editing, then you should not
-    restart editing again but just return YES.
+    restart editing again but just return true.
 
     The default implementation checks to see if editing is allowed, then
     becomes first responder and updates the isEditing property if appropriate.
     Generally you will want to replace this method with your own 
     implementation and not call the default.
     
-    @returns {Boolean} YES if editing began or is in progress, NO otherwise
+    @returns {Boolean} true if editing began or is in progress, NO otherwise
   */
   beginEditing: function() {
     if (!this.get('isEditable')) return NO ;
-    if (this.get('isEditing')) return YES ;
+    if (this.get('isEditing')) return true ;
     
     // begin editing
     this.beginPropertyChanges();
-    this.set('isEditing', YES) ;
+    this.set('isEditing', true) ;
     this.becomeFirstResponder() ;
     this.endPropertyChanges();
-    return YES ;
+    return true ;
   },
   
   /**
@@ -95,7 +95,7 @@ SC.Editable = {
     
     This method is called by other views when they want to cancel editing
     that began earlier.  When this method is called you should resign first
-    responder, restore the original value of the view and return YES.
+    responder, restore the original value of the view and return true.
     
     If your view cannot revert back to its original state before editing began
     then you can implement this method to simply return NO.  A properly
@@ -103,15 +103,15 @@ SC.Editable = {
     view to end editing anyway.
     
     If this method is called on a view that is not currently editing, you
-    should always just return YES.
+    should always just return true.
     
     The default implementation does not support discarding changes and always
     returns NO.
     
-    @returns {Boolean} YES if changes were discarded and editing ended.
+    @returns {Boolean} true if changes were discarded and editing ended.
   */
   discardEditing: function() {
-    // if we are not editing, return YES, otherwise NO.
+    // if we are not editing, return true, otherwise NO.
     return !this.get('isEditing') ;
   },
   
@@ -122,7 +122,7 @@ SC.Editable = {
     This method is called by other views when they want to end editing, 
     saving any changes that were made to the view in the meantime.  When this
     method is called you should resign first responder, save the latest
-    value of the view and return YES.
+    value of the view and return true.
     
     If your view cannot save the current state of the view for some reason 
     (for example if validation fails), then you should return NO.  Properly
@@ -135,18 +135,18 @@ SC.Editable = {
     changes.
   
     If this method is called on a view that is not currently editing, you
-    should always just reutrn YES.
+    should always just reutrn true.
     
     The default implementation sets isEditing to NO, resigns first responder
-    and returns YES.
+    and returns true.
     
-    @returns {Boolean} YES if changes were discarded and editing ended.
+    @returns {Boolean} true if changes were discarded and editing ended.
   */
   commitEditing: function() {
-    if (!this.get('isEditing')) return YES;
+    if (!this.get('isEditing')) return true;
     this.set('isEditing', NO) ;
     this.resignFirstResponder() ;
-    return YES ;
+    return true ;
   }
 
 } ;

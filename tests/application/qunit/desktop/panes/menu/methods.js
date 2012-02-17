@@ -9,16 +9,16 @@
 
 var items = [
   { title: 'Menu Item', keyEquivalent: 'ctrl_shift_n' },
-  { title: 'Checked Menu Item', isChecked: YES, keyEquivalent: 'ctrl_a' },
+  { title: 'Checked Menu Item', isChecked: true, keyEquivalent: 'ctrl_a' },
   { title: 'Selected Menu Item', keyEquivalent: 'backspace' },
-  { separator: YES },
+  { separator: true },
   { title: 'Menu Item with Icon', icon: 'inbox', keyEquivalent: 'ctrl_m' },
   { title: 'Menu Item with Icon', icon: 'folder', keyEquivalent: 'ctrl_p' },
-  { separator: YES },
-  { title: 'Selected Menu Item…', isChecked: YES, keyEquivalent: 'ctrl_shift_o' },
+  { separator: true },
+  { title: 'Selected Menu Item…', isChecked: true, keyEquivalent: 'ctrl_shift_o' },
   { title: 'Item with Submenu', subMenu: [{ title: 'Submenu item 1' }, { title: 'Submenu item 2'}] },
   { title: 'Disabled Menu Item', isEnabled: NO }//,
-  // { isSeparator: YES },
+  // { isSeparator: true },
   // { groupTitle: 'Menu Label', items: [{ title: 'Nested Item' }, { title: 'Nested Item' }] }
 ];
 
@@ -86,7 +86,7 @@ test('displayItems', function() {
   equals(SC.typeOf(output), SC.T_OBJECT, 'strings should be transformed into objects');
   equals(output.title, 'Alpha', 'title property of transformed object should match original string');
   equals(output.value, 'Alpha', 'value property of transformed object should match original string');
-  equals(output.isEnabled, YES, 'isEnabled property of transformed object should be YES');
+  equals(output.isEnabled, true, 'isEnabled property of transformed object should be true');
 
   var hashes = [
     { title: 'Yankee' },

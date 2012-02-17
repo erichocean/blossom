@@ -24,7 +24,7 @@ SC.addInvokeOnceLastDebuggingInfo = function() {
     if (!methods) {
       methods = this[targetGuid] = SC.CoreSet.create() ;
       methods.target = target ;
-      methods.isTargetSet = YES ; // used for getMembers().
+      methods.isTargetSet = true ; // used for getMembers().
       this.targets++ ;
     }
     methods.add(method) ;
@@ -236,7 +236,7 @@ SC.addInvokeOnceLastDebuggingInfo = function() {
     var currentFunction = arguments.callee.caller,
         i = 0,
         stack = {},
-        first = YES,
+        first = true,
         functionName;
 
     while (currentFunction  &&  i < 6) {

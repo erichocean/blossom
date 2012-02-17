@@ -21,7 +21,7 @@ suite("SC.TreeController - tree_case", {
     content = [
       TestObject.create({
         title: "A",
-        isExpanded: YES,
+        isExpanded: true,
         outline: 0,
         
         children: [
@@ -41,11 +41,11 @@ suite("SC.TreeController - tree_case", {
 
       TestObject.create({
         title: "B",
-        isExpanded: YES,
+        isExpanded: true,
         outline: 0,
         children: [
           TestObject.create({ title: "B.i",
-            isExpanded: YES,
+            isExpanded: true,
             outline: 1,
             children: [
               TestObject.create({ title: "B.i.1", outline: 2 }),
@@ -65,7 +65,7 @@ suite("SC.TreeController - tree_case", {
     root = TestObject.create({
       title: "ROOT",
       children: content,
-      isExpanded: YES
+      isExpanded: true
     });
     
     flattened = [
@@ -86,7 +86,7 @@ suite("SC.TreeController - tree_case", {
       content: root,
       treeItemChildrenKey: "children",
       treeItemIsExpandedKey: "isExpanded",
-      treeItemIsGrouped: YES 
+      treeItemIsGrouped: true 
     });
   },
   

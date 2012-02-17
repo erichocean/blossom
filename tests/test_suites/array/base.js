@@ -212,11 +212,11 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
     // it.  If we don't expect a length notification, it is OK for a class
     // to trigger a change anyway so we don't check for this case.
     if (enumerableDidChange !== NO) {
-      equals(observer.didNotify("[]"), YES, 'should notify []') ;
+      equals(observer.didNotify("[]"), true, 'should notify []') ;
     }
     
     if (lengthDidChange) {
-      equals(observer.didNotify('length'), YES, 'should notify length change');
+      equals(observer.didNotify('length'), true, 'should notify length change');
     }
   }
   

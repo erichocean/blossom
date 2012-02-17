@@ -33,7 +33,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
 
     equals(obj.shiftObject(), exp, 'should return shifted object') ;
-    T.validateAfter(obj, [], observer, YES, YES);
+    T.validateAfter(obj, [], observer, true, true);
   });
 
   test("[A,B,C].shiftObject() => [B,C] + notify", function() {
@@ -44,7 +44,7 @@ SC.ArraySuite.define(function(T) {
     obj.replace(0,0,before);
     observer.observe('[]', 'length') ;
     equals(obj.shiftObject(), value, 'should return shifted object') ;
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
 });

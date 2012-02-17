@@ -74,7 +74,7 @@ test("hasContent", function() {
 test("allowsMultipleContent should have no effect", function() {
   controller = SC.ObjectController.create({ 
     content: content,
-    allowsMultipleContent: YES
+    allowsMultipleContent: true
   });
   
   equals(controller.get("length"), undefined, "controller.get(length)");

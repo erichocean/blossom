@@ -84,7 +84,7 @@ if (! BLOSSOM) {
   {{{
     updateDisplay: function() {
       this.$('span.title').text('Hello World');
-      this.$().setClassName('sc-enabled', YES) ;
+      this.$().setClassName('sc-enabled', true) ;
     }
   }}}
 
@@ -452,7 +452,7 @@ SC.CoreQuery = (function() {
     andSelf: function() { return this.add( this.prevObject ); },
 
     /** 
-      Returns YES if every element in the matching set matches the passed
+      Returns true if every element in the matching set matches the passed
       selector.  Remember that only simple selectors are supported in 
       CoreQuery.
       
@@ -464,7 +464,7 @@ SC.CoreQuery = (function() {
     },
 
     /**
-      Returns YES if every element in the matching set has the named CSS
+      Returns true if every element in the matching set has the named CSS
       class.
       
       @param {String} className
@@ -967,7 +967,7 @@ SC.CoreQuery = (function() {
 
       // Initialize the search.  split the selector into pieces
       ret = [context];
-      var nodeName, inFindMode = YES,
+      var nodeName, inFindMode = true,
           parts = t.match(quickSplit), len = parts.length, m ;
       
       // loop through each part and either find or filter as needed
@@ -976,7 +976,7 @@ SC.CoreQuery = (function() {
         
         // handle space separators.  this just resets to find mode
         if (t === ' ' || t === '') {
-          inFindMode = YES ;
+          inFindMode = true ;
           
         // if we are in find mode, then use the current selector to
         // find new elements that are children. at the end, leave findMode.
@@ -1017,7 +1017,7 @@ SC.CoreQuery = (function() {
                   found = NO; // clear
                 } else {
                   if (found) next.push(found) ;
-                  found = YES ; // do not do slow search
+                  found = true ; // do not do slow search
                 }
               } else found = NO;
               
@@ -1855,7 +1855,7 @@ SC.$ = (typeof jQuery == "undefined") ? SC.CoreQuery : jQuery ;
 // also. -- test in system/core_query/additions
 SC.mixin(SC.$.fn, /** @scope SC.CoreQuery.prototype */ {
   
-  isCoreQuery: YES, // walk like a duck
+  isCoreQuery: true, // walk like a duck
   
   /** @private - better loggin */
   toString: function() {
@@ -1868,7 +1868,7 @@ SC.mixin(SC.$.fn, /** @scope SC.CoreQuery.prototype */ {
   },
   
   /** 
-    Returns YES if all member elements are visible.  This is provided as a
+    Returns true if all member elements are visible.  This is provided as a
     common test since CoreQuery does not support filtering by 
     psuedo-selector.
   */
@@ -1948,15 +1948,15 @@ SC.mixin(SC.$.fn, /** @scope SC.CoreQuery.prototype */ {
     var indexOf = classNames.indexOf(name);
     // if should add, add class...
     if (shouldAdd) {
-      if (indexOf < 0) { classNames.push(name); return YES ; }
+      if (indexOf < 0) { classNames.push(name); return true ; }
       
     // otherwise, null out class name (this will leave some extra spaces)
-    } else if (indexOf >= 0) { classNames[indexOf]=null; return YES; }
+    } else if (indexOf >= 0) { classNames[indexOf]=null; return true; }
     return NO ;
   },
   
   /**
-    Returns YES if any of the matched elements have the passed element or CQ object as a child element.
+    Returns true if any of the matched elements have the passed element or CQ object as a child element.
   */
   within: function(el) {
     el = SC.$(el); // make into CQ object

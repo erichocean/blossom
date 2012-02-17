@@ -26,7 +26,7 @@
 
       App.Power = SC.Record.extend({
         person: SC.Record.toOne('App.Person', {
-          isMaster: YES,
+          isMaster: true,
           inverse: 'power'
         })
       });
@@ -59,8 +59,8 @@
 
       App.Power = SC.Record.extend({
         person: SC.Record.toOne('App.Person', {
-          isMaster: YES,
-          lazilyInstantiate: YES,
+          isMaster: true,
+          lazilyInstantiate: true,
           inverse: 'power'
         })
       });
@@ -92,7 +92,7 @@
 //   /** @private
 //     Relinquish many records.
 // 
-//     This happens when a master record (`isMaster` = `YES`) removes a reference
+//     This happens when a master record (`isMaster` = `true`) removes a reference
 //     to related records, either through `pushRetrieve` or `pushDestroy`.
 //    */
 //   _srs_inverseDidRelinquishRelationships: function (recordType, ids, attr, inverseId) {
@@ -126,7 +126,7 @@
 //   /** @private
 //     Add a relationship to many inverse records.
 // 
-//     This happens when a master record (`isMaster` = `YES`) adds a reference
+//     This happens when a master record (`isMaster` = `true`) adds a reference
 //     to another record on a `pushRetrieve`.
 //    */
 //   _srs_inverseDidAddRelationships: function (recordType, ids, attr, inverseId) {
@@ -139,7 +139,7 @@
 //   /** @private
 //     Add a relationship to an inverse record.
 // 
-//     If the flag lazilyInstantiate is set to YES, then the inverse record will be
+//     If the flag lazilyInstantiate is set to true, then the inverse record will be
 //     created lazily.
 // 
 //     @param {SC.Record} recordType The inverse record type.
@@ -236,7 +236,7 @@
 // 
 //   /**
 //     Disassociate records that are related to the one being destroyed iff this
-//     record has `isMaster` set to `YES`.
+//     record has `isMaster` set to `true`.
 //    */
 //   pushDestroy: function (original, recordType, id, storeKey) {
 //     var existingIDs;

@@ -31,7 +31,7 @@ SC.WebView = SC.View.extend(SC.Control, {
   /**
   The content of the iframe can be bigger than the size specifed when creating
   the view. If you want the view to be auto-resized to the dimensions of the 
-  iframe, then set the value of this property to YES.
+  iframe, then set the value of this property to true.
   The web view can be auto resized only if the contents are from the same
   domain as the parent domain.
   @property{Boolean}
@@ -72,7 +72,7 @@ SC.WebView = SC.View.extend(SC.Control, {
   */
   iframeDidLoad: function() {
     //fit the iframe to size of the contents.
-    if (this.get('shouldAutoResize') === YES){
+    if (this.get('shouldAutoResize') === true){
       var contentWindow;
       var iframeElt = this.$('iframe')[0];
       if(iframeElt && iframeElt.contentWindow){

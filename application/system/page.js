@@ -89,9 +89,9 @@ SC.Page = SC.Object.extend(
     return this ;
   }
 
-  //needsDesigner: YES,
+  //needsDesigner: true,
   
-  //inDesignMode: YES
+  //inDesignMode: true
     
 }) ;
 

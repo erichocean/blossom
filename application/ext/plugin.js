@@ -27,7 +27,7 @@ SC.Plugin = SC.Object.extend(
   /** @property
     Walk like a duck?
   */
-  isPlugin: YES,
+  isPlugin: true,
 
   /** @property
     The default view to be shown when the plugin is loaded
@@ -92,7 +92,7 @@ SC.Plugin = SC.Object.extend(
         d = this.get("defaultView"), v;
     if(SC.typeOf(p) === SC.T_STRING) p = this.get(p);
     v = p.get(d);
-    if(!v) this.error("No default view found in plugin %@".fmt(this.get("pluginName")), YES);
+    if(!v) this.error("No default view found in plugin %@".fmt(this.get("pluginName")), true);
     return v;
   }.property("page", "defaultView").cacheable(),
   

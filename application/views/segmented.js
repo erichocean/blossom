@@ -64,31 +64,31 @@ SC.SegmentedView = SC.View.extend(SC.Control,
   value: null,
 
   /**
-    Set to YES to enabled the segmented view, NO to disabled it.
+    Set to true to enabled the segmented view, NO to disabled it.
   */
-  isEnabled: YES, 
+  isEnabled: true, 
 
   /**
-    If YES, clicking a selected button again will deselect it, setting the
+    If true, clicking a selected button again will deselect it, setting the
     segmented views value to null.  Defaults to NO.
   */
   allowsEmptySelection: NO,  
   
   /**
-    If YES, then clicking on a tab will not deselect the other segments, it
+    If true, then clicking on a tab will not deselect the other segments, it
     will simply add or remove it from the selection.
   */
   allowsMultipleSelection: NO,
 
   /**
-    If YES, it will set the segment value even if an action is defined.
+    If true, it will set the segment value even if an action is defined.
   */
   selectSegmentWhenTriggeringAction: NO,
 
   /**
-    If YES, titles will be localized before display.
+    If true, titles will be localized before display.
   */
-  localize: YES,
+  localize: true,
   
   align: SC.ALIGN_CENTER,
   
@@ -129,7 +129,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
   /** 
     A key that determines if this item in particular is enabled.  Note if the
     control in general is not enabled, no items will be enabled, even if the
-    item's enabled property returns YES.
+    item's enabled property returns true.
     
     @property {String}
   */
@@ -207,7 +207,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       // if the item is a string, build the array using defaults...
       itemType = SC.typeOf(item);
       if (itemType === SC.T_STRING) {
-        cur = [item.humanize().titleize(), item, YES, null, null,  null, idx] ;
+        cur = [item.humanize().titleize(), item, true, null, null,  null, idx] ;
         
       // if the item is not an array, try to use the itemKeys.
       } else if (itemType !== SC.T_ARRAY) {
@@ -227,7 +227,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
         if (!keys[1]) cur[1] = item;
         
         // special case 3...if isEnabled is null, default to yes.
-        if (!keys[2]) cur[2] = YES ; 
+        if (!keys[2]) cur[2] = true ; 
       }
       
       // finally, be sure to loc the title if needed
@@ -261,7 +261,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     Invoked whenever the item array or an item in the array is changed.  This method will reginerate the list of items.
   */
   itemContentDidChange: function() {
-    this.set('renderLikeFirstTime', YES);
+    this.set('renderLikeFirstTime', true);
     this.notifyPropertyChange('displayItems');
   },
   
@@ -434,7 +434,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       var view = evt.shiftKey ? this.get('previousValidKeyView') : this.get('nextValidKeyView');
       if(view) view.becomeFirstResponder();
       else evt.allowDefault();
-      return YES ; // handled
+      return true ; // handled
     }    
     if (!this.get('allowsMultipleSelection') && !this.get('allowsEmptySelection')){
       items = this.get('displayItems');
@@ -448,7 +448,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
             this.triggerItemAtIndex(i+1);
           }
         }
-        return YES ; // handled
+        return true ; // handled
       }
       else if (evt.which === 37 || evt.which === 38) {
         for(i=1; i< len; i++){
@@ -457,23 +457,23 @@ SC.SegmentedView = SC.View.extend(SC.Control,
             this.triggerItemAtIndex(i-1);
           }
         }
-        return YES ; // handled
+        return true ; // handled
       }
     }
-    return YES; 
+    return true; 
   },
   
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return YES; // nothing to do
+    if (!this.get('isEnabled')) return true; // nothing to do
     var idx = this.displayItemIndexForEvent(evt);
     
     // if mouse was pressed on a button, then start detecting pressed events
     if (idx>=0) {
-      this._isMouseDown = YES ;
+      this._isMouseDown = true ;
       this.set('activeIndex', idx);
     }
     
-    return YES ;
+    return true ;
   },
   
   mouseUp: function(evt) {
@@ -485,7 +485,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     // cleanup
     this._isMouseDown = NO ;
     this.set('activeIndex', -1);
-    return YES ;
+    return true ;
   },
   
   mouseMoved: function(evt) {
@@ -493,7 +493,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       var idx = this.displayItemIndexForEvent(evt);
       this.set('activeIndex', idx);
     }
-    return YES;
+    return true;
   },
   
   mouseExited: function(evt) {
@@ -502,7 +502,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       var idx = this.displayItemIndexForEvent(evt);
       this.set('activeIndex', idx);
     }
-    return YES;
+    return true;
   },
   
   mouseEntered: function(evt) {
@@ -511,22 +511,22 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       var idx = this.displayItemIndexForEvent(evt);
       this.set('activeIndex', -1);
     }
-    return YES ;
+    return true ;
   },
   
   
   
   touchStart: function(touch) {
-    if (!this.get('isEnabled')) return YES; // nothing to do
+    if (!this.get('isEnabled')) return true; // nothing to do
     var idx = this.displayItemIndexForEvent(touch);
     
     // if mouse was pressed on a button, then start detecting pressed events
     if (idx>=0) {
-      this._isTouching = YES ;
+      this._isTouching = true ;
       this.set('activeIndex', idx);
     }
     
-    return YES ;
+    return true ;
   },
   
   touchEnd: function(touch) {
@@ -538,7 +538,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     // cleanup
     this._isTouching = NO ;
     this.set('activeIndex', -1);
-    return YES ;
+    return true ;
   },
   
   touchesDragged: function(evt, touches) {
@@ -556,14 +556,14 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     
     this._isTouching = isTouching;
     
-    return YES;
+    return true;
   },
   
   _touchDidExit: function(evt) {
     var idx = this.displayItemIndexForEvent(evt);
     this.set('activeIndex', -1);
 
-    return YES;
+    return true;
   },
   
   _touchDidEnter: function(evt) {
@@ -571,7 +571,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     var idx = this.displayItemIndexForEvent(evt);
     this.set('activeIndex', idx);
 
-    return YES ;
+    return true ;
   },
 
   /** 
@@ -662,7 +662,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
    willBecomeKeyResponderFrom: function(keyView) {
      // focus the text field.
      if (!this._isFocused) {
-       this._isFocused = YES ;
+       this._isFocused = true ;
        this.becomeFirstResponder();
        if (this.get('isVisibleInWindow')) {
          this.$()[0].focus();

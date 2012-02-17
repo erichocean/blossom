@@ -147,7 +147,7 @@ var ShapeCanvasView = SC.CollectionView.extend({
       .endPropertyChanges();
     }
   
-    return YES ;
+    return true ;
   }
   
 });
@@ -157,7 +157,7 @@ var pane = SC.ControlTestPane.design()
     layout: { top: 0, left: 0, right: 0, height: 300 },
     content: content,
     exampleView: ShapeView,
-    allowDeselectAll: YES
+    allowDeselectAll: true
   });
   
 pane.show(); // add a test to show the test pane

@@ -39,7 +39,7 @@ SC.TreeItemContent = {
     
     @property {Boolean}
   */
-  isTreeItemContent: YES,
+  isTreeItemContent: true,
   
   /**
     Property returns the children for this tree item.  The default simply 
@@ -58,12 +58,12 @@ SC.TreeItemContent = {
     
     @property {Boolean}
   */
-  treeItemIsExpanded: YES,
+  treeItemIsExpanded: true,
   
   /**
     Indicates whether the tree item should be rendered as a group or not. 
     This property is only useful on the root item in your tree.  Setting it to
-    YES on any other item will be ignored.
+    true on any other item will be ignored.
     
     @property {Boolean}
   */
@@ -114,7 +114,7 @@ SC.TreeItemContent = {
     @returns {void}
   */
   treeItemExpand: function(parent, idx) {
-    this.setIfChanged('treeItemIsExpanded', YES);    
+    this.setIfChanged('treeItemIsExpanded', true);    
   },
   
   /**

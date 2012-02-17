@@ -29,7 +29,7 @@ test("Update the sparse array using provideObjectAtIndex", function() {
 
 test("objectAt() should get the object at the specified index",function() {
 	var spArray = SC.SparseArray.create(4) ;
-	var arr = [SC.Object.create({ dummy: YES }),"Sproutcore",2,true];
+	var arr = [SC.Object.create({ dummy: true }),"Sproutcore",2,true];
 	spArray = arr;
 	equals(4,spArray.length,'the length');
 	equals(arr[0],spArray.objectAt(0),'first object');
@@ -85,7 +85,7 @@ test("modifying a range should not require the rest of the array to refetch", fu
     },
     
     // make editable
-    sparseArrayShouldReplace: function() { return YES; }
+    sparseArrayShouldReplace: function() { return true; }
     
   };
   
@@ -124,10 +124,10 @@ test("Check that requestIndex works with a rangeWindowSize larger than 1", funct
 
     sparseArrayShouldReplace: function(sparseArray, idx, amt, objects) {
       this.content.replace(idx, amt, objects) ; // keep internal up-to-date
-      return YES ; // allow anything
+      return true ; // allow anything
     },
     sparseArrayDidRequestRange: function(sparseArray, range) {
-       didRequestRange=YES;
+       didRequestRange=true;
      }
 
   });
@@ -135,7 +135,7 @@ test("Check that requestIndex works with a rangeWindowSize larger than 1", funct
 	ary.set('rangeWindowSize', 4);
 	equals(10, ary.get('length'), "length") ;
 	ary.objectAt(7);
-	equals(didRequestRange, YES, "The range was requested") ;
+	equals(didRequestRange, true, "The range was requested") ;
 });
 
 
@@ -177,7 +177,7 @@ var DummyDelegate = SC.Object.extend({
   
   sparseArrayShouldReplace: function(sparseArray, idx, amt, objects) {
     this.content.replace(idx, amt, objects) ; // keep internal up-to-date
-    return YES ; // allow anything
+    return true ; // allow anything
   }
   
 });

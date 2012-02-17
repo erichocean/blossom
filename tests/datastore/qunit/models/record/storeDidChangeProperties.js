@@ -30,7 +30,7 @@ suite("SC.Record#storeDidChangeProperties", {
     json = { 
       foo: "bar", 
       number: 123,
-      bool: YES,
+      bool: true,
       array: [1,2,3] 
     };
     
@@ -55,9 +55,9 @@ function expect(fooObject, expectedStatusCnt, expectedFooCnt) {
 // BASIC BEHAVIORS
 // 
 
-test("should change status only if statusOnly=YES", function() {
+test("should change status only if statusOnly=true", function() {
   checkPreconditions();
-  foo.storeDidChangeProperties(YES);
+  foo.storeDidChangeProperties(true);
   expect(foo,1,0);
 });
 

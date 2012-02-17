@@ -14,7 +14,7 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
 /*globals logChange */
 
 /**
-  Set to YES to have all observing activity logged to the console.  This 
+  Set to true to have all observing activity logged to the console.  This 
   should be used for debugging only.
   
   @property {Boolean}
@@ -152,7 +152,7 @@ SC.Observable = {
     
     @property {Boolean}
   */
-  isObservable: YES,
+  isObservable: true,
   
   /**
     Determines whether observers should be automatically notified of changes
@@ -162,13 +162,13 @@ SC.Observable = {
     can override this method to return NO for properties you do not want the
     observing system to automatically notify for.
     
-    The default implementation always returns YES.
+    The default implementation always returns true.
     
     @param key {String} the key that is changing
-    @returns {Boolean} YES if automatic notification should occur.
+    @returns {Boolean} true if automatic notification should occur.
   */
   // automaticallyNotifiesObserversFor: function(key) { 
-  //   return YES;
+  //   return true;
   // },
 
   // ..........................................
@@ -312,7 +312,7 @@ SC.Observable = {
 
         // update cached value
         if (func.isCacheable) cache[func.cacheKey] = ret ;
-        if (notify) this.propertyDidChange(key, ret, YES) ;
+        if (notify) this.propertyDidChange(key, ret, true) ;
       }
 
     } else if (func === undefined) {
@@ -607,13 +607,13 @@ SC.Observable = {
     // assume array.
     if (!ret) {
       ret = this[kvoKey] = (type === undefined) ? [] : type.create();
-      this._kvo_cloned[kvoKey] = YES ;
+      this._kvo_cloned[kvoKey] = true ;
       
     // if item does exist but has not been cloned, then clone it.  Note
     // that all types must implement copy().0
     } else if (!this._kvo_cloned[kvoKey]) {
       ret = this[kvoKey] = ret.copy();
-      this._kvo_cloned[kvoKey] = YES; 
+      this._kvo_cloned[kvoKey] = true; 
     }
     
     return ret ;
@@ -773,7 +773,7 @@ SC.Observable = {
   },
   
   /**
-    Returns YES if the object currently has observers registered for a 
+    Returns true if the object currently has observers registered for a 
     particular key.  You can use this method to potentially defer performing
     an expensive action until someone begins observing a particular property
     on the object.
@@ -788,8 +788,8 @@ SC.Observable = {
         locals    = this[SC.keyFor('_kvo_local', key)],
         members ;
 
-    if (locals && locals.length>0) return YES ;
-    if (observers && observers.getMembers().length>0) return YES ;
+    if (locals && locals.length>0) return true ;
+    if (observers && observers.getMembers().length>0) return true ;
     return NO ;
   },
 
@@ -817,7 +817,7 @@ SC.Observable = {
   */
   initObservable: function() {
     if (this._observableInited) return ;
-    this._observableInited = YES ;
+    this._observableInited = true ;
     
     var loc, keys, key, value, observer, propertyPaths, propertyPathsLength,
         len, ploc, path, dotIndex, root, propertyKey, keysLen;
@@ -879,7 +879,7 @@ SC.Observable = {
         if (value = this[key]) {
 
           // activate cacheable only if needed for perf reasons
-          if (value.isCacheable) this._kvo_cacheable = YES; 
+          if (value.isCacheable) this._kvo_cacheable = true; 
 
           // register dependent keys
           if (value.dependentKeys && (value.dependentKeys.length>0)) {
@@ -1061,7 +1061,7 @@ SC.Observable = {
     
     if (log) SC.KVO_SPACES = spaces.slice(0, -2);
     
-    return YES ; // finished successfully
+    return true ; // finished successfully
   },
 
   // ..........................................

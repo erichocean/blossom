@@ -93,7 +93,7 @@ var view, myViewClass ;
 suite("SC.View#createChildView", {
   setup: function() {
     view = SC.View.create({ page: SC.Object.create() }); 
-    myViewClass = SC.View.extend({ isMyView: YES, foo: 'bar' });
+    myViewClass = SC.View.extend({ isMyView: true, foo: 'bar' });
   }
 });
 

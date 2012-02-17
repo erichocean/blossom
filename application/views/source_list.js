@@ -11,7 +11,7 @@ sc_require('views/source_list_group');
 
 if (! BLOSSOM) {
 
-SC.BENCHMARK_SOURCE_LIST_VIEW = YES ;
+SC.BENCHMARK_SOURCE_LIST_VIEW = true ;
 
 /** @class
   
@@ -45,7 +45,7 @@ SC.SourceListView = SC.ListView.extend(
     By default, SourceListView's trigger any action you set whenever the user
     clicks on an item.  This gives the SourceList a "menu" like behavior.
   */
-  actOnSelect: YES
+  actOnSelect: true
 
 });
 

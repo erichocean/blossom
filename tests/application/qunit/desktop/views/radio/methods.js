@@ -17,7 +17,7 @@ suite("SC.RadioView Logic", {
           layout: { right: 20, bottom: 20, width: 100, height: 23 },
           items: 'Red Green'.w(),
           value: 'Red',
-          isEnabled: YES
+          isEnabled: true
         })]
     });
     pane.append(); // make sure there is a layer...
@@ -33,7 +33,7 @@ suite("SC.RadioView Logic", {
 });
 
 test("renders an input tag with appropriate attributes", function() {
-  equals(view.get('value'), 'Red', 'precon - value should be YES');
+  equals(view.get('value'), 'Red', 'precon - value should be true');
 
   var q = view.$();
   equals(q.attr('role'), 'radiogroup', 'should have role=radio');
@@ -69,7 +69,7 @@ test("isEnabled should alter group classname and sync with isEnabled property", 
 
   // update isEnabled -- make sure it edits the value
   SC.RunLoop.begin();
-  view.set('isEnabled', YES);
+  view.set('isEnabled', true);
   SC.RunLoop.end();
   
   ok(view.get('isEnabled'), 'isEnabled should match value');

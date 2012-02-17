@@ -66,17 +66,17 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
   suite('SC.TabView ui', pane.standardSetup());
   
   test("Check that all tabViews are visible", function() {
-    ok(pane.view('tabView1').get('isVisibleInWindow'), 'tabView1.isVisibleInWindow should be YES');
-    ok(pane.view('tabView2').get('isVisibleInWindow'), 'tabView2.isVisibleInWindow should be YES');
-    ok(pane.view('tabView3').get('isVisibleInWindow'), 'tabView3.isVisibleInWindow should be YES');
+    ok(pane.view('tabView1').get('isVisibleInWindow'), 'tabView1.isVisibleInWindow should be true');
+    ok(pane.view('tabView2').get('isVisibleInWindow'), 'tabView2.isVisibleInWindow should be true');
+    ok(pane.view('tabView3').get('isVisibleInWindow'), 'tabView3.isVisibleInWindow should be true');
    });
    
    
    test("Check that the tabView has the right classes set", function() {
      var viewElem=pane.view('tabView1').$();
      var views=pane.view('tabView1').$('div');
-     ok(viewElem.hasClass('sc-view'), 'tabView1.hasClass(sc-view) should be YES');
-     ok(viewElem.hasClass('sc-tab-view'), 'tabView1.hasClass(sc-tab-view) should be YES');
+     ok(viewElem.hasClass('sc-view'), 'tabView1.hasClass(sc-view) should be true');
+     ok(viewElem.hasClass('sc-tab-view'), 'tabView1.hasClass(sc-tab-view) should be true');
      ok(views[1].className.indexOf('sc-segmented-view')>=0, 'tabView1 should contain a segmented view');
      ok(views[0].className.indexOf('sc-container-view')>=0, 'tabView1 should contain a container view');
      ok(views[1].childNodes.length==3, 'tabView1 should have 3 options');

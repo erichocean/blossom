@@ -53,7 +53,7 @@ SC.Array = {
   /**
     Walk like a duck - use isSCArray to avoid conflicts
   */
-  isSCArray: YES,
+  isSCArray: true,
   
   /**
     @field {Number} length
@@ -392,7 +392,7 @@ SC.Array = {
     
     // first time a range observer is added, begin observing the [] property
     if (!this._array_isNotifyingRangeObservers) {
-      this._array_isNotifyingRangeObservers = YES ;
+      this._array_isNotifyingRangeObservers = true ;
       this.addObserver('[]', this, this._array_notifyRangeObservers);
     }
     

@@ -30,9 +30,9 @@ test("SC.Set.create() should create empty set", function() {
 test("SC.Set.create([1,2,3]) should create set with three items in them", function() {
   var set = SC.Set.create([a,b,c]) ;
   equals(set.length, 3) ;
-  equals(set.contains(a), YES) ;
-  equals(set.contains(b), YES) ;
-  equals(set.contains(c), YES) ;
+  equals(set.contains(a), true) ;
+  equals(set.contains(b), true) ;
+  equals(set.contains(c), true) ;
 });
 
 test("SC.Set.create() should accept anything that implements SC.Array", function() {
@@ -44,9 +44,9 @@ test("SC.Set.create() should accept anything that implements SC.Array", function
   
   var set = SC.Set.create(arrayLikeObject) ;
   equals(set.length, 3) ;
-  equals(set.contains(a), YES) ;
-  equals(set.contains(b), YES) ;
-  equals(set.contains(c), YES) ;
+  equals(set.contains(a), true) ;
+  equals(set.contains(b), true) ;
+  equals(set.contains(c), true) ;
 });
 
 var set ; // global variables
@@ -70,7 +70,7 @@ test("should add an SC.Object", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -79,7 +79,7 @@ test("should add a regular hash", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -88,7 +88,7 @@ test("should add a string", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -97,7 +97,7 @@ test("should add a number", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -106,7 +106,7 @@ test("should add a bool", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -115,7 +115,7 @@ test("should add a function", function() {
   
   var oldLength = set.length ;
   set.add(obj) ;
-  equals(set.contains(obj), YES, "contains()") ;
+  equals(set.contains(obj), true, "contains()") ;
   equals(oldLength+1, set.length, "new set length") ;
 });
 
@@ -151,8 +151,8 @@ suite("SC.Set.remove + SC.Set.contains", {
   // ones we add in the tests below...
   setup: function() {
     set = SC.Set.create([
-      SC.Object.create({ dummy: YES }),
-      { isHash: YES },
+      SC.Object.create({ dummy: true }),
+      { isHash: true },
       "Not the String",
       16, false]) ;
   },
@@ -166,7 +166,7 @@ suite("SC.Set.remove + SC.Set.contains", {
 test("should remove an SC.Object and reduce length", function() {
   var obj = SC.Object.create() ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -177,7 +177,7 @@ test("should remove an SC.Object and reduce length", function() {
 test("should remove a regular hash and reduce length", function() {
   var obj = {} ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -188,7 +188,7 @@ test("should remove a regular hash and reduce length", function() {
 test("should remove a string and reduce length", function() {
   var obj = "String!" ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -199,7 +199,7 @@ test("should remove a string and reduce length", function() {
 test("should remove a number and reduce length", function() {
   var obj = 23 ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -210,7 +210,7 @@ test("should remove a number and reduce length", function() {
 test("should remove a bool and reduce length", function() {
   var obj = true ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -221,7 +221,7 @@ test("should remove a bool and reduce length", function() {
 test("should remove a function and reduce length", function() {
   var obj = function() { return "Test function"; } ;
   set.add(obj) ;
-  equals(set.contains(obj), YES) ;
+  equals(set.contains(obj), true) ;
   var oldLength = set.length ;
   
   set.remove(obj) ;
@@ -262,8 +262,8 @@ suite("SC.Set.pop + SC.Set.clone", {
 // ones we add in the tests below...
 	setup: function() {
 		set = SC.Set.create([
-			SC.Object.create({ dummy: YES }),
-			{ isHash: YES },
+			SC.Object.create({ dummy: true }),
+			{ isHash: true },
 			"Not the String",
 			16, false]) ;
 		},
@@ -284,9 +284,9 @@ test("the clone() should return an indentical set", function() {
 	var oldLength = set.length ;
 	var obj = set.clone();
 	equals(oldLength,obj.length,'length of the clone should be same');
-	equals(YES,obj.contains(set[0]));
-	equals(YES,obj.contains(set[1]));
-	equals(YES,obj.contains(set[2]));
-	equals(YES,obj.contains(set[3]));
-	equals(YES,obj.contains(set[4]));
+	equals(true,obj.contains(set[0]));
+	equals(true,obj.contains(set[1]));
+	equals(true,obj.contains(set[2]));
+	equals(true,obj.contains(set[3]));
+	equals(true,obj.contains(set[4]));
 });

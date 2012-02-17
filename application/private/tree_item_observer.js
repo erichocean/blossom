@@ -133,8 +133,8 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
   }.property('children').cacheable(),
   
   /**
-    Returns YES if the item itself should be shown, NO if only its children
-    should be shown.  Normally returns YES unless the parentObject is null.
+    Returns true if the item itself should be shown, NO if only its children
+    should be shown.  Normally returns true unless the parentObject is null.
   */
   isHeaderVisible: function() {
     return !!this.get('parentObserver');
@@ -686,7 +686,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
     
     item.addObserver('*', this, this._itemPropertyDidChange);
     this._itemPropertyDidChange(item, '*');
-    this._notifyParent = YES ; // avoid infinite loops
+    this._notifyParent = true ; // avoid infinite loops
   },
   
   /**
@@ -851,7 +851,7 @@ SC.TreeItemObserver = SC.Object.extend(SC.Array, SC.CollectionContent, {
         key = del ? del.get('treeItemIsExpandedKey') : 'treeItemIsExpanded';
         this._treeItemIsExpandedKey = key ;
       }
-      item.setIfChanged(key, YES);
+      item.setIfChanged(key, true);
     }
     
     return this ;

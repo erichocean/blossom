@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>tests/datastore/qunit/integration/many_array.js</string>
+	<string>application/system/application.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,6 +21,20 @@
 	<integer>292</integer>
 	<key>metaData</key>
 	<dict>
+		<key>application/controllers/array.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>60</integer>
+				<key>line</key>
+				<integer>14</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>application/layers/image.js</key>
 		<dict>
 			<key>caret</key>
@@ -58,28 +72,12 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>499</integer>
+				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>428</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>432</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>499</integer>
-			</dict>
+			<integer>436</integer>
 		</dict>
 		<key>application/layers/layout.js</key>
 		<dict>
@@ -255,61 +253,19 @@
 			<key>firstVisibleLine</key>
 			<integer>638</integer>
 		</dict>
-		<key>application/surfaces/composite.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>54</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>application/surfaces/container.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
-				<key>line</key>
-				<integer>29</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>application/surfaces/leaf.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>12</integer>
-				<key>line</key>
-				<integer>26</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>application/surfaces/surface.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>162</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>122</integer>
+			<integer>91</integer>
 		</dict>
 		<key>application/surfaces/view.js</key>
 		<dict>
@@ -330,9 +286,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>14</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -358,9 +314,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>1249</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -400,28 +356,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>84</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>246</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>234</integer>
 		</dict>
-		<key>datastore/models/record.js</key>
+		<key>datastore/system/child_array.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>36</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>218</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>1423</integer>
+			<integer>196</integer>
 		</dict>
 		<key>datastore/system/nested_store.js</key>
 		<dict>
@@ -442,20 +398,6 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>63</integer>
-				<key>line</key>
-				<integer>321</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>291</integer>
-		</dict>
-		<key>datastore/system/store.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
 				<integer>0</integer>
@@ -463,80 +405,78 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>346</integer>
+			<integer>663</integer>
 		</dict>
 		<key>examples/quaddemo/main.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>18</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>47</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>13</integer>
-				<key>line</key>
-				<integer>47</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>18</integer>
-				<key>line</key>
-				<integer>47</integer>
-			</dict>
-		</dict>
-		<key>examples/quaddemo/quaddemo.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>28</integer>
-				<key>line</key>
-				<integer>233</integer>
+				<integer>51</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>202</integer>
+			<integer>0</integer>
 		</dict>
 		<key>foundation/mixins/observable.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>361</integer>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>foundation/private/observer_queue.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>28</integer>
+				<key>line</key>
+				<integer>100</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>58</integer>
+		</dict>
+		<key>foundation/protocols/observable_protocol.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>61</integer>
+				<key>line</key>
+				<integer>37</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>553</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>2</integer>
 				<key>line</key>
-				<integer>361</integer>
+				<integer>37</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>61</integer>
 				<key>line</key>
-				<integer>361</integer>
+				<integer>37</integer>
 			</dict>
 		</dict>
 		<key>foundation/system/plugin.js</key>
@@ -763,14 +703,14 @@
 				<integer>84</integer>
 			</dict>
 		</dict>
-		<key>tests/datastore/qunit/integration/many_array.js</key>
+		<key>tests/datastore/qunit/data_sources/cascade.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>21</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>33</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -781,30 +721,27 @@
 	<key>openDocuments</key>
 	<array>
 		<string>buildtools/buildtools.js</string>
-		<string>application/system/application.js</string>
-		<string>examples/quaddemo/quaddemo.js</string>
 		<string>examples/quaddemo/main.js</string>
+		<string>application/system/application.js</string>
 		<string>application/surfaces/surface.js</string>
-		<string>datastore/system/store.js</string>
-		<string>tests/datastore/qunit/integration/many_array.js</string>
+		<string>foundation/protocols/observable_protocol.js</string>
 		<string>foundation/mixins/observable.js</string>
-		<string>datastore/models/record.js</string>
-		<string>application/surfaces/composite.js</string>
-		<string>application/surfaces/leaf.js</string>
-		<string>application/surfaces/container.js</string>
-		<string>application/surfaces/view.js</string>
-		<string>application/views/view.js</string>
+		<string>application/controllers/array.js</string>
+		<string>foundation/private/observer_queue.js</string>
 		<string>application/layers/layer.js</string>
+		<string>tests/datastore/qunit/data_sources/cascade.js</string>
+		<string>application/surfaces/view.js</string>
 		<string>application/layers/text.js</string>
 		<string>application/layers/image.js</string>
 		<string>application/media/media.js</string>
 		<string>application/media/video.js</string>
 		<string>application/media/audio.js</string>
 		<string>application/media/image.js</string>
+		<string>application/views/view.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{662, 224}, {1252, 1194}}</string>
+	<string>{{662, 193}, {1192, 1225}}</string>
 </dict>
 </plist>

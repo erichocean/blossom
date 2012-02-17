@@ -18,7 +18,7 @@ suite("SC.NestedStore#commitChanges", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     args = [];
     
@@ -114,7 +114,7 @@ test("state = EDITABLE", function() {
   equals(store.storeKeyEditState(storeKey), SC.Store.EDITABLE, 'precond - data edit state');
   ok(store.chainedChanges  && store.chainedChanges.contains(storeKey), 'editable record should be in chainedChanges set');
 
-  testStateTransition(YES, YES);
+  testStateTransition(true, true);
 });
 
 

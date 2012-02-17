@@ -247,7 +247,7 @@ SC.UserDefaults = SC.Object.extend(
 
     this._sc_userDomain = this.get('userDomain');
     this._sc_appDomain  = this.get('appDomain');
-    this.set('ready', YES);
+    this.set('ready', true);
   },
 
   readyCallback: function(ob, func){
@@ -256,7 +256,7 @@ SC.UserDefaults = SC.Object.extend(
   },
 
   readyChanged: function(){
-    if(this.ready===YES){
+    if(this.ready===true){
       var f = this.func;
       if(f) f.apply(this.ob);
     }
@@ -553,12 +553,12 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
     var didChange = NO;
     if (this.get("userDomain") !== this._scud_userDomain) {
       this._scud_userDomain = this.get('userDomain');
-      didChange = YES;
+      didChange = true;
     }
     
     if (this.get('appDomain') !== this._scud_appDomain) {
       this._scud_appDomain = this.get('appDomain');
-      didChange = YES;
+      didChange = true;
     }
     
     if (didChange) this.allPropertiesDidChange();
@@ -624,14 +624,14 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
                     hash[row['key']]=row['value'];
                   }
                   transaction.parent.dataHash = hash;
-                  SC.run(function() { SC.userDefaults.set('ready', YES); });
+                  SC.run(function() { SC.userDefaults.set('ready', true); });
                 }, obj.killTransaction);
           }
         );
         this._safari3DB=myDB;
       }
     }else{
-      this.set('ready', YES);
+      this.set('ready', true);
     }
   },
 
@@ -649,7 +649,7 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   },
   
   readyChanged: function(){
-    if(this.ready===YES){
+    if(this.ready===true){
       var f = this.func;
       if(f) f.apply(this.ob);
     }

@@ -26,7 +26,7 @@ SC.NestedStore = SC.Store.extend(
 /** @scope SC.NestedStore.prototype */ {
 
   /**
-    This is set to YES when there are changes that have not been committed 
+    This is set to true when there are changes that have not been committed 
     yet.
 
     @type Boolean
@@ -46,15 +46,15 @@ SC.NestedStore = SC.Store.extend(
   parentStore: null,
 
   /**
-    `YES` if the view is nested. Walk like a duck
+    `true` if the view is nested. Walk like a duck
     
     @type Boolean
-    @default YES
+    @default true
   */
-  isNested: YES,
+  isNested: true,
 
   /**
-    If YES, then the attribute hash state will be locked when you first 
+    If true, then the attribute hash state will be locked when you first 
     read the data hash or status.  This means that if you retrieve a record
     then change the record in the parent store, the changes will not be 
     visible to your nested store until you commit or discard changes.
@@ -70,9 +70,9 @@ SC.NestedStore = SC.Store.extend(
     graph at the same time.
     
     @type Boolean
-    @default YES
+    @default true
   */
-  lockOnRead: YES,
+  lockOnRead: true,
 
   /** @private
     Array contains the base revision for an attribute hash when it was first
@@ -100,7 +100,7 @@ SC.NestedStore = SC.Store.extend(
     the server see the changelog property.
     
     @type SC.Set
-    @default YES
+    @default true
   */
   chainedChanges: null,
     
@@ -127,7 +127,7 @@ SC.NestedStore = SC.Store.extend(
     Propagate this store's changes to its parent.  If the store does not 
     have a parent, this has no effect other than to clear the change set.
 
-    @param {Boolean} force if YES, does not check for conflicts first
+    @param {Boolean} force if true, does not check for conflicts first
     @returns {SC.Store} receiver
   */
   commitChanges: function(force) {
@@ -313,7 +313,7 @@ SC.NestedStore = SC.Store.extend(
         }
       }
       else {
-        this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], YES);
+        this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], true);
       }
       if (!editables) editables = this.editables = [];
       editables[storeKey] = 1 ; // mark as editable
@@ -361,7 +361,7 @@ SC.NestedStore = SC.Store.extend(
     }
     else {
       this._lock(storeKey);
-      didLock = YES;
+      didLock = true;
     }
 
     if (status) {
@@ -426,7 +426,7 @@ SC.NestedStore = SC.Store.extend(
       this._notifyRecordPropertyChange(storeKey, statusOnly, key);
     }
 
-    this.setIfChanged('hasChanges', YES);
+    this.setIfChanged('hasChanges', true);
     return this ;
   },
 
@@ -484,7 +484,7 @@ SC.NestedStore = SC.Store.extend(
   
   /** @private - adapt for nested store
   
-    Unlike for the main store, for nested stores if isRefresh=YES, we'll throw
+    Unlike for the main store, for nested stores if isRefresh=true, we'll throw
     an error if the record is dirty.  We'll otherwise avoid setting our status
     because that can disconnect us from upper and/or lower stores.
   */
@@ -522,19 +522,19 @@ SC.NestedStore = SC.Store.extend(
   
           if (dataHashes  &&  dataHashes.hasOwnProperty(storeKey)) {
             delete dataHashes[storeKey];
-            changed = YES;
+            changed = true;
           }
           if (revisions   &&  revisions.hasOwnProperty(storeKey)) {
             delete revisions[storeKey];
-            changed = YES;
+            changed = true;
           }
           if (editables) delete editables[storeKey];
           if (locks) delete locks[storeKey];
 
           if (statuses  &&  statuses.hasOwnProperty(storeKey)) {
             delete statuses[storeKey];
-            if (!changed) statusOnly = YES;
-            changed = YES;
+            if (!changed) statusOnly = true;
+            changed = true;
           }
           
           if (changed) this._notifyRecordPropertyChange(storeKey, statusOnly);

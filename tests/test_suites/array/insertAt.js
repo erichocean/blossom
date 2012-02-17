@@ -35,7 +35,7 @@ SC.ArraySuite.define(function(T) {
       obj.insertAt(200, T.expected(1));
     } catch (e) {
       equals(e, SC.OUT_OF_RANGE_EXCEPTION, 'should throw SC.OUT_OF_RANGE_EXCEPTION');
-      didThrow = YES ;
+      didThrow = true ;
     }
     ok(didThrow, 'should raise exception');
   });
@@ -74,7 +74,7 @@ SC.ArraySuite.define(function(T) {
       obj.insertAt(200, T.expected(1));
     } catch (e) {
       equals(e, SC.OUT_OF_RANGE_EXCEPTION, 'should throw SC.OUT_OF_RANGE_EXCEPTION');
-      didThrow = YES ;
+      didThrow = true ;
     }
     ok(didThrow, 'should raise exception');
   });

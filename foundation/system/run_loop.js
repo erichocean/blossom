@@ -57,12 +57,12 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     if (SC.LOG_BINDINGS || SC.LOG_OBSERVERS) {
       console.log("-- SC.RunLoop.beginRunLoop at %@".fmt(this._start));
     } 
-    this._runLoopInProgress = YES;
+    this._runLoopInProgress = true;
     return this ; 
   },
   
   /**
-    YES when a run loop is in progress
+    true when a run loop is in progress
   
     @property {Boolean}
   */
@@ -173,12 +173,12 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     bindings that might have changed.  You can override this method in a 
     subclass if you like to handle additional cleanup. 
     
-    This method must return YES if it found any items pending in its queues
+    This method must return true if it found any items pending in its queues
     to take action on.  endRunLoop will invoke this method repeatedly until
     the method returns NO.  This way if any if your final executing code
     causes additional queues to trigger, then can be flushed again.
     
-    @returns {Boolean} YES if items were found in any queue, NO otherwise
+    @returns {Boolean} true if items were found in any queue, NO otherwise
   */
   flushApplicationQueues: function() {
     var hadContent = NO,
@@ -186,7 +186,7 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
         queue = this._invokeQueue;
     if (queue && queue.targets > 0) {
       this._invokeQueue = null; // reset so that a new queue will be created
-      hadContent = YES ; // needs to execute again
+      hadContent = true ; // needs to execute again
       queue.invokeMethods();
     }
     
@@ -199,7 +199,7 @@ SC.RunLoop = SC.Object.extend(/** @scope SC.RunLoop.prototype */ {
     var queue = this._invokeLastQueue, hadContent = NO ;
     if (queue && queue.targets > 0) {
       this._invokeLastQueue = null; // reset queue.
-      hadContent = YES; // has targets!
+      hadContent = true; // has targets!
       if (hadContent) queue.invokeMethods();
     }
     return hadContent ;
@@ -252,7 +252,7 @@ SC.RunLoop.end = function() {
 } ;
 
 /**
-  Returns YES when a run loop is in progress
+  Returns true when a run loop is in progress
 
   @return {Boolean}
 */
@@ -269,7 +269,7 @@ SC.RunLoop.isRunLoopInProgress = function() {
 
   @param {Function} callback callback to execute
   @param {Object} target context for callback
-  @param {Boolean} if YES, does not start/end a new runloop if one is already running
+  @param {Boolean} if true, does not start/end a new runloop if one is already running
 */
 SC.run = function(callback, target, useExistingRunLoop) {
   if(useExistingRunLoop) {

@@ -199,9 +199,9 @@ test('advance', function() {
 test('compare', function() {
   var exception = null;
   
-  equals(SC.DateTime.isComparable, YES, "SC.DateTime is comparable");
+  equals(SC.DateTime.isComparable, true, "SC.DateTime is comparable");
   equals(SC.compare(dt, dt), 0, "A DateTime instance is equal to itself via compare()");
-  equals(dt.isEqual(dt), YES, "A DateTime instance is equal to itself via isEqual()");
+  equals(dt.isEqual(dt), true, "A DateTime instance is equal to itself via isEqual()");
   equals(dt.advance({hour: 1}).isEqual(dt), NO);
   equals(SC.compare(dt, dt.advance({hour: 1})), -1);
   equals(SC.compare(dt.advance({hour: 1}), dt), 1);
@@ -243,8 +243,8 @@ test('fancy getters', function() {
   // (note must set all three components of a date
   // in order to get predictable results, per JS Date object spec)
   equals(SC.DateTime.create({ year: 1900, month: 1, day: 1 }).get('isLeapYear'), NO);
-  equals(SC.DateTime.create({ year: 2000, month: 1, day: 1 }).get('isLeapYear'), YES);
-  equals(SC.DateTime.create({ year: 2004, month: 1, day: 1 }).get('isLeapYear'), YES);
+  equals(SC.DateTime.create({ year: 2000, month: 1, day: 1 }).get('isLeapYear'), true);
+  equals(SC.DateTime.create({ year: 2004, month: 1, day: 1 }).get('isLeapYear'), true);
   
   equals(dt.get('daysInMonth'), 30); // june
   equals(SC.DateTime.create({ year: 2000, month: 2, day: 1 }).get('daysInMonth'), 29);

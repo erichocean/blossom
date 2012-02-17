@@ -172,7 +172,7 @@ SC.Set = SC.mixin({},
     
     @property {Boolean}
   */
-  isSet: YES,
+  isSet: true,
   
   /**
     This property will change as the number of objects in the set changes.
@@ -218,7 +218,7 @@ SC.Set = SC.mixin({},
   },
   
   /**
-    Returns YES if the passed object is also a set that contains the same 
+    Returns true if the passed object is also a set that contains the same 
     objects as the receiver.
   
     @param {SC.Set} obj the other object
@@ -235,7 +235,7 @@ SC.Set = SC.mixin({},
       if (!obj.contains(this[loc])) return NO ;
     }
     
-    return YES;
+    return true;
   },
   
   /**
@@ -486,7 +486,7 @@ SC.Set = SC.mixin({},
   _pool: [],
 
   /** @private */
-  isObservable: YES
+  isObservable: true
 
 }) ;
 

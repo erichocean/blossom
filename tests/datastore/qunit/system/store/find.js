@@ -31,7 +31,7 @@ suite("SC.Query querying find() on a store", {
           }
         }
         
-        return YES ;
+        return true ;
       },
       
       reset: function() {
@@ -52,7 +52,7 @@ suite("SC.Query querying find() on a store", {
       
       destroyRecord: function(store, storeKey){
         store.dataSourceDidDestroy(storeKey);
-        return YES;
+        return true;
       }
       
     });
@@ -154,7 +154,7 @@ test("data source must get the right calls", function() {
 
 test("should find records based on boolean", function() {
   SC.RunLoop.begin();
-  var q = SC.Query.local(MyApp.Foo, "married=YES");
+  var q = SC.Query.local(MyApp.Foo, "married=true");
   var records = MyApp.store.find(q);
   equals(records.get('length'), 4, 'record length should be 4');
   SC.RunLoop.end();

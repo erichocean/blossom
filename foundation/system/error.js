@@ -30,8 +30,8 @@ var SC = global.SC; // Required to allow foundation to be re-namespaced as BT
   
   You can actually make any object you want to be treated like an Error object
   by simply implementing two properties: isError and errorValue.  If you 
-  set isError to YES, then calling SC.ok(obj) on your object will return NO.
-  If isError is YES, then SC.val(obj) will return your errorValue property 
+  set isError to true, then calling SC.ok(obj) on your object will return NO.
+  If isError is true, then SC.val(obj) will return your errorValue property 
   instead of the receiver.
   
   @extends SC.Object
@@ -91,7 +91,7 @@ SC.Error = SC.Object.extend(
     
     @property {Boolean}
   */
-  isError: YES
+  isError: true
 }) ;
 
 /**
@@ -124,7 +124,7 @@ SC.$error = function(description, label, value, c) {
 } ;
 
 /**
-  Returns YES if the passed value is an error object or false.
+  Returns true if the passed value is an error object or false.
   
   @param {Object} ret object value
   @returns {Boolean}

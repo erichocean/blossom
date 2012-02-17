@@ -22,14 +22,14 @@ suite("SC.DateFieldView", {
       SC.DateFieldView.extend({
         hint: 'dd/mm/yyyy hh:mm AM/PM',
         value: SC.DateTime.create({ day: 1, month: 1, year: 2010, hour: 11, minute: 20 }),
-        showTime: YES,
+        showTime: true,
         isEnabled: NO
       }),
       SC.DateFieldView.extend({
         hint: 'hh:mm AM/PM',
         value: SC.DateTime.create({ hour: 11, minute: 20 }),
         showDate: NO,
-        showTime: YES
+        showTime: true
       })]
     });
     pane.append(); // make sure there is a layer...
@@ -51,7 +51,7 @@ function() {
   equals(view0.get('fieldValue'), '01/01/2010', 'Field value should be equal - Date Only');
   equals(view1.get('fieldValue'), '01/01/2010 11:20 AM', 'Field value should be equal - Date & Time');
   equals(view2.get('fieldValue'), '11:20 AM', 'Field value should be equal - Time Only');
-  equals(view0.get('isEnabled'), YES, 'field enabled');
+  equals(view0.get('isEnabled'), true, 'field enabled');
   equals(view1.get('isEnabled'), NO, 'field not enabled');
   var q = Q$('input', view0.get('layer'));
   equals(q.attr('type'), 'text', 'should have type as text');

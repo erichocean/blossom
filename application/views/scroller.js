@@ -48,7 +48,7 @@ SC.ScrollerView = SC.View.extend(
   //
   
   /**
-    If YES, a click on the track will cause the scrollbar to scroll to that position.
+    If true, a click on the track will cause the scrollbar to scroll to that position.
     Otherwise, a click on the track will cause a page down.
     
     In either case, alt-clicks will perform the opposite behavior.
@@ -118,12 +118,12 @@ SC.ScrollerView = SC.View.extend(
   minimum: 0,
 
   /**
-    YES to enable scrollbar, NO to disable it.  Scrollbars will automatically
+    true to enable scrollbar, NO to disable it.  Scrollbars will automatically
     disable if the maximum scroll width does not exceed their capacity.
 
     @property
   */
-  isEnabled: YES,
+  isEnabled: true,
 
   /**
     Determine the layout direction.  Determines whether the scrollbar should
@@ -138,9 +138,9 @@ SC.ScrollerView = SC.View.extend(
     Whether or not the scroller should display scroll buttons
 
     @property {Boolean}
-    @default YES
+    @default true
   */
-  hasButtons: YES,
+  hasButtons: true,
 
   // ..........................................................
   // DISPLAY METRICS
@@ -199,7 +199,7 @@ SC.ScrollerView = SC.View.extend(
     Successive calls will reposition the thumb based on the value property.
 
     @param {SC.RenderContext} context the render context
-    @param {Boolean} firstTime YES if this is creating a layer
+    @param {Boolean} firstTime true if this is creating a layer
     @private
   */
   render: function(context, firstTime) {
@@ -212,10 +212,10 @@ SC.ScrollerView = SC.View.extend(
     // style them differently using CSS.
     switch (this.get('layoutDirection')) {
       case SC.LAYOUT_VERTICAL:
-        classNames['sc-vertical'] = YES;
+        classNames['sc-vertical'] = true;
         break;
       case SC.LAYOUT_HORIZONTAL:
-        classNames['sc-horizontal'] = YES;
+        classNames['sc-horizontal'] = true;
         break;
     }
 
@@ -419,7 +419,7 @@ SC.ScrollerView = SC.View.extend(
   }.property('displayValue', 'maximum', 'trackLength', 'thumbLength').cacheable(),
 
   /**
-    YES if the maximum value exceeds the frame size of the scroller.  This
+    true if the maximum value exceeds the frame size of the scroller.  This
     will hide the thumb and buttons.
 
     @property {Boolean}
@@ -495,7 +495,7 @@ SC.ScrollerView = SC.View.extend(
 
       // Store the starting state so we know how much to adjust the
       // thumb when the user drags
-      this._thumbDragging = YES;
+      this._thumbDragging = true;
       this._thumbOffset = clickLocation;
       this._mouseDownLocation = { x: evt.pageX, y: evt.pageY };
       this._thumbPositionAtDragStart = this.get('thumbPosition');
@@ -507,7 +507,7 @@ SC.ScrollerView = SC.View.extend(
       this.makeButtonActive('.button-top');
       // start a timer that will continue to fire until mouseUp is called
       this.startMouseDownTimer('scrollUp');
-      this._isScrollingUp = YES;
+      this._isScrollingUp = true;
     } else if (target.className.indexOf('button-bottom') >= 0) {
       // User clicked the down/right button
       // Increment the value by a fixed amount
@@ -515,7 +515,7 @@ SC.ScrollerView = SC.View.extend(
       this.makeButtonActive('.button-bottom');
       // start a timer that will continue to fire until mouseUp is called
       this.startMouseDownTimer('scrollDown');
-      this._isScrollingDown = YES;
+      this._isScrollingDown = true;
     } else {
       // User clicked in the track
       var scrollToClick = this.get("shouldScrollToClick");
@@ -541,7 +541,7 @@ SC.ScrollerView = SC.View.extend(
         // and start a normal mouse down
         thumbPosition = this.get('thumbPosition');
         
-        this._thumbDragging = YES;
+        this._thumbDragging = true;
         this._thumbOffset = {x: frame.x - thumbPosition, y: frame.y - thumbPosition };
         this._mouseDownLocation = {x:evt.pageX, y:evt.pageY};
         this._thumbPositionAtDragStart = thumbPosition;
@@ -560,7 +560,7 @@ SC.ScrollerView = SC.View.extend(
       
     }
 
-    return YES;
+    return true;
   },
 
   /**
@@ -578,7 +578,7 @@ SC.ScrollerView = SC.View.extend(
     // remove its active state
     if (active) {
       active.removeClass('active');
-      ret = YES;
+      ret = true;
     }
 
     // Stop firing repeating events after mouseup
@@ -655,12 +655,12 @@ SC.ScrollerView = SC.View.extend(
       
       switch (this.get('layoutDirection')) {
         case SC.LAYOUT_VERTICAL:
-          if (evt.pageY < topButtonRect.bottom) nowScrollingUp = YES;
-          else nowScrollingDown = YES;
+          if (evt.pageY < topButtonRect.bottom) nowScrollingUp = true;
+          else nowScrollingDown = true;
           break;
         case SC.LAYOUT_HORIZONTAL:
-          if (evt.pageX < topButtonRect.right) nowScrollingUp = YES;
-          else nowScrollingDown = YES;
+          if (evt.pageX < topButtonRect.right) nowScrollingUp = true;
+          else nowScrollingDown = true;
           break;
       }
       
@@ -692,7 +692,7 @@ SC.ScrollerView = SC.View.extend(
     
     this._altIsDown = evt.altKey;
     this._shiftIsDown = evt.shiftKey;
-    return YES;
+    return true;
   },
 
   /**
@@ -701,7 +701,7 @@ SC.ScrollerView = SC.View.extend(
     continue holding the mouse button down, we want to repeat that action
     after a small delay.  This timer will be invalidated in mouseUp.
     
-    Specify "immediate" as YES if it should not wait.
+    Specify "immediate" as true if it should not wait.
 
     @private
   */

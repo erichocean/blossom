@@ -18,9 +18,9 @@ suite("SC.IndexSet#intersects", {
 // 
 
 test("handle index in set", function() {
-  equals(set.intersects(1001), YES, 'index 1001 should be in set %@'.fmt(set));
-  equals(set.intersects(1009), YES, 'index 1009 should be in set %@'.fmt(set));
-  equals(set.intersects(2000), YES, 'index 2000 should be in set %@'.fmt(set));
+  equals(set.intersects(1001), true, 'index 1001 should be in set %@'.fmt(set));
+  equals(set.intersects(1009), true, 'index 1009 should be in set %@'.fmt(set));
+  equals(set.intersects(2000), true, 'index 2000 should be in set %@'.fmt(set));
 });
 
 test("handle index not in set", function() {
@@ -38,7 +38,7 @@ test("handle index past end of set", function() {
 // 
 
 test("handle range inside set", function() {
-  equals(set.intersects(1001,4), YES, '1001..1003 should be in set');
+  equals(set.intersects(1001,4), true, '1001..1003 should be in set');
 });
 
 test("handle range outside of set", function() {
@@ -46,7 +46,7 @@ test("handle range outside of set", function() {
 });
 
 test("handle range partially inside set", function() {
-  equals(set.intersects(998,4), YES,'998..1001 should be in set');
+  equals(set.intersects(998,4), true,'998..1001 should be in set');
 });
 
 // ..........................................................
@@ -55,7 +55,7 @@ test("handle range partially inside set", function() {
 
 test("handle set inside set", function() {
   var test = SC.IndexSet.create().add(1001,4).add(1005,2);
-  equals(set.intersects(test), YES, '%@ should be in %@'.fmt(test, set));
+  equals(set.intersects(test), true, '%@ should be in %@'.fmt(test, set));
 });
 
 test("handle range outside of set", function() {
@@ -65,10 +65,10 @@ test("handle range outside of set", function() {
 
 test("handle range partially inside set", function() {
   var test = SC.IndexSet.create().add(1001,4).add(100,2);
-  equals(set.intersects(test), YES, '%@ should be in %@'.fmt(test, set));
+  equals(set.intersects(test), true, '%@ should be in %@'.fmt(test, set));
 });
 
 test("handle self", function() {
-  equals(set.contains(set), YES, 'should return YES when passed itself');  
+  equals(set.contains(set), true, 'should return true when passed itself');  
 });
 

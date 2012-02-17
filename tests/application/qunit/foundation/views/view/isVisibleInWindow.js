@@ -41,17 +41,17 @@ test("a new view should not be visible initially", function() {
 
 test("adding a new view to a visible pane should make it visible", function() {
   ok(!view.get('isVisibleInWindow'), "view.get('isVisibleInWindow') === NO") ;
-  ok(pane.get('isVisibleInWindow'), "pane.get('isVisibleInWindow') === YES") ;
+  ok(pane.get('isVisibleInWindow'), "pane.get('isVisibleInWindow') === true") ;
   
   pane.appendChild(view) ;
-  ok(view.get('isVisibleInWindow'), "after pane.appendChild(view), view.get('isVisibleInWindow') === YES") ;
+  ok(view.get('isVisibleInWindow'), "after pane.appendChild(view), view.get('isVisibleInWindow') === true") ;
 });
 
 test("removing a view from a visible pane should make it invisible again", function() {
   ok(!view.get('isVisibleInWindow'), "view.get('isVisibleInWindow') === NO") ;
-  ok(pane.get('isVisibleInWindow'), "pane.get('isVisibleInWindow') === YES") ;
+  ok(pane.get('isVisibleInWindow'), "pane.get('isVisibleInWindow') === true") ;
   pane.appendChild(view) ;
-  ok(view.get('isVisibleInWindow'), "after pane.appendChild(view), view.get('isVisibleInWindow') === YES") ;
+  ok(view.get('isVisibleInWindow'), "after pane.appendChild(view), view.get('isVisibleInWindow') === true") ;
   
   view.removeFromParent() ;
   ok(!view.get('isVisibleInWindow'), "after view.removeFromParent(), view.get('isVisibleInWindow') === NO") ;
@@ -78,7 +78,7 @@ test("updateLayer should not be invoked even if layer becomes dirty until isVisi
 	pane.appendChild(view); // make visible in window...
 	ok(view.get('isVisibleInWindow'), 'view should now be visible in window');
 	SC.RunLoop.end();
-	equals(callCount, 1, 'createLayer should exec now b/c isVisibleInWindow is YES');
+	equals(callCount, 1, 'createLayer should exec now b/c isVisibleInWindow is true');
 });
 
 test("layoutChildViewsIfNeeded should not be invoked even if layer needs layout until isVisibleInWindow changes, then it should invoke", function() {
@@ -99,7 +99,7 @@ test("layoutChildViewsIfNeeded should not be invoked even if layer needs layout 
 	pane.appendChild(view); // make visible in window...
 	ok(view.get('isVisibleInWindow'), 'view should now be visible in window');
 	SC.RunLoop.end();
-	equals(callCount, 1, 'layoutChildViews should exec now b/c isVisibleInWindow is YES');
+	equals(callCount, 1, 'layoutChildViews should exec now b/c isVisibleInWindow is true');
 });
 
 test("setting isVisible to NO should trigger a layer update to hide the view", function() {

@@ -50,7 +50,7 @@ suite("SC.TextFieldView",{
 test("renders an text field input tag with appropriate attributes", function() {
   equals(view.get('value'), '', 'value should be empty');
   equals(view1.get('value'), 'SproutCore', 'value should not be empty ');
-  equals(view.get('isEnabled'),YES,'field enabled' );
+  equals(view.get('isEnabled'),true,'field enabled' );
   equals(view1.get('isEnabled'),NO,'field not enabled' );
   var q = Q$('input', view.get('layer'));
   equals(q.attr('type'), 'text', 'should have type as text');
@@ -74,7 +74,7 @@ test("isEnabled=NO should add disabled class", function() {
 //   view1.set('isEnabled', NO);
 //   SC.RunLoop.end();  
 //   ok(view1.$input().attr('disabled'), 'should have disabled attr');  
-//   view1.set('isEditing',YES);
+//   view1.set('isEditing',true);
 //   ok(view1.get('value') === 'SproutCore', 'value cannot be changed');
 //   });
 

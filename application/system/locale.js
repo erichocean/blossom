@@ -60,13 +60,13 @@ SC.Locale = SC.Object.extend({
         strings = String[langs[idx]];
       }
       if (strings) {
-        this.hasStrings = YES; 
+        this.hasStrings = true; 
         this.strings = strings ;
       }
     }
   },
   
-  /** Set to YES when strings have been added to this locale. */
+  /** Set to true when strings have been added to this locale. */
   hasStrings: NO,
   
   /** The strings hash for this locale. */
@@ -100,7 +100,7 @@ SC.Locale = SC.Object.extend({
 SC.Locale.mixin(/** @scope SC.Locale */ {
 
   /**
-    If YES, localization will favor the detected language instead of the
+    If true, localization will favor the detected language instead of the
     preferred one.
   */
   useAutodetectedLanguage: NO,
@@ -215,7 +215,7 @@ SC.Locale.mixin(/** @scope SC.Locale */ {
     
     // add strings hash
     if (stringsHash)  this.prototype.strings = SC.mixin(strings, stringsHash) ;
-    this.prototype.hasStrings = YES ;
+    this.prototype.hasStrings = true ;
     return this;
   },
   

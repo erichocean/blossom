@@ -59,43 +59,43 @@ suite("SC.Store#commitRecord", {
       guid: "commitGUID1",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json2 = {
       guid: "commitGUID2",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json3 = {
       guid: "commitGUID3",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json4 = {
       guid: "commitGUID4",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json5 = {
       guid: "commitGUID5",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json6 = {
       guid: "commitGUID6",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json7 = {
       guid: "commitGUID7",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     SC.RunLoop.begin();
@@ -210,7 +210,7 @@ test("calling commitRecords() with params", function() {
 
 test("calling commitRecords() with callbacks", function() {
   var wasCalled = NO;
-  var cb = function(){wasCalled = YES;};
+  var cb = function(){wasCalled = true;};
   
   store.commitRecord(null, null, storeKey2, {}, cb);
   ok(store._callback_queue[storeKey2], "should have a callback in the queue");

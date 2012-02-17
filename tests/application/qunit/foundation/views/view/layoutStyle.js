@@ -82,8 +82,8 @@ suite("NOTIFICATIONS", commonSetup) ;
 
 test("Setting layout will notify frame observers", function() {
   var didNotify = NO, didNotifyStyle = NO;
-  child.addObserver('frame', this, function() { didNotify = YES; }) ;
-  child.addObserver('layoutStyle', this, function() { didNotifyStyle = YES; });
+  child.addObserver('frame', this, function() { didNotify = true; }) ;
+  child.addObserver('layoutStyle', this, function() { didNotifyStyle = true; });
   
   child.set('layout', { left: 0, top: 10, bottom: 20, right: 50 }) ;
   ok(didNotify, "didNotify");
@@ -140,7 +140,7 @@ test("layout {centerX, centerY, width, height}", function() {
 
 test("layout {top, left, width: auto, height: auto}", function() {
   child = SC.View.create({
-    useStaticLayout: YES,
+    useStaticLayout: true,
     render: function(context) {
       // needed for auto
       context.push('<div style="padding: 10px"></div>');
@@ -213,7 +213,7 @@ test("layout {centerX, centerY, width, height}", function() {
 
 test("layout {top, left, width: auto, height: auto}", function() {
   child = SC.View.create({
-    useStaticLayout: YES,
+    useStaticLayout: true,
     render: function(context) {
       // needed for auto
       context.push('<div style="padding: 10px"></div>');
@@ -252,9 +252,9 @@ suite('ACCELERATED LAYOUT VARIATIONS', {
     commonSetup.setup();
     
     // Force support
-    child.hasAcceleratedLayer = YES;
-    SC.platform.supportsAcceleratedLayers = YES;
-    SC.platform.supportsCSS3DTransforms = YES;
+    child.hasAcceleratedLayer = true;
+    SC.platform.supportsAcceleratedLayers = true;
+    SC.platform.supportsCSS3DTransforms = true;
   },
 
   teardown: commonSetup.teardown
@@ -282,8 +282,8 @@ test("layout {top, left, bottom, right}", function() {
 
 test("layout {top, left, width: auto, height: auto}", function() {
   child = SC.View.create({
-    hasAcceleratedLayer: YES, // Force this
-    useStaticLayout: YES,
+    hasAcceleratedLayer: true, // Force this
+    useStaticLayout: true,
     render: function(context) {
       // needed for auto
       context.push('<div style="padding: 10px"></div>');

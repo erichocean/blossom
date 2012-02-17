@@ -18,7 +18,7 @@ suite("SC.Store#dataHashDidChange", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey = SC.Store.generateStoreKey();
@@ -106,7 +106,7 @@ test("calling dataHashDidChange twice with different statusOnly values before fl
   var storeKey = SC.Record.storeKeyFor(514) ;
   record = store.materializeRecord(storeKey) ;
   store.dataHashDidChange(storeKey, null, NO) ;
-  store.dataHashDidChange(storeKey, null, YES) ;
+  store.dataHashDidChange(storeKey, null, true) ;
   
   ok(store.recordPropertyChanges.hasDataChanges.contains(storeKey), 'recordPropertyChanges.hasDataChanges should contain the storeKey %@'.fmt(storeKey)) ;
 

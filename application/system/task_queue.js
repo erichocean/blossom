@@ -14,7 +14,7 @@ sc_require("tasks/task");
 */
 SC.TaskQueue = SC.Task.extend({
   /**
-    If YES, the queue will automatically run in the background when the browser idles.
+    If true, the queue will automatically run in the background when the browser idles.
   */
   runWhenIdle: NO,
   
@@ -30,7 +30,7 @@ SC.TaskQueue = SC.Task.extend({
   interval: 50,
   
   /**
-    If running, YES.
+    If running, true.
   */
   isRunning: NO,
   
@@ -43,7 +43,7 @@ SC.TaskQueue = SC.Task.extend({
   _tasks: [],
   
   /**
-    Returns YES if there are tasks in the queue.
+    Returns true if there are tasks in the queue.
   */
   hasTasks: function() {
     return this._tasks.length > 0;
@@ -98,7 +98,7 @@ SC.TaskQueue = SC.Task.extend({
         }, 
         this.get('interval')
       );
-      this._idleIsScheduled = YES;
+      this._idleIsScheduled = true;
     }
   },
   
@@ -124,7 +124,7 @@ SC.TaskQueue = SC.Task.extend({
     Runs tasks until limit (TaskQueue.runLimit by default) is reached.
   */
   run: function(limit) {
-    this.set("isRunning", YES);
+    this.set("isRunning", true);
     if (!limit) limit = this.get("runLimit");
     
     var task, start = Date.now();
@@ -146,5 +146,5 @@ SC.TaskQueue = SC.Task.extend({
 });
 
 SC.backgroundTaskQueue = SC.TaskQueue.create({
-  runWhenIdle: YES
+  runWhenIdle: true
 });

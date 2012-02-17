@@ -46,7 +46,7 @@ var CommonArray = [
     first: "Charles", 
     gender: "male", 
     californian: NO, 
-    ready: YES, 
+    ready: true, 
     visited: "Prague", 
     doneTravelling: NO, 
     run: runFunc,
@@ -57,8 +57,8 @@ var CommonArray = [
   {
     first: "Jenna", 
     gender: "female", 
-    californian: YES, 
-    ready: YES, 
+    californian: true, 
+    ready: true, 
     visited: "Prague", 
     doneTravelling: NO, 
     run: runFunc,
@@ -70,7 +70,7 @@ var CommonArray = [
     first: "Peter", 
     gender: "male", 
     californian: NO, 
-    ready: YES, 
+    ready: true, 
     visited: "Prague", 
     doneTravelling: NO, 
     run: runFunc,
@@ -82,7 +82,7 @@ var CommonArray = [
     first: "Chris", 
     gender: "male", 
     californian: NO, 
-    ready: YES, 
+    ready: true, 
     visited: "Prague", 
     doneTravelling: NO, 
     run: runFunc,
@@ -261,7 +261,7 @@ test("should return true if function for every() returns true", function() {
       equals(SC.guidFor(this), SC.guidFor(targets[idx]), "this") ;
     }
     
-    equals(result, YES) ;
+    equals(result, true) ;
   }
 });
 
@@ -316,7 +316,7 @@ test("should return true if one function for some() returns true", function() {
     var result = src.some(function(item, index, array) {
       return item.gender !== "male" ;
     }, this);
-    equals(result, YES) ;
+    equals(result, true) ;
   }
 });
 
@@ -369,7 +369,7 @@ test("everyProperty should return true if all properties macth", function() {
   for (var idx2=0, len2=ary2.length; idx2<len2; idx2++) {
     src = ary2[idx2] ;
     var ret = src.everyProperty('visited', 'Prague') ;
-    equals(YES, ret, "visited") ;
+    equals(true, ret, "visited") ;
   }
 });
 
@@ -378,7 +378,7 @@ test("everyProperty should return true if all properties true", function() {
   for (var idx2=0, len2=ary2.length; idx2<len2; idx2++) {
     src = ary2[idx2] ;
     var ret = src.everyProperty('ready') ;
-    equals(YES, ret, "ready") ;
+    equals(true, ret, "ready") ;
   }
 });
 
@@ -414,7 +414,7 @@ test("someProperty should return true if any properties true", function() {
   for (var idx2=0, len2=ary2.length; idx2<len2; idx2++) {
     src = ary2[idx2] ;
     var ret = src.someProperty('first', 'Charles') ;
-    equals(YES, ret, "first") ;
+    equals(true, ret, "first") ;
   }
 });
 
@@ -507,7 +507,7 @@ test("should trigger observer of reduced prop when array changes once property r
       first: "John", 
       gender: "male", 
       californian: NO, 
-      ready: YES, 
+      ready: true, 
       visited: "Paris", 
       balance: 5
     }) ;
@@ -535,7 +535,7 @@ test("should trigger observer of reduced prop when array changes - even if you n
       first: "John", 
       gender: "male", 
       californian: NO, 
-      ready: YES, 
+      ready: true, 
       visited: "Paris", 
       balance: 5
     }) ;
@@ -609,7 +609,7 @@ test("should notify observers even if reduced property is cached on prototype", 
     first: "John", 
     gender: "male", 
     californian: NO, 
-    ready: YES, 
+    ready: true, 
     visited: "Paris", 
     balance: 5
   }) ;

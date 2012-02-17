@@ -12,7 +12,7 @@ suite("User Defaults",{
 
 
 test("Adding a task should not cause it to run.",function(){
-  var task = SC.Task.create({ run: function(){ this.ran = YES; } });
+  var task = SC.Task.create({ run: function(){ this.ran = true; } });
   taskQueue.push(task);
   
   ok(!task.ran, "Task should not have run");
@@ -20,7 +20,7 @@ test("Adding a task should not cause it to run.",function(){
 
 
 test("Adding a task and calling run() should cause the task to be run.",function(){
-  var task = SC.Task.create({ run: function(){ this.ran = YES; } });
+  var task = SC.Task.create({ run: function(){ this.ran = true; } });
   taskQueue.push(task);
   taskQueue.run();
   

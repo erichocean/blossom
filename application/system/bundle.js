@@ -16,12 +16,12 @@ SC.mixin(/** @scope SC */ {
     @default NO
     @type {Boolean}
     
-    If YES, log bundle loading.
+    If true, log bundle loading.
   */
   logBundleLoading: NO,
   
   /**
-    Returns YES is bundleName is loaded; NO if bundleName is not loaded or
+    Returns true is bundleName is loaded; NO if bundleName is not loaded or
     no information is available.
     
     @param bundleName {String}
@@ -111,7 +111,7 @@ SC.mixin(/** @scope SC */ {
     // through other means but the SC.BUNDLE_INFO entry doesn't exist.
     if(m || SC.LAZY_INSTANTIATION[bundleName]) {
       if(SC.logBundleLoading) console.log("SC.loadBundle(): Bundle '%@' found through other means, will attempt to load…".fmt(bundleName));
-      SC.BUNDLE_INFO[bundleName] = {loaded: YES};
+      SC.BUNDLE_INFO[bundleName] = {loaded: true};
       return SC.BUNDLE_INFO[bundleName]; 
     }
     return NO;
@@ -180,7 +180,7 @@ SC.mixin(/** @scope SC */ {
       if (!bundleInfo.loading) {
         // load bundle's dependencies first
         var requires = bundleInfo.requires || [] ;
-        var dependenciesMet = YES ;
+        var dependenciesMet = true ;
         for (idx=0, len=requires.length; idx<len; ++idx) {
           var targetName = requires[idx] ;
           var targetInfo = SC.BUNDLE_INFO[targetName] ;
@@ -244,7 +244,7 @@ SC.mixin(/** @scope SC */ {
           }
           
           // and remember that we're loading
-          bundleInfo.loading = YES ;
+          bundleInfo.loading = true ;
           
           // Start the load process.
           this.scriptDidLoad(bundleName);
@@ -289,7 +289,7 @@ SC.mixin(/** @scope SC */ {
         log        = SC.logBundleLoading,
         callbacks, targets ;
     if (!bundleInfo) {
-      bundleInfo = SC.BUNDLE_INFO[bundleName] = { loaded: YES} ;
+      bundleInfo = SC.BUNDLE_INFO[bundleName] = { loaded: true} ;
       return;
     }
     if (bundleInfo.loaded && log) {
@@ -299,7 +299,7 @@ SC.mixin(/** @scope SC */ {
     
     // remember that we're loaded
     delete bundleInfo.loading ;
-    bundleInfo.loaded = YES ;
+    bundleInfo.loaded = true ;
     
     // call our callbacks (if SC.isReady), otherwise queue them for later
     if (SC.isReady) {

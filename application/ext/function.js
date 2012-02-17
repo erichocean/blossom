@@ -60,7 +60,7 @@
   @param {(String|RegExp)...} args
 */
 Function.prototype.handleEvents = function() {
-  this.isEventHandler = YES;
+  this.isEventHandler = true;
   this.events = arguments;
   return this;
 };
@@ -116,7 +116,7 @@ Function.prototype.handleEvents = function() {
   @param {String...} args
 */
 Function.prototype.stateObserves = function() {
-  this.isStateObserveHandler = YES;
+  this.isStateObserveHandler = true;
   this.args = SC.A(arguments);
   return this;
 };

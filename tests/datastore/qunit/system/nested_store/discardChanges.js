@@ -18,7 +18,7 @@ suite("SC.NestedStore#discardChanges", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     args = null;
     

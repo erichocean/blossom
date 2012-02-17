@@ -38,8 +38,8 @@ suite("SC.View#updateLayerIfNeeded", {
     var layer = document.createElement('div');
     view = SC.View.create({
       layer: layer, // fake it...
-      isVisibleInWindow: YES,
-      layerNeedsUpdate: YES,
+      isVisibleInWindow: true,
+      layerNeedsUpdate: true,
       updateLayer: function() { callCount++; }
     });
     callCount = 0 ;
@@ -60,15 +60,15 @@ test("does not call updateLayer if isVisibleInWindow is NO", function() {
 });
 
 test("does call updateLayer() if isVisible & layerNeedsUpdate", function() {
-  equals(view.get('isVisibleInWindow'), YES, 'precond - isVisibleInWindow');
-  equals(view.get('layerNeedsUpdate'), YES, 'precond - layerNeedsUpdate');
+  equals(view.get('isVisibleInWindow'), true, 'precond - isVisibleInWindow');
+  equals(view.get('layerNeedsUpdate'), true, 'precond - layerNeedsUpdate');
   
   view.updateLayerIfNeeded();
   ok(callCount > 0, 'updateLayer() did run');
 });
 
 test("resets layerNeedsUpdate to NO if called", function() {
-  equals(view.get('layerNeedsUpdate'), YES, 'precond - layerNeedsUpdate');
+  equals(view.get('layerNeedsUpdate'), true, 'precond - layerNeedsUpdate');
   view.updateLayerIfNeeded();
   equals(view.get('layerNeedsUpdate'), NO, 'layerNeedsUpdate reset to NO');
 });
@@ -98,7 +98,7 @@ suite("SC.View#layerNeedsUpdate auto-triggers", {
 
 test("setting layerNeedsUpdate calls updateLayerIfNeeded at end of runloop", function() {
   SC.RunLoop.begin();
-  view.set('layerNeedsUpdate', YES);
+  view.set('layerNeedsUpdate', true);
   SC.RunLoop.end();
   
   equals(callCount, 1, 'updateLayerIfNeeded did run');  
@@ -106,9 +106,9 @@ test("setting layerNeedsUpdate calls updateLayerIfNeeded at end of runloop", fun
 
 test("setting & resetting only triggers updateLayerIfNeeded once per runloop", function() {
   SC.RunLoop.begin();
-  view.set('layerNeedsUpdate', YES)
+  view.set('layerNeedsUpdate', true)
       .set('layerNeedsUpdate', NO)
-      .set('layerNeedsUpdate', YES);
+      .set('layerNeedsUpdate', true);
   SC.RunLoop.end();
   
   equals(callCount, 1, 'updateLayerIfNeeded did run');  
@@ -125,19 +125,19 @@ test("layerNeedsUpdate actually triggers updateLayer", function() {
   var layer = document.createElement('div');
   var view = SC.View.create({
     layer: layer, // fake it...
-    isVisibleInWindow: YES,
+    isVisibleInWindow: true,
     updateLayer: function() { callCount++; }
   });
   
   SC.RunLoop.begin();
-  view.set('layerNeedsUpdate', YES);
+  view.set('layerNeedsUpdate', true);
   SC.RunLoop.end();
   
-  equals(callCount, 1, 'updateLayer did run b/c layerNeedsUpdate is YES');
+  equals(callCount, 1, 'updateLayer did run b/c layerNeedsUpdate is true');
   callCount = 0 ;
   
   SC.RunLoop.begin();
-  view.set('layerNeedsUpdate', YES);
+  view.set('layerNeedsUpdate', true);
   view.set('layerNeedsUpdate', NO);
   SC.RunLoop.end();
   

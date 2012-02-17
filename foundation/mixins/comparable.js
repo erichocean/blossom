@@ -24,7 +24,7 @@ SC.Comparable = {
     
     @type Boolean
   */
-  isComparable: YES,
+  isComparable: true,
   
   /**
     Override to return the result of the comparison of the two parameters. The

@@ -19,7 +19,7 @@ sc_require('system/core_query');
 
 SC.platform = {
   /**
-    YES if the current device supports touch events, NO otherwise.
+    true if the current device supports touch events, NO otherwise.
 
     You can simulate touch events in environments that don't support them by
     calling SC.platform.simulateTouchEvents() from your browser's console.
@@ -36,7 +36,7 @@ SC.platform = {
     input attributes.
 
     For example, to test to see if the placeholder attribute is supported,
-    you would verify that SC.platform.input.placeholder is YES.
+    you would verify that SC.platform.input.placeholder is true.
   */
   input: function(attributes) {
     var ret = {},
@@ -55,7 +55,7 @@ SC.platform = {
     +'pattern min max step placeholder').w()),
 
   /**
-    YES if the application is currently running as a standalone application.
+    true if the application is currently running as a standalone application.
 
     For example, if the user has saved your web application to their home
     screen on an iPhone OS-based device, this property will be true.
@@ -90,7 +90,7 @@ SC.platform = {
     }
 
     // Tell the app that we now "speak" touch
-    SC.platform.touch = YES;
+    SC.platform.touch = true;
 
     // CSS selectors may depend on the touch class name being present
     document.body.className = document.body.className + ' touch';
@@ -148,7 +148,7 @@ SC.platform = {
     are received.
   */
   _simtouch_mousedown: function(evt) {
-    this._mousedown = YES;
+    this._mousedown = true;
 
     var manufacturedEvt = this.manufactureTouchEvent(evt, 'touchstart');
     return SC.RootResponder.responder.touchstart(manufacturedEvt);
@@ -278,11 +278,11 @@ SC.platform = {
   // test
   for (i = 0; i < test_browsers.length; i++)
   {
-    if (el.style[test_browsers[i] + "TransitionProperty"] !== undefined) SC.platform.supportsCSSTransitions = YES;
-    if (el.style[test_browsers[i] + "Transform"] !== undefined) SC.platform.supportsCSSTransforms = YES;
+    if (el.style[test_browsers[i] + "TransitionProperty"] !== undefined) SC.platform.supportsCSSTransitions = true;
+    if (el.style[test_browsers[i] + "Transform"] !== undefined) SC.platform.supportsCSSTransforms = true;
     if (el.style[test_browsers[i] + "Perspective"] !== undefined || el.style[test_browsers[i] + "PerspectiveProperty"] !== undefined) {
-      SC.platform.understandsCSS3DTransforms = YES;
-      SC.platform.supportsCSS3DTransforms = YES;
+      SC.platform.understandsCSS3DTransforms = true;
+      SC.platform.supportsCSS3DTransforms = true;
     }
   }
 
@@ -296,6 +296,6 @@ SC.platform = {
   // Unfortunately, this has to be manual, as I can't think of a good way to test it
   // webkit-only for now.
   if (SC.platform.supportsCSSTransforms && SC.platform.cssPrefix === "webkit") {
-    SC.platform.supportsAcceleratedLayers = YES;
+    SC.platform.supportsAcceleratedLayers = true;
   }
 })();

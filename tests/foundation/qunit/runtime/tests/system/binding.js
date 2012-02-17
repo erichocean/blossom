@@ -16,7 +16,7 @@ suite("basic object binding", {
 });
   
 test("binding is connected", function() {
-  equals(binding.isConnected, YES, "binding.isConnected") ;
+  equals(binding.isConnected, true, "binding.isConnected") ;
 });
 
 test("binding has actually been setup", function() {
@@ -29,7 +29,7 @@ test("binding should have synced on connect", function() {
 
 test("changing fromObject should mark binding as dirty", function() {
   fromObject.set("value", "change") ;
-  equals(binding._changePending, YES) ;
+  equals(binding._changePending, true) ;
 });
 
 test("fromObject change should propogate to toObject only after flush", function() {
@@ -41,7 +41,7 @@ test("fromObject change should propogate to toObject only after flush", function
 
 test("changing toObject should mark binding as dirty", function() {
   toObject.set("value", "change") ;
-  equals(binding._changePending, YES) ;
+  equals(binding._changePending, true) ;
 });
 
 test("toObject change should propogate to fromObject only after flush", function() {
@@ -108,7 +108,7 @@ suite("one way binding", {
   
 test("changing fromObject should mark binding as dirty", function() {
   fromObject.set("value", "change") ;
-  equals(binding._changePending, YES) ;
+  equals(binding._changePending, true) ;
 });
 
 test("fromObject change should propogate after flush", function() {
@@ -160,7 +160,7 @@ test("changing first output should propograte to third after flush", function() 
   equals("change", first.get("output"), "first.output") ;
   ok("change" !== third.get("input"), "third.input") ;
   
-  var didChange = YES;
+  var didChange = true;
   while(didChange) didChange = SC.Binding.flushPendingChanges() ;
   
   // bindings should not have bending changes
@@ -240,7 +240,7 @@ test("Binding with transforms, function to check the type of value", function() 
 
 test("two bindings to the same value should sync in the order they are initialized", function() {
 
-  SC.LOG_BINDINGS = YES;
+  SC.LOG_BINDINGS = true;
 
   SC.RunLoop.begin();
 
@@ -268,7 +268,7 @@ test("two bindings to the same value should sync in the order they are initializ
   
   var b = window.b;
 
-  SC.LOG_BINDINGS = YES;
+  SC.LOG_BINDINGS = true;
     
   SC.RunLoop.end();
   
@@ -301,19 +301,19 @@ suite("AND binding", {
   
 });
 
-test("toObject.value should be YES if both sources are YES", function() {
+test("toObject.value should be true if both sources are true", function() {
   SC.RunLoop.begin();
-  SC.testControllerA.set('value', YES);
-  SC.testControllerB.set('value', YES);
+  SC.testControllerA.set('value', true);
+  SC.testControllerB.set('value', true);
   SC.RunLoop.end();
 
   SC.Binding.flushPendingChanges();
-  equals(toObject.get('value'), YES);
+  equals(toObject.get('value'), true);
 });
 
 test("toObject.value should be NO if either source is NO", function() {
   SC.RunLoop.begin();
-  SC.testControllerA.set('value', YES);
+  SC.testControllerA.set('value', true);
   SC.testControllerB.set('value', NO);
   SC.RunLoop.end();
 
@@ -321,16 +321,16 @@ test("toObject.value should be NO if either source is NO", function() {
   equals(toObject.get('value'), NO);
 
   SC.RunLoop.begin();
-  SC.testControllerA.set('value', YES);
-  SC.testControllerB.set('value', YES);
+  SC.testControllerA.set('value', true);
+  SC.testControllerB.set('value', true);
   SC.RunLoop.end();
 
   SC.Binding.flushPendingChanges();
-  equals(toObject.get('value'), YES);
+  equals(toObject.get('value'), true);
 
   SC.RunLoop.begin();
   SC.testControllerA.set('value', NO);
-  SC.testControllerB.set('value', YES);
+  SC.testControllerB.set('value', true);
   SC.RunLoop.end();
 
   SC.Binding.flushPendingChanges();

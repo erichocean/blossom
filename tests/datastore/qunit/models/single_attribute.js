@@ -271,7 +271,7 @@ test("isEditable NO should not fire property change observer", function() {
 
   var readOnlyWasModified = NO;
   var modifierListener = function() {
-    readOnlyWasModified = YES;
+    readOnlyWasModified = true;
   };
   rec5.addObserver('readOnlyRelatedTo', modifierListener);
 
@@ -314,7 +314,7 @@ suite("modifying a keyed toOne relationship via the inverse", {
 
     MyApp.Foo = SC.Record.extend({
       bar: SC.Record.toOne('MyApp.Bar', {
-        isMaster: YES, inverse: 'foo'
+        isMaster: true, inverse: 'foo'
       })
     });
 

@@ -8,7 +8,7 @@
 suite("SC.RootResponder#makeKeyPane");
 
 test("returns receiver", function() {
-  var p1 = SC.Pane.create(), p2 = SC.Pane.create({ acceptsKeyPane: YES });
+  var p1 = SC.Pane.create(), p2 = SC.Pane.create({ acceptsKeyPane: true });
   var r = SC.RootResponder.create();
   
   equals(r.makeKeyPane(p1), r, 'returns receiver even if pane does not accept key pane');
@@ -17,7 +17,7 @@ test("returns receiver", function() {
 
 test("changes keyPane to new pane if pane accepts key focus", function() {
   var p1 = SC.Pane.create({ acceptsKeyPane: NO }) ;
-  var p2 = SC.Pane.create({ acceptsKeyPane: YES });
+  var p2 = SC.Pane.create({ acceptsKeyPane: true });
   var r = SC.RootResponder.create();
   
   r.makeKeyPane(p1);
@@ -29,8 +29,8 @@ test("changes keyPane to new pane if pane accepts key focus", function() {
 });
 
 test("setting nil sets key pane to mainPane if mainPane accepts key focus", function() {
-  var main = SC.Pane.create({ acceptsKeyPane: YES });
-  var key = SC.Pane.create({ acceptsKeyPane: YES });
+  var main = SC.Pane.create({ acceptsKeyPane: true });
+  var key = SC.Pane.create({ acceptsKeyPane: true });
   var r = SC.RootResponder.create({ mainPane: main, keyPane: key });
   
   // try to clear keyPane -- mainPane accepts key
@@ -53,8 +53,8 @@ test("setting nil sets key pane to mainPane if mainPane accepts key focus", func
 var p1, p2, r, callCount ;
 suite("SC.RootResponder#makeKeyPane - testing notifications", {
   setup: function() {
-    p1 = SC.Pane.create({ acceptsKeyPane: YES });    
-    p2 = SC.Pane.create({ acceptsKeyPane: YES });    
+    p1 = SC.Pane.create({ acceptsKeyPane: true });    
+    p2 = SC.Pane.create({ acceptsKeyPane: true });    
     r = SC.RootResponder.create();
     callCount = 0 ;
   },

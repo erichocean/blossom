@@ -14,11 +14,11 @@ pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
   notifiedDidBegin: NO,
 
   inlineEditorShouldBeginEditing: function(inlineEditor) {
-    return YES;
+    return true;
   },
 
   inlineEditorWillBeginEditing: function(inlineEditor) {
-    this.set('notifiedWillBegin', YES);
+    this.set('notifiedWillBegin', true);
 
     // The inline editor is the last view appended to the pane
     var length = pane._pane.childViews.length,
@@ -28,7 +28,7 @@ pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
   },
 
   inlineEditorDidBeginEditing: function(inlineEditor) {
-    this.set('notifiedDidBegin', YES);
+    this.set('notifiedDidBegin', true);
 
     // The inline editor is the last view appended to the pane
     var length = pane._pane.childViews.length,
@@ -107,7 +107,7 @@ function() {
     SC.InlineTextFieldView.beginEditing();
     ok(NO, "should fail if parameters missing");
   } catch(e) {
-    ok(YES, "should fail if parameters missing");
+    ok(true, "should fail if parameters missing");
   }
 });
 
@@ -118,7 +118,7 @@ function() {
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
     ok(NO, "should fail if frame missing");
   } catch(e1) {
-    ok(YES, "should fail if frame missing: %@".fmt(e1));
+    ok(true, "should fail if frame missing: %@".fmt(e1));
   }
 
   try {
@@ -126,7 +126,7 @@ function() {
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
     ok(NO, "should fail if delegate missing");
   } catch(e2) {
-    ok(YES, "should fail if delegate missing: %@".fmt(e2));
+    ok(true, "should fail if delegate missing: %@".fmt(e2));
   }
 
   try {
@@ -134,7 +134,7 @@ function() {
     SC.InlineTextFieldView.beginEditing(optionsForLabel1);
     ok(NO, "should fail if exampleElement missing");
   } catch(e3) {
-    ok(YES, "should fail if exampleElement missing: %@".fmt(e3));
+    ok(true, "should fail if exampleElement missing: %@".fmt(e3));
   }
 });
 
@@ -166,9 +166,9 @@ function() {
   ok(editor.$("input").length > 0, "should be using an input element");
 });
 
-test("use textarea element when options.multiline is set to YES",
+test("use textarea element when options.multiline is set to true",
 function() {
-  optionsForLabel1["multiline"] = YES;
+  optionsForLabel1["multiline"] = true;
 
   SC.RunLoop.begin();
   SC.InlineTextFieldView.beginEditing(optionsForLabel1);

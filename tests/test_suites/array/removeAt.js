@@ -27,7 +27,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(0) ;
-    T.validateAfter(obj, [], observer, YES);
+    T.validateAfter(obj, [], observer, true);
   });
   
   test("[].removeAt(200) => OUT_OF_RANGE_EXCEPTION exception", function() {
@@ -36,7 +36,7 @@ SC.ArraySuite.define(function(T) {
       obj.removeAt(200);
     } catch (e) {
       equals(e, SC.OUT_OF_RANGE_EXCEPTION, 'should throw SC.OUT_OF_RANGE_EXCEPTION');
-      didThrow = YES ;
+      didThrow = true ;
     }
     ok(didThrow, 'should raise exception');
   });
@@ -49,7 +49,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(0);
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
 
   test("[A,B].removeAt(1) => [A] + notify", function() {
@@ -60,7 +60,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(1);
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
 
   test("[A,B,C].removeAt(1) => [A,C] + notify", function() {
@@ -71,7 +71,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(1);
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
   test("[A,B,C,D].removeAt(1,2) => [A,D] + notify", function() {
@@ -82,7 +82,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(1,2);
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
 
   test("[A,B,C,D].removeAt(IndexSet<0,2-3>) => [B] + notify", function() {
@@ -93,7 +93,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeAt(SC.IndexSet.create(0).add(2,2));
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
 });

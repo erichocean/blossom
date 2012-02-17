@@ -42,7 +42,7 @@ SC.mixin({
       } while (SC._sc_readyQueue.length > 0) ;
 
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
-      SC.isReady = YES ;
+      SC.isReady = true ;
 
       // clear the queue
       SC._sc_readyQueue = null ;

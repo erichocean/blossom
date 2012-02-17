@@ -22,7 +22,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -74,7 +74,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slaves: SC.Record.toMany('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -122,7 +122,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -166,7 +166,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slaves: SC.Record.toMany('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -223,7 +223,7 @@
 //   MyApp.Relative = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'relative',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -280,7 +280,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     relative: SC.Record.toOne('MyApp.Master', {
 //       inverse: 'relative',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -333,7 +333,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -398,7 +398,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -455,7 +455,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slaves: SC.Record.toMany('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -522,7 +522,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -596,7 +596,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slaves: SC.Record.toMany('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -662,7 +662,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -711,7 +711,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slaves: SC.Record.toMany('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -769,7 +769,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -822,7 +822,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     master: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'slave',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -869,7 +869,7 @@
 //   MyApp.Generic = SC.Record.extend({
 //     relative: SC.Record.toOne('MyApp.Generic', {
 //       inverse: 'relative',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -891,7 +891,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES,
+//       isMaster: true,
 //       key: 'alice'
 //     })
 //   });
@@ -930,7 +930,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'masters',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -968,7 +968,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES
+//       isMaster: true
 //     })
 //   });
 // 
@@ -1007,7 +1007,7 @@
 //   MyApp.Generic = SC.Record.extend({
 //     relative: SC.Record.toOne('MyApp.Generic', {
 //       inverse: 'relative',
-//       isMaster: YES
+//       isMaster: true
 //     }),
 // 
 //     callCount: 0,
@@ -1054,8 +1054,8 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES,
-//       lazilyInstantiate: YES
+//       isMaster: true,
+//       lazilyInstantiate: true
 //     })
 //   });
 // 
@@ -1063,7 +1063,7 @@
 //     master: SC.Record.toOne('MyApp.Master', {
 //       inverse: 'slave',
 //       isMaster: NO,
-//       lazilyInstantiate: YES // should be a noop
+//       lazilyInstantiate: true // should be a noop
 //     })
 //   });
 // 
@@ -1082,7 +1082,7 @@
 //       s1 = MyApp.store.find(MyApp.Slave, 's1'),
 //       s2 = MyApp.store.find(MyApp.Slave, 's2');
 // 
-//   // test lazy creation on isMaster => YES
+//   // test lazy creation on isMaster => true
 //   ok(s1, 's1 should be created lazily');
 //   equals(m1.get('slave'), s1, 'm1 should be master of s1');
 // 
@@ -1099,7 +1099,7 @@
 //   MyApp.Master = SC.Record.extend({
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES,
+//       isMaster: true,
 //       lazilyInstantiate: function () {
 //         return NO;
 //       }
@@ -1110,7 +1110,7 @@
 //     master: SC.Record.toOne('MyApp.Master', {
 //       inverse: 'slave',
 //       isMaster: NO,
-//       lazilyInstantiate: YES // should be a noop
+//       lazilyInstantiate: true // should be a noop
 //     })
 //   });
 // 
@@ -1150,8 +1150,8 @@
 //   MyApp.SuperMaster = SC.Record.extend({
 //     master: SC.Record.toOne('MyApp.Master', {
 //       inverse: 'superMaster',
-//       isMaster: YES,
-//       lazilyInstantiate: YES
+//       isMaster: true,
+//       lazilyInstantiate: true
 //     })
 //   });
 // 
@@ -1165,8 +1165,8 @@
 // 
 //     slave: SC.Record.toOne('MyApp.Slave', {
 //       inverse: 'master',
-//       isMaster: YES,
-//       lazilyInstantiate: YES
+//       isMaster: true,
+//       lazilyInstantiate: true
 //     })
 //   });
 // 
@@ -1180,8 +1180,8 @@
 // 
 //     subSlave: SC.Record.toOne('MyApp.SubSlave', {
 //       inverse: 'slave',
-//       isMaster: YES,
-//       lazilyInstantiate: YES
+//       isMaster: true,
+//       lazilyInstantiate: true
 //     })
 //   });
 // 

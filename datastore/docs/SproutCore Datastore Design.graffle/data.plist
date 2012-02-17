@@ -14629,7 +14629,7 @@ discard}</string>
 commit_nested\
 remove\
 did_change(parent editable = NO)\
-read(lock=YES, parent editable=NO)}</string>
+read(lock=true, parent editable=NO)}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>
@@ -14767,9 +14767,9 @@ discard}</string>
 
 \f0\fs20 \cf0 \expnd0\expndtw0\kerning0
 read_editable\
-did_change(parent editable=YES)\
+did_change(parent editable=true)\
 write\
-read(lock=YES, parent editable=YES)}</string>
+read(lock=true, parent editable=true)}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>

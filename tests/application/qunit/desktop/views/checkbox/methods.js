@@ -16,7 +16,7 @@ suite("SC.Checkbox", {
         SC.CheckboxView.extend({
           layout: { right: 20, bottom: 20, width: 100, height: 23 },
           title: "First Name",
-          value: YES 
+          value: true 
         })]
     });
     pane.append(); // make sure there is a layer...
@@ -32,7 +32,7 @@ suite("SC.Checkbox", {
 });
 
 test("renders an input tag with appropriate attributes", function() {
-  equals(view.get('value'), YES, 'precon - value should be YES');
+  equals(view.get('value'), true, 'precon - value should be true');
 
   var q = view.$();
   equals(q.attr('role'), 'checkbox', 'should have type=checkbox');
@@ -83,7 +83,7 @@ test("isSelected should alter sel classname and sync with value property", funct
   
   // update isSelected -- make sure it edits the value
   SC.RunLoop.begin();
-  view.set('isSelected', YES);
+  view.set('isSelected', true);
   SC.RunLoop.end();
   
   ok(view.get('isSelected'), 'isSelected should match value');
@@ -93,7 +93,7 @@ test("isSelected should alter sel classname and sync with value property", funct
 
 test("clicking on the checkbox will change toggle the value", function() {
 
-  ok(view.get('value'), 'precond - value should be YES');
+  ok(view.get('value'), 'precond - value should be true');
   view.mouseDown();
   view.mouseUp();
   ok(!view.get('value'), 'value should now be NO');

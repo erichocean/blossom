@@ -99,7 +99,7 @@ test("changing the content from one single to null and back", function() {
 });
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), YES, 'should have content');
+  equals(controller.get("hasContent"), true, 'should have content');
   
   var callCount = 0;
   controller.addObserver("hasContent", function() { callCount++; });
@@ -110,7 +110,7 @@ test("hasContent", function() {
   
   callCount = 0;
   controller.set("content", content);
-  equals(controller.get("hasContent"), YES, "hasContent should == YES after setting back to content");
+  equals(controller.get("hasContent"), true, "hasContent should == true after setting back to content");
   ok(callCount > 0, "hasContent observer should fire");
 });
 
@@ -176,7 +176,7 @@ test("changing the content from one to another", function() {
 });
 
 test("hasContent", function() {
-  equals(controller.get("hasContent"), YES, 'should have content');
+  equals(controller.get("hasContent"), true, 'should have content');
   
   var callCount = 0;
   controller.addObserver("hasContent", function() { callCount++; });
@@ -187,7 +187,7 @@ test("hasContent", function() {
   
   callCount = 0;
   controller.set("content", content);
-  equals(controller.get("hasContent"), YES, "hasContent should == YES after setting back to content");
+  equals(controller.get("hasContent"), true, "hasContent should == true after setting back to content");
   ok(callCount > 0, "hasContent observer should fire");
 });
 

@@ -215,7 +215,7 @@ SC.mixin(/** @scope SC */ {
   },
 
   /**
-    Returns YES if the passed value is null or undefined.  This avoids errors
+    Returns true if the passed value is null or undefined.  This avoids errors
     from JSLint complaining about use of ==, which can be technically 
     confusing.
     
@@ -238,7 +238,7 @@ SC.mixin(/** @scope SC */ {
   },
   
   /**
-    Returns YES if the passed object is an array or array-like. Instances
+    Returns true if the passed object is an array or array-like. Instances
     of the NodeList class return NO.
 
     Unlike SC.typeOf this method returns true even if the passed object is 
@@ -249,7 +249,7 @@ SC.mixin(/** @scope SC */ {
     @returns {Boolean} 
   */
   isArray: function(obj) {
-    if (obj && obj.objectAt) return YES ; // fast path
+    if (obj && obj.objectAt) return true ; // fast path
     
     var len = (obj ? obj.length : null), type = typeof obj;
     return !((len === undefined) || (len === null) || (obj instanceof Function) || (type === "string") || obj.setInterval);
@@ -427,7 +427,7 @@ SC.mixin(/** @scope SC */ {
 
     @param a {Object} first value to compare
     @param b {Object} the second value to compare
-    @returns {Boolean} YES if the two have equal hash code values.
+    @returns {Boolean} true if the two have equal hash code values.
 
   */
   isEqual: function(a,b) {
@@ -521,7 +521,7 @@ SC.mixin(/** @scope SC */ {
         return 0;
         
       case SC.T_OBJECT:
-        if (v.constructor.isComparable === YES) return v.constructor.compare(v, w);
+        if (v.constructor.isComparable === true) return v.constructor.compare(v, w);
         return 0;
 
       default:
@@ -927,7 +927,7 @@ SC.mixin(Function.prototype,
     var guid = SC.guidFor(this) ;
     this.cacheKey = "__cache__" + guid ;
     this.lastSetValueKey = "__lastValue__" + guid ;
-    this.isProperty = YES ;
+    this.isProperty = true ;
     return this ;
   },
   
@@ -942,13 +942,13 @@ SC.mixin(Function.prototype,
     If you do not specify this option, computed properties are assumed to be
     not cacheable.
     
-    @param {Boolean} aFlag optionally indicate cacheable or no, default YES
+    @param {Boolean} aFlag optionally indicate cacheable or no, default true
     @returns {Function} reciever
   */
   cacheable: function(aFlag) {
-    this.isProperty = YES ;  // also make a property just in case
+    this.isProperty = true ;  // also make a property just in case
     if (!this.dependentKeys) this.dependentKeys = [] ;
-    this.isCacheable = (aFlag === undefined) ? YES : aFlag ;
+    this.isCacheable = (aFlag === undefined) ? true : aFlag ;
     return this ;
   },
   
@@ -966,13 +966,13 @@ SC.mixin(Function.prototype,
     If you do not specify this option, properties are assumed to be 
     non-volatile. 
     
-    @param {Boolean} aFlag optionally indicate state, default to YES
+    @param {Boolean} aFlag optionally indicate state, default to true
     @returns {Function} receiver
   */
   idempotent: function(aFlag) {
-    this.isProperty = YES;  // also make a property just in case
+    this.isProperty = true;  // also make a property just in case
     if (!this.dependentKeys) this.dependentKeys = [] ;
-    this.isVolatile = (aFlag === undefined) ? YES : aFlag ;
+    this.isVolatile = (aFlag === undefined) ? true : aFlag ;
     return this ;
   },
   
@@ -1124,7 +1124,7 @@ SC.DROP_ANY = 0x07 ;
 /**
   This variable is here to make the tab focus behavior work like safari's.
 */
-SC.SAFARI_FOCUS_BEHAVIOR = YES;
+SC.SAFARI_FOCUS_BEHAVIOR = true;
 
 SC.mixin(/** @lends SC */ {
   

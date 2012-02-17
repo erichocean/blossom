@@ -210,7 +210,7 @@ SC.AlertPane = SC.PanelPane.extend({
   /** @private - internal view that is actually displayed */
   contentView: SC.View.extend({
     
-    useStaticLayout: YES,
+    useStaticLayout: true,
     
     layout: { left: 0, right: 0, top: 0, height: "auto" },
     
@@ -235,27 +235,27 @@ SC.AlertPane = SC.PanelPane.extend({
         childViews: ['cancelButton', 'okButton'],
         classNames: ['text-align-right'],
         cancelButton : SC.ButtonView.extend({
-            useStaticLayout: YES,
+            useStaticLayout: true,
             actionKey: SC.BUTTON2_STATUS,
-            localize: YES,
+            localize: true,
             titleMinWidth: 64,
             layout: { right: 5, height: 'auto', width: 'auto', bottom: 0 },
             theme: 'capsule',
             title: "Cancel", 
-            isCancel: YES,
+            isCancel: true,
             action: "dismiss",
             isVisible: NO
           }),
 
         okButton : SC.ButtonView.extend({
-            useStaticLayout: YES,
+            useStaticLayout: true,
             actionKey: SC.BUTTON1_STATUS,
-            localize: YES,
+            localize: true,
             titleMinWidth: 64,
             layout: { left: 0, height: 'auto', width: 'auto', bottom: 0 },
             theme: 'capsule',
             title: "OK", 
-            isDefault: YES,
+            isDefault: true,
             action: "dismiss"
           })
       }),
@@ -265,9 +265,9 @@ SC.AlertPane = SC.PanelPane.extend({
         isVisible: NO,
         childViews: [
           SC.ButtonView.extend({
-            useStaticLayout: YES,
+            useStaticLayout: true,
             actionKey: SC.BUTTON3_STATUS,
-            localize: YES,
+            localize: true,
             titleMinWidth: 64,
             layout: { left: 0, height: 'auto', width: 'auto', bottom: 0 },
             theme: 'capsule',
@@ -354,11 +354,11 @@ SC.AlertPane.show = function(message, description, caption, button1Title, button
     button = ret.get(buttonKeys[idx]);
     title = args[idx + 3];
     if (title) {
-      button.set('title', title).set('isVisible', YES);
+      button.set('title', title).set('isVisible', true);
       if(title=='?') button.set('titleMinWidth', 0);
       if (idx==2) {
         var button_wrapper = ret.get('buttonThreeWrapper');
-        button_wrapper.set('isVisible', YES);
+        button_wrapper.set('isVisible', true);
       }
     }
   }

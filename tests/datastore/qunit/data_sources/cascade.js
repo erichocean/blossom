@@ -20,7 +20,7 @@ suite("SC.CascadeDataSource", {
         equals(1, updateStoreKeys[0], "should equal [1]");
         equals(2, destroyStoreKeys[0], "should equal [2]");
         equals('world', params.hello, 'should equal { hello: "world" }');
-        return YES;
+        return true;
       },
 
       retriveRecords: function () {
@@ -55,7 +55,7 @@ suite("SC.CascadeDataSource", {
       fetch: function (st, query) {
         equals(store, st, "should equal store");
         equals('query', query, "should equal 'query'");
-        return YES;
+        return true;
       }
     });
     Sample.barDataSource = Sample.BarDataSource.create();
@@ -70,7 +70,7 @@ suite("SC.CascadeDataSource", {
         equals(store, st, "should equal store");
         equals(0, storeKeys[0], "should equal [0]");
         equals("id", ids[0], 'should equal ["id"]');
-        return YES;
+        return true;
       },
 
       fetch: function () {
@@ -115,16 +115,16 @@ test("Verify dataSources added using 'from' are appended in order", function () 
   equals(dataSource.dataSources[2], Sample.bazDataSource, 'should equal data source baz');
 });
 
-test("Verify dataSource returns 'YES' when handled by a child dataSource for commitRecords", function () {
+test("Verify dataSource returns `true` when handled by a child dataSource for commitRecords", function () {
   ok(Sample.dataSource.commitRecords(store, [0], [1], [2], { hello: "world" }),
      "commitRecords should be handled by foo");
 });
 
-test("Verify dataSource returns 'YES' when handled by a child dataSource for fetch", function () {
+test("Verify dataSource returns `true` when handled by a child dataSource for fetch", function () {
   ok(Sample.dataSource.fetch(store, 'query'), "fetch should be handled by bar");
 });
 
-test("Verify dataSource returns 'YES' when handled by a child dataSource for retriveRecords", function () {
+test("Verify dataSource returns `true` when handled by a child dataSource for retriveRecords", function () {
   ok(Sample.dataSource.retrieveRecords(store, [0], ['id']), "retrieveRecords should be handled by baz");
 });
 

@@ -43,7 +43,7 @@ test("with valid value", function() {
 
 test("with invalid value", function() {
   var view = pane.view('with error value');
-  pane.verifyInvalid(view, YES);
+  pane.verifyInvalid(view, true);
 });
 
 
@@ -68,7 +68,7 @@ test("changing from valid to invalid", function() {
   view.set('value', SC.Error.create());
   SC.RunLoop.end();
   
-  pane.verifyInvalid(view, YES);
+  pane.verifyInvalid(view, true);
 });
 
 })();

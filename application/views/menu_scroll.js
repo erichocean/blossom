@@ -64,12 +64,12 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
   maximum: 0,
   
   /**
-    YES if enable scrollbar, NO to disable it.  Scrollbars will automatically 
+    true if enable scrollbar, NO to disable it.  Scrollbars will automatically 
     disable if the maximum scroll width does not exceed their capacity.
     
     @property
   */
-  isEnabled: YES,
+  isEnabled: true,
   
   /**
     Determine the layout direction.  Determines whether the scrollbar should 
@@ -152,7 +152,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
   },
   
   mouseEntered: function(evt) {
-    this.set('isMouseOver', YES);
+    this.set('isMouseOver', true);
     this._invokeScrollOnMouseOver();
   },
   
@@ -223,7 +223,7 @@ SC.MenuScrollerView = SC.ScrollerView.extend({
         this.set('value', 0);
       }
     }
-    return YES;
+    return true;
   },
   
   /**
@@ -286,7 +286,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
   // 
   
   /** 
-    YES if the view should maintain a horizontal scroller.   This property 
+    true if the view should maintain a horizontal scroller.   This property 
     must be set when the view is created.
     
     @property {Boolean}
@@ -303,7 +303,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
   horizontalScrollerView: SC.MenuScrollerView,
   
   /**
-    YES if the horizontal scroller should be visible.  You can change this 
+    true if the horizontal scroller should be visible.  You can change this 
     property value anytime to show or hide the horizontal scroller.  If you 
     do not want to use a horizontal scroller at all, you should instead set 
     hasHorizontalScroller to NO to avoid creating a scroller view in the 
@@ -314,7 +314,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
   isHorizontalScrollerVisible: NO,
 
   /**
-    Returns YES if the view both has a horizontal scroller, the scroller is
+    Returns true if the view both has a horizontal scroller, the scroller is
     visible.
     
     @property {Boolean}
@@ -322,19 +322,19 @@ SC.MenuScrollView = SC.ScrollView.extend({
   canScrollHorizontal: NO,
    
   /**
-    If YES, the horizontal scroller will autohide if the contentView is
-    smaller than the visible area.  You must set hasHorizontalScroller to YES 
+    If true, the horizontal scroller will autohide if the contentView is
+    smaller than the visible area.  You must set hasHorizontalScroller to true 
     for this property to have any effect.  
   */
   autohidesHorizontalScroller: NO,
   
   /** 
-    YES if the view shuld maintain a vertical scroller.   This property must 
+    true if the view shuld maintain a vertical scroller.   This property must 
     be set when the view is created.
     
     @property {Boolean}
   */
-  hasVerticalScroller: YES,
+  hasVerticalScroller: true,
   
   /**
     The vertical scroller view class. This will be replaced with a view 
@@ -346,22 +346,22 @@ SC.MenuScrollView = SC.ScrollView.extend({
   verticalScrollerView2: SC.MenuScrollerView,
   
   /**
-    YES if the vertical scroller should be visible.  For SC.MenuScroll the
+    true if the vertical scroller should be visible.  For SC.MenuScroll the
     vertical scroller is always there we just hide the arrows to scroll.
     
     @property {Boolean}
   */
-  isVerticalScrollerVisible: YES,
+  isVerticalScrollerVisible: true,
 
   
-  canScrollVertical: YES,
+  canScrollVertical: true,
 
   /**
-    If YES, the vertical scroller will autohide if the contentView is
-    smaller than the visible area.  You must set hasVerticalScroller to YES 
+    If true, the vertical scroller will autohide if the contentView is
+    smaller than the visible area.  You must set hasVerticalScroller to true 
     for this property to have any effect.  
   */
-  autohidesVerticalScroller: YES,
+  autohidesVerticalScroller: true,
   
   /**
     Use this property to set the 'bottom' offset of your vertical scroller, 
@@ -493,7 +493,7 @@ SC.MenuScrollView = SC.ScrollView.extend({
         }) ;
         childViews.push(view);
         view2 = this.verticalScrollerView2 = this.createChildView(view2, {
-          scrollDown: YES,
+          scrollDown: true,
           layout: {bottom: 0, left: 0, right: 0 },
           controlSize: controlSize,
           valueBinding: '*owner.verticalScrollOffset'

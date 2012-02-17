@@ -25,7 +25,7 @@ test("invokes layoutDidChangeFor() on layoutView each time it is called", functi
 	var callCount = 0 ;
 	var layoutView = SC.View.create({
 		layoutDidChangeFor: function(changedView){
-			equals(this.get('childViewsNeedLayout'), YES, 'should set childViewsNeedLayout to YES before calling layoutDidChangeFor()');
+			equals(this.get('childViewsNeedLayout'), true, 'should set childViewsNeedLayout to true before calling layoutDidChangeFor()');
 			
 			equals(view, changedView, 'should pass view');
 			callCount++;

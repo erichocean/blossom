@@ -35,7 +35,7 @@ test("calling select(indexes=Number)", function() {
   ok(expected.isEqual(actual), 'selection should have object (expected: %@ actual: %@)'.fmt(expected, actual));
 });
 
-test("calling select(indexes=Number, extend=YES)", function() {
+test("calling select(indexes=Number, extend=true)", function() {
 
   var base = SC.SelectionSet.create().add(content, 3,3),
       next = 1,
@@ -46,7 +46,7 @@ test("calling select(indexes=Number, extend=YES)", function() {
   actual = view.get('selection');
   ok(base.isEqual(actual), 'precond - should have base selection (expected: %@ actual: %@)'.fmt(expected, actual));
   
-  view.select(1, YES);
+  view.select(1, true);
   actual = view.get('selection');
   ok(expected.isEqual(actual), 'selection should add set to existing selection (expected: %@ actual: %@)'.fmt(expected, actual));
 });
@@ -61,7 +61,7 @@ test("calling select(indexes=SC.IndexSet)", function() {
   ok(expected.isEqual(actual), 'selection should have passed index set only (expected: %@ actual: %@)'.fmt(expected, actual));
 });
 
-test("calling select(indexes=SC.IndexSet, extend=YES)", function() {
+test("calling select(indexes=SC.IndexSet, extend=true)", function() {
 
   var base = SC.SelectionSet.create().add(content,3,3),
       next = SC.SelectionSet.create().add(content,0,2),
@@ -73,7 +73,7 @@ test("calling select(indexes=SC.IndexSet, extend=YES)", function() {
   ok(base.isEqual(actual), 'precond - should have base selection (expected: %@ actual: %@)'.fmt(base, actual));
   
   var indexes = SC.IndexSet.create(0,2);
-  view.select(indexes, YES);
+  view.select(indexes, true);
   actual = view.get('selection');
   ok(expected.isEqual(actual), 'selection should add set to existing selection (expected: %@ actual: %@)'.fmt(expected, actual));
 });
@@ -159,7 +159,7 @@ test("del.collectionViewShouldSelectIndexes - extending selection", function() {
   };
   
   view.select(SC.IndexSet.create(0,4));
-  view.select(SC.IndexSet.create(3,3), YES);
+  view.select(SC.IndexSet.create(3,3), true);
 
   var expected = SC.SelectionSet.create().add(content,0,6).remove(content,3),
       actual   = view.get('selection');

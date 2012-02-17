@@ -46,7 +46,7 @@ SC.ObserverSet = {
     if (!methods) {
       methods = this[targetGuid] = SC.CoreSet.create() ;
       methods.target = target ;
-      methods.isTargetSet = YES ; // used for getMembers().
+      methods.isTargetSet = true ; // used for getMembers().
       this.targets++ ;
     }
     methods.add(method) ;
@@ -66,7 +66,7 @@ SC.ObserverSet = {
     last method for the named target, then the number of targets will also
     be reduced.
 
-    returns YES if the items was removed, NO if it was not found.
+    returns true if the items was removed, NO if it was not found.
   */
   remove: function(target, method) {
     var targetGuid = (target) ? SC.guidFor(target) : "__this__";
@@ -89,7 +89,7 @@ SC.ObserverSet = {
 
     this._membersCacheIsValid = NO;
 
-    return YES ;
+    return true ;
   },
 
   /**
@@ -147,7 +147,7 @@ SC.ObserverSet = {
       }
     }
 
-    this._membersCacheIsValid = YES ;
+    this._membersCacheIsValid = true ;
     return ret ;
   },
 

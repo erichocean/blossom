@@ -19,49 +19,49 @@ suite("SC.Store#retrieveRecord", {
       guid: "retrieveGUID1",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json2 = {
       guid: "retrieveGUID2",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json3 = {
       guid: "retrieveGUID3",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json4 = {
       guid: "retrieveGUID4",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json5 = {
       guid: "retrieveGUID5",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json6 = {
       guid: "retrieveGUID6",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json7 = {
       guid: "retrieveGUID7",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json8 = {
       guid: "retrieveGUID8",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey1 = SC.Store.generateStoreKey();
@@ -88,7 +88,7 @@ function testStates(canLoad) {
   
   SC.RunLoop.begin();
   
-  store.retrieveRecord(undefined, undefined, storeKey1, YES);
+  store.retrieveRecord(undefined, undefined, storeKey1, true);
   status = store.readStatus( storeKey1);
   if (canLoad) {
     equals(status, SC.Record.BUSY_LOADING, "the status should have changed to BUSY_LOADING");
@@ -97,7 +97,7 @@ function testStates(canLoad) {
   }
   
   
-  store.retrieveRecord(undefined, undefined, storeKey2, YES);
+  store.retrieveRecord(undefined, undefined, storeKey2, true);
   status = store.readStatus( storeKey2);
   if (canLoad) {
     equals(status, SC.Record.BUSY_LOADING, "the status should have changed to BUSY_LOADING");
@@ -105,7 +105,7 @@ function testStates(canLoad) {
     equals(status, SC.Record.ERROR, "the status should become empty");
   }
   
-  store.retrieveRecord(undefined, undefined, storeKey3, YES);
+  store.retrieveRecord(undefined, undefined, storeKey3, true);
   status = store.readStatus( storeKey3);
   if (canLoad) {
     equals(status, SC.Record.BUSY_LOADING, "the status should have changed to BUSY_LOADING");
@@ -114,7 +114,7 @@ function testStates(canLoad) {
   }
   
   try{
-    store.retrieveRecord(undefined, undefined, storeKey4, YES);
+    store.retrieveRecord(undefined, undefined, storeKey4, true);
     msg='';
   }catch(error1){
     msg=error1.message;
@@ -122,7 +122,7 @@ function testStates(canLoad) {
   equals(msg, SC.Record.BUSY_ERROR.message, "should throw error");
 
   try{
-    store.retrieveRecord(undefined, undefined, storeKey5, YES);
+    store.retrieveRecord(undefined, undefined, storeKey5, true);
     msg='';
   }catch(error2){
     msg=error2.message;
@@ -130,7 +130,7 @@ function testStates(canLoad) {
   equals(msg, SC.Record.BUSY_ERROR.message, "should throw error");
   
   try{
-    store.retrieveRecord(undefined, undefined, storeKey6, YES);
+    store.retrieveRecord(undefined, undefined, storeKey6, true);
     msg='';
   }catch(error3){
     msg=error3.message;
@@ -138,7 +138,7 @@ function testStates(canLoad) {
   equals(msg, SC.Record.BUSY_ERROR.message, "should throw error");
 
   try{
-    store.retrieveRecord(undefined, undefined, storeKey7, YES);
+    store.retrieveRecord(undefined, undefined, storeKey7, true);
     msg='';
   }catch(error4){
     msg=error4.message;
@@ -146,7 +146,7 @@ function testStates(canLoad) {
   equals(msg, SC.Record.BAD_STATE_ERROR.message, "should throw error");
 
 
-  store.retrieveRecord(undefined, undefined, storeKey8, YES);
+  store.retrieveRecord(undefined, undefined, storeKey8, true);
   status = store.readStatus( storeKey8);
   if (canLoad) {
     ok(SC.Record.BUSY_REFRESH | (status & 0x03), "the status changed to BUSY_REFRESH.");
@@ -175,22 +175,22 @@ test("Retrieve a record without a working data source and check for different er
 test("Retrieve a record with working data source and check for different errors and states", function() {
   // build a fake data source that claims to handle retrieval
   var source = SC.DataSource.create({
-    retrieveRecords: function() { return YES ; }
+    retrieveRecords: function() { return true ; }
   });
   store.set('dataSource', source);
 
-  testStates(YES);
+  testStates(true);
 
 });
 
 test("Retrieve a record with callback", function() {
   // build a fake data source that claims to handle retrieval
   var source = SC.DataSource.create({
-    retrieveRecords: function() { return YES ; }
+    retrieveRecords: function() { return true ; }
   });
   store.set('dataSource', source);
   var callback = NO;
-  store.retrieveRecord(undefined, undefined, storeKey1, YES, function(){callback = YES;});
+  store.retrieveRecord(undefined, undefined, storeKey1, true, function(){callback = true;});
   
   ok(store._callback_queue[storeKey1], "The callback exists in the queue");
   

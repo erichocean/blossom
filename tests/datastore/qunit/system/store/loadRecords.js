@@ -11,7 +11,7 @@
   suite("SC.Store#loadRecords", {
     setup: function() {
       Person = SC.Record.extend({
-        first: SC.Record.attr(String, { isRequired: YES}),
+        first: SC.Record.attr(String, { isRequired: true}),
         last: SC.Record.attr(String),
         age: SC.Record.attr(Number),
         isAlive: SC.Record.attr(Boolean)
@@ -31,14 +31,14 @@
           first: "John",
           last: "Sproutish",
           age: 35,
-          isAlive: YES
+          isAlive: true
         }),
         Person.create({
           guid: 2,
           first: "Sarah",
           last: "Coop",
           age: 28,
-          isAlive: YES
+          isAlive: true
         })
       ];
 

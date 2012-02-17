@@ -223,7 +223,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.Array,
     var i = this.wasRangeRequested(start);
     if(i>=0) { 
       this.requestedRangeIndex.removeAt(i,1);
-      return YES;
+      return true;
     }
     return NO;
   },

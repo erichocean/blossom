@@ -17,7 +17,7 @@ if (! BLOSSOM) {
   takes a lot of the same properties as a button:
   
   - isEnabled: whether disclosure triangle is clickable or not
-  - value: YES or NO (where YES implies expanded/open)
+  - value: true or NO (where true implies expanded/open)
   
   @extends SC.ButtonView
   @since SproutCore
@@ -34,7 +34,7 @@ SC.DisclosureView = SC.ButtonView.extend(
     This is the value that will be set when the disclosure triangle is toggled
     open.
   */
-  toggleOnValue: YES,
+  toggleOnValue: true,
   
   /**
     The value that will be set when the disclosure triangle is toggled closed.
@@ -70,11 +70,11 @@ SC.DisclosureView = SC.ButtonView.extend(
   keyDown: function(evt) {
     if (evt.which === 37 || evt.which === 38) {  
       this.set('value', this.get('toggleOffValue')) ;
-      return YES;
+      return true;
     }
     if (evt.which === 39 || evt.which === 40) {  
       this.set('value', this.get('toggleOnValue')) ;
-      return YES;
+      return true;
     }
     arguments.callee.base.apply(this, arguments);
   }

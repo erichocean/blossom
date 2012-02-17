@@ -78,7 +78,7 @@ suite("SC.TreeItemObserver - Flat Array Use Case", {
     root = TestObject.create({
       title: "ROOT",
       children: content,
-      isExpanded: YES
+      isExpanded: true
     });
     
     flattened = content.slice();
@@ -299,13 +299,13 @@ test("contentGroupIndexes - not grouped", function() {
 });
 
 test("contentGroupIndexes - grouped", function() {
-  delegate.set('treeItemIsGrouped', YES);
-  equals(delegate.get('treeItemIsGrouped'), YES, 'precond - delegate.treeItemIsGrouped == YES');
+  delegate.set('treeItemIsGrouped', true);
+  equals(delegate.get('treeItemIsGrouped'), true, 'precond - delegate.treeItemIsGrouped == true');
   same(obs.contentGroupIndexes(null, obs), SC.IndexSet.create(0, obs.get('length')), 'contentGroupIndexes should cover entire set');
   
   var idx, len = obs.get('length');
   for(idx=0;idx<len;idx++) {
-    equals(obs.contentIndexIsGroup(null, obs, idx), YES, 'obs.contentIndexIsGroup(null, obs, %@) should be YES'.fmt(idx));
+    equals(obs.contentIndexIsGroup(null, obs, idx), true, 'obs.contentIndexIsGroup(null, obs, %@) should be true'.fmt(idx));
   }
 });
 

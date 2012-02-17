@@ -11,7 +11,7 @@
 //
 suite("SC.View#render");
 
-test("default implementation invokes renderChildViews if firstTime = YES", function() {
+test("default implementation invokes renderChildViews if firstTime = true", function() {
 
 	var runCount = 0, curContext, curFirstTime;
 	var view = SC.View.create({
@@ -22,9 +22,9 @@ test("default implementation invokes renderChildViews if firstTime = YES", funct
 		}
 	});
 	
-	// VERIFY firstTime = YES
+	// VERIFY firstTime = true
 	curContext = view.renderContext();
-	curFirstTime = YES ;
+	curFirstTime = true ;
 	view.render(curContext, curFirstTime);
 	equals(runCount, 1, 'did invoke renderChildViews()');
 
@@ -66,9 +66,9 @@ test("creates a context and then invokes prepareContext on each childView", func
 		]
 	});
 
-	// VERIFY: firstTime= YES 	
+	// VERIFY: firstTime= true 	
 	curContext = view.renderContext('div');
-	curFirstTime= YES ;
+	curFirstTime= true ;
 	equals(view.renderChildViews(curContext, curFirstTime), curContext, 'returns context');
 	equals(runCount, 3, 'prepareContext() invoked for each child view');
 	

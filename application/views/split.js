@@ -69,7 +69,7 @@ SC.RESIZE_BOTTOM_RIGHT = 'resize-bottom-right';
   viewhelper.
   
   @property {Boolean} canCollapseViews Set to NO when you don't want any of
-  the child views to collapse. Defaults to YES. 
+  the child views to collapse. Defaults to true. 
   
   In addition, the top/left and bottom/right child views can have these
   properties:
@@ -103,7 +103,7 @@ SC.SplitView = SC.View.extend(
   /**
     Set to NO to disable collapsing for all views.
   */
-  canCollapseViews: YES,
+  canCollapseViews: true,
   
   /*
     Configure which view(s) you want to autoresize when this split view's 
@@ -130,7 +130,7 @@ SC.SplitView = SC.View.extend(
   /**
     Yes, we're a split view.
   */
-  isSplitView: YES,
+  isSplitView: true,
   
   // add default views
   topLeftView: SC.View,
@@ -380,7 +380,7 @@ SC.SplitView = SC.View.extend(
       // Turn a flag on to recalculate the spliting if the desired thickness
       // is a percentage
       if(this._recalculateDivider===undefined && desiredThickness<1) {
-        this._recalculateDivider=YES;
+        this._recalculateDivider=true;
       }
       else if(this._recalculateDivider) this._recalculateDivider=NO;
       
@@ -466,24 +466,24 @@ SC.SplitView = SC.View.extend(
     this._layoutDirection = this.get('layoutDirection') ;
     
     this.beginLiveResize() ;
-    this._inLiveResize = YES ;
+    this._inLiveResize = true ;
     
-    return YES ;
+    return true ;
   },
   
   mouseDragged: function(evt) {
     var offset = (this._layoutDirection === SC.LAYOUT_HORIZONTAL) ? evt.pageX 
                 - this._mouseDownX : evt.pageY - this._mouseDownY ;
     this._updateTopLeftThickness(offset) ;
-    return YES;
+    return true;
   },
   
   mouseUp: function(evt) {
-    if (this._inLiveResize === YES) {
+    if (this._inLiveResize === true) {
       this._thumbView = null ; // avoid memory leaks
       this._inLiveResize = NO ;
       this.endLiveResize() ;
-      return YES ;
+      return true ;
     }
     
     return NO ;
@@ -738,16 +738,16 @@ SC.SplitView = SC.View.extend(
     
     The default implemention returns NO if the split view property
     canCollapseViews is set to NO or when the given view has
-    property canCollapse set to NO, otherwise it returns YES.
+    property canCollapse set to NO, otherwise it returns true.
     
     @param {SC.SplitView} splitView the split view
     @param {SC.View} view the view we want to collapse.
-    @returns {Boolean} YES to allow collapse.
+    @returns {Boolean} true to allow collapse.
   */
   splitViewCanCollapse: function(splitView, view) {
     if (splitView.get('canCollapseViews') === NO) return NO ;
     if (view.get('canCollapse') === NO) return NO ;
-    return YES ;
+    return true ;
   },
   
   /**

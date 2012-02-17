@@ -33,26 +33,26 @@
   .add("textarea - empty", SC.TextFieldView, { 
     hint: "Full Name", 
     value: '',
-    isTextArea: YES
+    isTextArea: true
   })
   
   .add("textarea - with value", SC.TextFieldView, { 
     hint: "Full Name", 
     value: 'John Doe',
-    isTextArea: YES
+    isTextArea: true
   })
   
   .add("textarea - disabled - empty", SC.TextFieldView, { 
     hint: "Full Name", 
     value: '',
-    isTextArea: YES,
+    isTextArea: true,
     isEnabled: NO
   })
   
   .add("textarea - disabled - with value", SC.TextFieldView, { 
     hint: "Full Name", 
     value: 'John Doe',
-    isTextArea: YES,
+    isTextArea: true,
     isEnabled: NO
   });
   
@@ -136,13 +136,13 @@ test("with value", function() {
 test("disabled - empty", function() {
   var view = pane.view('disabled - empty');
   pane.verifyEmpty(view, 'Full Name');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("disabled - with value", function() {
   var view = pane.view('disabled - with value');
   pane.verifyNotEmpty(view, 'John Doe', 'Full Name');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("textarea - empty", function() {
@@ -160,13 +160,13 @@ test("textarea - with value", function() {
 test("textarea - disabled - empty", function() {
   var view = pane.view('disabled - empty');
   pane.verifyEmpty(view, 'Full Name');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("textarea - disabled - with value", function() {
   var view = pane.view('disabled - with value');
   pane.verifyNotEmpty(view, 'John Doe', 'Full Name');
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 // ..........................................................
@@ -190,7 +190,7 @@ test("disabling view", function() {
   SC.RunLoop.begin();
   view.set('isEnabled', NO);
   SC.RunLoop.end();
-  pane.verifyDisabled(view, YES);
+  pane.verifyDisabled(view, true);
 });
 
 test("changing value to null", function() {
@@ -209,7 +209,7 @@ test("enabling disabled view", function() {
 
   // test changing enabled state updates like it should
   SC.RunLoop.begin();
-  view.set('isEnabled', YES);
+  view.set('isEnabled', true);
   SC.RunLoop.end();
   pane.verifyDisabled(view, NO);
 });
@@ -486,7 +486,7 @@ test("focus and blurring text field", function() {
   SC.Event.trigger(input, 'focus');
   
   // verify editing state changed...
-  ok(view.get('isEditing'), 'view.isEditing should be YES');
+  ok(view.get('isEditing'), 'view.isEditing should be true');
   ok(view.$().hasClass('focus'), 'view layer should have focus class');
   
   // simulate typing a letter

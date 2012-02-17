@@ -44,7 +44,7 @@ suite("SC.RangeObserver#rangeDidChange", {
       
     });
 
-    obj = SC.RangeObserver.create(source, indexes, observer, observer.changeObserver, "context", YES);
+    obj = SC.RangeObserver.create(source, indexes, observer, observer.changeObserver, "context", true);
     
   }
 });
@@ -58,14 +58,14 @@ test("returns receiver", function() {
 // 
 
 test("invokes callback if no changes set is passed", function() {
-  observer.verify = YES ;
+  observer.verify = true ;
   observer.indexes = null ;
   obj.rangeDidChange();
   equals(observer.callCount, 1, 'should invoke callback');
 });
 
 test("invokes callback if changes set is passed and it intersects with observed range", function() {
-  observer.verify = YES ;
+  observer.verify = true ;
   observer.indexes = SC.IndexSet.create(1,2) ;
   obj.rangeDidChange(observer.indexes);
   equals(observer.callCount, 1, 'should invoke callback');

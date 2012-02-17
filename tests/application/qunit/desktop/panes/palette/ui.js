@@ -19,9 +19,9 @@ test("verify palette pane content container is visible at correct location with 
   });
   pane.append();
 
-  ok(pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be YES');
+  ok(pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be true');
   ok(pane.$().hasClass('sc-palette'), 'pane should have sc-palette class');
-  ok(pane.childViews[0].get('isVisibleInWindow'), 'pane.div.isVisibleInWindow should be YES');
+  ok(pane.childViews[0].get('isVisibleInWindow'), 'pane.div.isVisibleInWindow should be true');
   ok(pane.childViews[0].$().hasClass('sc-view'), 'pane.div should have sc-view class');
   
   var ret = pane.layoutStyle();

@@ -87,7 +87,7 @@ SC.Border = {
 
     @private
   */
-  hasBorder: YES,
+  hasBorder: true,
 
   /**
     Make sure we re-render if the borderStyle property changes.

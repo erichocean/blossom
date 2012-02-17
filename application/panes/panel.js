@@ -38,7 +38,7 @@ SC.PanelPane = SC.Pane.extend({
 
   layout: { left:0, right:0, top:0, bottom:0 },
   classNames: ['sc-panel'],
-  acceptsKeyPane: YES,
+  acceptsKeyPane: true,
   
   /**
     Indicates that a pane is modal and should not allow clicks to pass
@@ -47,7 +47,7 @@ SC.PanelPane = SC.Pane.extend({
     
     @property {Boolean}
   */
-  isModal: YES,
+  isModal: true,
 
   /**
     The modal pane to place behind this pane if this pane is modal.  This 
@@ -140,7 +140,7 @@ SC.PanelPane = SC.Pane.extend({
   appendTo: function(elem) {
     var pane ;
     if (!this.get('isVisibleInWindow') && this.get('isModal') && (pane = this._modalPane())) {
-      this._isShowingModal = YES;
+      this._isShowingModal = true;
       pane.paneWillAppend(this);
     }
     return arguments.callee.base.apply(this, arguments);
@@ -162,7 +162,7 @@ SC.PanelPane = SC.Pane.extend({
     var pane, isModal = this.get('isModal');
     if (isModal) {
        if (!this._isShowingModal && this.get('isVisibleInWindow') && (pane = this._modalPane())) {
-         this._isShowingModal = YES;
+         this._isShowingModal = true;
          pane.paneWillAppend(this);
        }
        

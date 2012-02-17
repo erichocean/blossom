@@ -72,7 +72,7 @@ SC.Cookie = SC.Object.extend({
     @property {Boolean}
     @isReadOnly
   */
-  isCookie: YES,
+  isCookie: true,
   
   // ..........................................................
   // METHODS

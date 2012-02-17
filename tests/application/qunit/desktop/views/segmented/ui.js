@@ -76,39 +76,39 @@ var pane;
     .add("3_items,1_sel,emptySel", SC.SegmentedView, { 
       items: ["Item1", "Very Long Item", "Item 3"],
         value: "Very Long Item",
-        allowsEmptySelection: YES,
+        allowsEmptySelection: true,
         layout: { height: 25 }
     })
     .add("3_items,2_sel,emptySel", SC.SegmentedView, { 
       items: ["Item1", "Very Long Item", "Item 3"],
       value: "Item1 Item3".w(),
-      allowsEmptySelection: YES,
+      allowsEmptySelection: true,
       layout: { height: 25 }
     })
     .add("3_items,1_sel,multipleSel", SC.SegmentedView, { 
       items: "Item1 Item2 Item3".w(),
       value: "Item2",
-      allowsMultipleSelection: YES,
+      allowsMultipleSelection: true,
       layout: { height: 25 }
     })
     .add("3_items,2_sel,multipleSel", SC.SegmentedView, { 
       items: "Item1 Item2 Item3".w(),
       value: "Item1 Item3".w(),
-      allowsMultipleSelection: YES,
+      allowsMultipleSelection: true,
       layout: { height: 25 }
     })
     .add("3_items,1_sel,emptySel,multiSel", SC.SegmentedView, { 
       items: "Item1 Item2 Item3".w(),
       value: "Item2",
-      allowsEmptySelection: YES,
-      allowsMultipleSelection: YES,
+      allowsEmptySelection: true,
+      allowsMultipleSelection: true,
       layout: { height: 25 }
     })
     .add("3_items,2_sel,emptySel,multiSel", SC.SegmentedView, { 
       items: "Item1 Item2 Item3".w(),
       value: "Item1 Item3".w(),
-      allowsEmptySelection: YES,
-      allowsMultipleSelection: YES,
+      allowsEmptySelection: true,
+      allowsMultipleSelection: true,
       layout: { height: 25 }
     });
     
@@ -120,19 +120,19 @@ var pane;
   suite('SC.SegmentedView ui', pane.standardSetup());
   
   test("Check that all segmentedViews are visible", function() {
-    ok(pane.view('3_empty').get('isVisibleInWindow'), '3_empty.isVisibleInWindow should be YES');
-    ok(pane.view('3_empty,icon').get('isVisibleInWindow'), '3_empty,icon.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,1_sel').get('isVisibleInWindow'), '3_items,1_sel.isVisibleInWindow should be YES');
-    ok(pane.view('2_items,toolTip').get('isVisibleInWindow'), '2_items,toolTip.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,1_sel,disabled').get('isVisibleInWindow'), '3_items,1_sel,disabled.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,icon,2_sel').get('isVisibleInWindow'), '3_items,icon,2_sel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,2_sel,disabled').get('isVisibleInWindow'), '3_items,2_sel,disabled.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,1_sel,emptySel').get('isVisibleInWindow'), '3_items,1 sel,emptySel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,2_sel,emptySel').get('isVisibleInWindow'), '3_items,2 sel,emptySel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,1_sel,multipleSel').get('isVisibleInWindow'), '3_items,1_sel,multipleSel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,2_sel,multipleSel').get('isVisibleInWindow'), '3_items,2_sel,multipleSel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,1_sel,emptySel,multiSel').get('isVisibleInWindow'), '3_items,1_sel,emptySel,multiSel.isVisibleInWindow should be YES');
-    ok(pane.view('3_items,2_sel,emptySel,multiSel').get('isVisibleInWindow'), '3_items,2_sel,emptySel,multiSel.isVisibleInWindow should be YES');
+    ok(pane.view('3_empty').get('isVisibleInWindow'), '3_empty.isVisibleInWindow should be true');
+    ok(pane.view('3_empty,icon').get('isVisibleInWindow'), '3_empty,icon.isVisibleInWindow should be true');
+    ok(pane.view('3_items,1_sel').get('isVisibleInWindow'), '3_items,1_sel.isVisibleInWindow should be true');
+    ok(pane.view('2_items,toolTip').get('isVisibleInWindow'), '2_items,toolTip.isVisibleInWindow should be true');
+    ok(pane.view('3_items,1_sel,disabled').get('isVisibleInWindow'), '3_items,1_sel,disabled.isVisibleInWindow should be true');
+    ok(pane.view('3_items,icon,2_sel').get('isVisibleInWindow'), '3_items,icon,2_sel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,2_sel,disabled').get('isVisibleInWindow'), '3_items,2_sel,disabled.isVisibleInWindow should be true');
+    ok(pane.view('3_items,1_sel,emptySel').get('isVisibleInWindow'), '3_items,1 sel,emptySel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,2_sel,emptySel').get('isVisibleInWindow'), '3_items,2 sel,emptySel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,1_sel,multipleSel').get('isVisibleInWindow'), '3_items,1_sel,multipleSel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,2_sel,multipleSel').get('isVisibleInWindow'), '3_items,2_sel,multipleSel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,1_sel,emptySel,multiSel').get('isVisibleInWindow'), '3_items,1_sel,emptySel,multiSel.isVisibleInWindow should be true');
+    ok(pane.view('3_items,2_sel,emptySel,multiSel').get('isVisibleInWindow'), '3_items,2_sel,emptySel,multiSel.isVisibleInWindow should be true');
   });
   
   
@@ -140,8 +140,8 @@ var pane;
     var viewElem=pane.view('3_empty').$();
     var segments=pane.view('3_empty').$('a');
     equals(segments.length, 3, 'precond - segmented view should have 3 segments');
-    ok(viewElem.hasClass('sc-view'), '3_empty.hasClass(sc-view) should be YES');
-    ok(viewElem.hasClass('sc-segmented-view'), '3_empty.hasClass(sc-segmented-view) should be YES');
+    ok(viewElem.hasClass('sc-view'), '3_empty.hasClass(sc-view) should be true');
+    ok(viewElem.hasClass('sc-segmented-view'), '3_empty.hasClass(sc-segmented-view) should be true');
     for (var i=0, ilen=segments.length; i<ilen; i++){
       var seg=segments[i];
       if(i===0){
@@ -167,8 +167,8 @@ var pane;
     var viewElem=pane.view('3_empty,icon').$();
     var segments=pane.view('3_empty,icon').$('a');
     equals(segments.length, 3, 'precond - segmented view should have 3 segments');
-    ok(viewElem.hasClass('sc-view'), '3_empty.hasClass(sc-view) should be YES');
-    ok(viewElem.hasClass('sc-segmented-view'), '3_empty.hasClass(sc-segmented-view) should be YES');
+    ok(viewElem.hasClass('sc-view'), '3_empty.hasClass(sc-view) should be true');
+    ok(viewElem.hasClass('sc-segmented-view'), '3_empty.hasClass(sc-segmented-view) should be true');
     for (var i=0, ilen=segments.length; i<ilen; i++){
       var seg=segments[i];
       if(i===0){

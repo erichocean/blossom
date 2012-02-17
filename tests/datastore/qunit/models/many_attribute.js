@@ -42,7 +42,7 @@ suite("SC.ManyAttribute core methods", {
 
       // test many-to-many relationships with inverse
       barToMany: SC.Record.toMany('MyApp.Bar', {
-        inverse: 'fooToMany', isMaster: YES, orderBy: 'name'
+        inverse: 'fooToMany', isMaster: true, orderBy: 'name'
       }),
       
       // test many-to-one relationships with inverse
@@ -61,7 +61,7 @@ suite("SC.ManyAttribute core methods", {
       
       // test many-to-one
       fooToOne: SC.Record.toOne('MyApp.Foo', {
-        inverse: 'barToOne', isMaster: YES
+        inverse: 'barToOne', isMaster: true
       })
     });
     

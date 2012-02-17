@@ -64,7 +64,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
   menu: null,
   
   /**
-    If YES and the menu is a class, this will cause a task that will instantiate the menu
+    If true and the menu is a class, this will cause a task that will instantiate the menu
     to be added to SC.backgroundTaskQueue.
   */
   shouldLoadInBackground: NO,
@@ -132,7 +132,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     this._setupMenu();
   },
   
-  acceptsFirstResponder: YES,
+  acceptsFirstResponder: true,
   
   /**
     The guaranteed-instantiated menu.
@@ -171,7 +171,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     }
 
     menu.popup(this, this.get('preferMatrix')) ;
-    return YES;
+    return true;
   },
 
   /** @private
@@ -183,9 +183,9 @@ SC.PopupButtonView = SC.ButtonView.extend(
   */
   mouseDown: function(evt) {
     // If disabled, handle mouse down but ignore it.
-    if (!this.get('isEnabled')) return YES ;
+    if (!this.get('isEnabled')) return true ;
 
-    this._isMouseDown = YES;
+    this._isMouseDown = true;
 
     this._action() ;
 
@@ -199,7 +199,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
 
     this.becomeFirstResponder();
 
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -212,7 +212,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
   },
 
   /** @private
-    Because we responded YES to the mouseDown event, we have responsibility
+    Because we responded true to the mouseDown event, we have responsibility
     for handling the corresponding mouseUp event.
 
     However, the user may click on this button, then drag the mouse down to a
@@ -257,7 +257,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     // Reset state.
     this._isMouseDown = NO;
     arguments.callee.base.apply(this, arguments);
-    return YES;
+    return true;
   },
 
   /** @private
@@ -269,7 +269,7 @@ SC.PopupButtonView = SC.ButtonView.extend(
     @returns {Boolean}
   */
   mouseExited: function(evt) {
-    return YES;
+    return true;
   },
 
   /** @private

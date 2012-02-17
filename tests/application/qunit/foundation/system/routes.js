@@ -27,7 +27,7 @@ suite('SC.routes setup', {
 });
 
 test('Setup', function() {
-  equals(SC.routes._didSetup, YES, 'SC.routes should have been setup');
+  equals(SC.routes._didSetup, true, 'SC.routes should have been setup');
 });
 
 test('Initial route', function() {
@@ -150,7 +150,7 @@ suite('SC.routes defined routes', {
         this.set('params', params);
       },
       triggerRoute: function() {
-        this.triggered = YES;
+        this.triggered = true;
       }
     });
   },
@@ -282,7 +282,7 @@ suite('SC.routes location observing', {
     router = SC.Object.create({
       hasBeenNotified: NO,
       route: function(params) {
-        this.set('hasBeenNotified', YES);
+        this.set('hasBeenNotified', true);
       }
     });
   },
@@ -302,7 +302,7 @@ test('Location change', function() {
   }, 2000);
   
   router.addObserver('hasBeenNotified', function() {
-    equals(router.get('hasBeenNotified'), YES, 'router should have been notified');
+    equals(router.get('hasBeenNotified'), true, 'router should have been notified');
     clearTimeout(timer);
     window.start();
   });

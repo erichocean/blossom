@@ -9,7 +9,7 @@ var view ;
 suite("SC.CollectionView#displayProperties", {
   setup: function() {
     view = SC.CollectionView.create({
-        isVisibleInWindow: YES
+        isVisibleInWindow: true
     }).createLayer();
   },
 
@@ -20,7 +20,7 @@ suite("SC.CollectionView#displayProperties", {
 
 test("should gain active class if isActive", function() {
   SC.RunLoop.begin();
-  view.set('isActive', YES);
+  view.set('isActive', true);
   SC.RunLoop.end();
   ok(view.$().hasClass('active'), 'should have active class');
 

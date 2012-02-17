@@ -14,7 +14,7 @@ suite("SC.Store Core Methods", {
       gotParams: NO,
       
       updateRecord: function(store, storeKey, params) {
-        this.gotParams = params && params['param1'] ? YES: NO;
+        this.gotParams = params && params['param1'] ? true: NO;
       }
     });
     
@@ -125,7 +125,7 @@ test("Passing params through commitRecords()", function() {
   
   store.commitRecords(null, null, null, { param1: 'value1' });
   
-  equals(dataSource.gotParams, YES, 'params should have travelled through to dataSource updateRecord() call');
+  equals(dataSource.gotParams, true, 'params should have travelled through to dataSource updateRecord() call');
   
 });
 

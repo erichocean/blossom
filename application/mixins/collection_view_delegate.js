@@ -31,7 +31,7 @@ SC.CollectionViewDelegate = {
   /**
     Used to detect the mixin by SC.CollectionView
   */
-  isCollectionViewDelegate: YES,
+  isCollectionViewDelegate: true,
   
   // ..........................................................
   // SELECTION
@@ -60,7 +60,7 @@ SC.CollectionViewDelegate = {
     
     @param {SC.CollectionView} view the view collection view
     @param {SC.IndexSet} indexes the indexes to be selected
-    @param {Boolean} extend YES if the indexes will extend existing sel
+    @param {Boolean} extend true if the indexes will extend existing sel
     @returns {SC.IndexSet} allowed index set
   */
   collectionViewShouldSelectIndexes: function (view, indexes, extend) { 
@@ -91,7 +91,7 @@ SC.CollectionViewDelegate = {
     called.  You can implement this method to get fine-grained control over
     which items can be deleted.  To prevent deletion, return null.
     
-    This method is only called if canDeleteContent is YES on the collection
+    This method is only called if canDeleteContent is true on the collection
     view.
     
     @param {SC.CollectionView} view the collection view
@@ -111,12 +111,12 @@ SC.CollectionViewDelegate = {
     
     If you simply want to control the items to be deleted, you should instead
     implement collectionViewShouldDeleteItems().  This method will only be 
-    called if canDeleteContent is YES and collectionViewShouldDeleteIndexes()
+    called if canDeleteContent is true and collectionViewShouldDeleteIndexes()
     returns a non-empty index set
     
     @param {SC.CollectionView} view collection view
     @param {SC.IndexSet} indexes the items to delete
-    @returns {Boolean} YES if the deletion was a success.
+    @returns {Boolean} true if the deletion was a success.
   */
   collectionViewDeleteContent: function(view, content, indexes) {
     if (!content) return NO ;
@@ -124,12 +124,12 @@ SC.CollectionViewDelegate = {
     if (SC.typeOf(content.destroyAt) === SC.T_FUNCTION) {
       content.destroyAt(indexes);
       view.selectPreviousItem(NO, 1) ;
-      return YES ;
+      return true ;
       
     } else if (SC.typeOf(content.removeAt) === SC.T_FUNCTION) {
       content.removeAt(indexes);
       view.selectPreviousItem(NO, 1) ;
-      return YES;
+      return true;
       
     } else return NO ;
   },
@@ -147,12 +147,12 @@ SC.CollectionViewDelegate = {
     may enable content reordering but then implement this method to prevent
     reordering of certain items in the view.
     
-    The default implementation always returns YES.
+    The default implementation always returns true.
     
     @param view {SC.CollectionView} the collection view
-    @returns {Boolean} YES to alow, NO to prevent it
+    @returns {Boolean} true to alow, NO to prevent it
   */
-  collectionViewShouldBeginDrag: function(view) { return YES; },
+  collectionViewShouldBeginDrag: function(view) { return true; },
   
   /**
     Called by the collection view just before it starts a drag so that 
@@ -162,7 +162,7 @@ SC.CollectionViewDelegate = {
     will provide for the drag data.
     
     If you return null or an empty array, can you have set canReorderContent
-    to YES on the CollectionView, then the drag will go ahead but only 
+    to true on the CollectionView, then the drag will go ahead but only 
     reordering will be allowed.  If canReorderContent is NO, then the drag
     will not be allowed to start.
     

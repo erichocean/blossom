@@ -118,7 +118,7 @@ SC.CollectionFastPath = {
   },
   
   /**
-    Returns YES if the item at the index is a group.
+    Returns true if the item at the index is a group.
     
     @private
   */
@@ -404,8 +404,8 @@ SC.CollectionFastPath = {
       this._invalidIndexes = NO; 
       
       // tell others we will be reloading
-      if (invalid.isIndexSet && invalid.contains(nowShowing)) invalid = YES ;
-      if (this.willReload) this.willReload(invalid === YES ? null : invalid);
+      if (invalid.isIndexSet && invalid.contains(nowShowing)) invalid = true ;
+      if (this.willReload) this.willReload(invalid === true ? null : invalid);
     }
     
     // get arrays of items to add/remove
@@ -419,7 +419,7 @@ SC.CollectionFastPath = {
     
     // handle the invalid set (if it is present)
     if (invalid) {
-      this.processUpdates(invalid === YES ? nowShowing : invalid);
+      this.processUpdates(invalid === true ? nowShowing : invalid);
     }
     
     // process items to add
@@ -436,7 +436,7 @@ SC.CollectionFastPath = {
     if (!scrollOnly) {
       var layout = this.computeLayout();
       if (layout) this.adjust(layout);
-      if (this.didReload) this.didReload(invalid === YES ? null : invalid);
+      if (this.didReload) this.didReload(invalid === true ? null : invalid);
     }
     
     return this;
@@ -584,7 +584,7 @@ SC.CollectionFastPath = {
       this.configureItemView(view, attrs);
       
       // set that it is in the collection
-      view._isInCollection = YES;
+      view._isInCollection = true;
       
       // add to view map (if not used, it will be removed)
       this.mapView(object, index, view);
@@ -601,7 +601,7 @@ SC.CollectionFastPath = {
     this.appendChild(view);
     
     // set that it is in the collection.
-    view._isInCollection = YES;
+    view._isInCollection = true;
     
     // add to view map (if not used, it will be removed)
     this.mapView(object, index, view);
@@ -686,7 +686,7 @@ SC.CollectionFastPath = {
       if (r.contains(this._lastNowShowing) && this._lastNowShowing.contains(r)) return;
     }
     this._lastNowShowing = r;
-    this.reloadIfNeeded(r, YES);
+    this.reloadIfNeeded(r, true);
     
     this._lastTouchScrollTime = Date.now();
   }

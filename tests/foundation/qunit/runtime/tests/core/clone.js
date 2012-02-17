@@ -93,14 +93,14 @@ test("should use copy() if isCopyable", function() {
     isCopy: NO,
     
     copy: function() {
-      return SC.Object.create(SC.Copyable, { isCopy: YES });
+      return SC.Object.create(SC.Copyable, { isCopy: true });
     }
     
   });
   
   var copy = SC.clone(obj);
   ok(!!copy, 'clone should return a copy');
-  equals(copy.isCopy, YES, 'copy.isCopy should be YES');
+  equals(copy.isCopy, true, 'copy.isCopy should be true');
 });
 
 test("SC.copy should be an alias for SC.clone", function() {

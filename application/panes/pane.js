@@ -86,10 +86,10 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 /** @scope SC.Pane.prototype */ {
 
   /** 
-    Returns YES for easy detection of when you reached the pane. 
+    Returns true for easy detection of when you reached the pane. 
     @property {Boolean}
   */
-  isPane: YES,
+  isPane: true,
   
   /** 
     Set to the current page when the pane is instantiated from a page object.
@@ -213,7 +213,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     pass a target, this method will begin with the target and work up the 
     responder chain.  Otherwise, it will begin with the current rr 
     and walk up the chain looking for any responder that implements a handler 
-    for the passed method and returns YES when executed.
+    for the passed method and returns true when executed.
 
     @param {String} action
     @param {SC.Event} evt
@@ -297,16 +297,16 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   firstResponder: null,
   
   /** 
-    If YES, this pane can become the key pane.  You may want to set this to NO 
+    If true, this pane can become the key pane.  You may want to set this to NO 
     for certain types of panes.  For example, a palette may never want to 
-    become key.  The default value is YES.
+    become key.  The default value is true.
     
     @property {Boolean}
   */
-  acceptsKeyPane: YES,
+  acceptsKeyPane: true,
   
   /**
-    This is set to YES when your pane is currently the target of key events. 
+    This is set to true when your pane is currently the target of key events. 
     
     @property {Boolean}
   */
@@ -377,7 +377,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     
     if (view) {
       view.beginPropertyChanges()
-        .set('isFirstResponder', YES).set('isKeyResponder', isKeyPane)
+        .set('isFirstResponder', true).set('isKeyResponder', isKeyPane)
       .endPropertyChanges();
     }
     
@@ -418,7 +418,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
       if (nextValidKeyView) {
         this.makeFirstResponder(nextValidKeyView);
-        return YES;
+        return true;
       }
     }
 
@@ -462,7 +462,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {SC.Pane} receiver
   */
   willBecomeKeyPaneFrom: function(pane) {
-    this._forwardKeyChange(!this.get('isKeyPane'), 'willBecomeKeyResponderFrom', pane, YES);
+    this._forwardKeyChange(!this.get('isKeyPane'), 'willBecomeKeyResponderFrom', pane, true);
     return this ;
   },
 
@@ -494,8 +494,8 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   */
   didBecomeKeyPaneFrom: function(pane) {
     var isKeyPane = this.get('isKeyPane');
-    this.set('isKeyPane', YES);
-    this._forwardKeyChange(!isKeyPane, 'didBecomeKeyResponderFrom', pane, YES);
+    this.set('isKeyPane', true);
+    this._forwardKeyChange(!isKeyPane, 'didBecomeKeyResponderFrom', pane, true);
     return this ;
   },
   
@@ -504,7 +504,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   //
   
   /**
-    Returns YES whenever the pane has been set as the main pane for the 
+    Returns true whenever the pane has been set as the main pane for the 
     application.
     
     @property {Boolean}
@@ -551,7 +551,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     @returns {void}
   */
   focusMainFrom: function(pane) {
-    this.set('isMainPane', YES);
+    this.set('isMainPane', true);
   },
   
   // .......................................................
@@ -704,7 +704,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   removeFromParent: function() { },
   
   /**
-    YES when the pane is currently attached to a document DOM.  Read only.
+    true when the pane is currently attached to a document DOM.  Read only.
     
     @property {Boolean}
     @readOnly
@@ -712,7 +712,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
   isPaneAttached: NO,
   
   /**
-    If YES, a touch itnercept pane will be added above this pane.
+    If true, a touch itnercept pane will be added above this pane.
   */
   hasTouchIntercept: NO,
   
@@ -729,7 +729,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
 
   _addIntercept: function() {
     if (this.get("hasTouchIntercept") && SC.platform.touch) {
-      this.set("usingTouchIntercept", YES);
+      this.set("usingTouchIntercept", true);
       var div = document.createElement("div");
       var divStyle = div.style;
       divStyle.position = "absolute";
@@ -775,7 +775,7 @@ SC.Pane = SC.View.extend(SC.ResponderContext,
     this.set('currentWindowSize', responder.computeWindowSize()) ;
     
     // update my own location
-    this.set('isPaneAttached', YES) ;
+    this.set('isPaneAttached', true) ;
     this.parentViewDidChange() ;
     
     //notify that the layers have been appended to the document

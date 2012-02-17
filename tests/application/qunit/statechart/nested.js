@@ -15,7 +15,7 @@ suite("SC.Statechart Mixin Nested Statechart", {
     enterTotal = exitTotal = 0;
     nested = SC.Object.create(SC.Statechart,{
       startStates: {'default': 'a', 'other': 'f'},
-      startOnInit: YES,
+      startOnInit: true,
       
       a: SC.Statechart.registerState({initialSubState: 'b', enterState: function(){ enterTotal+=1; }, exitState: function(){ exitTotal+=1; }}),
       b: SC.Statechart.registerState({parentState: 'a', initialSubState: 'c', enterState: function(){ enterTotal+=1; }, exitState: function(){ exitTotal+=1; }}),

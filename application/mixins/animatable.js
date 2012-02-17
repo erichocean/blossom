@@ -40,7 +40,7 @@
 //   /**
 //   Walks like a duck.
 //   */
-//   isAnimatable: YES,
+//   isAnimatable: true,
 // 
 //   transitions: {},
 //   concatenatedProperties: ["transitions"],
@@ -212,18 +212,18 @@
 //       {
 //         if (nval === null)
 //         {
-//           if (cval !== undefined) didChange = YES;
+//           if (cval !== undefined) didChange = true;
 //           delete current[i];
 //         }
 //         else
 //         {
 //           current[i] = nval;
-//           didChange = YES;
+//           didChange = true;
 //         }
 //       }
 // 
 //       if (didChange) {
-//         if (current === style) didChangeStyle = YES; else didChangeLayout = YES;
+//         if (current === style) didChangeStyle = true; else didChangeLayout = true;
 //       }
 //     }
 // 
@@ -401,8 +401,8 @@
 //         (SC.empty(nL) || (!SC.isPercentage(nL) && !SC.empty(nW))) &&
 //         (this.transitions && (this.transitions['top'] || this.transitions['left']))
 //       ) {
-//         specialTransform = YES;
-//         this._useSpecialCaseTransform = YES;
+//         specialTransform = true;
+//         this._useSpecialCaseTransform = true;
 //       } else {
 //         this._useSpecialCaseTransform = NO;
 //       }
@@ -636,14 +636,14 @@
 //     var needsRender = NO;
 //     if (styles["display"] && layer.style["display"] !== styles["display"]) {
 //       layer.style["display"] = styles["display"];
-//       needsRender = YES;
+//       needsRender = true;
 //     }
 // 
 //     // set CSS transitions very first thing
 //     if (this._animatableSetCSS != this._last_transition_css) {
 //       layer.style[SC.platform.domCSSPrefix+"Transition"] = this._animatableSetCSS;
 //       this._last_transition_css = this._animatableSetCSS;
-//       needsRender = YES;
+//       needsRender = true;
 //     }
 // 
 //     if (!this._animators["display-styles"]) this._animators["display-styles"] = {};
@@ -694,7 +694,7 @@
 //       {
 //         // otherwise, normal layout
 //         newLayout[i] = styles[i];
-//         updateLayout = YES;
+//         updateLayout = true;
 //         continue;
 //       }
 //       else if (i == "transform") transform += " " + styles[i];
@@ -756,7 +756,7 @@
 //       {
 //         if (SC.none(newLayout[key])) style[key] = undefined; // because IE is stupid and can't handle delete or debug.
 //         else style[key] = newLayout[key];
-//         didChange = YES;
+//         didChange = true;
 //       }
 //     }
 // 

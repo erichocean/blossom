@@ -16,14 +16,14 @@ suite("SC.CollectionView.reload", {
     view = SC.CollectionView.create({
       content: content, 
 
-      isVisibleInWindow: YES
+      isVisibleInWindow: true
     });
   }
 });
 
 /*
   Verfies that the item views for the passed collection view match exactly the
-  content array passed.  If shouldShowAllContent is also YES then verifies 
+  content array passed.  If shouldShowAllContent is also true then verifies 
   that the nowShowing range is showing the entire content range.
   
   @param {SC.CollectionView} view the view to test
@@ -75,7 +75,7 @@ test("should only reload when isVisibleInWindow", function() {
   equals(view.getPath('childViews.length'), len, 'view.childViews.length should not change while offscreen');
   
   SC.RunLoop.begin();
-  view.set('isVisibleInWindow', YES);
+  view.set('isVisibleInWindow', true);
   SC.RunLoop.end();
 
   equals(view.getPath('childViews.length'), content.get('length'), 'view.childViews.length should change when moved onscreen if reload is pending');
@@ -86,7 +86,7 @@ test("should automatically reload if content is set when collection view is firs
   SC.RunLoop.begin();
   SC.RunLoop.end();
 
-  verifyItemViews(view, content, YES);
+  verifyItemViews(view, content, true);
 });
 
 test("reload(null) should generate item views for all items", function() {
@@ -95,7 +95,7 @@ test("reload(null) should generate item views for all items", function() {
   view.reload();
   SC.RunLoop.end(); // allow reload to run
 
-  verifyItemViews(view, content, YES);
+  verifyItemViews(view, content, true);
 });
 
 test("reload(index set) should update item view for items in index only", function() {
@@ -113,7 +113,7 @@ test("reload(index set) should update item view for items in index only", functi
   ok(cv2 !== view.childViews[3], 'view.childViews[3] should be new instance after view.reload(<1,3>) actual: %@ expected: %@'.fmt(view.childViews[3], cv2));
   
   // verify integrity
-  verifyItemViews(view, content, YES);
+  verifyItemViews(view, content, true);
 });
 
 test("adding items to content should reload item views at end", function() {
@@ -121,7 +121,7 @@ test("adding items to content should reload item views at end", function() {
   SC.run(function() { 
     content.pushObject(SC.Object.create()); 
   });
-  verifyItemViews(view, content, YES);
+  verifyItemViews(view, content, true);
 });
 
 test("removing items from content should remove item views", function() {
@@ -129,7 +129,7 @@ test("removing items from content should remove item views", function() {
   SC.run(function() { 
     content.popObject(); 
   });
-  verifyItemViews(view, content, YES);
+  verifyItemViews(view, content, true);
 });
 
 // ..........................................................
@@ -140,20 +140,20 @@ test("remove and readd item", function() {
   // first remove an item.
   var item = content.objectAt(0);
   SC.run(function() { content.removeAt(0); });
-  verifyItemViews(view, content, YES, 'after content.removeAt(0)');
+  verifyItemViews(view, content, true, 'after content.removeAt(0)');
 
   // then readd the item
   SC.run(function() { content.insertAt(0, item); });
-  verifyItemViews(view, content, YES, 'after content.insertAt(0,item)');
+  verifyItemViews(view, content, true, 'after content.insertAt(0,item)');
 
   // then add another item
   item = SC.Object.create();
   SC.run(function() { content.pushObject(item); });
-  verifyItemViews(view, content, YES, 'after content.pushObject(item)');
+  verifyItemViews(view, content, true, 'after content.pushObject(item)');
 
   // and remove the item
   SC.run(function() { content.popObject(); });
-  verifyItemViews(view, content, YES, 'after content.popObject(item)');
+  verifyItemViews(view, content, true, 'after content.popObject(item)');
 
 });
 
@@ -165,7 +165,7 @@ test("reloading should only render nowShowing component", function() {
     computeNowShowing: function() {
       return expected;
     },
-    isVisibleInWindow: YES
+    isVisibleInWindow: true
   });
   
   SC.RunLoop.begin();

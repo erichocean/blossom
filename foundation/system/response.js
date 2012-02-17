@@ -166,12 +166,12 @@ SC.Response = SC.Object.extend(
   }.property('body').cacheable(),
   
   /**
-    Set to YES if response is cancelled
+    Set to true if response is cancelled
   */
   isCancelled: NO,
   
   /**
-    Set to YES if the request timed out.  Set to NO if the request has
+    Set to true if the request timed out.  Set to NO if the request has
     completed before the timeout value.  Set to null if the timeout timer is
     still ticking.
   */
@@ -284,7 +284,7 @@ SC.Response = SC.Object.extend(
   */
   cancel: function() {
     if (!this.get('isCancelled')) {
-      this.set('isCancelled', YES) ;
+      this.set('isCancelled', true) ;
       this.cancelTransport() ;
       SC.Request.manager.transportDidClose(this) ;
     }
@@ -297,14 +297,14 @@ SC.Response = SC.Object.extend(
     // If we already received a response yet the timer still fired for some
     // reason, do nothing.
     if (this.get('timedOut') === null) {
-      this.set('timedOut', YES);
+      this.set('timedOut', true);
       this.cancelTransport();
       SC.Request.manager.transportDidClose(this);
       
       // Set our value to an error.
       var error = SC.$error("HTTP Request timed out", "Request", 408) ;
       error.set("errorValue", this) ;
-      this.set('isError', YES);
+      this.set('isError', true);
       this.set('errorObject', error);
       
       // Invoke the didTimeout callback.
@@ -519,7 +519,7 @@ SC.XHRResponse = SC.Response.extend({
           
           error = SC.$error(msg || "HTTP Request failed", "Request", status) ;
           error.set("errorValue", this) ;
-          this.set('isError', YES);
+          this.set('isError', true);
           this.set('errorObject', error);
         }
 
@@ -537,7 +537,7 @@ SC.XHRResponse = SC.Response.extend({
         rawRequest.onreadystatechange = null;
       }
 
-      return YES;
+      return true;
     }
     return NO; 
   }

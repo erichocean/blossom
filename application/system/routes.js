@@ -202,7 +202,7 @@ SC.routes = SC.Object.create({
     var that;
     
     if (!this._didSetup) {
-      this._didSetup = YES;
+      this._didSetup = true;
       
       if (SC.platform.supportsHashChange) {
         this.hashChange();

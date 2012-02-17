@@ -17,7 +17,7 @@ if (! BLOSSOM) {
   panes.
   
   A modal pane is automatically appended when a pane with isModal set to
-  YES is made visible and removed when the same pane is hidden.  The only 
+  true is made visible and removed when the same pane is hidden.  The only 
   purpose of the ModalPane is to absorb mouse events so that they cannot 
   filter through to the underlying content. 
   

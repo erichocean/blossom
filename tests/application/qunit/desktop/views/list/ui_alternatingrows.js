@@ -40,7 +40,7 @@ var pane = SC.ControlTestPane.design()
     hasHorizontalScroller: NO,
     contentView: SC.ListView.design({
       content: ContentArray.create({ length: 10 }),
-      showAlternatingRows: YES,
+      showAlternatingRows: true,
       rowHeight: 20
     })
   }))
@@ -49,7 +49,7 @@ var pane = SC.ControlTestPane.design()
     hasHorizontalScroller: NO,
     contentView: SC.ListView.design({
       content: ContentArray.create({ length: 11 }),
-      showAlternatingRows: YES,
+      showAlternatingRows: true,
       rowHeight: 20
     })
   }));

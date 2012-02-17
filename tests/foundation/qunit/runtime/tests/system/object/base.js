@@ -33,9 +33,9 @@ test("Should return false when asked to perform a method it does not have", func
   equals(obj.tryToPerform('aMethodThatDoesNotExist'), false) ;
 });
 
-test("Should pass back the return YES if method returned YES, NO if method not implemented or returned NO", function() {
-  equals(obj.tryToPerform('aMethodThatReturnsTrue'), YES, 'method that returns YES') ;
-  equals(obj.tryToPerform('aMethodThatReturnsFoobar'), YES, 'method that returns non-NO') ;
+test("Should pass back the return true if method returned true, NO if method not implemented or returned NO", function() {
+  equals(obj.tryToPerform('aMethodThatReturnsTrue'), true, 'method that returns true') ;
+  equals(obj.tryToPerform('aMethodThatReturnsFoobar'), true, 'method that returns non-NO') ;
   equals(obj.tryToPerform('aMethodThatReturnsFalse'), NO, 'method that returns NO') ;
   equals(obj.tryToPerform('imaginaryMethod'), NO, 'method that is not implemented') ;
 });
@@ -71,7 +71,7 @@ test("Should advertise changes once per request to SC.Object#didChangeFor when s
 test("When the object is destroyed the 'isDestroyed' status should change accordingly", function() {
 	equals(obj.get('isDestroyed'), NO);
 	obj.destroy();
-	equals(obj.get('isDestroyed'), YES);
+	equals(obj.get('isDestroyed'), true);
 });
 
 suite("SC.Object observers", {
@@ -89,15 +89,15 @@ suite("SC.Object observers", {
       
       // normal observer
       observer: function(){
-        this._normal = YES;
+        this._normal = true;
       }.observes("prop1"),
       
       globalObserver: function() {
-        this._global = YES;
+        this._global = true;
       }.observes("TestNamespace.obj.value"),
       
       bothObserver: function() {
-        this._both = YES;
+        this._both = true;
       }.observes("prop1", "TestNamespace.obj.value")
     });
     
@@ -107,19 +107,19 @@ suite("SC.Object observers", {
 test("Local observers work", function() {
   obj._normal = NO;
   obj.set("prop1", NO);
-  equals(obj._normal, YES, "Normal observer did change.");
+  equals(obj._normal, true, "Normal observer did change.");
 });
 
 test("Global observers work", function() {
   obj._global = NO;
   TestNamespace.obj.set("value", "test2");
-  equals(obj._global, YES, "Global observer did change.");
+  equals(obj._global, true, "Global observer did change.");
 });
 
 test("Global+Local observer works", function() {
   obj._both = NO;
   obj.set("prop1", NO);
-  equals(obj._both, YES, "Both observer did change.");
+  equals(obj._both, true, "Both observer did change.");
 });
 
 suite("SC.Object instance extended", {  
@@ -140,15 +140,15 @@ suite("SC.Object instance extended", {
 });
 
 test("Checking the instance of method for an object", function() {
-	equals(obj1.instanceOf(obj), YES);
+	equals(obj1.instanceOf(obj), true);
 	equals(obj1.instanceOf(don), NO);
 });
 
 test("Checking the kind of method for an object", function() {
-	equals(obj1.kindOf(obj), YES);
+	equals(obj1.kindOf(obj), true);
 	equals(obj1.kindOf(don), NO);
 	
-	equals(SC.kindOf(obj1, obj), YES);
+	equals(SC.kindOf(obj1, obj), true);
 	equals(SC.kindOf(obj1, don), NO);
 	equals(SC.kindOf(null, obj1), NO);
 });
@@ -181,7 +181,7 @@ test("Checking the superclass method for an existing function", function() {
 });
 
 test("Checking the subclassOf function on an object and its subclass", function(){
-	equals(obj1.subclassOf(obj), YES);
+	equals(obj1.subclassOf(obj), true);
 	equals(obj.subclassOf(obj1), NO);
 });
 

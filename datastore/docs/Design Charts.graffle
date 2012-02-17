@@ -14521,7 +14521,7 @@ discard}</string>
 \f0\fs24 \cf0 commit_nested\
 remove\
 did_change(parent editable = NO)\
-read(lock=YES, parent editable=NO)}</string>
+read(lock=true, parent editable=NO)}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>
@@ -14653,9 +14653,9 @@ discard}</string>
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 
 \f0\fs24 \cf0 read_editable\
-did_change(parent editable=YES)\
+did_change(parent editable=true)\
 write\
-read(lock=YES, parent editable=YES)}</string>
+read(lock=true, parent editable=true)}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>

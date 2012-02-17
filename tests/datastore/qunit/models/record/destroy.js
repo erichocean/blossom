@@ -17,7 +17,7 @@ suite("SC.Record#destroy", {
     MyApp.json = { 
       foo: "bar", 
       number: 123,
-      bool: YES,
+      bool: true,
       array: [1,2,3] 
     };
     
@@ -49,7 +49,7 @@ test("calling destroy on existing record should call destroyRecord() on store", 
 
   // Fake it till you make it...
   MyApp.store.writeStatus(MyApp.foo.storeKey, SC.Record.READY_CLEAN)
-    .dataHashDidChange(MyApp.foo.storeKey, null, YES);
+    .dataHashDidChange(MyApp.foo.storeKey, null, true);
     
   equals(MyApp.foo.get('status'), SC.Record.READY_CLEAN, 'precond - status is READY CLEAN');
   

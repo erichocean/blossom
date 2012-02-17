@@ -69,7 +69,7 @@ test('isEnabled', function() {
   view.set('value', 500);
   SC.Event.trigger(layer, 'mousedown', [evt]);
   equals(view.get('value'), 500, 'scrollers should not respond to mouse events if they are disabled');
-  view.set('isEnabled', YES);
+  view.set('isEnabled', true);
   SC.Event.trigger(layer, 'mousedown', [evt]);
   ok(view.get('value') < (scrollerHeight+100), 'scrollers should respond to mouse events if they are not disabled');
 });
@@ -82,7 +82,7 @@ test('layoutDirection', function() {
 });
 
 test('hasButtons', function() {
-  equals(view.get('hasButtons'), YES, 'scrollers should default to having buttons');
+  equals(view.get('hasButtons'), true, 'scrollers should default to having buttons');
   equals(view.$('.endcap').length, 0, 'scrollers with buttons should not have an endcap');
   equals(view.$('.button-bottom, .button-top').length, 2, 'scrollers with buttons should have an up and a down button');
   equals(view2.$('.endcap').length, 1, 'scrollers with buttons should have an endcap');

@@ -33,7 +33,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     
     obj.removeObject(before[1]) ;
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
   test("[A,B,C].removeObject(D) => [A,B,C]", function() {

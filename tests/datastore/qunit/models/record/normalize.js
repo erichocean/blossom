@@ -159,7 +159,7 @@ test("normalizing with includeNull flag" ,function() {
   equals(rec3.attributes()['firstName'], undefined, 'hash value of firstName is undefined');
   equals(rec3.get('firstName'), null, 'get value of firstName is null');
   
-  rec3.normalize(YES);
+  rec3.normalize(true);
   
   equals(rec3.attributes()['firstName'], null, 'hash value of firstName after normalizing is null');
   equals(rec3.get('firstName'), null, 'get value of firstName after normalizing is null');

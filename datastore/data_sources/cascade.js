@@ -10,7 +10,7 @@ sc_require('data_sources/data_source');
 /** @class
 
   A cascading data source will actually forward requests onto an array of 
-  additional data sources, stopping when one of the data sources returns YES,
+  additional data sources, stopping when one of the data sources returns true,
   indicating that it handled the request.  
   
   You can use a cascading data source to tie together multiple data sources,
@@ -88,7 +88,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
         ret     = NO,
         cur, source, idx;
     
-    for(idx=0; (ret !== YES) && idx<len; idx++) {
+    for(idx=0; (ret !== true) && idx<len; idx++) {
       source = sources.objectAt(idx);
       cur = source.fetch ? source.fetch.apply(source, arguments) : NO;
       ret = this._handleResponse(ret, cur);
@@ -105,7 +105,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
         ret     = NO,
         cur, source, idx;
     
-    for(idx=0; (ret !== YES) && idx<len; idx++) {
+    for(idx=0; (ret !== true) && idx<len; idx++) {
       source = sources.objectAt(idx);
       cur = source.retrieveRecords.apply(source, arguments);
       ret = this._handleResponse(ret, cur);
@@ -121,7 +121,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
         ret     = NO,
         cur, source, idx;
     
-    for(idx=0; (ret !== YES) && idx<len; idx++) {
+    for(idx=0; (ret !== true) && idx<len; idx++) {
       source = sources.objectAt(idx);
       cur = source.commitRecords.apply(source, arguments);
       ret = this._handleResponse(ret, cur);
@@ -137,7 +137,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
         ret     = NO,
         cur, source, idx;
     
-    for(idx=0; (ret !== YES) && idx<len; idx++) {
+    for(idx=0; (ret !== true) && idx<len; idx++) {
       source = sources.objectAt(idx);
       cur = source.cancel.apply(source, arguments);
       ret = this._handleResponse(ret, cur);
@@ -168,7 +168,7 @@ SC.CascadeDataSource = SC.DataSource.extend(
 
   /** @private - Determine the proper return value. */
   _handleResponse: function(current, response) {
-    if (response === YES) return YES ;
+    if (response === true) return true ;
     else if (current === NO) return (response === NO) ? NO : SC.MIXED_STATE ;
     else return SC.MIXED_STATE ;
   }

@@ -5,7 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-SC.VALIDATE_OK = YES;
+SC.VALIDATE_OK = true;
 SC.VALIDATE_NO_CHANGE = NO;
 
 /**
@@ -90,12 +90,12 @@ SC.Validator = SC.Object.extend(
     
     You can implement standard behavior for your validator by using the validate()
     and validateError() methods.  validate() should return NO if the field is not
-    valid, YES otherwise.  If you return NO from this method, then the validateError()
+    valid, true otherwise.  If you return NO from this method, then the validateError()
     method will be called so you can generate an error object describing the specific problem.
 
     @param {SC.FormView} form the form this view belongs to
     @param {SC.View} field the field to validate.  Responds to fieldValue.
-    @returns {Boolean} YES if field is valid.
+    @returns {Boolean} true if field is valid.
   */
   validate: function(form, field) { return true; },
 
@@ -195,7 +195,7 @@ SC.Validator = SC.Object.extend(
     @param {SC.View} field the field to validate
     @param {String} char the characters being added
     
-    @returns {Boolean} YES if allowed, NO otherwise
+    @returns {Boolean} true if allowed, NO otherwise
   */
   validateKeyDown: function(form, field,charStr) { return true; },
 

@@ -70,8 +70,8 @@ suite("SC.RecordAttribute core methods", {
     });
 
     MyApp.Bar = SC.Record.extend({
-      parent: SC.Record.toOne('MyApp.Foo', { aggregate: YES }),
-      relatedMany: SC.Record.toMany('MyApp.Foo', { aggregate: YES })
+      parent: SC.Record.toOne('MyApp.Foo', { aggregate: true }),
+      relatedMany: SC.Record.toMany('MyApp.Foo', { aggregate: true })
     });
 
     SC.RunLoop.begin();
@@ -200,8 +200,8 @@ test("writing pass-through should simply set value", function() {
   rec.set("firstName", 23);
   equals(rec.readAttribute("firstName"), 23, "should write number");
 
-  rec.set("firstName", YES);
-  equals(rec.readAttribute("firstName"), YES, "should write bool");
+  rec.set("firstName", true);
+  equals(rec.readAttribute("firstName"), true, "should write bool");
 
 });
 

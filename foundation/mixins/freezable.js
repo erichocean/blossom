@@ -80,10 +80,10 @@ SC.Freezable = {
     
     @property {Boolean}
   */
-  isFreezable: YES,
+  isFreezable: true,
   
   /**
-    Set to YES when the object is frozen.  Use this property to detect whether
+    Set to true when the object is frozen.  Use this property to detect whether
     your object is frozen or not.
     
     @property {Boolean}
@@ -100,8 +100,8 @@ SC.Freezable = {
     // NOTE: Once someone actually implements Object.freeze() in the browser,
     // add a call to that here also.
     
-    if (this.set) this.set('isFrozen', YES);
-    else this.isFrozen = YES;
+    if (this.set) this.set('isFrozen', true);
+    else this.isFrozen = true;
     return this;
   }
     

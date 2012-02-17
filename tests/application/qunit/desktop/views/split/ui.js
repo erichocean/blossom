@@ -20,7 +20,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
       layoutDirection: SC.LAYOUT_VERTICAL,canCollapseViews: NO
     })
   	.add("collapsable", SC.SplitView, { 
-      layoutDirection: SC.LAYOUT_HORIZONTAL,canCollapseViews: YES
+      layoutDirection: SC.LAYOUT_HORIZONTAL,canCollapseViews: true
     });
       
   pane.show(); // add a test to show the test pane
@@ -45,7 +45,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 	var view = pane.view('collapsable');
     ok(!view.$().hasClass('vertical'), 'should not be have vertical class');
 	equals(view.get('layoutDirection'),SC.LAYOUT_HORIZONTAL);
-	equals(view.get('canCollapseViews'),YES,"the view should be collapsable");
+	equals(view.get('canCollapseViews'),true,"the view should be collapsable");
   });		
  })();
 

@@ -26,7 +26,7 @@ MyApp.Todo = SC.Record.extend({
 MyApp.Project = SC.Record.extend({
   name: SC.Record.attr(String),
   todos: SC.Record.toMany("MyApp.Todo", {
-    inverse: "project", isMaster: YES
+    inverse: "project", isMaster: true
   })
 });
 

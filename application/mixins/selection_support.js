@@ -37,28 +37,28 @@ SC.SelectionSupport = {
     
     @property {Boolean}
   */
-  hasSelectionSupport: YES,
+  hasSelectionSupport: true,
 
   /**
-    If YES, selection is allowed. Default is YES.
+    If true, selection is allowed. Default is true.
     
     @property {Boolean}
   */
-  allowsSelection: YES,
+  allowsSelection: true,
 
   /**
-    If YES, multiple selection is allowed. Default is YES.
+    If true, multiple selection is allowed. Default is true.
     
     @property {Boolean}
   */
-  allowsMultipleSelection: YES,
+  allowsMultipleSelection: true,
 
   /**
-    If YES, allow empty selection Default is YES.
+    If true, allow empty selection Default is true.
     
     @property {Boolean}
   */
-  allowsEmptySelection: YES,
+  allowsEmptySelection: true,
 
   /**
     Override to return the first selectable object.  For example, if you 
@@ -137,7 +137,7 @@ SC.SelectionSupport = {
   }.property('arrangedObjects', 'allowsEmptySelection', 'allowsMultipleSelection', 'allowsSelection').cacheable(),
 
   /**
-    YES if the receiver currently has a non-zero selection.
+    true if the receiver currently has a non-zero selection.
     
     @property {Boolean}
   */
@@ -150,11 +150,11 @@ SC.SelectionSupport = {
   // METHODS
   // 
   /**
-    Selects the passed objects in your content.  If you set "extend" to YES,
+    Selects the passed objects in your content.  If you set "extend" to true,
     then this will attempt to extend your selection as well.
   
     @param {SC.Enumerable} objects objects to select
-    @param {Boolean} extend optionally set to YES to extend selection
+    @param {Boolean} extend optionally set to true to extend selection
     @returns {Object} receiver
   */
   selectObjects: function(objects, extend) {
@@ -176,10 +176,10 @@ SC.SelectionSupport = {
 
   /**
     Selects a single passed object in your content.  If you set "extend" to 
-    YES then this will attempt to extend your selection as well.
+    true then this will attempt to extend your selection as well.
     
     @param {Object} object object to select
-    @param {Boolean} extend optionally set to YES to extend selection
+    @param {Boolean} extend optionally set to true to extend selection
     @returns {Object} receiver
   */
   selectObject: function(object, extend) {

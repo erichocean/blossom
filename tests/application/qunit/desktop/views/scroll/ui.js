@@ -34,7 +34,7 @@
       contentView: iv,
       hasHorizontalScroller : NO,
       verticalScrollerBottom: 16,
-      isVerticalScrollerVisible: YES,
+      isVerticalScrollerVisible: true,
       autohidesVerticalScroller: NO
       
     });

@@ -510,7 +510,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   resize: function() {
     this.computeViewportSize();
-    return YES; // Allow normal processing to continue. FIXME: Is this correct?
+    return true; // Allow normal processing to continue. FIXME: Is this correct?
   },
 
   // .......................................................
@@ -579,7 +579,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @param {Object} sender The sender of the action
     @param {SC.Pane} pane optional pane to start search with
     @param {Object} context optional. only passed to ResponderContexts
-    @returns {Boolean} YES if action was performed, NO otherwise
+    @returns {Boolean} true if action was performed, NO otherwise
     @test in targetForAction
   */
   sendAction: function( action, target, sender, pane, context) {
@@ -768,7 +768,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // Fix for IME input (japanese, mandarin). If the KeyCode is 229 wait for 
     // the keyup and trigger a keyDown if it is enter onKeyup.
     if (this._IMEInputON && evt.keyCode === 13) {
-      evt.isIMEInput = YES;
+      evt.isIMEInput = true;
       this.sendEvent('keyDown', evt);
       this._IMEInputON = false;
     }
@@ -837,7 +837,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (evt.shiftKey !== m.shift) { m.shift = evt.shiftKey; changed=true;}
     evt.modifiers = m; // save on event
 
-    return (changed) ? (this.sendEvent('flagsChanged', evt) ? evt.hasCustomEventHandling : YES) : YES ;
+    return (changed) ? (this.sendEvent('flagsChanged', evt) ? evt.hasCustomEventHandling : true) : true ;
   },
 
   /** @private
@@ -865,7 +865,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var view = this.targetViewForEvent(evt) ,
         handler = this.sendEvent('mouseWheel', evt, view) ;
   
-    return (handler) ? evt.hasCustomEventHandling : YES ;
+    return (handler) ? evt.hasCustomEventHandling : true ;
   },
 
   _sc_lastHovered: null,
@@ -875,7 +875,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // a bit more useful; right now it's just to prevent bugs when dragging
   // and dropping.
 
-  _sc_mouseCanDrag: YES,
+  _sc_mouseCanDrag: true,
 
   selectstart: function(evt) {
     var targetView = this.targetViewForEvent(evt),
@@ -884,10 +884,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // If the target view implements mouseDragged, then we want to ignore the
     // 'selectstart' event.
     if (targetView && targetView.respondsTo('mouseDragged')) {
-      return (result !==null ? YES: NO) && !this._sc_mouseCanDrag;
+      return (result !==null ? true: NO) && !this._sc_mouseCanDrag;
     }
     else {
-      return (result !==null ? YES: NO);
+      return (result !==null ? true: NO);
     }
   },
 
@@ -911,7 +911,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : YES;
+    return view ? evt.hasCustomEventHandling : true;
   },
 
   webkitAnimationIteration: function(evt) {
@@ -923,7 +923,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : YES;
+    return view ? evt.hasCustomEventHandling : true;
   },
 
   webkitAnimationEnd: function(evt) {
@@ -935,7 +935,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : YES;
+    return view ? evt.hasCustomEventHandling : true;
   },
 
   /**
@@ -1053,7 +1053,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     the keypress event.
   */
   keydown: function(evt) {
-    if (SC.none(evt)) return YES;
+    if (SC.none(evt)) return true;
 
     var keyCode = evt.keyCode,
         isFirefox = SC.isMozilla();
@@ -1062,7 +1062,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // If the KeyCode is 229 wait for the keyup and
     // trigger a keyDown if it is is enter onKeyup.
     if (keyCode===229){
-      this._IMEInputON = YES;
+      this._IMEInputON = true;
       return this.sendEvent('keyDown', evt);
     }
 
@@ -1072,7 +1072,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       this._sc_drag.cancelDrag();
       this._sc_drag = null;
       this._sc_mouseDownView = null;
-      return YES;
+      return true;
     }
 
     // Firefox does NOT handle delete here...
@@ -1090,14 +1090,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // if this is a function or non-printable key, try to use this as a key
     // equivalent.  Otherwise, send as a keyDown event so that the focused
     // responder can do something useful with the event.
-    ret = YES ;
+    ret = true ;
     if (this._sc_isFunctionOrNonPrintableKey(evt)) {
       // Otherwise, send as keyDown event.  If no one was interested in this
       // keyDown event (probably the case), just let the browser do its own
       // processing.
 
       // Arrow keys are handled in keypress for firefox
-      if (keyCode>=37 && keyCode<=40 && isFirefox) return YES;
+      if (keyCode>=37 && keyCode<=40 && isFirefox) return true;
 
 
       ret = this.sendEvent('keyDown', evt) ;
@@ -1132,16 +1132,16 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       //get the keycode and set it for which.
       evt.which = keyCode;
       ret = this.sendEvent('keyDown', evt);
-      return ret ? (SC.allowsBackspaceToPreviousPage || evt.hasCustomEventHandling) : YES ;
+      return ret ? (SC.allowsBackspaceToPreviousPage || evt.hasCustomEventHandling) : true ;
 
     // normal processing.  send keyDown for printable keys...
     //there is a special case for arrow key repeating of events in FF.
     } else {
       var isFirefoxArrowKeys = (keyCode >= 37 && keyCode <= 40 && isFirefox),
           charCode           = evt.charCode;
-      if ((charCode !== undefined && charCode === 0) && !isFirefoxArrowKeys) return YES;
+      if ((charCode !== undefined && charCode === 0) && !isFirefoxArrowKeys) return true;
       if (isFirefoxArrowKeys) evt.which = keyCode;
-      return this.sendEvent('keyDown', evt) ? evt.hasCustomEventHandling:YES;
+      return this.sendEvent('keyDown', evt) ? evt.hasCustomEventHandling:true;
     }
   },
 
@@ -1162,7 +1162,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   // in combination with the selectstart event.
     //   if (view && view.get('blocksIEDeactivate')) return NO;
     // }
-    return YES;
+    return true;
   },
 
   // ..........................................................

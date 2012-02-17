@@ -27,7 +27,7 @@ SC.ArraySuite.define(function(T) {
     observer.observe('[]', 'length') ;
     obj.replace(0,0,exp) ;
 
-    T.validateAfter(obj, exp, observer, YES);
+    T.validateAfter(obj, exp, observer, true);
   });
 
   test("[A,B,C,D].replace(1,2,X) => [A,X,D] + notify", function() {
@@ -42,7 +42,7 @@ SC.ArraySuite.define(function(T) {
 
     obj.replace(1,2,replace) ;
 
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
 
   test("[A,B,C,D].replace(1,2,[X,Y]) => [A,X,Y,D] + notify", function() {
@@ -58,7 +58,7 @@ SC.ArraySuite.define(function(T) {
 
     obj.replace(1,2, replace) ;
 
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
   test("[A,B].replace(1,0,[X,Y]) => [A,X,Y,B] + notify", function() {
@@ -74,7 +74,7 @@ SC.ArraySuite.define(function(T) {
   
     obj.replace(1,0, replace) ;
     
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
   test("[A,B,C,D].replace(2,2) => [A,B] + notify", function() {
@@ -88,7 +88,7 @@ SC.ArraySuite.define(function(T) {
   
     obj.replace(2,2) ;
     
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
 });

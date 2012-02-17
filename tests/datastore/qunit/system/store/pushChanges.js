@@ -14,7 +14,7 @@ suite("SC.Store#pushChanges", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey1 = SC.Store.generateStoreKey();

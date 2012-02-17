@@ -54,7 +54,7 @@ SC.PalettePane = SC.PanelPane.extend({
     var f=this.get('frame');
     this._mouseOffsetX = f ? (f.x - evt.pageX) : 0;
     this._mouseOffsetY = f ? (f.y - evt.pageY) : 0;
-    return YES;
+    return true;
   },
 
   mouseDragged: function(evt) {
@@ -62,7 +62,7 @@ SC.PalettePane = SC.PanelPane.extend({
       this.set('layout', { width: this.layout.width, height: this.layout.height, left: this._mouseOffsetX + evt.pageX, top: this._mouseOffsetY + evt.pageY });
       this.updateLayout();
     }
-    return YES;
+    return true;
   },
   
   touchStart: function(evt){

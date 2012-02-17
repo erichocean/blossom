@@ -52,7 +52,7 @@ SC.SheetPane = SC.PanelPane.extend({
     arguments.callee.base.apply(this, arguments);
     
     if (SC.Animatable) {
-      SC.SheetPane.ANIMATABLE_AVAILABLE = YES;
+      SC.SheetPane.ANIMATABLE_AVAILABLE = true;
       this.mixin(SC.Animatable);
       
       if (!this.transitions) this.transitions = {};

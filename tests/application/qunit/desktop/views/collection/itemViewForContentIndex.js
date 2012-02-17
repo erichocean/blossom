@@ -15,8 +15,8 @@ suite("SC.CollectionView.itemViewForContentIndex", {
     
     del = {
       fixture: {
-        isEnabled: YES,
-        isSelected: YES,
+        isEnabled: true,
+        isSelected: true,
         outlineLevel: 3,
         disclosureState: SC.LEAF_NODE
       },
@@ -110,8 +110,8 @@ test("returning item from cache", function() {
   equals(itemView2, itemView1, 'retrieving multiple times should same instance');
 
   // Test internal case
-  var itemView3 = view.itemViewForContentIndex(1, YES);
-  ok(itemView1 !== itemView3, 'itemViewForContentIndex(1, YES) should return new item even if it is already cached actual :%@'.fmt(itemView3));
+  var itemView3 = view.itemViewForContentIndex(1, true);
+  ok(itemView1 !== itemView3, 'itemViewForContentIndex(1, true) should return new item even if it is already cached actual :%@'.fmt(itemView3));
 
   var itemView4 = view.itemViewForContentIndex(1, NO);
   equals(itemView4, itemView3, 'itemViewForContentIndex(1) [no reload] should return newly cached item after recache');
@@ -159,15 +159,15 @@ test("contentExampleViewKey is set and content property is empty", function() {
 // 
 
 test("delegate says content is group", function() {
-  view.testAsGroup = YES ;
+  view.testAsGroup = true ;
   var itemView = view.itemViewForContentIndex(1);
   ok(itemView, 'should return itemView');
   ok(itemView.kindOf(view.groupExampleView), 'itemView should be groupExampleView (%@). actual: %@'.fmt(view.groupExampleView, itemView));
-  ok(itemView.isGroupView, 'itemView.isGroupView should be YES');
+  ok(itemView.isGroupView, 'itemView.isGroupView should be true');
 });
 
 test("contentGroupExampleViewKey is set and content has property", function() {
-  view.testAsGroup = YES ;
+  view.testAsGroup = true ;
   
   var CustomView = SC.View.extend();
   var obj = content.objectAt(1);
@@ -177,11 +177,11 @@ test("contentGroupExampleViewKey is set and content has property", function() {
   var itemView = view.itemViewForContentIndex(1);
   ok(itemView, 'should return item view');
   ok(itemView.kindOf(CustomView), 'itemView should be custom view specified on object. actual: %@'.fmt(itemView));
-  ok(itemView.isGroupView, 'itemView.isGroupView should be YES');
+  ok(itemView.isGroupView, 'itemView.isGroupView should be true');
 });
 
 test("contentGroupExampleViewKey is set and content is null", function() {
-  view.testAsGroup = YES ;
+  view.testAsGroup = true ;
 
   var CustomView = SC.View.extend();
   view.set('contentGroupExampleViewKey', 'foo');
@@ -191,11 +191,11 @@ test("contentGroupExampleViewKey is set and content is null", function() {
   ok(itemView, 'should return item view');
   equals(itemView.get('content'), null, 'itemView content should be null');
   ok(itemView.kindOf(view.groupExampleView), 'itemView should be exampleView (%@). actual: %@'.fmt(view.groupExampleView, itemView));
-  ok(itemView.isGroupView, 'itemView.isGroupView should be YES');
+  ok(itemView.isGroupView, 'itemView.isGroupView should be true');
 });
 
 test("contentGroupExampleViewKey is set and content property is empty", function() {
-  view.testAsGroup = YES ;
+  view.testAsGroup = true ;
 
   var CustomView = SC.View.extend();
   view.set('contentGroupExampleViewKey', 'foo');
@@ -204,11 +204,11 @@ test("contentGroupExampleViewKey is set and content property is empty", function
   ok(itemView, 'should return item view');
   equals(itemView.get('content'), content.objectAt(1), 'itemView should have content');
   ok(itemView.kindOf(view.groupExampleView), 'itemView should be exampleView (%@). actual: %@'.fmt(view.groupExampleView, itemView));
-  ok(itemView.isGroupView, 'itemView.isGroupView should be YES');
+  ok(itemView.isGroupView, 'itemView.isGroupView should be true');
 });
 
 test("_contentGroupIndexes's cache should be properly invalidated", function() {
-  view.testAsGroup = YES;
+  view.testAsGroup = true;
   
   // force setup of range observers
   view.updateContentRangeObserver();
@@ -262,7 +262,7 @@ test("prefers delegate over content if both implement mixin", function() {
 
 test("after making an item visible then invisible again", function() {
 
-  view.isVisibleInWindow = YES ;
+  view.isVisibleInWindow = true ;
   
   // STEP 1- setup with some nowShowing
   SC.run(function() {

@@ -17,7 +17,7 @@ sc_require('models/record');
 
       title: SC.Record.attr(String, {
         defaultValue: 'Untitled',
-        isRequired: YES|NO
+        isRequired: true|NO
       })
 
   In addition to having predefined transform types, there is also a way to
@@ -51,9 +51,9 @@ SC.RecordAttribute = SC.Object.extend(
     Walk like a duck.
 
     @type Boolean
-    @default YES
+    @default true
   */
-  isRecordAttribute: YES,
+  isRecordAttribute: true,
 
   /**
     The default value.  If attribute is `null` or `undefined`, this default
@@ -101,7 +101,7 @@ SC.RecordAttribute = SC.Object.extend(
   key: null,
 
   /**
-    If `YES`, then the attribute is required and will fail validation unless
+    If `true`, then the attribute is required and will fail validation unless
     the property is set to a non-null or undefined value.
 
     @type Boolean
@@ -113,21 +113,21 @@ SC.RecordAttribute = SC.Object.extend(
     If `NO` then attempts to edit the attribute will be ignored.
 
     @type Boolean
-    @default YES
+    @default true
   */
-  isEditable: YES,
+  isEditable: true,
 
   /**
     If set when using the Date format, expect the ISO8601 date format.
     This is the default.
 
     @type Boolean
-    @default YES
+    @default true
   */
-  useIsoDate: YES,
+  useIsoDate: true,
 
   /**
-    Can only be used for toOne or toMany relationship attributes. If YES,
+    Can only be used for toOne or toMany relationship attributes. If true,
     this flag will ensure that any related objects will also be marked
     dirty when this record dirtied.
 
@@ -143,7 +143,7 @@ SC.RecordAttribute = SC.Object.extend(
 
 
   /**
-    Can only be used for toOne or toMany relationship attributes. If YES,
+    Can only be used for toOne or toMany relationship attributes. If true,
     this flag will lazily create the related record that was pushed in
     from the data source (via pushRetrieve) if the related record does
     not exist yet.
@@ -338,10 +338,10 @@ SC.RecordAttribute = SC.Object.extend(
   //
 
   /** @private - Make this look like a property so that `get()` will call it. */
-  isProperty: YES,
+  isProperty: true,
 
   /** @private - Make this look cacheable */
-  isCacheable: YES,
+  isCacheable: true,
 
   /** @private - needed for KVO `property()` support */
   dependentKeys: [],

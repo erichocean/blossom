@@ -15,7 +15,7 @@ test("should return if passed RAW element that is child", function() {
   </div>') ;
   
   var child = cq.find('.child1');
-  equals(cq.within(child.get(0)), YES, "cq.within(DOMElement) = YES") ;
+  equals(cq.within(child.get(0)), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
   equals(cq.within(notChild.get(0)), NO, "cq.hadChild(DOMElement) = NO");
@@ -31,7 +31,7 @@ test("should return if passed CQ with element that is child", function() {
   </div>') ;
   
   var child = cq.find('.child1');
-  equals(cq.within(child), YES, "cq.within(DOMElement) = YES") ;
+  equals(cq.within(child), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
   equals(cq.within(notChild), NO, "cq.hadChild(DOMElement) = NO");
@@ -52,15 +52,15 @@ test("should work if matched set has multiple element", function() {
   equals(cq.length, 3, "should have three element in matched set");
   
   var child = cq.find('.child1');
-  equals(cq.within(child), YES, "cq.within(DOMElement) = YES") ;
+  equals(cq.within(child), true, "cq.within(DOMElement) = true") ;
   
   var notChild = SC.$('<div class="not-child"></div>') ;
   equals(cq.within(notChild), NO, "cq.hadChild(DOMElement) = NO");
   child = notChild = cq = null ;
 }) ;
 
-test("should return YES if matching self", function() {
+test("should return true if matching self", function() {
   var cq = SC.$('<div></div>');
-  equals(cq.within(cq), YES, "should not match");
+  equals(cq.within(cq), true, "should not match");
 });
 

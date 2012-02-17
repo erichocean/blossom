@@ -39,6 +39,6 @@ SC.Controller = SC.Object.extend(
     
     @property {Boolean}
   */
-  isEditable: YES
+  isEditable: true
 
 });

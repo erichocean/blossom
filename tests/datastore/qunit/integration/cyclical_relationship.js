@@ -38,7 +38,7 @@ suite("Cyclical relationships", {
       
       // discover favorite contacts only
       favoriteContacts: function() {
-        return this.get('contacts').filterProperty('isFavorite', YES);
+        return this.get('contacts').filterProperty('isFavorite', true);
       }.property('contacts').cacheable(),
       
       // we need to reset favoriteContacts whenever the contacts themselves
@@ -58,12 +58,12 @@ suite("Cyclical relationships", {
       { guid: 1,
         name: "G1-Fav1",
         group: 100,
-        isFavorite: YES },
+        isFavorite: true },
 
       { guid: 2,
         name: "G1-Fav2",
         group: 100,
-        isFavorite: YES },
+        isFavorite: true },
 
       { guid: 3,
         name: "G1-Norm1",
@@ -73,7 +73,7 @@ suite("Cyclical relationships", {
       { guid: 4,
         name: "G2-Fav1",
         group: 101,
-        isFavorite: YES },
+        isFavorite: true },
 
       { guid: 5,
         name: "G1-Norm1",
@@ -102,7 +102,7 @@ test("finding favoriteContacts", function() {
   var group  = AB.store.find(AB.Group, 100);
   var expected = AB.store.find(AB.Contact)
     .filterProperty('group', group)
-    .filterProperty('isFavorite', YES);
+    .filterProperty('isFavorite', true);
     
   same(group.get('favoriteContacts'), expected, 'contacts');
   

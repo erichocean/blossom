@@ -126,9 +126,9 @@ SC.Surface = SC.Responder.extend({
 
   /**
     The isVisible property determines if the view is shown in the view
-    hierarchy it is a part of. A view can have isVisible == YES and still have
+    hierarchy it is a part of. A view can have isVisible == true and still have
     isVisibleInWindow == NO. This occurs, for instance, when a parent view has
-    isVisible == NO. Default is YES.
+    isVisible == NO. Default is true.
 
     The isVisible property is considered part of the layout and so changing it
     will trigger a layout update.
@@ -1012,7 +1012,7 @@ SC.Surface = SC.Responder.extend({
     pass a target, this method will begin with the target and work up the 
     responder chain.  Otherwise, it will begin with the current rr 
     and walk up the chain looking for any responder that implements a handler 
-    for the passed method and returns YES when executed.
+    for the passed method and returns true when executed.
 
     @param {String} action
     @param {SC.Event} evt
@@ -1093,7 +1093,7 @@ SC.Surface = SC.Responder.extend({
 
       if (nextValidKeyView) {
         this.set('firstResponder', nextValidKeyView);
-        return YES;
+        return true;
       }
     }
 

@@ -13,39 +13,39 @@ var pane ;
 
 function evaluatePane(pane, message, description, caption, button1Title, button2Title, button3Title, iconClass) {
   // wrapper
-  ok(pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be YES');
+  ok(pane.get('isVisibleInWindow'), 'pane.isVisibleInWindow should be true');
   ok(pane.$().hasClass('sc-alert'), 'pane should have sc-alert class');
-  ok(pane.childViews[0].get('isVisibleInWindow'), 'pane.div.isVisibleInWindow should be YES');
+  ok(pane.childViews[0].get('isVisibleInWindow'), 'pane.div.isVisibleInWindow should be true');
   ok(pane.childViews[0].$().hasClass('sc-view'), 'pane.div should have sc-view class');
-  ok(pane.childViews[0].childViews[0].get('isVisibleInWindow'), 'pane.div.info.isVisibleInWindow should be YES');
+  ok(pane.childViews[0].childViews[0].get('isVisibleInWindow'), 'pane.div.info.isVisibleInWindow should be true');
   ok(pane.childViews[0].childViews[0].$().hasClass('info'), 'pane.div.info should have info class');
-  ok(pane.childViews[0].childViews[1].get('isVisibleInWindow'), 'pane.div.div.isVisibleInWindow should be YES');
+  ok(pane.childViews[0].childViews[1].get('isVisibleInWindow'), 'pane.div.div.isVisibleInWindow should be true');
 
   // content
-  ok(pane.childViews[0].childViews[0].$('img'), 'pane.div.info.img existance should be YES');
+  ok(pane.childViews[0].childViews[0].$('img'), 'pane.div.info.img existance should be true');
   ok(pane.childViews[0].childViews[0].$('img').hasClass('icon'), 'pane.div.info.img should have icon class');
   ok(pane.childViews[0].childViews[0].$('img').hasClass(iconClass), 'pane.div.info.img should have %@ class'.fmt(iconClass));
-  ok(pane.childViews[0].childViews[0].$('h1'), 'pane.div.info.h1 existance should be YES');
+  ok(pane.childViews[0].childViews[0].$('h1'), 'pane.div.info.h1 existance should be true');
   equals(pane.childViews[0].childViews[0].$('h1').text(), 'AlertPane.message', 'pane.div.info.h1 should have title');
 
   if (description) {
-    ok(pane.childViews[0].childViews[0].$('p.description'), 'pane.div.info.description existance should be YES');
+    ok(pane.childViews[0].childViews[0].$('p.description'), 'pane.div.info.description existance should be true');
     equals(pane.childViews[0].childViews[0].$('p.description').text(), 'AlertPane.description', 'pane.div.info.description should have description');
   } else {
     equals(pane.childViews[0].childViews[0].$('p.description').length, 0, 'pane.div.info should have 0 description');
   }
 
   if (caption) {
-    ok(pane.childViews[0].childViews[0].$('p.caption'), 'pane.div.info.caption existance should be YES');
+    ok(pane.childViews[0].childViews[0].$('p.caption'), 'pane.div.info.caption existance should be true');
     equals(pane.childViews[0].childViews[0].$('p.caption').text(), 'AlertPane.caption', 'pane.div.info.caption should have caption');
   } else {
     equals(pane.childViews[0].childViews[0].$('p.caption').length, 0, 'pane.div.info should have 0 caption');
   }
   
   // buttons
-  ok(pane.childViews[0].childViews[1].$('div'), 'pane.div.div.div existance should be YES');
+  ok(pane.childViews[0].childViews[1].$('div'), 'pane.div.div.div existance should be true');
   equals(pane.childViews[0].childViews[1].$('div').length, 2, 'pane.div.div should have 2 Buttons');
-  ok(pane.childViews[0].$('div'), 'pane.div.div existance should be YES');
+  ok(pane.childViews[0].$('div'), 'pane.div.div existance should be true');
   
   var button1 = pane.childViews[0].childViews[1].childViews[1];
   var button2 = pane.childViews[0].childViews[1].childViews[0];

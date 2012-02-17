@@ -154,7 +154,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
 
     @type Boolean
   */
-  isQuery: YES,
+  isQuery: true,
 
   /**
     Unparsed query conditions.  If you are handling a query yourself, then
@@ -280,7 +280,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
 
 
   /**
-    Returns `YES` if query location is Remote.  This is sometimes more
+    Returns `true` if query location is Remote.  This is sometimes more
     convenient than checking the location.
 
 		@property
@@ -291,7 +291,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   }.property('location').cacheable(),
 
   /**
-    Returns `YES` if query location is Local.  This is sometimes more
+    Returns `true` if query location is Local.  This is sometimes more
     convenient than checking the location.
 
 		@property
@@ -313,17 +313,17 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   //
 
   /**
-    Returns `YES` if record is matched by the query, `NO` otherwise.  This is
+    Returns `true` if record is matched by the query, `NO` otherwise.  This is
     used when computing a query locally.
 
     @param {SC.Record} record the record to check
     @param {Hash} parameters optional override parameters
-    @returns {Boolean} YES if record belongs, NO otherwise
+    @returns {Boolean} true if record belongs, NO otherwise
   */
   contains: function(record, parameters) {
 
     // check the recordType if specified
-    var rtype, ret = YES ;
+    var rtype, ret = true ;
     if (rtype = this.get('recordTypes')) { // plural form
       ret = rtype.find(function(t) { return SC.kindOf(record, t); });
     } else if (rtype = this.get('recordType')) { // singular
@@ -347,11 +347,11 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   },
 
   /**
-    Returns `YES` if the query matches one or more of the record types in the
+    Returns `true` if the query matches one or more of the record types in the
     passed set.
 
     @param {SC.Set} types set of record types
-    @returns {Boolean} YES if record types match
+    @returns {Boolean} true if record types match
   */
   containsRecordTypes: function(types) {
     var rtype = this.get('recordType');
@@ -363,7 +363,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
         return !!types.find(function(t2) { return SC.kindOf(t2,t); });
       });
 
-    } else return YES; // allow anything through
+    } else return true; // allow anything through
   },
 
   /**
@@ -431,7 +431,7 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
   },
 
   /** @private
-      Becomes YES once the query has been successfully parsed
+      Becomes true once the query has been successfully parsed
   */
   _isReady:     NO,
 
@@ -1347,7 +1347,7 @@ SC.Query.mixin( /** @scope SC.Query */ {
         var married = SC.Query.local(Ab.Person, "isMarried=YES");
         var married = SC.Query.local(Ab.Person, "isMarried=%@", [YES]);
         var married = SC.Query.local(Ab.Person, "isMarried={married}", {
-          married: YES
+          married: true
         });
 
     You can also pass a hash of options as the second parameter.  This is

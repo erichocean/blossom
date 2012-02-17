@@ -49,10 +49,10 @@ SC.SourceListGroupView = SC.View.extend(SC.Control, SC.CollectionGroup,
     
     @type Boolean
   */
-  isGroupVisible: YES,
+  isGroupVisible: true,
   
   /** 
-    YES if group is showing its titlebar.
+    true if group is showing its titlebar.
     
     Group views will typically hide their header if the content is set to 
     null.  You can also override this method to always hide the header if 
@@ -60,7 +60,7 @@ SC.SourceListGroupView = SC.View.extend(SC.Control, SC.CollectionGroup,
     
     @type Boolean
   */
-  hasGroupTitle: YES,
+  hasGroupTitle: true,
   
   /**
     The content property key to use as the group view's title.
@@ -99,8 +99,8 @@ SC.SourceListGroupView = SC.View.extend(SC.Control, SC.CollectionGroup,
       this.setIfChanged('hasGroupTitle', NO) ;
       return ;
     } else {
-      labelView.setIfChanged('isVisible', YES) ;
-      this.setIfChanged('hasGroupTitle', YES) ;
+      labelView.setIfChanged('isVisible', true) ;
+      this.setIfChanged('hasGroupTitle', true) ;
     }
     
    // set the title if that changed.
@@ -122,7 +122,7 @@ SC.SourceListGroupView = SC.View.extend(SC.Control, SC.CollectionGroup,
         
         var isVisible = (content && content.get) ?
           !!content.get(groupVisibleKey) :
-          YES ;
+          true ;
         if (isVisible != this.get('isGroupVisible')) {
           this.set('isGroupVisible', isVisible) ;
           labelView.set('value', isVisible) ;
@@ -158,7 +158,7 @@ SC.SourceListGroupView = SC.View.extend(SC.Control, SC.CollectionGroup,
       
       @type Boolean
     */
-    value: YES,
+    value: true,
     
     /** @private
       If the disclosure value changes, call the owner's method.  Note

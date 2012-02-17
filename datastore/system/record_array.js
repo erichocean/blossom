@@ -103,7 +103,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
   */
   isEditable: function() {
     var query = this.get('query');
-    return query ? query.get('isEditable') : YES;
+    return query ? query.get('isEditable') : true;
   }.property('query').cacheable(),
 
   // ..........................................................
@@ -226,7 +226,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
   },
 
   /**
-    Returns YES if the passed can be found in the record array.  This is
+    Returns true if the passed can be found in the record array.  This is
     provided for compatibility with SC.Set.
 
     @param {SC.Record} record
@@ -343,7 +343,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
     @returns {SC.RecordArray} receiver
   */
   reload: function() {
-    this.flush(YES);
+    this.flush(true);
     return this;
   },
 
@@ -450,7 +450,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
     if (!changed) changed = this._scq_changedStoreKeys = SC.IndexSet.create();
     changed.addEach(storeKeys);
 
-    this.set('needsFlush', YES);
+    this.set('needsFlush', true);
     if (this.get('storeKeys')) {
       this.flush();
     }
@@ -477,7 +477,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
     // never-ending recursive flush calls.  Instead, we'll simply mark
     // ourselves as needing a flush again when we're done.
     if (this._insideFlush) {
-      this.set('needsFlush', YES);
+      this.set('needsFlush', true);
       return this;
     }
 
@@ -491,7 +491,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
       return this;
     }
 
-    this._insideFlush = YES;
+    this._insideFlush = true;
 
     // OK, actually generate some results
     var storeKeys = this.get('storeKeys'),
@@ -535,7 +535,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
 
         }, this);
         // make sure resort happens
-        didChange = YES ;
+        didChange = true ;
 
       } // if (changed)
 
@@ -574,7 +574,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
 
       //console.log(this.toString() + ' full flush took ' + (new Date()-startDate) + ' ms');
 
-      didChange = YES ;
+      didChange = true ;
     }
 
     // if we reach our threshold of pacing we need to schedule the rest of the
@@ -586,7 +586,7 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
       window.setTimeout(function() {
         SC.run(function() {
           if(!self || self.get('isDestroyed')) return;
-          self.set('needsFlush', YES);
+          self.set('needsFlush', true);
           self._scq_changedStoreKeys = SC.IndexSet.create().addEach(storeKeysToPace);
           self.flush();
         });
@@ -615,20 +615,20 @@ SC.RecordArray = SC.Object.extend(SC.Enumerable, SC.Array,
   },
 
   /**
-    Set to `YES` when the query is dirty and needs to update its storeKeys
+    Set to `true` when the query is dirty and needs to update its storeKeys
     before returning any results.  `RecordArray`s always start dirty and become
     clean the first time you try to access their contents.
 
     @type Boolean
   */
-  needsFlush: YES,
+  needsFlush: true,
 
   // ..........................................................
   // EMULATE SC.ERROR API
   //
 
   /**
-    Returns `YES` whenever the status is `SC.Record.ERROR`.  This will allow
+    Returns `true` whenever the status is `SC.Record.ERROR`.  This will allow
     you to put the UI into an error state.
 
 		@property

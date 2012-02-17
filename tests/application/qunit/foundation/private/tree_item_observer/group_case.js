@@ -73,9 +73,9 @@ suite("SC.TreeItemObserver - Group Use Case", {
   setup: function() {
     content = [
       TestObject.create({
-        isGroup: YES,
+        isGroup: true,
         title: "A",
-        isExpanded: YES,
+        isExpanded: true,
         outline: 0,
         children: "0 1 2 3 4".w().map(function(x) { 
           return TestObject.create({ 
@@ -85,9 +85,9 @@ suite("SC.TreeItemObserver - Group Use Case", {
       }),
 
       TestObject.create({
-        isGroup: YES,
+        isGroup: true,
         title: "B",
-        isExpanded: YES,
+        isExpanded: true,
         outline: 0,
         children: "0 1 2 3 4".w().map(function(x) { 
           return TestObject.create({ 
@@ -97,7 +97,7 @@ suite("SC.TreeItemObserver - Group Use Case", {
       }),
 
       TestObject.create({
-        isGroup: YES,
+        isGroup: true,
         title: "C",
         isExpanded: NO,
         outline: 0,
@@ -111,7 +111,7 @@ suite("SC.TreeItemObserver - Group Use Case", {
     root = TestObject.create({
       title: "ROOT",
       children: content,
-      isExpanded: YES
+      isExpanded: true
     });
 
   
@@ -119,7 +119,7 @@ suite("SC.TreeItemObserver - Group Use Case", {
     
     extrachild = TestObject.create({
       title: "EXTRA",
-      isExpanded: YES,
+      isExpanded: true,
       children: "0 1 2".w().map(function(x) { 
         return TestObject.create({ title: "EXTRA.%@".fmt(x) });
       })
@@ -673,8 +673,8 @@ test("contentGroupIndexes - not grouped", function() {
 });
 
 test("contentGroupIndexes - grouped", function() {
-  delegate.set('treeItemIsGrouped', YES);
-  equals(delegate.get('treeItemIsGrouped'), YES, 'precond - delegate.treeItemIsGrouped == YES');
+  delegate.set('treeItemIsGrouped', true);
+  equals(delegate.get('treeItemIsGrouped'), true, 'precond - delegate.treeItemIsGrouped == true');
   
   var set = SC.IndexSet.create(0).add(6).add(12);
   same(obs.contentGroupIndexes(null, obs), set, 'contentGroupIndexes should cover just top leve items');

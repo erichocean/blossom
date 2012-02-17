@@ -69,7 +69,7 @@ SC.mixin({
       } while (SC._sc_readyQueue.length > 0) ;
 
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
-      SC.isReady = YES ;
+      SC.isReady = true ;
 
       // clear the queue
       SC._sc_readyQueue = null ;
@@ -103,7 +103,7 @@ SC.mixin({
   /** @private configures the ready event handler if needed */
   _sc_bindReady: function() {
     if (this._sc_isReadyBound) return;
-    this._sc_isReadyBound = YES ;
+    this._sc_isReadyBound = true ;
 
     // Mozilla, Opera (see further below for it) and webkit nightlies 
     // currently support this event.  Use the handy event callback
@@ -207,7 +207,7 @@ SC.mixin({
       } while (SC._sc_readyQueue.length > 0) ;
 
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
-      SC.isReady = YES ;
+      SC.isReady = true ;
 
       // clear the queue
       SC._sc_readyQueue = null ;
@@ -236,7 +236,7 @@ SC.mixin({
 } // ! BLOSSOM
 
 SC._sc_bindReady();
-SC.removeLoading = YES;
+SC.removeLoading = true;
 
 // default to app mode.  When loading unit tests, this will run in test mode
 SC.APP_MODE = "APP_MODE";

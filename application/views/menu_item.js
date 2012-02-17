@@ -27,21 +27,21 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
 
   classNames: ['sc-menu-item'],
 
-  escapeHTML: YES,
+  escapeHTML: true,
 
   /**
     @private
     @property
     @type {Boolean}
   */
-  acceptsFirstResponder: YES,
+  acceptsFirstResponder: true,
   
   /**
     IE only attribute to block bluring of other controls
 
     @type Boolean
   */
-  blocksIEDeactivate: YES,
+  blocksIEDeactivate: true,
 
   /**
     Disable context menu.
@@ -60,12 +60,12 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   content: null,
 
   /**
-    YES if this menu item represents a separator.
+    true if this menu item represents a separator.
 
     @property {Boolean}
   */
   isSeparator: function() {
-    return this.getContentProperty('itemSeparatorKey') === YES;
+    return this.getContentProperty('itemSeparatorKey') === true;
   }.property('content').cacheable(),
 
   /**
@@ -75,7 +75,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   */
   isEnabled: function() {
     return this.getContentProperty('itemIsEnabledKey') !== NO &&
-           this.getContentProperty('itemSeparatorKey') !== YES;
+           this.getContentProperty('itemSeparatorKey') !== true;
   }.property('content.isEnabled').cacheable(),
 
   /**
@@ -93,7 +93,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     if (menuItems) {
       if (SC.kindOf(menuItems, SC.MenuPane)) {
         menuItems.set('isModal', NO);
-        menuItems.set('isSubMenu', YES);
+        menuItems.set('isSubMenu', true);
         menuItems.set('parentMenu', parentMenu);
         return menuItems;
       } else {
@@ -101,7 +101,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
           layout: { width: 200 },
           items: menuItems,
           isModal: NO,
-          isSubMenu: YES,
+          isSubMenu: true,
           parentMenu: parentMenu,
           controlSize: parentMenu.get('controlSize')
         });
@@ -290,7 +290,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     targetMenuItem = this.getPath('parentMenu.rootMenu.targetMenuItem');
 
     if (targetMenuItem) targetMenuItem.performAction();
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -298,7 +298,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
 
     This method will start flashing the menu item to indicate to the user that
     their selection has been received, unless disableMenuFlash has been set to
-    YES on the menu item.
+    true on the menu item.
 
     @returns {Boolean}
   */
@@ -323,12 +323,12 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
       // flashing state. In the flashing state, no other menu items
       // should become selected.
       menu = this.getPath('parentMenu.rootMenu');
-      menu._isFlashing = YES;
+      menu._isFlashing = true;
       this.invokeLater(this.flashHighlight, 25);
       this.invokeLater(this.sendAction, 150);
     }
 
-    return YES;
+    return true;
   },
 
   /**
@@ -395,7 +395,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
 
   /** @private*/
   mouseDown: function(evt) {
-    return YES ;
+    return true ;
   },
 
   /** @private */
@@ -407,8 +407,8 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     // a menu flash.
     if (rootMenu._isFlashing) return;
 
-    menu.set('mouseHasEntered', YES);
-    this.set('mouseHasEntered', YES);
+    menu.set('mouseHasEntered', true);
+    this.set('mouseHasEntered', true);
     menu.set('currentMenuItem', this);
 
     // Become first responder to show highlight
@@ -419,7 +419,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     if(this.get('hasSubMenu')) {
       this._subMenuTimer = this.invokeLater(this.showSubMenu,100) ;
     }
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -449,12 +449,12 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
       }
     }
 
-    return YES ;
+    return true ;
   },
 
   touchStart: function(evt){
     this.mouseEntered(evt);
-    return YES;
+    return true;
   },
 
   touchEnd: function(evt){
@@ -497,7 +497,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     if(menu) {
       menu.moveUp(this) ;
     }
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -510,7 +510,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
     if(menu) {
       menu.moveDown(this) ;
     }
-    return YES ;
+    return true ;
   },
 
   /** @private
@@ -520,7 +520,7 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
   */
   moveRight: function(sender,evt) {
     this.showSubMenu() ;
-    return YES;
+    return true;
   },
 
   /** @private
@@ -541,13 +541,13 @@ SC.MenuItemView = SC.View.extend(SC.ContentDisplay,
 
   /** @private*/
   keyUp: function(evt) {
-    return YES ;
+    return true ;
   },
 
   /** @private*/
   cancel: function(evt) {
     this.getPath('parentMenu.rootMenu').remove();
-    return YES ;
+    return true ;
   },
 
   /** @private*/

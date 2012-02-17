@@ -22,7 +22,7 @@ function queryEquals(q, location, recordType, conditions, extra, desc) {
   if (!desc) desc = '';
 
   ok(!!q, desc + ': should have a query');
-  equals(q.get('isFrozen'), YES, desc + ": should be frozen");
+  equals(q.get('isFrozen'), true, desc + ": should be frozen");
 
   if (q) {
     if (location) {

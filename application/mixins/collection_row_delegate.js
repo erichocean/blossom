@@ -20,7 +20,7 @@
 SC.CollectionRowDelegate = {
 
   /** walk like a duck */
-  isCollectionRowDelegate: YES,
+  isCollectionRowDelegate: true,
   
   /**
     Default row height.  Unless you implement some custom row height 

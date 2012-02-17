@@ -102,7 +102,7 @@ SC.IndexSet = SC.mixin({},
     
     @property {Boolean}
   */
-  isIndexSet: YES,
+  isIndexSet: true,
 
   /**  @private 
     Internal setting determines the preferred skip size for hinting sets.
@@ -180,7 +180,7 @@ SC.IndexSet = SC.mixin({},
   },
     
   /**
-    Returns YES if the passed index set contains the exact same indexes as 
+    Returns true if the passed index set contains the exact same indexes as 
     the receiver.  If you pass any object other than an index set, returns NO.
     
     @param {Object} obj another object.
@@ -189,7 +189,7 @@ SC.IndexSet = SC.mixin({},
   isEqual: function(obj) {
     
     // optimize for some special cases
-    if (obj === this) return YES ;
+    if (obj === this) return true ;
     if (!obj || !obj.isIndexSet || (obj.max !== this.max) || (obj.length !== this.length)) return NO;
 
     // ok, now we need to actually compare the ranges of the two.
@@ -203,7 +203,7 @@ SC.IndexSet = SC.mixin({},
       cur = Math.abs(next) ;
       next = lcontent[cur];
     } while (cur !== 0);
-    return YES ;
+    return true ;
   },
   
   /**
@@ -261,7 +261,7 @@ SC.IndexSet = SC.mixin({},
   },
   
   /**
-    Returns YES if the index set contains the named index
+    Returns true if the index set contains the named index
     
     @param {Number} start index or range
     @param {Number} length optional range length
@@ -279,7 +279,7 @@ SC.IndexSet = SC.mixin({},
         
       // if passed an index set, check each receiver range
       } else if (start && start.isIndexSet) {
-        if (start === this) return YES ; // optimization
+        if (start === this) return true ; // optimization
 
         content = start._content ;
         cur = 0 ;
@@ -289,7 +289,7 @@ SC.IndexSet = SC.mixin({},
           cur = Math.abs(next);
           next = content[cur];
         }
-        return YES ;
+        return true ;
         
       } else {
         length = start.length; 
@@ -304,7 +304,7 @@ SC.IndexSet = SC.mixin({},
   },
 
   /**
-    Returns YES if the index set contains any of the passed indexes.  You
+    Returns true if the index set contains any of the passed indexes.  You
     can pass a single index, a range or an index set.
     
     @param {Number} start index, range, or IndexSet
@@ -321,13 +321,13 @@ SC.IndexSet = SC.mixin({},
         
       // if passed an index set, check each receiver range
       } else if (start && start.isIndexSet) {
-        if (start === this) return YES ; // optimization
+        if (start === this) return true ; // optimization
 
         content = start._content ;
         cur = 0 ;
         next = content[cur];
         while (next !== 0) {
-          if ((next>0) && this.intersects(cur, next-cur)) return YES ;
+          if ((next>0) && this.intersects(cur, next-cur)) return true ;
           cur = Math.abs(next);
           next = content[cur];
         }
@@ -345,7 +345,7 @@ SC.IndexSet = SC.mixin({},
     lim     = start + length;
     while (cur < lim) {
       if (next === 0) return NO; // no match and at end!
-      if ((next > 0) && (next > start)) return YES ; // found a match
+      if ((next > 0) && (next > start)) return true ; // found a match
       cur = Math.abs(next);
       next = content[cur];
     }

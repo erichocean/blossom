@@ -13,7 +13,7 @@ var content = "1 2 3 4 5 6 7 8 9 10".w().map(function(x) {
 suite("SC.CollectionView.selection", {
   setup: function() {
     view = SC.CollectionView.create({
-      isVisibleInWindow: YES, // force render
+      isVisibleInWindow: true, // force render
       content: content
     });
   }

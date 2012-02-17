@@ -119,7 +119,7 @@ var AnchorShape = SC.Shape.extend({
         mousePos = stage.get('mousePosition');
     this.draggingRectOffsetX = mousePos.x - this.x;
     this.draggingRectOffsetY = mousePos.y - this.y;
-    return YES;
+    return true;
   },
 
   mouseDragged: function(evt) {

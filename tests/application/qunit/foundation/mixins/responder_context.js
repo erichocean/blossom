@@ -10,11 +10,11 @@ suite("ResponderContext", {
     Manager = SC.Responder.create(SC.ResponderContext, {  });
     var TestResponder = SC.Responder.extend({
       didBecomeFirstResponder: function() {
-        this.didBecome = YES;
-        this.hasFirst = YES;
+        this.didBecome = true;
+        this.hasFirst = true;
       },
       willLoseFirstResponder: function() {
-        this.didLose = YES;
+        this.didLose = true;
         this.hasFirst = NO;
       }
     });

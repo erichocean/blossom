@@ -126,27 +126,27 @@ SC.SliderView = SC.View.extend(SC.Control,
   _isMouseDown: NO,
   
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return YES; // nothing to do...
-    this.set('isActive', YES);
-    this._isMouseDown = YES ;
+    if (!this.get('isEnabled')) return true; // nothing to do...
+    this.set('isActive', true);
+    this._isMouseDown = true ;
     return this._triggerHandle(evt, true);
   },
   
   // mouseDragged uses same technique as mouseDown.
   mouseDragged: function(evt) { 
-    return this._isMouseDown ? this._triggerHandle(evt) : YES; 
+    return this._isMouseDown ? this._triggerHandle(evt) : true; 
   },
   
   // remove active class
   mouseUp: function(evt) {
     if (this._isMouseDown) this.set('isActive', NO);
-    var ret = this._isMouseDown ? this._triggerHandle(evt) : YES ;
+    var ret = this._isMouseDown ? this._triggerHandle(evt) : true ;
     this._isMouseDown = NO;
     return ret ;
   },
   
   mouseWheel: function(evt) {
-    if (!this.get('isEnabled')) return YES;
+    if (!this.get('isEnabled')) return true;
     var min = this.get('minimum'),
         max = this.get('maximum'),
         newVal = this.get('value')+((evt.wheelDeltaX+evt.wheelDeltaY)*0.01),
@@ -155,7 +155,7 @@ SC.SliderView = SC.View.extend(SC.Control,
     if (newVal< min) this.setIfChanged('value', min);
     else if (newVal> max) this.setIfChanged('value', max);
     else this.setIfChanged('value', newVal);
-    return YES ;  
+    return true ;  
   },
   
   touchStart: function(evt){
@@ -199,7 +199,7 @@ SC.SliderView = SC.View.extend(SC.Control,
 
     // if changes by more than a rounding amount, set v.
     if (Math.abs(v-loc)>=0.01) this.set('value', loc); // adjust 
-    return YES ;
+    return true ;
   },
   
   /** tied to the isEnabled state */
@@ -211,7 +211,7 @@ SC.SliderView = SC.View.extend(SC.Control,
   willBecomeKeyResponderFrom: function(keyView) {
     // focus the text field.
     if (!this._isFocused) {
-      this._isFocused = YES ;
+      this._isFocused = true ;
       this.becomeFirstResponder();
       if (this.get('isVisibleInWindow')) {
         this.$()[0].focus();
@@ -230,7 +230,7 @@ SC.SliderView = SC.View.extend(SC.Control,
        var view = evt.shiftKey ? this.get('previousValidKeyView') : this.get('nextValidKeyView');
        if(view) view.becomeFirstResponder();
        else evt.allowDefault(); 
-       return YES ; // handled
+       return true ; // handled
      }
      
      if (evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40){
@@ -270,13 +270,13 @@ SC.SliderView = SC.View.extend(SC.Control,
 
      // validate keyDown...
      // if (this.performValidateKeyDown(evt)) {
-     //    this._isKeyDown = YES ;
+     //    this._isKeyDown = true ;
      //    evt.allowDefault(); 
      //  } else {
      //    evt.stop();
      //  }
      SC.RunLoop.begin().end();
-     return YES; 
+     return true; 
    },
 
   contentPropertyDidChange: function(target, key) {

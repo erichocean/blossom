@@ -58,7 +58,7 @@ SC.Benchmark = {
   
     @property {Boolean}
   */
-  enabled: YES,
+  enabled: true,
   
   /** 
      This hash stores collected stats.  It contains key value pairs.  The value

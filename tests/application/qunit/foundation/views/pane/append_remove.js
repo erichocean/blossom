@@ -26,7 +26,7 @@ test("adding to document for first time", function() {
   var layer = pane.get('layer');
   ok(layer, 'should create layer');
   equals(layer.parentNode, elem, 'layer should belong to parent');
-  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = YES');
+  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = true');
   ok(pane.rootResponder, 'should have rootResponder');
   
 });
@@ -57,7 +57,7 @@ test("readding pane", function() {
   
   pane.appendTo(elem2);
   equals(layer.parentNode, elem2, 'layer moved to new parent');
-  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = YES');
+  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = true');
   ok(pane.rootResponder, 'should have rootResponder');
 });
 
@@ -70,14 +70,14 @@ test("adding/remove/adding pane", function() {
   var layer = pane.get('layer');
   ok(layer, 'has layer');
   equals(layer.parentNode, elem1, 'layer belongs to parent');
-  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow is YES before remove');
+  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow is true before remove');
   pane.remove();
   ok(!pane.get('isVisibleInWindow'), 'isVisibleInWindow is NO');
   
   pane.appendTo(elem2);
   layer = pane.get('layer');
   equals(layer.parentNode, elem2, 'layer moved to new parent');
-  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = YES');
+  ok(pane.get('isVisibleInWindow'), 'isVisibleInWindow should  = true');
   ok(pane.rootResponder, 'should have rootResponder');
 });
   

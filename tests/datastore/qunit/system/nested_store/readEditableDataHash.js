@@ -16,7 +16,7 @@ suite("SC.NestedStore#readEditableDataHash", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey = SC.Store.generateStoreKey();
@@ -51,7 +51,7 @@ test("data state=INHERITED, parent editable = NO", function() {
   }
 });
 
-test("data state=INHERITED, parent editable = YES", function() {
+test("data state=INHERITED, parent editable = true", function() {
   
   // test preconditions
   parent.readEditableDataHash(storeKey);

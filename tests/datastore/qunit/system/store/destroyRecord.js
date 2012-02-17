@@ -19,37 +19,37 @@ suite("SC.Store#destroyRecord", {
       guid: "destroyGUID1",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json2 = {
       guid: "destroyGUID2",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json3 = {
       guid: "destroyGUID3",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json4 = {
       guid: "destroyGUID4",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json5 = {
       guid: "destroyGUID5",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json6 = {
       guid: "destroyGUID6",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey1 = SC.Store.generateStoreKey();

@@ -72,7 +72,7 @@ sc_require('mixins/statechart_delegate');
   
       MyApp.Statechart = SC.Object.extend(SC.StatechartManager, {
         rootState: SC.State.design({
-          substatesAreConcurrent: YES,
+          substatesAreConcurrent: true,
 
           stateA: SC.State.design({
             // ... can continue to nest further states
@@ -85,14 +85,14 @@ sc_require('mixins/statechart_delegate');
       });
   
   Above, to indicate that a state's substates are concurrent, you just have to set the substatesAreConcurrent to 
-  YES. Once done, then stateA and stateB will be independent of each other and each will manage their
+  true. Once done, then stateA and stateB will be independent of each other and each will manage their
   own current substates. The root state will then have more then one current substate.
   
   To define concurrent states directly on the object without explicitly defining a root, you can do the 
   following:
   
       MyApp.Statechart = SC.Object.extend(SC.StatechartManager, {
-        statesAreConcurrent: YES,
+        statesAreConcurrent: true,
 
         stateA: SC.State.design({
           // ... can continue to nest further states
@@ -111,7 +111,7 @@ sc_require('mixins/statechart_delegate');
           initialSubstate: 'stateA',
 
           stateA: SC.State.design({
-            substatesAreConcurrent: YES,
+            substatesAreConcurrent: true,
 
             stateM: SC.State.design({ ... })
             stateN: SC.State.design({ ... })
@@ -135,7 +135,7 @@ sc_require('mixins/statechart_delegate');
       // state_a.js
 
       MyApp.StateA = SC.State.extend({
-        substatesAreConcurrent: YES,
+        substatesAreConcurrent: true,
 
         stateM: SC.State.design({ ... })
         stateN: SC.State.design({ ... })
@@ -145,7 +145,7 @@ sc_require('mixins/statechart_delegate');
       // state_b.js
 
       MyApp.StateB = SC.State.extend({
-        substatesAreConcurrent: YES,
+        substatesAreConcurrent: true,
 
         stateM: SC.State.design({ ... })
         stateN: SC.State.design({ ... })
@@ -171,10 +171,10 @@ sc_require('mixins/statechart_delegate');
 SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
   // Walk like a duck
-  isResponderContext: YES,
+  isResponderContext: true,
   
   // Walk like a duck
-  isStatechart: YES,
+  isStatechart: true,
   
   /**
     Indicates if this statechart has been initialized
@@ -232,7 +232,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
   /** 
     Indicates if properties on this object representing states are concurrent to each other.
-    If YES then they are concurrent, otherwise they are not. If the YES, then the
+    If true then they are concurrent, otherwise they are not. If the true, then the
     initialState property must not be assigned.
     
     This property will only be used if the rootState property is not assigned.
@@ -298,12 +298,12 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
 
   /** 
     Indicates if the statechart should be automatically initialized by this
-    object after it has been created. If YES then initStatechart will be
+    object after it has been created. If true then initStatechart will be
     called automatically, otherwise it will not.
   
     @property {Boolean}
   */
-  autoInitStatechart: YES,
+  autoInitStatechart: true,
   
   /**
     If yes, any warning messages produced by the statechart or any of its states will
@@ -418,7 +418,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       this.set(key, rootState.get(this.get(key)));
     } 
     
-    this.set('statechartIsInitialized', YES);
+    this.set('statechartIsInitialized', true);
     this.gotoState(rootState);
     
     if (trace) this.statechartLogTrace("END initialize statechart");
@@ -605,7 +605,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     
     // Lock the current state transition so that no other requested state transition 
     // interferes. 
-    this._gotoStateLocked = YES;
+    this._gotoStateLocked = true;
     
     if (fromCurrentState) {
       // Check to make sure the current state given is actually a current state of this statechart
@@ -933,7 +933,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
         this.gotoState(state, fromCurrentState, context);
       }
     } else {
-      this.gotoState(state, fromCurrentState, YES, context);
+      this.gotoState(state, fromCurrentState, true, context);
     }
   },
   
@@ -984,7 +984,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       return;
     }
     
-    this._sendEventLocked = YES;
+    this._sendEventLocked = true;
     
     if (trace) {
       this.statechartLogTrace("BEGIN sendEvent: '%@'".fmt(event));
@@ -998,10 +998,10 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       while (!eventHandled && state) {
         if (!checkedStates[state.get('fullPath')]) {
          eventHandled = state.tryToHandleEvent(event, arg1, arg2);
-         checkedStates[state.get('fullPath')] = YES;
+         checkedStates[state.get('fullPath')] = true;
         }
         if (!eventHandled) state = state.get('parentState');
-        else statechartHandledEvent = YES;
+        else statechartHandledEvent = true;
       }
     }
     
@@ -1074,7 +1074,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     if (stateChain1.length === 0 || stateChain2.length === 0) return null;
     
     var pivot = stateChain1.find(function(state, index) {
-      if (stateChain2.indexOf(state) >= 0) return YES;
+      if (stateChain2.indexOf(state) >= 0) return true;
     });
     
     return pivot;
@@ -1105,14 +1105,14 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       
       for (; i < len; i += 1) {
         currentState = currentSubstates[i];
-        if (currentState._traverseStatesToExit_skipState === YES) continue;
+        if (currentState._traverseStatesToExit_skipState === true) continue;
         var chain = this._createStateChain(currentState);
         this._traverseStatesToExit(chain.shift(), chain, state, gotoStateActions);
       }
     }
     
     gotoStateActions.push({ action: SC.EXIT_STATE, state: state });
-    if (state.get('isCurrentState')) state._traverseStatesToExit_skipState = YES;
+    if (state.get('isCurrentState')) state._traverseStatesToExit_skipState = true;
     this._traverseStatesToExit(exitStatePath.shift(), exitStatePath, stopState, gotoStateActions);
   },
   
@@ -1176,7 +1176,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       // Looks like we hit the end of the road. Therefore the state has now become
       // a current state of the statechart.
       else {
-        gotoStateAction.currentState = YES;
+        gotoStateAction.currentState = true;
       }
     }
     
@@ -1196,7 +1196,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
   /** @override
   
-    Returns YES if the named value translates into an executable function on
+    Returns true if the named value translates into an executable function on
     any of the statechart's current states or the statechart itself.
     
     @param event {String} the property name to check
@@ -1223,19 +1223,19 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
   
     Attempts to handle a given event against any of the statechart's current states and the
     statechart itself. If any current state can handle the event or the statechart itself can
-    handle the event then YES is returned, otherwise NO is returned.
+    handle the event then true is returned, otherwise NO is returned.
   
     @param event {String} what to perform
     @param arg1 {Object} Optional
     @param arg2 {Object} Optional
-    @returns {Boolean} YES if handled, NO if not handled
+    @returns {Boolean} true if handled, NO if not handled
   */
   tryToPerform: function(event, arg1, arg2) {
     if (!this.respondsTo(event)) return NO;
 
     if (SC.typeOf(this[event]) === SC.T_FUNCTION) {
       var result = this[event](arg1, arg2);
-      if (result !== NO) return YES;
+      if (result !== NO) return true;
     }
     
     return !!this.sendEvent(event, arg1, arg2);
@@ -1313,7 +1313,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       state = currentStates.objectAt(i);
       while (state) {
         if (checkedStates[state.get('fullPath')]) break;
-        checkedStates[state.get('fullPath')] = YES;
+        checkedStates[state.get('fullPath')] = true;
         method = state[methodName];
         if (SC.typeOf(method) === SC.T_FUNCTION && !method.isEventHandler) {
           result = method.apply(state, args);
@@ -1473,7 +1473,7 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
     if (statesAreConcurrent && !SC.empty(initialState)) {
       this._logStatechartCreationError("Can not assign an initial state when states are concurrent");
     } else if (statesAreConcurrent) {
-      attrs.substatesAreConcurrent = YES;
+      attrs.substatesAreConcurrent = true;
     } else if (SC.typeOf(initialState) === SC.T_STRING) {
       attrs.initialSubstate = initialState;
     } else {

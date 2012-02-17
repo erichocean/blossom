@@ -13,15 +13,15 @@ suite("SC.ButtonView#actions", {
 
 test("Emulate mouse click to verify if the button activates", function() {
   b.triggerAction();
-  equals(b.get('isActive'), YES, "the should be active for 200ms");
+  equals(b.get('isActive'), true, "the should be active for 200ms");
   
 });
 
 
 test("Test different moused states", function() {
-  b.set('isEnabled', YES);
+  b.set('isEnabled', true);
   b.mouseDown();
-  equals(b.get('isActive'), YES, "the button should be active after a mouseDown event");
+  equals(b.get('isActive'), true, "the button should be active after a mouseDown event");
   b.mouseExited();
   equals(b.get('isActive'), NO, "the button should be active after a mouseDown event");
   b.mouseEntered();
@@ -83,7 +83,7 @@ test('Test triggerAction only happens once', function(){
 
 // This test is not nearly reliable enough
 test("Test action repeats while active", function(){
-  b.set('isActive', YES);
+  b.set('isActive', true);
   b._action();
 
   var assertions = function(){
@@ -104,13 +104,13 @@ test("Test action happens on mouseDown", function(){
 });
 
 test("Test action does not happen on mouseUp", function(){
-  b._isMouseDown = YES;
+  b._isMouseDown = true;
   b.mouseUp();
   equals(counter.get('value'), 0, "should not have run");
 });
 
 test("Should stop when inactive", function(){
-  b.set('isActive', YES);
+  b.set('isActive', true);
   b._action();
   b.set('isActive', NO);
 

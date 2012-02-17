@@ -13,7 +13,7 @@ suite("SC.ListView.rowDelegate", {
     // fake empty array that implements delegate
     content = SC.Object.create(SC.CollectionRowDelegate, SC.Array, SC.Freezable, {
       
-      isFrozen: YES,
+      isFrozen: true,
       
       length: 0,
       
@@ -47,15 +47,15 @@ test("with no delegate and content is delegate", function() {
   view = SC.ListView.create({ content: content });
 
   equals(view.get('delegate'), null, 'precond - delegate should be null');
-  equals(view.get('content').isCollectionRowDelegate, YES, 'precond - content should be CollectionRowDelegate');
+  equals(view.get('content').isCollectionRowDelegate, true, 'precond - content should be CollectionRowDelegate');
   equals(view.get('rowDelegate'), content, 'row delegate should be content');
 });
 
 test("with delegate and content is delegate", function() {
   view = SC.ListView.create({ delegate: del, content: content });
 
-  equals(view.get('delegate').isCollectionRowDelegate, YES, 'precond - delegate should be CollectionRowDelegate');
-  equals(view.get('content').isCollectionRowDelegate, YES, 'precond - content should be CollectionRowDelegate');
+  equals(view.get('delegate').isCollectionRowDelegate, true, 'precond - delegate should be CollectionRowDelegate');
+  equals(view.get('content').isCollectionRowDelegate, true, 'precond - content should be CollectionRowDelegate');
   equals(view.get('rowDelegate'), del, 'row delegate should be delegate');
 });
 

@@ -233,7 +233,7 @@ SC.StatePathMatcher._BasicToken = SC.StatePathMatcher._Token.extend({
     var part = this.owner._pop(),
         token = this.nextToken;
     if (this.value !== part) return NO;
-    return token ? token.match() : YES;
+    return token ? token.match() : true;
   }
     
 });
@@ -269,7 +269,7 @@ SC.StatePathMatcher._ExpandToken = SC.StatePathMatcher._Token.extend({
       
     while (part = this.owner._pop()) {
       if (part === start) {
-        return token ? token.match() : YES;
+        return token ? token.match() : true;
       }
     }
       
@@ -303,7 +303,7 @@ SC.StatePathMatcher._ThisToken = SC.StatePathMatcher._Token.extend({
     if (!part || this.owner._stack.length !== 0) return NO;
     
     for (; i < len; i += 1) {
-      if (substates[i].get('name') === part) return YES;
+      if (substates[i].get('name') === part) return true;
     }
     
     return NO;

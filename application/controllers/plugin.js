@@ -49,7 +49,7 @@ SC.PluginController = SC.Object.create(
     var args = Array.prototype.slice.call(arguments),
         request = args.shift(); 
     this._load(request, args);
-    return YES;
+    return true;
   },
 
   /** @public
@@ -133,7 +133,7 @@ SC.PluginController = SC.Object.create(
     this.set(name, plugin);
     this.get("loadedPlugins").push(name);
     this.get("loadedPlugins").push(request);
-    plugin.set("isRegistered", YES);
+    plugin.set("isRegistered", true);
     this.log("Just registered %@ (%@)".fmt(name, request));
     this._invokeHooksFor(name);
   },
@@ -152,7 +152,7 @@ SC.PluginController = SC.Object.create(
       this.error("Cannot load plugins without an active session (%@)".fmt(request));
       return;
     }
-    if(!this.isPlugin(request)) this.error("Request for non-plugin `%@`".fmt(request), YES);
+    if(!this.isPlugin(request)) this.error("Request for non-plugin `%@`".fmt(request), true);
     request = this._moduleFor(request);
 
     console.warn("_load: ", request);
@@ -192,7 +192,7 @@ SC.PluginController = SC.Object.create(
     jobs = hooks.filter(function(job) { 
       if(job.plugin === pluginName) { 
         console.warn("apprently ", job.plugin, " == ", pluginName); 
-        return YES; } else { return NO; } });
+        return true; } else { return NO; } });
     if(jobs.length > 0) {
       while(jobs.length > 0) {
         var job = jobs.shift();
@@ -216,7 +216,7 @@ SC.PluginController = SC.Object.create(
         modules[loadable.module] = loadable;
         plugins[loadable.module] = loadable;
         plugins[loadable.name] = loadable;
-        return YES;
+        return true;
       }
       return NO;
     });
@@ -243,7 +243,7 @@ SC.PluginController = SC.Object.create(
     if(SC.typeOf(callbacks) !== SC.T_ARRAY) {
       if(SC.typeOf(callbacks) === SC.T_FUNCTION) {
         callbacks = [callbacks];
-      } else { this.error("Callbacks are supposed to be an array of functions", YES); }
+      } else { this.error("Callbacks are supposed to be an array of functions", true); }
     }
     var plugin = this.get(request), i=0;
     for(; i<callbacks.length; ++i) {

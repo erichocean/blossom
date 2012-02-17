@@ -12,7 +12,7 @@ suite("SC.RootResponder#makeMenuPane", {
   setup: function() {
     responder = SC.RootResponder.create();
     menu = SC.Pane.create({
-      acceptsMenuPane: YES
+      acceptsMenuPane: true
     });
   },
   
@@ -41,7 +41,7 @@ test("menuPane does not affect keyPane", function() {
   equals(responder.get('keyPane'), p2, 'key pane should not change');
 });
 
-test("Pane should not become menu pane if acceptsMenuPane is not YES", function() {
+test("Pane should not become menu pane if acceptsMenuPane is not true", function() {
   menu.set('acceptsMenuPane', NO);
   responder.makeMenuPane(menu);
   equals(responder.get('menuPane'), null, 'menuPane should remain null');

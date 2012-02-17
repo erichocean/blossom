@@ -33,11 +33,11 @@ SC.ResponderContext = {
   // PROPERTIES
   // 
   
-  isResponderContext: YES,
+  isResponderContext: true,
   
   /** @property
   
-    When set to YES, logs tracing information about all actions sent and 
+    When set to true, logs tracing information about all actions sent and 
     responder changes.
   */
   trace: NO,
@@ -142,9 +142,9 @@ SC.ResponderContext = {
       console.log('%@: makeFirstResponder => %@'.fmt(this, this.responderNameFor(responder)));
     }
     
-    if (responder) responder.set("becomingFirstResponder", YES);
+    if (responder) responder.set("becomingFirstResponder", true);
     
-    this._locked = YES;
+    this._locked = true;
     this._pendingResponder = null;
     
     // Find the nearest common responder in the responder chain for the new
@@ -168,7 +168,7 @@ SC.ResponderContext = {
     this.beginPropertyChanges();
     
     this.set('firstResponder', responder) ;
-    if (responder) responder.set('isFirstResponder', YES);
+    if (responder) responder.set('isFirstResponder', true);
     
     this._notifyDidBecomeFirstResponder(responder, responder, common);
     
@@ -202,7 +202,7 @@ SC.ResponderContext = {
     var next = this.nextResponderFor(cur);
     if (next) this._notifyDidBecomeFirstResponder(responder, next, root);
     
-    cur.set('hasFirstResponder', YES);
+    cur.set('hasFirstResponder', true);
     cur.didBecomeFirstResponder(responder);  
   },
   
@@ -219,7 +219,7 @@ SC.ResponderContext = {
   /**
     Send the passed action down the responder chain, starting with the 
     current first responder.  This will look for the first responder that 
-    actually implements the action method and returns YES or no value when 
+    actually implements the action method and returns true or no value when 
     called.
     
     @param {String} action name of action
@@ -234,7 +234,7 @@ SC.ResponderContext = {
         handled = NO,
         responder;
 
-    this._locked = YES;
+    this._locked = true;
     if (trace) {
       console.log("%@: begin action '%@' (%@, %@)".fmt(this, action, sender, context));
     }

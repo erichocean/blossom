@@ -36,9 +36,9 @@ suite("SC.CollectionView.content", {
               
           while(--loc >= 0) {
             args = history[loc];
-            if (args <= 1) return YES ; 
-            if (args[1] === null) return YES ;
-            if (args[0].get('nowShowing').contains(args[1])) return YES ;            
+            if (args <= 1) return true ; 
+            if (args[1] === null) return true ;
+            if (args[0].get('nowShowing').contains(args[1])) return true ;            
           }
           return NO ;
         },
@@ -74,8 +74,8 @@ suite("SC.CollectionView.content", {
         
         expect: function(indexes, callCount) {
 
-          if (indexes === YES) {
-            equals(this.shouldReloadAll(), YES, 'reload() should reload all');
+          if (indexes === true) {
+            equals(this.shouldReloadAll(), true, 'reload() should reload all');
           } else if (indexes !== NO) {
             var expected = this.indexes();
             var passed = indexes.isEqual(expected);
@@ -128,9 +128,9 @@ test("setting content for first time", function() {
   equals(view.get('content'), null, 'precond - view.content should be null');
   
   view.set('content', content1);
-  view.reload.expect(YES, 2); // should reload everything
+  view.reload.expect(true, 2); // should reload everything
   view.contentPropertyDidChange.expect(0); // should not call
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
   view.expectLength(content1.get('length'));
 });
 
@@ -140,9 +140,9 @@ test("changing content with different size", function() {
   view.reset();
   
   view.set('content', content2);
-  view.reload.expect(YES, 2); // call twice?
+  view.reload.expect(true, 2); // call twice?
   view.contentPropertyDidChange.expect(0); // should not call
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
   view.expectLength(content2.get('length'));
 });
 
@@ -152,9 +152,9 @@ test("changing content with same size", function() {
   view.reset();
   
   view.set('content', content2);
-  view.reload.expect(YES); 
+  view.reload.expect(true); 
   view.contentPropertyDidChange.expect(0); // should not call
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
   view.expectLength(content2.get('length'));
 });
 
@@ -166,7 +166,7 @@ test("changing the content of a single item should reload that item", function()
   content1.replace(1,1, ["X"]);
   view.reload.expect(SC.IndexSet.create(1));
   view.contentPropertyDidChange.expect(0); // should not call
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
   view.expectLength(content1.get('length'));
 });
 
@@ -179,7 +179,7 @@ test("changing the content of several items should reload each item", function()
   content1.replace(3,1, ["X"]);
   view.reload.expect(SC.IndexSet.create(1).add(3));
   view.contentPropertyDidChange.expect(0); // should not call
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
   view.expectLength(content1.get('length'));
 });
 
@@ -194,7 +194,7 @@ test("adding to end of content should reload new items", function() {
   view.reload.expect(SC.IndexSet.create(content1.get('length')-2, 2));
   view.contentPropertyDidChange.expect(0); // should not call
   view.expectLength(content1.get('length'));
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
 });
 
 test("removing from end of content should reload removed items", function() {
@@ -208,7 +208,7 @@ test("removing from end of content should reload removed items", function() {
   view.reload.expect(SC.IndexSet.create(content1.get('length'), 2));
   view.contentPropertyDidChange.expect(0); // should not call
   view.expectLength(content1.get('length'));
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
 });
 
 test("inserting into middle should reload all following items", function() {
@@ -220,7 +220,7 @@ test("inserting into middle should reload all following items", function() {
   view.reload.expect(SC.IndexSet.create(3, content1.get('length')-3));
   view.contentPropertyDidChange.expect(0); // should not call
   view.expectLength(content1.get('length'));
-  view.computeLayout.expect(YES);
+  view.computeLayout.expect(true);
 });
 
 // ..........................................................

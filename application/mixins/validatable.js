@@ -43,7 +43,7 @@ SC.Validatable = {
   errorLabel: null,
 
   /**
-    YES if the receiver is currently valid.
+    true if the receiver is currently valid.
     
     This property watches the value property by default.  You can override
     this property if you want to use some other method to calculate the
@@ -71,7 +71,7 @@ SC.Validatable = {
     or an error object.  If no validator is installed, this method will
     always return SC.VALIDATE_OK.
 
-    @param {Boolean} partialChange YES if this is a partial edit.
+    @param {Boolean} partialChange true if this is a partial edit.
     @returns {String} SC.VALIDATE_OK, error, or SC.VALIDATE_NO_CHANGE
   */
   performValidate: function(partialChange) {
@@ -106,8 +106,8 @@ SC.Validatable = {
   },
   
   /**
-    Runs a keypress validation.  Returns YES if the keypress should be 
-    allowed, NO otherwise.  If no validator is defined, always returns YES.
+    Runs a keypress validation.  Returns true if the keypress should be 
+    allowed, NO otherwise.  If no validator is defined, always returns true.
     
     @param {String} charStr the key string
     @returns {Boolean}
@@ -115,8 +115,8 @@ SC.Validatable = {
   performValidateKeyDown: function(evt) {
     // ignore anything with ctrl or meta key press
     var charStr = evt.getCharString();
-    if (!charStr) return YES ;
-    return this._validator ? this._validator.validateKeyDown(this.get('ownerForm'), this, charStr) : YES;
+    if (!charStr) return true ;
+    return this._validator ? this._validator.validateKeyDown(this.get('ownerForm'), this, charStr) : true;
   },
   
   /**

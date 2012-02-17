@@ -18,13 +18,13 @@ suite("SC.Store#cancelRecord", {
       guid: "cancelGUID1",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json2 = {
       guid: "cancelGUID2",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey1 = SC.Store.generateStoreKey();

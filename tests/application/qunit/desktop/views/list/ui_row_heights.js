@@ -95,7 +95,7 @@ function verifyChildViewsMatch(views, set) {
   views.forEach(function(view) {
     var idx = view.contentIndex ;
     if (indexes.contains(idx)) {
-      ok(YES, "should find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
+      ok(true, "should find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
     } else {
       ok(NO, "should NOT find childView for contentIndex %@ (nowShowing=%@)".fmt(idx, set));
     }
@@ -103,7 +103,7 @@ function verifyChildViewsMatch(views, set) {
   }, this);
   
   if (indexes.get('length') === 0) {
-    ok(YES, "all nowShowing indexes should have matching child views");
+    ok(true, "all nowShowing indexes should have matching child views");
   } else {
     ok(NO, "all nowShowing indexes should have matching child views (indexes not found: %@)".fmt(indexes));
   }

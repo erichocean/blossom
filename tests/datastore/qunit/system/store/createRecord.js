@@ -13,7 +13,7 @@ suite("SC.Store#createRecord", {
     MyRecordType = SC.Record.extend({
       string: SC.Record.attr(String, { defaultValue: "Untitled" }),
       number: SC.Record.attr(Number, { defaultValue: 5 }),
-      bool: SC.Record.attr(Boolean, { defaultValue: YES })
+      bool: SC.Record.attr(Boolean, { defaultValue: true })
     });
 
     SC.RunLoop.begin();
@@ -23,7 +23,7 @@ suite("SC.Store#createRecord", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey = SC.Store.generateStoreKey();

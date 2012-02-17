@@ -63,9 +63,9 @@ SC.StackedView = SC.CollectionView.extend(
     
     Note that normally this method will defer actually updating the height
     of the view until the end of the run loop.  You can force an immediate 
-    update by passing YES to the "immediately" parameter.
+    update by passing true to the "immediately" parameter.
     
-    @param {Boolean} immediately YES to update immedately
+    @param {Boolean} immediately true to update immedately
     @returns {SC.StackedView} receiver
   */
   updateHeight: function(immediately) {

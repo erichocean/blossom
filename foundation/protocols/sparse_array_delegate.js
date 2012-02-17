@@ -115,7 +115,7 @@ SC.SparseArrayDelegate = {
     @param {Number} idx the starting index to replace
     @param {Number} amt the number if items to replace
     @param {Array} objects the array of objects to insert
-    @returns {Boolean} YES to allow replace, NO to deny
+    @returns {Boolean} true to allow replace, NO to deny
   */
   sparseArrayShouldReplace: function(sparseArray, idx, amt, objects) {
     return NO ;

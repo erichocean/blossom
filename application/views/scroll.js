@@ -39,7 +39,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   // PROPERTIES
   // 
   
-  isScrollable: YES,
+  isScrollable: true,
   
   /** 
     The content view you want the scroll view to manage. This will be assigned to the contentView of the clipView also.
@@ -285,12 +285,12 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   // 
   
   /** 
-    YES if the view should maintain a horizontal scroller.   This property 
+    true if the view should maintain a horizontal scroller.   This property 
     must be set when the view is created.
     
     @property {Boolean}
   */
-  hasHorizontalScroller: YES,
+  hasHorizontalScroller: true,
   
   /**
     The horizontal scroller view class. This will be replaced with a view 
@@ -309,7 +309,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   horizontalTouchScrollerView: SC.TouchScrollerView,
   
   /**
-    YES if the horizontal scroller should be visible.  You can change this 
+    true if the horizontal scroller should be visible.  You can change this 
     property value anytime to show or hide the horizontal scroller.  If you 
     do not want to use a horizontal scroller at all, you should instead set 
     hasHorizontalScroller to NO to avoid creating a scroller view in the 
@@ -317,10 +317,10 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     @property {Boolean}
   */
-  isHorizontalScrollerVisible: YES,
+  isHorizontalScrollerVisible: true,
 
   /**
-    Returns YES if the view both has a horizontal scroller, the scroller is
+    Returns true if the view both has a horizontal scroller, the scroller is
     visible.
     
     @property {Boolean}
@@ -332,19 +332,19 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   }.property('isHorizontalScrollerVisible').cacheable(),
   
   /**
-    If YES, the horizontal scroller will autohide if the contentView is
-    smaller than the visible area.  You must set hasHorizontalScroller to YES 
+    If true, the horizontal scroller will autohide if the contentView is
+    smaller than the visible area.  You must set hasHorizontalScroller to true 
     for this property to have any effect.  
   */
-  autohidesHorizontalScroller: YES,
+  autohidesHorizontalScroller: true,
   
   /** 
-    YES if the view shuld maintain a vertical scroller.   This property must 
+    true if the view shuld maintain a vertical scroller.   This property must 
     be set when the view is created.
     
     @property {Boolean}
   */
-  hasVerticalScroller: YES,
+  hasVerticalScroller: true,
   
   /**
     The vertical scroller view class. This will be replaced with a view 
@@ -361,7 +361,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   verticalTouchScrollerView: SC.TouchScrollerView,
   
   /**
-    YES if the vertical scroller should be visible.  You can change this 
+    true if the vertical scroller should be visible.  You can change this 
     property value anytime to show or hide the vertical scroller.  If you do 
     not want to use a vertical scroller at all, you should instead set 
     hasVerticalScroller to NO to avoid creating a scroller view in the first 
@@ -369,10 +369,10 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     @property {Boolean}
   */
-  isVerticalScrollerVisible: YES,
+  isVerticalScrollerVisible: true,
 
   /**
-    Returns YES if the view both has a horizontal scroller, the scroller is
+    Returns true if the view both has a horizontal scroller, the scroller is
     visible.
     
     @property {Boolean}
@@ -384,11 +384,11 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   }.property('isVerticalScrollerVisible').cacheable(),
 
   /**
-    If YES, the vertical scroller will autohide if the contentView is
-    smaller than the visible area.  You must set hasVerticalScroller to YES 
+    If true, the vertical scroller will autohide if the contentView is
+    smaller than the visible area.  You must set hasVerticalScroller to true 
     for this property to have any effect.  
   */
-  autohidesVerticalScroller: YES,
+  autohidesVerticalScroller: true,
   
   /**
     Use this property to set the 'bottom' offset of your vertical scroller, 
@@ -408,7 +408,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     @property {Boolean}
   */
   verticalOverlay: function() {
-    if (SC.platform.touch) return YES;
+    if (SC.platform.touch) return true;
     return NO;
   }.property().cacheable(),
   
@@ -422,18 +422,18 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     @property {Boolean}
   */
   horizontalOverlay: function() {
-    if (SC.platform.touch) return YES;
+    if (SC.platform.touch) return true;
     return NO;
   }.property().cacheable(),
   
   /**
     Use to control the positioning of the vertical scroller.  If you do not
-    set 'verticalOverlay' to YES, then the content view will be automatically
+    set 'verticalOverlay' to true, then the content view will be automatically
     sized to meet the left edge of the vertical scroller, wherever it may be.
     This allows you to easily, for example, have “one pixel higher and one
     pixel lower” scroll bars that blend into their parent views.
     
-    If you do set 'verticalOverlay' to YES, then the scroller view will
+    If you do set 'verticalOverlay' to true, then the scroller view will
     “float on top” of the content view.
     
     Example: { top: -1, bottom: -1, right: 0 }
@@ -442,11 +442,11 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   
   /**
     Use to control the positioning of the horizontal scroller.  If you do not
-    set 'horizontalOverlay' to YES, then the content view will be
+    set 'horizontalOverlay' to true, then the content view will be
     automatically sized to meet the top edge of the horizontal scroller,
     wherever it may be.
     
-    If you do set 'horizontalOverlay' to YES, then the scroller view will
+    If you do set 'horizontalOverlay' to true, then the scroller view will
     “float on top” of the content view.
     
     Example: { left: 0, bottom: 0, right: 0 }
@@ -538,7 +538,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     will be undefined.
     
     @param {SC.View} view view to scroll or null to scroll receiver visible
-    @returns {Boolean} YES if scroll position was changed
+    @returns {Boolean} true if scroll position was changed
   */
   scrollToVisible: function(view) {
     
@@ -563,7 +563,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /**
     Scroll to the supplied rectangle.
     @param {rect} Rectangle to scroll to.
-    @returns {Boolean} YES if scroll position was changed.
+    @returns {Boolean} true if scroll position was changed.
   */
   scrollToRect: function(rect) {
     // find current visible frame.
@@ -585,7 +585,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     // scroll to that origin.
     if ((origX !== vo.x) || (origY !== vo.y)) {
       this.scrollTo(vo.x, vo.y);
-      return YES ;
+      return true ;
     } else return NO;
   },
   
@@ -849,7 +849,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   /*..............................................
     TOUCH SUPPORT
   */
-  acceptsMultitouch: YES,
+  acceptsMultitouch: true,
   
   /**
     The scroll deceleration rate.
@@ -857,21 +857,21 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   decelerationRate: SC.NORMAL_SCROLL_DECELERATION,
   
   /**
-    If YES, bouncing will always be enabled in the horizontal direction, even if the content
+    If true, bouncing will always be enabled in the horizontal direction, even if the content
     is smaller or the same size as the view. NO by default.
   */
   alwaysBounceHorizontal: NO,
   
   /**
     If NO, bouncing will not be enabled in the vertical direction when the content is smaller
-    or the same size as the scroll view. YES by default.
+    or the same size as the scroll view. true by default.
   */
-  alwaysBounceVertical: YES,
+  alwaysBounceVertical: true,
   
   /**
     Whether to delay touches from passing through to the content.
   */
-  delaysContentTouches: YES,
+  delaysContentTouches: true,
   
   /**
     @private
@@ -934,7 +934,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
   },
   
   captureTouch: function(touch) {
-    return YES;
+    return true;
   },
   
   touchGeneration: 0,
@@ -947,8 +947,8 @@ SC.ScrollView = SC.View.extend(SC.Border, {
       // while touchStart is itself being called...
       this.invokeLater(this.beginTouchesInContent, 1, generation);
     }
-    this.beginTouchTracking(touch, YES);
-    return YES;
+    this.beginTouchTracking(touch, true);
+    return true;
   },
 
   beginTouchesInContent: function(gen) {
@@ -957,7 +957,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     var touch = this.touch, itemView;
     if (touch && this.tracking && !this.dragging && !touch.touch.scrollHasEnded) {
       // try to capture the touch
-      touch.touch.captureTouch(this, YES);
+      touch.touch.captureTouch(this, true);
       
       if (!touch.touch.touchResponder) {
         // if it DIDN'T WORK!!!!!
@@ -997,7 +997,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
       // get the scroll offsets
       startClipOffsetX = this.touch.startClipOffset.x;
       startClipOffsetY = this.touch.startClipOffset.y;
-      needsScrollEnd = YES;
+      needsScrollEnd = true;
     }
     
     // calculate container+content width/height
@@ -1019,7 +1019,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     this.touch = {
       startTime: touch.timeStamp,
-      notCalculated: YES,
+      notCalculated: true,
       
       enableScrolling: { 
         x: contentWidth * this._scale > containerWidth || this.get("alwaysBounceHorizontal"), 
@@ -1079,7 +1079,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     };
 
     if (!this.tracking) {
-      this.tracking = YES;
+      this.tracking = true;
       this.dragging = NO;
     }
   },
@@ -1130,8 +1130,8 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     var isDragging = touch.dragging;
     if (!touch.scrolling.x && Math.abs(deltaX) > touch.scrollTolerance.x && touch.enableScrolling.x) {
       // say we are scrolling
-      isDragging = YES;
-      touch.scrolling.x = YES;
+      isDragging = true;
+      touch.scrolling.x = true;
       touch.scrollTolerance.y = touch.secondaryScrollTolerance;
       
       // reset position
@@ -1140,8 +1140,8 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     }
     if (!touch.scrolling.y && Math.abs(deltaY) > touch.scrollTolerance.y && touch.enableScrolling.y) {
       // say we are scrolling
-      isDragging = YES;
-      touch.scrolling.y = YES;
+      isDragging = true;
+      touch.scrolling.y = true;
       touch.scrollTolerance.x = touch.secondaryScrollTolerance;
       
       // reset position
@@ -1151,8 +1151,8 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     // handle scroll start
     if (isDragging && !touch.dragging) {
-      touch.dragging = YES;
-      this.dragging = YES;
+      touch.dragging = true;
+      this.dragging = true;
       this._touchScrollDidStart();
     }
     
@@ -1170,15 +1170,15 @@ SC.ScrollView = SC.View.extend(SC.Border, {
       
       var startDistance = touch.startDistance, dd = distance - startDistance;
       if (Math.abs(dd) > touch.scaleTolerance) {
-        touch.scrolling.y = YES; // if you scale, you can scroll.
-        touch.scrolling.x = YES;
+        touch.scrolling.y = true; // if you scale, you can scroll.
+        touch.scrolling.x = true;
         
         // we want to say something that was the startDistance away from each other should now be
         // distance away. So, if we are twice as far away as we started...
         var scale = touch.startScale * (distance / Math.max(startDistance, 50));
 
         var newScale = this._adjustForEdgeResistance(scale, touch.minimumScale, touch.maximumScale, touch.resistanceCoefficient, touch.resistanceAsymptote);
-        this.dragging = YES;
+        this.dragging = true;
         this._scale = newScale;
         var newPositionInContentX = positionInContentX * this._scale,
             newPositionInContentY = positionInContentY * this._scale;
@@ -1226,7 +1226,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     var touchStatus = this.touch,
         avg = touch.averagedTouchesForView(this);
     
-    touch.scrollHasEnded = YES;
+    touch.scrollHasEnded = true;
     if (avg.touchCount > 0) {
       this.beginTouchTracking(touch, NO);
     } else {
@@ -1244,7 +1244,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
         // this part looks weird, but it is actually quite simple.
         // First, we send the touch off for capture+starting again, but telling it to return to us
         // if nothing is found or if it is released.
-        touch.captureTouch(this, YES);
+        touch.captureTouch(this, true);
         
         // if we went anywhere, did anything, etc., call end()
         if (touch.touchResponder && touch.touchResponder !== this) {
@@ -1519,7 +1519,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     
     childViews.push(this.containerView = this.createChildView(view, {
       contentView: this.contentView,
-      isScrollContainer: YES
+      isScrollContainer: true
     }));
     
     // and replace our own contentView...
@@ -1702,7 +1702,7 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     scrollers, etc.
   */
   frameDidChange: function() {
-    this.contentViewFrameDidChange(YES);
+    this.contentViewFrameDidChange(true);
   }.observes('frame'),
 
   /** @private

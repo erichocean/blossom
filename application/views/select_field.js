@@ -73,7 +73,7 @@ SC.SelectFieldView = SC.FieldView.extend(
   /**
     if true, it means that the nameKey, valueKey or objects changed
   */
-  cpDidChange: YES,
+  cpDidChange: true,
   
   /**
     if true, it means that no sorting will occur, objects will appear 
@@ -89,7 +89,7 @@ SC.SelectFieldView = SC.FieldView.extend(
     
     @param itemValue the value for the item to validate
     @param itemName the name of the menu item to validate
-    @returns YES if the item should be enabled, NO otherwise
+    @returns true if the item should be enabled, NO otherwise
   */  
   validateMenuItem: function(itemValue, itemName) {
     return true ;
@@ -222,24 +222,24 @@ SC.SelectFieldView = SC.FieldView.extend(
   displayProperties: ['objects','nameKey','valueKey','isEnabled'],
 
   _objectsObserver: function() {
-    this.set('cpDidChange', YES);
+    this.set('cpDidChange', true);
   }.observes('objects'),
 
   _objectArrayObserver: function() {
-    this.set('cpDidChange', YES);
+    this.set('cpDidChange', true);
     this.propertyDidChange('objects');
   }.observes('*objects.[]'),
     
   _nameKeyObserver: function() {
-    this.set('cpDidChange', YES);
+    this.set('cpDidChange', true);
   }.observes('nameKey'),
    
   _valueKeyObserver: function() {
-    this.set('cpDidChange', YES);
+    this.set('cpDidChange', true);
   }.observes('valueKey'),
     
   _isEnabledObserver: function() {
-    this.set('cpDidChange', YES);
+    this.set('cpDidChange', true);
   }.observes('isEnabled'),
 
   acceptsFirstResponder: function() {
@@ -257,7 +257,7 @@ SC.SelectFieldView = SC.FieldView.extend(
     
     if (!this.get('isEnabled')) {
       evt.stop();
-      return YES;
+      return true;
     } else return arguments.callee.base.apply(this, arguments);
   },
    

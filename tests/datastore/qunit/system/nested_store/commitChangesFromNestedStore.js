@@ -15,7 +15,7 @@ suite("SC.NestedStore#commitChangesFromNestedStore", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
 
     storeKey = SC.Store.generateStoreKey();
@@ -100,7 +100,7 @@ test("adds items in chainedChanges to receiver chainedChanges", function() {
   ok(store.chainedChanges.contains(storeKey), 'chainedChanges should also contain storeKey');
 });
 
-test("should set hasChanges to YES if has changes", function() {
+test("should set hasChanges to true if has changes", function() {
 
   SC.RunLoop.begin();
 
@@ -109,7 +109,7 @@ test("should set hasChanges to YES if has changes", function() {
   equals(store.get('hasChanges'), NO, 'precond - store should not have changes');
 
   store.commitChangesFromNestedStore(child, changes, NO);
-  equals(store.get('hasChanges'), YES, 'store should now have changes');
+  equals(store.get('hasChanges'), true, 'store should now have changes');
 });
 
 test("should set hasChanges to NO if no changes", function() {
@@ -144,7 +144,7 @@ test("committing changes should chain back each step", function() {
   // do commits
   child.commitChanges();
 
-  equals(store.get('hasChanges'), YES, 'store should now have changes');
+  equals(store.get('hasChanges'), true, 'store should now have changes');
   equals(store.readDataHash(storeKey), json, 'store should now have json');
 
   store.commitChanges();

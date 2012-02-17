@@ -98,7 +98,7 @@ SC.Logger = SC.Object.create({
 
     @property {Boolean}
   */
-  fallBackOnLog: YES,
+  fallBackOnLog: true,
 
   /**
     Whether or not to format multiple arguments together
@@ -106,7 +106,7 @@ SC.Logger = SC.Object.create({
 
     @property {Boolean}
   */
-  format: YES,
+  format: true,
 
   /**
     The reporter is the object which implements the actual logging functions.
@@ -168,7 +168,7 @@ SC.Logger = SC.Object.create({
   debug: function() {
     var reporter = this.get('reporter');
 
-    if (this.get('debugEnabled') !== YES) {
+    if (this.get('debugEnabled') !== true) {
       return false;
     }
 

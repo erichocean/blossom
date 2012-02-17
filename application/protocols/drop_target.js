@@ -145,20 +145,20 @@ SC.DropTarget = {
     perform fine-grained checks on the drop location, for example.
     Return true to accept the drop operation.
     
-    The default implementation returns YES.
+    The default implementation returns true.
     
     @param {SC.Drag} drag The drag instance managing this drag
     @param {DragOp} op The proposed drag operation. A drag constant
     
-    @return {Boolean} YES if operation is OK, NO to cancel.
+    @return {Boolean} true if operation is OK, NO to cancel.
   */  
-  acceptDragOperation: function(drag, op) { return YES; },
+  acceptDragOperation: function(drag, op) { return true; },
   
   /**
     Called to actually perform the drag operation.
     
     Overide this method to actually perform the drag operation.  This method
-    is only called if you returned YES in acceptDragOperation(). 
+    is only called if you returned true in acceptDragOperation(). 
     
     Return the operation that was actually performed or SC.DRAG_NONE if the 
     operation was aborted.

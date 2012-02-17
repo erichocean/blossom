@@ -92,7 +92,7 @@ suite("Sample Model from an address book app", {
       lastNameType:  String,
       
       contactDetailsType: SC.Collection.inline({
-        isDependent: YES,
+        isDependent: true,
         recordType:  'AB.ContactDetail'
       }),
       

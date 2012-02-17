@@ -17,9 +17,9 @@ sc_require('models/record_attribute');
   
       group: SC.Record.toOne('MyApp.Group', { 
         inverse: 'contacts', // set the key used to represent the inverse 
-        isMaster: YES|NO, // indicate whether changing this should dirty
+        isMaster: true|NO, // indicate whether changing this should dirty
         transform: function(), // transforms value <=> storeKey,
-        isEditable: YES|NO, make editable or not
+        isEditable: true|NO, make editable or not
       });
   
   @extends SC.RecordAttribute
@@ -43,9 +43,9 @@ SC.SingleAttribute = SC.RecordAttribute.extend(
     record should become dirty also or not.
     
     @type Boolean
-    @default YES
+    @default true
   */
-  isMaster: YES,
+  isMaster: true,
   
   
   /**

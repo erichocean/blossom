@@ -27,7 +27,7 @@ var TreeItem = SC.Object.extend(SC.TreeItemContent, {
     return ret ;
   }.property().cacheable(),  
   
-  treeItemIsExpanded: YES,
+  treeItemIsExpanded: true,
   
   treeItemBranchIndexes: function() {
     return this.depth<3 ? SC.IndexSet.create(0, this.get('length')) : null;
@@ -35,7 +35,7 @@ var TreeItem = SC.Object.extend(SC.TreeItemContent, {
 
 });
 
-var root = TreeItem.create({ treeItemIsExpanded: YES });
+var root = TreeItem.create({ treeItemIsExpanded: true });
 var del = SC.Object.create();
 
 var pane = SC.ControlTestPane.design()

@@ -120,9 +120,9 @@ SC.POINTER_LAYOUT = ["perfectRight", "perfectLeft", "perfectTop", "perfectBottom
 SC.PickerPane = SC.PalettePane.extend({
   
   classNames: 'sc-picker',
-  isAnchored: YES,
+  isAnchored: true,
   
-  isModal: YES,
+  isModal: true,
   
   pointerPos: 'perfectRight',
   pointerPosX: 0,
@@ -631,7 +631,7 @@ SC.PickerPane = SC.PalettePane.extend({
   modalPaneDidClick: function(evt) {
     var f = this.get("frame");
     if(!this.clickInside(f, evt)) this.remove();
-    return YES ; 
+    return true ; 
   },
 
   mouseDown: function(evt) {

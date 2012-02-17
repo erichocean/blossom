@@ -32,23 +32,23 @@ if (! BLOSSOM) {
   {
     items: [{ title: "Red", 
               value: "red", 
-              enabled: YES, 
+              enabled: true, 
               icon: "button_red" },
             { title: "Green", 
               value: "green", 
-              enabled: YES, 
+              enabled: true, 
               icon: 'button_green' }],
     value: 'red',
     itemTitleKey: 'title',
     itemValueKey: 'value',
     itemIconKey: 'icon',
     itemIsEnabledKey: 'enabled',
-    isEnabled: YES,
+    isEnabled: true,
     layoutDirection: SC.LAYOUT_HORIZONTAL
   }
   
   Default layoutDirection is vertical. 
-  Default isEnabled is YES.
+  Default isEnabled is true.
   
   The value property can be either a string, as above, or an array of strings
   for pre-checking multiple values.
@@ -57,7 +57,7 @@ if (! BLOSSOM) {
   hash. When using a hash, make sure to also specify the itemTitleKey
   and itemValueKey you are using. Similarly, you will have to provide 
   itemIconKey if you are using icons radio buttons. The individual items 
-  enabled property is YES by default, and the icon is optional.
+  enabled property is true by default, and the icon is optional.
   
   @extends SC.FieldView
   @since SproutCore 1.0
@@ -82,7 +82,7 @@ SC.RadioView = SC.View.extend(SC.Control,
   layoutDirection: SC.LAYOUT_VERTICAL,
 
   // escape the HTML in label text
-  escapeHTML: YES,
+  escapeHTML: true,
 
   /** 
     The items property can be either an array with strings, or a
@@ -146,7 +146,7 @@ SC.RadioView = SC.View.extend(SC.Control,
   */
   itemContentDidChange: function() {
     // Force regeneration of buttons
-    this._renderAsFirstTime = YES;
+    this._renderAsFirstTime = true;
   
     this.notifyPropertyChange('_displayItems');
   },
@@ -178,7 +178,7 @@ SC.RadioView = SC.View.extend(SC.Control,
 
     // if necessary, regenerate the radio buttons
     if (this._renderAsFirstTime) {
-      firstTime = YES;
+      firstTime = true;
       this._renderAsFirstTime = NO;
     }
 
@@ -254,7 +254,7 @@ SC.RadioView = SC.View.extend(SC.Control,
     indexed in the following structure:
       [0] => Title (or label)
       [1] => Value
-      [2] => Enabled (YES default)
+      [2] => Enabled (true default)
       [3] => Icon (image URL)
   */
   _displayItems: function() {
@@ -295,7 +295,7 @@ SC.RadioView = SC.View.extend(SC.Control,
 
         if (isEnabledKey) {
           isEnabled = item.get ? item.get(isEnabledKey) : item[isEnabledKey];
-        } else isEnabled = YES;
+        } else isEnabled = true;
 
         if (iconKey) {
           icon = item.get ? item.get(iconKey) : item[iconKey];
@@ -353,7 +353,7 @@ SC.RadioView = SC.View.extend(SC.Control,
     mouseUp.
   */
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return YES;
+    if (!this.get('isEnabled')) return true;
     var target = evt.target;
     while (target) {
       if (target.className && target.className.indexOf('sc-radio-button') > -1) break;
@@ -362,13 +362,13 @@ SC.RadioView = SC.View.extend(SC.Control,
     if (!target) return NO;
 
     target = this.$(target);
-    if (target.hasClass('disabled')) return YES;
+    if (target.hasClass('disabled')) return true;
     target.addClass('active');
     this._activeRadioButton = target;
     // even if radiobuttons are not set to get firstResponder, allow default 
     // action, that way textfields loose focus as expected.
     evt.allowDefault();
-    return YES;
+    return true;
   },
 
   /**
@@ -377,7 +377,7 @@ SC.RadioView = SC.View.extend(SC.Control,
     enabled.
   */
   mouseUp: function(evt) {
-    if (!this.get('isEnabled')) return YES;
+    if (!this.get('isEnabled')) return true;
     var active = this._activeRadioButton,
     target = evt.target,
     items = this.get('_displayItems'),
@@ -387,14 +387,14 @@ SC.RadioView = SC.View.extend(SC.Control,
     if (active) {
       active.removeClass('active');
       this._activeRadioButton = null;
-    } else return YES;
+    } else return true;
 
     while (target) {
       if (target.className && target.className.indexOf('sc-radio-button') > -1) break;
       target = target.parentNode;
     }
     target = this.$(target);
-    if (target[0] !== active[0] || target.hasClass('disabled')) return YES;
+    if (target[0] !== active[0] || target.hasClass('disabled')) return true;
 
     index = parseInt(target.attr('index'), 0);
     item = items[index];

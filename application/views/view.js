@@ -47,7 +47,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     This method is invoked whenever a display property changes.  It will set
-    the layerNeedsUpdate method to YES.  If you need to perform additional
+    the layerNeedsUpdate method to true.  If you need to perform additional
     setup whenever the display changes, you can override this method as well.
 
     @returns {SC.View} receiver
@@ -55,7 +55,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   displayDidChange: function() {
     // console.log('SC.View#displayDidChange()', SC.guidFor(this));
     sc_assert(SC.isReady? (SC.RunLoop.isRunLoopInProgress() || SC.isAnimating) : true, "Display won't update without a run loop.");
-    this.set('layerNeedsUpdate', YES) ;
+    this.set('layerNeedsUpdate', true) ;
     return this;
   },
 
@@ -75,7 +75,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
     @property {Boolean}
   */
-  isEnabled: YES,
+  isEnabled: true,
   isEnabledBindingDefault: SC.Binding.oneWay().bool(),
 
   /** @private
@@ -97,9 +97,9 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     The isVisible property determines if the view is shown in the view
-    hierarchy it is a part of. A view can have isVisible == YES and still have
+    hierarchy it is a part of. A view can have isVisible == true and still have
     isVisibleInWindow == NO. This occurs, for instance, when a parent view has
-    isVisible == NO. Default is YES.
+    isVisible == NO. Default is true.
 
     The isVisible property is considered part of the layout and so changing it
     will trigger a layout update.
@@ -110,7 +110,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   isVisibleBindingDefault: SC.Binding.bool(),
 
   /**
-    YES only if the view and all of its parent views are currently visible
+    true only if the view and all of its parent views are currently visible
     in the window.  This property is used to optimize certain behaviors in
     the view.  For example, updates to the view layer are not performed
     on the view until the view becomes visible in the window.
@@ -140,10 +140,10 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
   //
 
   /**
-    Setting this property to YES will cause the updateLayerIfNeeded method to
+    Setting this property to true will cause the updateLayerIfNeeded method to
     be invoked at the end of the runloop.  You can also force a view to update
     sooner by calling updateLayerIfNeeded() directly.  The method will update
-    the layer only if this property is YES.
+    the layer only if this property is true.
 
     @property {Boolean}
     @test in updateLayer
@@ -152,7 +152,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /** @private
     Schedules the updateLayerIfNeeded method to run at the end of the runloop
-    if layerNeedsUpdate is set to YES.
+    if layerNeedsUpdate is set to true.
   */
   _sc_layerNeedsUpdateDidChange: function() {
     if (this.get('layerNeedsUpdate')) {
@@ -163,8 +163,8 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     Updates the layer only if the view is visible onscreen and if
-    layerNeedsUpdate is set to YES.  Normally you will not invoke this method
-    directly.  Instead you set the layerNeedsUpdate property to YES and this
+    layerNeedsUpdate is set to true.  Normally you will not invoke this method
+    directly.  Instead you set the layerNeedsUpdate property to true and this
     method will be called once at the end of the runloop.
 
     If you need to update view's layer sooner than the end of the runloop, you
@@ -201,7 +201,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
 
   /** @property
-    Set to YES if your view is willing to accept first responder status.  This
+    Set to true if your view is willing to accept first responder status.  This
     is used when calculcating key responder loop.
   */
   acceptsFirstResponder: NO,
@@ -212,9 +212,9 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     Determines if the user can select text within the view.  Normally this is
-    set to NO to disable text selection.  You should set this to YES if you
+    set to NO to disable text selection.  You should set this to true if you
     are creating a view that includes editable text.  Otherwise, settings this
-    to YES will probably make your controls harder to use and it is not
+    to true will probably make your controls harder to use and it is not
     recommended.
 
     @property {Boolean}
@@ -229,7 +229,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     text selectable views. In FF and Safari we use the css style 'allow-select'.
 
     If you want to enable text selection in certain controls is recommended
-    to override this function to always return YES , instead of setting
+    to override this function to always return true , instead of setting
     isTextSelectable to true.
 
     For example in textfield you dont want to enable textSelection on the text
@@ -237,7 +237,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     only overriding this method.
 
     @param evt {SC.Event} the selectstart event
-    @returns YES if selectable
+    @returns true if selectable
   */
   selectStart: function(evt) {
     return this.get('isTextSelectable');
@@ -275,7 +275,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
       // of the text.  Since this is not an action, do not send it up the
       // responder chain.
       ret = this.insertText(chr, event);
-      return ret ? (ret===YES ? this : ret) : null ; // map YES|NO => this|nil
+      return ret ? (ret===true ? this : ret) : null ; // map true|NO => this|nil
     }
 
     return null ; //nothing to do.
@@ -295,12 +295,12 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
 
   /**
     Recursively travels down the view hierarchy looking for a view that
-    implements the key equivalent (returning to YES to indicate it handled
+    implements the key equivalent (returning to true to indicate it handled
     the event).  You can override this method to handle specific key
     equivalents yourself.
 
     The keystring is a string description of the key combination pressed.
-    The evt is the event itself. If you handle the equivalent, return YES.
+    The evt is the event itself. If you handle the equivalent, return true.
     Otherwise, you should just return sc_super.
 
     @param {String} keystring
@@ -428,7 +428,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     view hierarchy looking looking for a scrollable view.  It will then
     call scrollToVisible() on it.
 
-    Returns YES if an actual scroll took place, no otherwise.
+    Returns true if an actual scroll took place, no otherwise.
 
     @returns {Boolean}
   */
@@ -459,7 +459,7 @@ SC.View = SC.Responder.extend(SC.DelegateSupport,
     Used to block the contextMenu per view.
 
     @param evt {SC.Event} the contextmenu event
-    @returns YES if the contextmenu can show up
+    @returns true if the contextmenu can show up
   */
   contextMenu: function(evt) {
     if(!this.get('isContextMenuEnabled')) evt.stop();
@@ -618,7 +618,7 @@ SC.View = SC.View.extend(
   //
 
   /** @property
-    YES if the view is currently first responder and the surface the view 
+    true if the view is currently first responder and the surface the view 
     belongs to is also the input surface.  While this property is set, you 
     should expect to receive text input and keyboard events.
   */
@@ -820,7 +820,7 @@ SC.View = SC.View.extend(
   },
 
   /**
-    Returns YES if the receiver is a subview of a given view or if it’s
+    Returns true if the receiver is a subview of a given view or if it’s
     identical to that view. Otherwise, it returns NO.
 
     @property {SC.View} view
@@ -962,7 +962,7 @@ SC.View = SC.View.extend(
     layer element and then calls your render() method.
 
     You will not usually call or override this method directly.  Instead you
-    should set the layerNeedsUpdate property to YES to cause this method to
+    should set the layerNeedsUpdate property to true to cause this method to
     run at the end of the run loop, or you can call updateLayerIfNeeded()
     to force the layer to update immediately.
 
@@ -1175,12 +1175,12 @@ SC.View = SC.View.extend(
   touchBoundary: { left: 50, right: 50, top: 50, bottom: 50 },
 
   /**
-    Returns YES if the provided touch is within the boundary.
+    Returns true if the provided touch is within the boundary.
   */
   touchIsInBoundary: function(touch) {
     console.log("SC.View#touchIsInBoundary()");
     console.log("FIXME: Implement me.");
-    return YES;
+    return true;
   },
 
   // ..........................................................
@@ -1345,7 +1345,7 @@ SC.View = SC.View.extend(
   /**
     Activates use of brower's static layout.  You can apply this mixin and
     still use absolute positioning.  To activate static positioning, set this
-    property to YES.
+    property to true.
 
     @property {Boolean}
   */
@@ -1382,7 +1382,7 @@ SC.View = SC.View.extend(
   //
 
   /** @property
-    YES if the view is currently first responder and the pane the view belongs
+    true if the view is currently first responder and the pane the view belongs
     to is also key pane.  While this property is set, you should expect to
     receive keyboard events.
   */
@@ -1399,7 +1399,7 @@ SC.View = SC.View.extend(
   }.property('parentView').cacheable(),
 
   /**
-    Computed property returns YES if the view and all of its parent views
+    Computed property returns true if the view and all of its parent views
     are enabled in the pane.  You should use this property when deciding
     whether to respond to an incoming event or not.
 
@@ -1614,7 +1614,7 @@ SC.View = SC.View.extend(
   parentViewDidChange: function() {
     this.recomputeIsVisibleInWindow() ;
 
-    this.set('layerLocationNeedsUpdate', YES) ;
+    this.set('layerLocationNeedsUpdate', true) ;
     this.invokeOnce(this.updateLayerLocationIfNeeded) ;
 
     // We also need to iterate down through the view hierarchy and invalidate
@@ -1652,7 +1652,7 @@ SC.View = SC.View.extend(
   },
 
   /**
-    Returns YES if the receiver is a subview of a given view or if it’s
+    Returns true if the receiver is a subview of a given view or if it’s
     identical to that view. Otherwise, it returns NO.
 
     @property {SC.View} view
@@ -1660,7 +1660,7 @@ SC.View = SC.View.extend(
   isDescendantOf: function(view) {
     var parentView = this.get('parentView');
 
-    if(this===view) return YES;
+    if(this===view) return true;
     else if(parentView) return parentView.isDescendantOf(view);
     else return NO;
   },
@@ -1732,7 +1732,7 @@ SC.View = SC.View.extend(
     // 'hidden' class to the layer because of the "don't update the layer if
     // we're not visible in the window" check.  If any of our parent views
     // became visible, our layer would incorrectly be shown!
-    this.updateLayerIfNeeded(YES);
+    this.updateLayerIfNeeded(true);
 
     return this;
   },
@@ -1892,7 +1892,7 @@ SC.View = SC.View.extend(
     layer element and then calls your render() method.
 
     You will not usually call or override this method directly.  Instead you
-    should set the layerNeedsUpdate property to YES to cause this method to
+    should set the layerNeedsUpdate property to true to cause this method to
     run at the end of the run loop, or you can call updateLayerIfNeeded()
     to force the layer to update immediately.
 
@@ -1956,7 +1956,7 @@ SC.View = SC.View.extend(
     var context = this.renderContext(this.get('tagName')) ;
 
     // now prepare the content like normal.
-    this.prepareContext(context, YES) ;
+    this.prepareContext(context, true) ;
     this.set('layer', context.element()) ;
 
     // now notify the view and its child views..
@@ -2035,7 +2035,7 @@ SC.View = SC.View.extend(
   */
   replaceLayer: function() {
     this.destroyLayer();
-    this.set('layerLocationNeedsUpdate', YES) ;
+    this.set('layerLocationNeedsUpdate', true) ;
     this.invokeOnce(this.updateLayerLocationIfNeeded) ;
   },
 
@@ -2067,7 +2067,7 @@ SC.View = SC.View.extend(
     this method if you choose to override updateLayer() or createLayer().
 
     @param {SC.RenderContext} context the render context
-    @param {Boolean} firstTime YES if this is creating a layer
+    @param {Boolean} firstTime true if this is creating a layer
     @returns {void}
   */
   prepareContext: function(context, firstTime) {
@@ -2078,11 +2078,11 @@ SC.View = SC.View.extend(
       // TODO: seems like things will break later if SC.guidFor(this) is used
 
       layerId = this.layerId ? this.get('layerId') : SC.guidFor(this) ;
-      context.id(layerId).classNames(this.get('classNames'), YES) ;
+      context.id(layerId).classNames(this.get('classNames'), true) ;
       this.renderLayout(context, firstTime) ;
     }else{
       context.resetClassNames();
-      context.classNames(this.get('classNames'), YES);
+      context.classNames(this.get('classNames'), true);
     }
 
     // do some standard setup...
@@ -2167,7 +2167,7 @@ SC.View = SC.View.extend(
     if this is the first time you are rendering, or null otherwise.
 
     @param {SC.RenderContext} context the render context
-    @param {Boolean} firstTime YES if this is creating a layer
+    @param {Boolean} firstTime true if this is creating a layer
     @returns {void}
   */
   render: function(context, firstTime) {
@@ -2251,14 +2251,14 @@ SC.View = SC.View.extend(
 
     @property {Boolean}
   */
-  shouldInheritCursor: YES,
+  shouldInheritCursor: true,
 
   // ..........................................................
   // LAYER LOCATION
   //
 
   /**
-    Set to YES when the view's layer location is dirty.  You can call
+    Set to true when the view's layer location is dirty.  You can call
     updateLayerLocationIfNeeded() to clear this flag if it is set.
 
     @property {Boolean}
@@ -2391,7 +2391,7 @@ SC.View = SC.View.extend(
     // unregister for autoscroll during drags
     if (this.get('isScrollable')) SC.Drag.removeScrollableView(this) ;
 
-    //Do generic destroy. It takes care of mixins and sets isDestroyed to YES.
+    //Do generic destroy. It takes care of mixins and sets isDestroyed to true.
     arguments.callee.base.apply(this, arguments);
     return this; // done with cleanup
   },
@@ -2514,10 +2514,10 @@ SC.View = SC.View.extend(
     if (SC.typeOf(key) === SC.T_STRING) {
       cur = layout[key] ;
       if (SC.none(value)) {
-        if (cur !== undefined) didChange = YES ;
+        if (cur !== undefined) didChange = true ;
         delete layout[key] ;
       } else {
-        if (cur !== value) didChange = YES ;
+        if (cur !== value) didChange = true ;
         layout[key] = value ;
       }
 
@@ -2530,10 +2530,10 @@ SC.View = SC.View.extend(
         cur = layout[key] ;
 
         if (value === null) {
-          if (cur !== undefined) didChange = YES ;
+          if (cur !== undefined) didChange = true ;
           delete layout[key] ;
         } else if (value !== undefined) {
-          if (cur !== value) didChange = YES ;
+          if (cur !== value) didChange = true ;
           layout[key] = value ;
         }
       }
@@ -2996,7 +2996,7 @@ SC.View = SC.View.extend(
     // logic is not applicable and we simply have to assume that the frame may
     // have changed.
     if (this.useStaticLayout) {
-      frameMayHaveChanged = YES;
+      frameMayHaveChanged = true;
     }
     else {
       layout = this.get('layout');
@@ -3137,7 +3137,7 @@ SC.View = SC.View.extend(
   //
 
   /**
-    Setting wantsAcceleratedLayer to YES will use 3d transforms to move the
+    Setting wantsAcceleratedLayer to true will use 3d transforms to move the
     layer when available.
   */
   wantsAcceleratedLayer: NO,
@@ -3413,7 +3413,7 @@ SC.View = SC.View.extend(
     // not, then there's no need to invalidate the frames of our child views.
     var previousLayout = this._previousLayout,
         currentLayout  = this.get('layout'),
-        didResize      = YES,
+        didResize      = true,
         previousWidth, previousHeight, currentWidth, currentHeight;
 
     if (previousLayout  &&  previousLayout !== currentLayout) {
@@ -3449,7 +3449,7 @@ SC.View = SC.View.extend(
     // notify layoutView...
     var layoutView = this.get('layoutView');
     if (layoutView) {
-      layoutView.set('childViewsNeedLayout', YES);
+      layoutView.set('childViewsNeedLayout', true);
       layoutView.layoutDidChangeFor(this) ;
       if (layoutView.get('childViewsNeedLayout')) {
         layoutView.invokeOnce(layoutView.layoutChildViewsIfNeeded);
@@ -3460,7 +3460,7 @@ SC.View = SC.View.extend(
   },
 
   /**
-    This this property to YES whenever the view needs to layout its child
+    This this property to true whenever the view needs to layout its child
     views.  Normally this property is set automatically whenever the layout
     property for a child view changes.
 
@@ -3592,7 +3592,7 @@ SC.View = SC.View.extend(
   }.property("frame", "parentView").cacheable(),
 
   /**
-    Returns YES if the provided touch is within the boundary.
+    Returns true if the provided touch is within the boundary.
   */
   touchIsInBoundary: function(touch) {
     var f = this.get("_touchBoundaryFrame"), maxX = 0, maxY = 0, boundary = this.get("touchBoundary");
@@ -3621,7 +3621,7 @@ SC.View = SC.View.extend(
     }
 
     if (x > 100 || y > 100) return NO;
-    return YES;
+    return true;
   },
 
   // ..........................................................
@@ -3696,7 +3696,7 @@ if (! BLOSSOM) {
 SC.View.mixin(/** @scope SC.View */ {
 
   /** @private walk like a duck -- used by SC.Page */
-  isViewClass: YES,
+  isViewClass: true,
 
   /**
     This method works just like extend() except that it will also preserve
@@ -3710,7 +3710,7 @@ SC.View.mixin(/** @scope SC.View */ {
   design: function() {
     if (this.isDesign) return this; // only run design one time
     var ret = this.extend.apply(this, arguments);
-    ret.isDesign = YES ;
+    ret.isDesign = true ;
     if (SC.ViewDesigner) {
       SC.ViewDesigner.didLoadDesign(ret, this, SC.A(arguments));
     }
@@ -4125,16 +4125,16 @@ SC.LAYOUT_AUTO = 'auto';
 /**
   Default property to disable or enable by default the contextMenu
 */
-SC.CONTEXT_MENU_ENABLED = YES;
+SC.CONTEXT_MENU_ENABLED = true;
 
 /**
   Default property to disable or enable if the focus can jump to the address
   bar or not.
 */
-SC.TABBING_ONLY_INSIDE_DOCUMENT = YES;
+SC.TABBING_ONLY_INSIDE_DOCUMENT = true;
 
 /** @private - custom array used for child views */
 SC.EMPTY_CHILD_VIEWS_ARRAY = [];
-SC.EMPTY_CHILD_VIEWS_ARRAY.needsClone = YES;
+SC.EMPTY_CHILD_VIEWS_ARRAY.needsClone = true;
 
 } // ! BLOSSOM

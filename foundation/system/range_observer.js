@@ -29,7 +29,7 @@ SC.RangeObserver = {
     
     @property {Boolean}
   */
-  isRangeObserver: YES,
+  isRangeObserver: true,
   
   /** @private */
   toString: function() { 
@@ -50,7 +50,7 @@ SC.RangeObserver = {
     @param {Object} target the target
     @param {Function|String} method the method to invoke
     @param {Object} context optional context to include in callback
-    @param {Boolean} isDeep if YES, observe property changes as well
+    @param {Boolean} isDeep if true, observe property changes as well
     @returns {SC.RangeObserver} instance
   */
   create: function(source, indexSet, target, method, context, isDeep) {
@@ -126,7 +126,7 @@ SC.RangeObserver = {
         var obj = this.source.objectAt(idx);
         if (obj && obj.addObserver) {
           observing.push(obj);
-          obj._kvo_needsRangeObserver = YES ;
+          obj._kvo_needsRangeObserver = true ;
         }
       };
     }
@@ -150,11 +150,11 @@ SC.RangeObserver = {
     var observing = this.observing ;
 
     if (this.isObserving || !observing || (observing.get('length')===0)) {
-      return YES ;
+      return true ;
     } 
     
     if (observing.contains(object)) {
-      this.isObserving = YES ;
+      this.isObserving = true ;
 
       // cache iterator function to keep things fast
       var func = this._setupPendingForEach;
@@ -186,7 +186,7 @@ SC.RangeObserver = {
         };
       }
       this.indexes.forEach(func,this);
-      return YES ;
+      return true ;
       
     } else return NO ;
   },

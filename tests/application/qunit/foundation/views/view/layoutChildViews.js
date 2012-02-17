@@ -56,7 +56,7 @@ test("if view has layout, calls renderLayout with context to update element", fu
 	view.createLayer(); // we need a layer
 	ok(view.get('layer'), 'precond - should have a layer');
 	
-	isTesting= YES ;
+	isTesting= true ;
 	view.updateLayout();
 	equals(callCount, 1, 'should call renderLayout()');
 });
@@ -77,7 +77,7 @@ test("if view has NO layout, should not call renderLayout", function() {
 	
 	ok(!view.get('layer'), 'precond - should NOT have a layer');
 	
-	isTesting= YES ;
+	isTesting= true ;
 	view.updateLayout();
 	equals(callCount, 0, 'should NOT call renderLayout()');
 });
@@ -126,8 +126,8 @@ suite('SC.View#layoutChildViewsIfNeeded', {
   
 test("calls layoutChildViews() if childViewsNeedLayout and isVisibleInWindow & sets childViewsNeedLayout to NO", function() {
 
-	view.childViewsNeedLayout = YES ;
-	view.isVisibleInWindow = YES ;
+	view.childViewsNeedLayout = true ;
+	view.isVisibleInWindow = true ;
 	view.layoutChildViewsIfNeeded();
 	equals(callCount, 1, 'should call layoutChildViews()');
 	equals(view.get('childViewsNeedLayout'),NO,'should set childViewsNeedLayout to NO');
@@ -136,21 +136,21 @@ test("calls layoutChildViews() if childViewsNeedLayout and isVisibleInWindow & s
 test("does not call layoutChildViews() if childViewsNeedLayout is NO", function() {
 
 	view.childViewsNeedLayout = NO ;
-	view.isVisibleInWindow = YES ;
+	view.isVisibleInWindow = true ;
 	view.layoutChildViewsIfNeeded();
 	equals(callCount, 0, 'should NOT call layoutChildViews()');
 });
 
 
-test("does not call layoutChildViews() if isVisibleInWindow is NO unless passed isVisible YES", function() {
+test("does not call layoutChildViews() if isVisibleInWindow is NO unless passed isVisible true", function() {
 
-	view.childViewsNeedLayout = YES ;
+	view.childViewsNeedLayout = true ;
 	view.isVisibleInWindow = NO ;
 	view.layoutChildViewsIfNeeded();
 	equals(callCount, 0, 'should NOT call layoutChildViews()');
-	equals(view.get('childViewsNeedLayout'), YES, 'should leave childViewsNeedLayout set to YES');
+	equals(view.get('childViewsNeedLayout'), true, 'should leave childViewsNeedLayout set to true');
 	
-	view.layoutChildViewsIfNeeded(YES);
+	view.layoutChildViewsIfNeeded(true);
 	equals(callCount, 1, 'should call layoutChildViews()');
 	equals(view.get('childViewsNeedLayout'), NO, 'should set childViewsNeedLayout to NO');
 });

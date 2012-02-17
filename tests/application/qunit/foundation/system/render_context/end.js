@@ -89,8 +89,8 @@ test("emits two tags even if tag has no content if opts.selfClosing == NO", func
   equals(context.get(1), "</div>", "has closing tag");
 });
 
-test("does NOT emit self closing tag if it has content, even if opts.selfClosing == YES (because that would yield invalid HTML)", function() {
-  context._selfClosing = YES;
+test("does NOT emit self closing tag if it has content, even if opts.selfClosing == true (because that would yield invalid HTML)", function() {
+  context._selfClosing = true;
   context.push("line").end();
   equals(context.length, 3, "has 3 lines");
   equals(context.get(2), "</div>", "has closing tag");

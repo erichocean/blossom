@@ -16,25 +16,25 @@ suite("SC.Store#recordDidChange", {
       guid: "commitGUID1",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json2 = {
       guid: "commitGUID2",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json3 = {
       guid: "commitGUID3",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     json4 = {
       guid: "commitGUID4",
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
 

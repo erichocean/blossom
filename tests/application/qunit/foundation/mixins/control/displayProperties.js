@@ -10,7 +10,7 @@ var view ;
 suite("SC.Control#displayProperties", {
   setup: function() {
     view = SC.View.create(SC.Control, { 
-        isVisibleInWindow: YES 
+        isVisibleInWindow: true 
     }).createLayer();
   },
   
@@ -19,9 +19,9 @@ suite("SC.Control#displayProperties", {
   }
 });
 
-test("setting isSelected to YES adds sel class name", function() {
+test("setting isSelected to true adds sel class name", function() {
   SC.RunLoop.begin();
-  view.set('isSelected', YES);
+  view.set('isSelected', true);
   SC.RunLoop.end();
   ok(view.$().hasClass('sel'), 'should have css class sel');
 });
@@ -36,7 +36,7 @@ test("setting isSelected to SC.MIXED_STATE add mixed class name, and removes sel
 
 test("setting isSelected to ON removes sel class name", function() {
   SC.RunLoop.begin();
-  view.set('isSelected', YES);
+  view.set('isSelected', true);
   SC.RunLoop.end();
   ok(view.$().hasClass('sel'), 'precond - should have sel class');
   
@@ -53,14 +53,14 @@ test("setting isEnabled to NO adds disabled class", function() {
   ok(view.$().hasClass('disabled'), 'should have disabled class');
 
   SC.RunLoop.begin();
-  view.set('isEnabled', YES);
+  view.set('isEnabled', true);
   SC.RunLoop.end();
   ok(!view.$().hasClass('disabled'), 'should remove disabled class');
 });
 
 test("should gain focus class if isFirstResponder", function() {
   SC.RunLoop.begin();
-  view.set('isFirstResponder', YES);
+  view.set('isFirstResponder', true);
   SC.RunLoop.end();
   ok(view.$().hasClass('focus'), 'should have focus class');
 
@@ -72,7 +72,7 @@ test("should gain focus class if isFirstResponder", function() {
 
 test("should gain active class if isActive", function() {
   SC.RunLoop.begin();
-  view.set('isActive', YES);
+  view.set('isActive', true);
   SC.RunLoop.end();
   ok(view.$().hasClass('active'), 'should have active class');
 

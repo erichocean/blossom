@@ -35,7 +35,7 @@ suite("SC.Statechart Mixin: Basic Unit test", {
         },
         
         whatever: function(){
-          basic.set('whateverWasCalled', YES);
+          basic.set('whateverWasCalled', true);
         }
       })
     });
@@ -76,7 +76,7 @@ test("basic sendEvent", function(){
   basic.foo.goState('foo');
   equals(basic.get('whateverWasCalled'), null, "nothing to report");
   basic.sendEvent("whatever");
-  equals(basic.get("whateverWasCalled"), YES, "whatever method was called");
+  equals(basic.get("whateverWasCalled"), true, "whatever method was called");
 });
 
 test("test method alias", function(){

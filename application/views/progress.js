@@ -29,10 +29,10 @@ if (! BLOSSOM) {
     minimum: 0, 
     maximum: 100,
     isIndeterminate: NO,
-    isEnabled: YES
+    isEnabled: true
   }
   
-  Default isEnabled value is YES.
+  Default isEnabled value is true.
 
   @extends SC.View
   @extends SC.Control
@@ -99,7 +99,7 @@ SC.ProgressView = SC.View.extend(SC.Control, {
   isIndeterminateBindingDefault: SC.Binding.bool(),
 
   /**
-    Set to YES when the process is currently running.  This will cause the 
+    Set to true when the process is currently running.  This will cause the 
     progress bar to animate, especially if it is indeterminate.  
   */
   isRunning: NO,

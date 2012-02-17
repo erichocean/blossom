@@ -15,7 +15,7 @@ suite("SC.Statechart Mixin History Statechart", {
     enterTotal = exitTotal = 0;
     nested = SC.Object.create(SC.Statechart,{
       startStates: {'default': 'b'},
-      startOnInit: YES,
+      startOnInit: true,
       
       a: SC.Statechart.registerState({enterState: function(){ enterTotal+=1; }, exitState: function(){ exitTotal+=1; }}),
       b: SC.Statechart.registerState({initialSubState: 'c', enterState: function(){ enterTotal+=1; }, exitState: function(){ exitTotal+=1; }}),
@@ -60,7 +60,7 @@ test("Recursive history state transition", function() {
   f.goState('e');
   equals(nested.get('e').state(), nested.get('e'), "e state should be the current state for default statechart");
   enterTotal = exitTotal = 0;
-  f.goHistoryState('b', YES);
+  f.goHistoryState('b', true);
   equals(nested.get('f').state(), f, "f state should be the current state for default statechart after going to the history of c");
   equals(enterTotal, 3, "should have entered 2 state after transition");
   equals(exitTotal, 1, "should have exited 1 states after transition");

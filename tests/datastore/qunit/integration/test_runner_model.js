@@ -45,7 +45,7 @@ suite("Sample Model from TestRunner Application", {
       
       target: SC.Record.attr('TestRunner.Target', {
         inverse: 'tests',
-        isMaster: YES,
+        isMaster: true,
         isEditable: NO
       })
       

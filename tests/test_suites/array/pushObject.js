@@ -29,7 +29,7 @@ SC.ArraySuite.define(function(T) {
     var exp = T.expected(1);
     observer.observe('[]', 'length') ;
     obj.pushObject(exp[0]) ;
-    T.validateAfter(obj, exp, observer, YES);
+    T.validateAfter(obj, exp, observer, true);
   });
 
   test("[A,B,C].pushObject(X) => [A,B,C,X] + notify", function() {
@@ -40,7 +40,7 @@ SC.ArraySuite.define(function(T) {
     obj.replace(0,0,before);
     observer.observe('[]', 'length') ;
     obj.pushObject(value) ;
-    T.validateAfter(obj, after, observer, YES);
+    T.validateAfter(obj, after, observer, true);
   });
   
 });

@@ -21,7 +21,7 @@ if (! BLOSSOM) {
   
   {{{
     dateAndTime: Shared.DateFieldView.design({
-      showTime: YES,
+      showTime: true,
       valueBinding: '...'
     }),
   }}}
@@ -30,7 +30,7 @@ if (! BLOSSOM) {
   
   {{{
     timeOnly: Shared.DateFieldView.design({
-      showTime: YES,
+      showTime: true,
       showDate: NO,
       valueBinding: '...'
     })
@@ -66,7 +66,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
   value: null,
   
   // Default Behaviour
-  showDate: YES,
+  showDate: true,
   showTime: NO,
   
   // Default formats to choose depending of the behaviour.
@@ -110,8 +110,8 @@ SC.DateFieldView = SC.TextFieldView.extend(
   format: function() {
     var st = this.get('showTime');
     var sd = this.get('showDate');
-    if (st === YES && sd === YES) return this.get('formatDateTime');
-    if (st === YES) return this.get('formatTime');
+    if (st === true && sd === true) return this.get('formatDateTime');
+    if (st === true) return this.get('formatTime');
     return this.get('formatDate');
   }.property('showTime', 'showDate').cacheable(),
   
@@ -227,31 +227,31 @@ SC.DateFieldView = SC.TextFieldView.extend(
   keyDown: function(evt) {
     if (this.interpretKeyEvents(evt)) {
       evt.stop();
-      return YES;
+      return true;
     }
     return arguments.callee.base.apply(this, arguments);
   },
   
   ctrl_a: function() {
-    return YES;
+    return true;
   },
 
   moveUp: function(evt) {
     var as = this.get('activeSelection');
     var ts = this.get('tabsSelections');
     this.updateValue(ts[as].get('key'), 1);
-    return YES;
+    return true;
   },
 
   moveDown: function(evt) {
     var as = this.get('activeSelection');
     var ts = this.get('tabsSelections');
     this.updateValue(ts[as].get('key'), 0);
-    return YES;
+    return true;
   },
 
   insertText: function(evt) {
-    return YES;
+    return true;
   },
 
   moveRight: function(evt) {
@@ -261,7 +261,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
       ns = 0;
     }
     this.set('activeSelection', ns);
-    return YES;
+    return true;
   },
     
   moveLeft: function(evt) {
@@ -271,7 +271,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
       ns = ts.length - 1;
     }
     this.set('activeSelection', ns);
-    return YES;
+    return true;
   },
 
   insertTab: function(evt) {
@@ -279,7 +279,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
     var ns = this.get('activeSelection') + 1;
     if (ns < ts.length) { 
       this.set('activeSelection', ns);
-      return YES;   
+      return true;   
     }
     return NO;
   },
@@ -288,7 +288,7 @@ SC.DateFieldView = SC.TextFieldView.extend(
     var ns = this.get('activeSelection') - 1;
     if (ns !== -1) { 
       this.set('activeSelection', ns);
-      return YES;   
+      return true;   
     }
     return NO;
   },
@@ -313,11 +313,11 @@ SC.DateFieldView = SC.TextFieldView.extend(
   },
 
   deleteBackward: function(evt) {
-    return YES;
+    return true;
   },
 
   deleteForward: function(evt) {
-    return YES;
+    return true;
   }
 
 });

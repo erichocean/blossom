@@ -43,7 +43,7 @@ SC.TabView = SC.View.extend(
   
   items: [],
   
-  isEnabled: YES,
+  isEnabled: true,
   
   itemTitleKey: null,
   itemValueKey: null,
@@ -148,7 +148,7 @@ SC.TabView = SC.View.extend(
         // FIXME: why is this necessary? 'value' is a displayProperty and should
         // automatically cause displayDidChange() to fire, which should cause 
         // the two lines below to execute in the normal course of things...
-        this.set('layerNeedsUpdate', YES) ;
+        this.set('layerNeedsUpdate', true) ;
         this.invokeOnce(this.updateLayerIfNeeded) ;
       }.observes('value'),
 

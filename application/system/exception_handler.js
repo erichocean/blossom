@@ -50,7 +50,7 @@
 // 
 //     document.body.appendChild(node);
 // 
-//     this.isShowingErrorDialog = YES;
+//     this.isShowingErrorDialog = true;
 //   },
 // 
 //   /** @private
@@ -77,7 +77,7 @@
 //   },
 // 
 //   /**
-//     YES if an exception was thrown and the error dialog is visible.
+//     true if an exception was thrown and the error dialog is visible.
 // 
 //     @property {Boolean}
 //   */

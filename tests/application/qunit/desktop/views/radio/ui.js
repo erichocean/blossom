@@ -9,14 +9,14 @@
 
 htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 
-var itemList = [{ title: "Red", value: "red", enabled: YES }, { title: "Green", value: "green" }, { title: "Blue", value: "blue" }],
-itemList2 = [{ title: "Cyan", value: "cyan", enabled: YES }, { title: "Magenta", value: "magenta" }, { title: "Yellow", value: "yellow" },{ title: "blacK", value: "black"}],
-itemList3 = [{ title: "Red", value: "red", enabled: YES, width: 30 }, { title: "Green", value: "green", width: 50 }, { title: "Blue", value: "blue", width: 40 }];
+var itemList = [{ title: "Red", value: "red", enabled: true }, { title: "Green", value: "green" }, { title: "Blue", value: "blue" }],
+itemList2 = [{ title: "Cyan", value: "cyan", enabled: true }, { title: "Magenta", value: "magenta" }, { title: "Yellow", value: "yellow" },{ title: "blacK", value: "black"}],
+itemList3 = [{ title: "Red", value: "red", enabled: true, width: 30 }, { title: "Green", value: "green", width: 50 }, { title: "Blue", value: "blue", width: 40 }];
 
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.RadioView, {
     value: "",
-    isEnabled: YES,
+    isEnabled: true,
     items: itemList,
     itemTitleKey: 'title',
     itemValueKey: 'value',
@@ -25,7 +25,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("checked", SC.RadioView, {
     value: "red",
-    isEnabled: YES,
+    isEnabled: true,
     items: itemList,
     itemTitleKey: 'title',
     itemValueKey: 'value',
@@ -43,7 +43,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("enabled first", SC.RadioView, {
     value: "",
-    isEnabled: YES,
+    isEnabled: true,
     items: itemList,
     itemTitleKey: 'title',
     itemValueKey: 'value',
@@ -53,7 +53,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("horizontal", SC.RadioView, {
     value: "",
-    isEnabled: YES,
+    isEnabled: true,
     items: 'Yes No'.w(),
     // LAYOUT_VERTICAL is default
     layoutDirection: SC.LAYOUT_HORIZONTAL
@@ -61,7 +61,7 @@ var pane = SC.ControlTestPane.design()
   
   .add("horizontal widths", SC.RadioView, {
     value: "",
-    isEnabled: YES,
+    isEnabled: true,
     items: itemList3,
     layoutDirection: SC.LAYOUT_HORIZONTAL,
     itemTitleKey: 'title',
@@ -115,7 +115,7 @@ test("basic", function() {
   pane.verifyLabels(view, itemList);
   
   // Modify the items array in place
-  itemList.replace(0, {title: "Hue", value: "hue", enabled: YES });
+  itemList.replace(0, {title: "Hue", value: "hue", enabled: true });
   itemList.replace(1, { title: "Saturation", value: "saturation" });
   itemList.replace(2, { title: "Brightness", value: "brightness"});
   
@@ -135,7 +135,7 @@ test("basic", function() {
   pane.verifyLabels(view, itemList2);
   
   // Reset the items array before moving on
-  itemList.replace(0, { title: "Red", value: "red", enabled: YES });
+  itemList.replace(0, { title: "Red", value: "red", enabled: true });
   itemList.replace(1, { title: "Green", value: "green" });
   itemList.replace(2, { title: "Blue", value: "blue" });
 });

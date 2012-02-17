@@ -55,7 +55,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     
     @property {Boolean}
   */
-  isEditable: YES,
+  isEditable: true,
   
   /**
     Used to sort the array.
@@ -88,16 +88,16 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   orderBy: null,
     
   /**
-    Set to YES if you want the controller to wrap non-enumerable content    
+    Set to true if you want the controller to wrap non-enumerable content    
     in an array and publish it.  Otherwise, it will treat single content like 
     null content.
     
     @property {Boolean}
   */
-  allowsSingleContent: YES,
+  allowsSingleContent: true,
   
   /**
-    Set to YES if you want objects removed from the array to also be
+    Set to true if you want objects removed from the array to also be
     deleted.  This is a convenient way to manage lists of items owned
     by a parent record object.
     
@@ -123,7 +123,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   /**
     Computed property indicates whether or not the array controller can 
     remove content.  You can delete content only if the content is not single
-    content and isEditable is YES.
+    content and isEditable is true.
     
     @property {Boolean}
   */
@@ -171,7 +171,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   }.property('content', 'isEditable'),
   
   /**
-    Set to YES if the controller has valid content that can be displayed,
+    Set to true if the controller has valid content that can be displayed,
     even an empty array.  Returns NO if the content is null or not enumerable
     and allowsSingleContent is NO.
     
@@ -226,7 +226,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     is a single object, then this simply sets the content to null.  Otherwise
     it will call removeObject() on the content.
     
-    Also, if destroyOnRemoval is YES, this will actually destroy the object.
+    Also, if destroyOnRemoval is true, this will actually destroy the object.
     
     @param {Object} object the object to remove
     @returns {SC.ArrayController} receiver
@@ -329,7 +329,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     this should be the same as the content property, but sometimes we need to
     generate something different because the content is not a regular array.
     
-    Passing YES to the force parameter will force this value to be recomputed.
+    Passing true to the force parameter will force this value to be recomputed.
   
     @returns {SC.Array} observable or null
   */
@@ -385,7 +385,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
             key = key.split('ASC ')[1];
           } else if (key.indexOf('DESC') > -1) {
             key = key.split('DESC ')[1];
-            descending = YES;
+            descending = true;
           }
         
           if (!a) aValue = a ;

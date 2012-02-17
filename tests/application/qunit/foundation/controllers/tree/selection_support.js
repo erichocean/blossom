@@ -43,8 +43,8 @@ suite("Test SC.SelectionSupport mixin with TreeController.", {
       });
       
     content = SC.Object.create(SC.TreeItemContent, {
-      treeItemIsGrouped: YES,
-      treeItemIsExpanded: YES,
+      treeItemIsGrouped: true,
+      treeItemIsExpanded: true,
       treeItemChildren: [fruitGroup, vegetableGroup]
     });
     

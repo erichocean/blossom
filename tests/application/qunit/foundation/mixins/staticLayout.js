@@ -84,7 +84,7 @@ suite('SC.StaticLayout', commonSetup) ;
 test("Test that auto as a value for width height is set correctly when"
   +" setting the element style", function() {
   child = SC.View.create({
-    useStaticLayout:YES,
+    useStaticLayout:true,
     render: function(context) {
       // needed for auto
       context.push('<div style="padding: 10px"></div>');
@@ -125,10 +125,10 @@ test("Test that an exception is thrown when calling adjust and setting to auto",
 
 test("Test SC.StaticLayout frame support", function() {
   child = SC.View.create({
-    useStaticLayout: YES
+    useStaticLayout: true
   });
   
-  equals(child.get('frame'), null, "View's frame property will be null when useStaticLayout is YES and layer is not attached to DOM.");
+  equals(child.get('frame'), null, "View's frame property will be null when useStaticLayout is true and layer is not attached to DOM.");
   
   parent.createLayer();
   var layer = parent.get('layer');
@@ -138,5 +138,5 @@ test("Test SC.StaticLayout frame support", function() {
   parent.appendChild(child);
   SC.RunLoop.end();
   
-  ok(SC.typeOf(child.get('frame')) === SC.T_HASH, "View's frame property will be an object when useStaticLayout is YES and layer is attached to DOM.");
+  ok(SC.typeOf(child.get('frame')) === SC.T_HASH, "View's frame property will be an object when useStaticLayout is true and layer is attached to DOM.");
 });

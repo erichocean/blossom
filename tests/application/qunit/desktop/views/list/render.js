@@ -5,7 +5,7 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-// SC.LOG_BINDINGS = YES ;
+// SC.LOG_BINDINGS = true ;
 
 var view, content, pane ;
 

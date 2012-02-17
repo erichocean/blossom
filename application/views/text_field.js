@@ -30,21 +30,21 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
 
   tagName: 'label',
   classNames: ['sc-text-field-view'],
-  isTextField: YES,
+  isTextField: true,
 
   // ..........................................................
   // PROPERTIES
   //
 
-  applyImmediately: YES,
+  applyImmediately: true,
 
   /**
-    If YES, the field will hide its text from display. The default value is NO.
+    If true, the field will hide its text from display. The default value is NO.
   */
   isPassword: NO,
 
   /**
-    If YES then allow multi-line input.  This will also change the default
+    If true then allow multi-line input.  This will also change the default
     tag type from "input" to "textarea".  Otherwise, pressing return will
     trigger the default insertion handler.
   */
@@ -56,22 +56,22 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   hint: '',
 
   /**
-    If YES then the text field is currently editing.
+    If true then the text field is currently editing.
   */
   isEditing: NO,
   
-  hintON:YES,
+  hintON:true,
   
   /**
     If you set this property to false the tab key won't trigger its default 
     behavior (tabbing to the next field).
   */
-  defaultTabbingEnabled:YES,
+  defaultTabbingEnabled:true,
   
   /**
     Enabled context menu for textfields.
   */
-  isContextMenuEnabled: YES,
+  isContextMenuEnabled: true,
 
   /**
     An optional view instance, or view class reference, which will be visible
@@ -124,7 +124,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     browser. As of today Safari 4+, Chrome 3+ and Firefox 3+ support it  
   */
     
-  spellCheckEnabled: YES,
+  spellCheckEnabled: true,
   
   maxLength: 5096,
   
@@ -375,7 +375,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   _forceRenderFirstTime: NO,
     
   _renderFieldLikeFirstTime: function(){
-    this.set('_forceRenderFirstTime', YES);
+    this.set('_forceRenderFirstTime', true);
   }.observes('isTextArea'),
   
   _renderField: function(context, firstTime, value, leftAdjustment, rightAdjustment) {
@@ -417,7 +417,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       value = this.get('escapeHTML')?SC.RenderContext.escapeHTML(value):value;
       if(!this.get('_supportsPlaceHolder') && (!value || (value && value.length===0))) {
         value = this.get('hint');
-        context.setClass('sc-hint', YES);
+        context.setClass('sc-hint', true);
       } 
       
       //for gecko pre 1.9 vertical aligment is completely broken so we need
@@ -450,7 +450,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
         if((!val || (val && val.length===0))){
           if(this.get('hintON') && !this.get('isFirstResponder')){
             //console.log('hint on render');
-            context.setClass('sc-hint', YES);
+            context.setClass('sc-hint', true);
             input.val(hint);
           }else{
             // console.log('removing hint on render');
@@ -612,7 +612,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
 
   _textField_fieldDidFocus: function(evt) {
     SC.run(function() {
-      this.set('focused',YES);
+      this.set('focused',true);
       this.fieldDidFocus(evt);
       var val = this.get('value');
       if(!this.get('_supportsPlaceHolder') && ((!val) || (val && val.length===0))){
@@ -636,7 +636,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       var val = this.get('value');
       if(!this.get('_supportsPlaceHolder') && ((!val) || (val && val.length===0))){
         // console.log('turn on hint');
-        this.set('hintON', YES);
+        this.set('hintON', true);
       }
     }, this);
   },
@@ -849,7 +849,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       var view = evt.shiftKey ? this.get('previousValidKeyView') : this.get('nextValidKeyView');
       if (view) view.becomeFirstResponder();
       else evt.allowDefault();
-      return YES ; // handled
+      return true ; // handled
     }
     // maxlength for textareas
     if(!SC.browser.safari && this.get('isTextArea')){
@@ -861,7 +861,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     // validate keyDown...
     // do not validate on touch, as it prevents return.
     if ((this.performValidateKeyDown(evt) || SC.platform.touch) && !maxLengthReached) {
-      this._isKeyDown = YES ;
+      this._isKeyDown = true ;
       evt.allowDefault();
     } else {
       evt.stop();
@@ -874,7 +874,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
       // therefore the field value doesn't update if we don't give it a break.
       this.invokeLater(this.fieldValueDidChange,1); // notify change
     }
-    return YES;
+    return true;
   },
 
   keyUp: function(evt) {
@@ -885,15 +885,15 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     this.notifyPropertyChange('selection');
     this._isKeyDown = NO;
     evt.allowDefault();
-    return YES;
+    return true;
   },
 
   mouseDown: function(evt) {
     var fieldValue = this.get('fieldValue'); // use 'fieldValue' since we want actual text
-    this._txtFieldMouseDown=YES;
+    this._txtFieldMouseDown=true;
     if (!this.get('isEnabled')) {
       evt.stop();
-      return YES;
+      return true;
     } else {
       return arguments.callee.base.apply(this, arguments);
     }
@@ -908,7 +908,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     
     if (!this.get('isEnabled')) {
       evt.stop();
-      return YES;
+      return true;
     } 
     return arguments.callee.base.apply(this, arguments);
   },
@@ -918,7 +918,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   */
   mouseWheel: function(evt) {
     evt.allowDefault();
-    return YES;
+    return true;
   },
 
   /*
@@ -926,7 +926,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     block text selection in all other views.
   */
   selectStart: function(evt) {
-    return YES;
+    return true;
   },
   
   /**
@@ -943,7 +943,7 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     // console.log('value observer');
     var val = this.get('value');
     if (val && val.length>0) this.set('hintON', NO);
-    else this.set('hintON', YES);
+    else this.set('hintON', true);
   }.observes('value')
   
 });

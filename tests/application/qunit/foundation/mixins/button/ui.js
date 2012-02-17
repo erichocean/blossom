@@ -12,7 +12,7 @@ htmlbody('<style> .sc-static-layout { border: 1px red dotted; } </style>');
 var pane = SC.ControlTestPane.design()
   .add("basic", SC.View.extend(SC.Control, SC.Button, 
     {
-      localize: YES,
+      localize: true,
       displayProperties: ['title'],
       render: function(context, firstTime) {
         this.renderTitle(context, firstTime);

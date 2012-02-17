@@ -19,10 +19,10 @@ SC.FixturesDataSource = SC.DataSource.extend(
   /** @scope SC.FixturesDataSource.prototype */ {
 
   /**
-    If YES then the data source will asynchronously respond to data requests
+    If true then the data source will asynchronously respond to data requests
     from the server.  If you plan to replace the fixture data source with a 
     data source that talks to a real remote server (using Ajax for example),
-    you should leave this property set to YES so that Fixtures source will
+    you should leave this property set to true so that Fixtures source will
     more accurately simulate your remote data source.
 
     If you plan to replace this data source with something that works with 
@@ -34,7 +34,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
   simulateRemoteResponse: NO,
   
   /**
-    If you set simulateRemoteResponse to YES, then the fixtures source will
+    If you set simulateRemoteResponse to true, then the fixtures source will
     assume a response latency from your server equal to the msec specified
     here.  You should tune this to simulate latency based on the expected 
     performance of your server network.  Here are some good guidelines:
@@ -175,7 +175,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
       this.invokeLater(this._createRecords, latency, store, storeKeys);
     } else this._createRecords(store, storeKeys);
     
-    return YES ;
+    return true ;
   },
 
   _createRecords: function(store, storeKeys) {
@@ -334,7 +334,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
   },
   
   /**
-    Returns YES if fixtures for a given recordType have already been loaded
+    Returns true if fixtures for a given recordType have already been loaded
     
     @param {SC.Record} recordType
     @returns {Boolean} storeKeys
@@ -342,7 +342,7 @@ SC.FixturesDataSource = SC.DataSource.extend(
   fixturesLoadedFor: function(recordType) {
     if (!this._fixtures) return NO;
     var ret = [], fixtures = this._fixtures[SC.guidFor(recordType)];
-    return fixtures ? YES: NO;
+    return fixtures ? true: NO;
   },
 
   /**
@@ -356,11 +356,11 @@ SC.FixturesDataSource = SC.DataSource.extend(
   },
 
   /**
-    Returns YES or SC.MIXED_STATE if one or more of the storeKeys can be 
+    Returns true or SC.MIXED_STATE if one or more of the storeKeys can be 
     handled by the fixture data source.
     
     @param {Array} storeKeys the store keys
-    @returns {Boolean} YES if all handled, MIXED_STATE if some handled
+    @returns {Boolean} true if all handled, MIXED_STATE if some handled
   */
   hasFixturesFor: function(storeKeys) {
     var ret = NO ;
@@ -369,8 +369,8 @@ SC.FixturesDataSource = SC.DataSource.extend(
         var recordType = SC.Store.recordTypeFor(storeKey),
             fixtures   = recordType ? recordType.FIXTURES : null ;
         if (fixtures && fixtures.length && fixtures.length>0) {
-          if (ret === NO) ret = YES ;
-        } else if (ret === YES) ret = SC.MIXED_STATE ;
+          if (ret === NO) ret = true ;
+        } else if (ret === true) ret = SC.MIXED_STATE ;
       }
     }, this);
     

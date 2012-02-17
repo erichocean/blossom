@@ -43,7 +43,7 @@ SC.MainPane = SC.Pane.extend({
   },
   
   /** @private */
-  acceptsKeyPane: YES,
+  acceptsKeyPane: true,
 
   /** @private */
   classNames: ['sc-main']

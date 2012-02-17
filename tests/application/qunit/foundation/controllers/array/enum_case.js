@@ -35,10 +35,10 @@ suite("SC.ArrayController - enum_case - EMPTY SET", {
 });
 
 test("state properties", function() {
-  equals(controller.get("hasContent"), YES, 'c.hasContent');
-  equals(controller.get("canRemoveContent"), YES, "c.canRemoveContent");
+  equals(controller.get("hasContent"), true, 'c.hasContent');
+  equals(controller.get("canRemoveContent"), true, "c.canRemoveContent");
   equals(controller.get("canReorderContent"), NO, "c.canReorderContent");
-  equals(controller.get("canAddContent"), YES, "c.canAddContent");
+  equals(controller.get("canAddContent"), true, "c.canAddContent");
 });
 
 // addObject should append to end of array + notify observers on Array itself
@@ -105,10 +105,10 @@ suite("SC.ArrayController - enum_case - NON-EMPTY SET", {
 });
 
 test("state properties", function() {
-  equals(controller.get("hasContent"), YES, 'c.hasContent');
-  equals(controller.get("canRemoveContent"), YES, "c.canRemoveContent");
+  equals(controller.get("hasContent"), true, 'c.hasContent');
+  equals(controller.get("canRemoveContent"), true, "c.canRemoveContent");
   equals(controller.get("canReorderContent"), NO, "c.canReorderContent");
-  equals(controller.get("canAddContent"), YES, "c.canAddContent");
+  equals(controller.get("canAddContent"), true, "c.canAddContent");
 });
 
 // addObject should regenerate ordered + notify observers on Array itself

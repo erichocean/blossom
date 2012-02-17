@@ -36,7 +36,7 @@ test("returns styles if set", function() {
 
 test("clone on next retrieval if styles(foo) set with cloneOnModify=YES", function() {
   var styles = { foo: 'bar' };
-  context.styles(styles, YES);
+  context.styles(styles, true);
   
   var result = context.styles();
   ok(result !== styles, "styles is NOT same instance");

@@ -31,7 +31,7 @@ SC.TreeController = SC.ObjectController.extend(SC.SelectionSupport,
   // 
   
   /**
-    Set to YES if you want the top-level items in the tree to be displayed as
+    Set to true if you want the top-level items in the tree to be displayed as
     group items in the collection view.
     
     @property {Boolean}

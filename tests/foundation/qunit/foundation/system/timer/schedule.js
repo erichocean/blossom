@@ -55,7 +55,7 @@ test("repeating timer with no limit should repeat until terminated", function() 
       if (--runs <= 0) t.invalidate(); 
     },
     interval: 100, 
-    repeats: YES
+    repeats: true
   });
   SC.RunLoop.end() ;
   
@@ -66,7 +66,7 @@ test("repeating timer with no limit should repeat until terminated", function() 
     
     if (--checks < 0) {
       window.start();
-      equals(YES, NO, 'Check Count Exceeded') ;
+      equals(true, NO, 'Check Count Exceeded') ;
     }
     
     if (runs > 0) {
@@ -98,7 +98,7 @@ test("repeating timer should terminate after expiration", function() {
       fired.push(Date.now()); 
     },
     interval: 100, 
-    repeats: YES,
+    repeats: true,
     until: start + 500
   });
   SC.RunLoop.end() ;
@@ -109,7 +109,7 @@ test("repeating timer should terminate after expiration", function() {
   var f = function f() {
     if (--checks < 0) {
       window.start();
-      equals(YES, NO, 'Timer never invalidated :') ;
+      equals(true, NO, 'Timer never invalidated :') ;
     }
     
     if ((checks > 0) && t.get('isValid')) {

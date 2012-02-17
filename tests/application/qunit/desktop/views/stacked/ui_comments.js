@@ -16,7 +16,7 @@ htmlbody(["<style>",
 
 var CommentView = SC.View.extend(SC.StaticLayout, SC.Control, {
   
-  useStaticLayout: YES,
+  useStaticLayout: true,
   
   content: null,
   
@@ -63,7 +63,7 @@ var CommentView = SC.View.extend(SC.StaticLayout, SC.Control, {
   }),
   
   commentLabel: SC.LabelView.extend(SC.StaticLayout, {
-    useStaticLayout: YES,
+    useStaticLayout: true,
     tagName: "p"
   }),
 

@@ -16,7 +16,7 @@ suite("SC.NestedStore#writeDataHash", {
     json = {
       string: "string",
       number: 23,
-      bool:   YES
+      bool:   true
     };
     
     storeKey = SC.Store.generateStoreKey();

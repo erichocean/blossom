@@ -23,7 +23,7 @@ suite("SC.ArrayController - single_case - SINGLE", {
   setup: function() {
     content = TestObject.create({ title: "FOO" });
     controller = SC.ArrayController.create({ 
-      content: content, allowsSingleContent: YES
+      content: content, allowsSingleContent: true
     });
   },
   
@@ -33,8 +33,8 @@ suite("SC.ArrayController - single_case - SINGLE", {
 });
 
 test("state properties", function() {
-  equals(controller.get("hasContent"), YES, 'c.hasContent');
-  equals(controller.get("canRemoveContent"), YES, "c.canRemoveContent");
+  equals(controller.get("hasContent"), true, 'c.hasContent');
+  equals(controller.get("canRemoveContent"), true, "c.canRemoveContent");
   equals(controller.get("canReorderContent"), NO, "c.canReorderContent");
   equals(controller.get("canAddContent"), NO, "c.canAddContent");
 });
@@ -60,9 +60,9 @@ test("removeObject - no destroyOnRemoval", function() {
 });
 
 test("removeObject - destroyOnRemoval", function() {
-  controller.set('destroyOnRemoval', YES);
+  controller.set('destroyOnRemoval', true);
   SC.run(function() { controller.removeObject(content); });
-  equals(content.isDestroyed, YES, 'content.isDestroyed should be destroyed');
+  equals(content.isDestroyed, true, 'content.isDestroyed should be destroyed');
 });
 
 

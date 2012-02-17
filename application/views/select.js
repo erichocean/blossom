@@ -94,9 +94,9 @@ SC.SelectView = SC.ButtonView.extend(
 
     @property
     @type {Boolean}
-    @default YES
+    @default true
   */
-  localize: YES,
+  localize: true,
 
   /**
     if true, it means that no sorting will occur, items will appear
@@ -104,9 +104,9 @@ SC.SelectView = SC.ButtonView.extend(
 
     @property
     @type {Boolean}
-    @default YES
+    @default true
   */
-  disableSort: YES,
+  disableSort: true,
 
   /**
 
@@ -153,13 +153,13 @@ SC.SelectView = SC.ButtonView.extend(
   value: null ,
 
   /**
-    if this property is set to 'YES', a checbox is shown next to the
+    if this property is set to `true`, a checbox is shown next to the
     selected menu item.
 
     @private
-    @default YES
+    @default true
   */
-  showCheckbox: YES,
+  showCheckbox: true,
 
   /**
     Default value of the select button.
@@ -231,7 +231,7 @@ SC.SelectView = SC.ButtonView.extend(
   isSelectedBinding: '*menu.isVisibleInWindow',
 
   /**
-    If this property is set to 'YES', the menu pane will be positioned
+    If this property is set to `true`, the menu pane will be positioned
     below the anchor.
 
     @private
@@ -261,9 +261,9 @@ SC.SelectView = SC.ButtonView.extend(
     This is a property for enabling/disabling ellipsis
 
     @private
-    @default YES
+    @default true
   */
-  needsEllipsis: YES,
+  needsEllipsis: true,
 
   /**
     This property allows you at add extra padding to the height
@@ -355,7 +355,7 @@ SC.SelectView = SC.ButtonView.extend(
     itemList = [] ;
 
     //to set the 'checkbox' property of menu items
-    isChecked = YES ;
+    isChecked = true ;
 
     //index for finding the first item in the list
     idx = 0 ;
@@ -392,7 +392,7 @@ SC.SelectView = SC.ButtonView.extend(
 
         //set the _itemIdx - To change the prefMatrix accordingly.
         this.set('_itemIdx', idx) ;
-        isChecked = !showCheckbox ? NO : YES ;
+        isChecked = !showCheckbox ? NO : true ;
       }
       else {
         isChecked = NO ;
@@ -413,7 +413,7 @@ SC.SelectView = SC.ButtonView.extend(
         title: name,
         icon: icon,
         value: value,
-        isEnabled: YES,
+        isEnabled: true,
         checkbox: isChecked,
         action: this.displaySelectedItem
       }) ;
@@ -540,7 +540,7 @@ SC.SelectView = SC.ButtonView.extend(
 
         @property
       */
-      isEnabled: YES,
+      isEnabled: true,
 
       menuHeightPadding: menuHeightPadding,
 
@@ -557,7 +557,7 @@ SC.SelectView = SC.ButtonView.extend(
     if (!menu) return NO ;
     menu.popup(this, this.preferMatrix) ;
     menu.set('currentSelectedMenuItem', currSel) ;
-    return YES ;
+    return true ;
   },
 
   /**
@@ -633,12 +633,12 @@ SC.SelectView = SC.ButtonView.extend(
     Holding down the button should display the menu pane.
   */
   mouseDown: function(evt) {
-    if (!this.get('isEnabled')) return YES ; // handled event, but do nothing
-    this.set('isActive', YES);
-    this._isMouseDown = YES;
+    if (!this.get('isEnabled')) return true ; // handled event, but do nothing
+    this.set('isActive', true);
+    this._isMouseDown = true;
     this.becomeFirstResponder() ;
     this._action() ;
-    return YES ;
+    return true ;
   },
 
   /**
@@ -648,7 +648,7 @@ SC.SelectView = SC.ButtonView.extend(
   */
   keyDown: function(event) {
     if ( this.interpretKeyEvents(event) ) {
-      return YES;
+      return true;
     }
     else {
       arguments.callee.base.apply(this,arguments);

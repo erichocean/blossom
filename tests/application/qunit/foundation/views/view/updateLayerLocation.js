@@ -37,7 +37,7 @@ test("returns receiver", function() {
 function parentHasChild(parent, child) {
 	var cur = parent.firstChild;
 	while(cur) {
-		if (cur === child) return YES;
+		if (cur === child) return true;
 		cur = cur.nextSibling ;
 	}
 	return NO ;
@@ -138,7 +138,7 @@ test("CASE 5b: insert child w/ layer before a sibling w/ NO layer - should creat
 	newParent.appendChild(sibling);
 	newParent.insertBefore(child, sibling);
 	
-	ok(sibling.get('layerLocationNeedsUpdate'), 'sibling.layerLocationNeedsUpdate should be YES');
+	ok(sibling.get('layerLocationNeedsUpdate'), 'sibling.layerLocationNeedsUpdate should be true');
 	
 	child.updateLayerLocation();
 	
@@ -169,9 +169,9 @@ test("returns receiver", function() {
 	equals(view.updateLayerLocationIfNeeded(), view, 'returns receiver');
 });
 
-test("invokes updateLayerLocation if layerLocationNeedsUpdate is YES", function() {
+test("invokes updateLayerLocation if layerLocationNeedsUpdate is true", function() {
   
-  view.set('layerLocationNeedsUpdate', YES);
+  view.set('layerLocationNeedsUpdate', true);
   view.updateLayerLocationIfNeeded();
   equals(runCount, 1, 'did invoke');  
 });
@@ -185,7 +185,7 @@ test("does NOT invoke updateLayerLocation if layerLocationNeedsUpdate is NO", fu
 
 test("sets layerLocationNeedsUpdate to NO when run", function() {
   var view = SC.View.create(); // this needs to _not_ override updateLayerLocation.
-  view.set('layerLocationNeedsUpdate', YES);
+  view.set('layerLocationNeedsUpdate', true);
   view.updateLayerLocationIfNeeded();
   equals(view.get('layerLocationNeedsUpdate'), NO, 'did reset');
 });

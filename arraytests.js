@@ -159,7 +159,7 @@ CoreTest = {
     
     if (!ret.expect) {
       ret.expect = function(callCount) {
-        if (callCount === YES) {
+        if (callCount === true) {
           ok(this.callCount > 0, CoreTest.fmt("%@ should be called at least once", this.stubName));
         } else {
           if (callCount === NO) callCount = 0;

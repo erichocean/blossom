@@ -98,7 +98,7 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
     var anis = this.get("_sc_childAnimationEvents") || {};
     if(anis[e]) anis[e].xtAnimate(e);
     else this.warn("Could not find target childView for event %@".fmt(e));
-    return YES;
+    return true;
   },
 
   //..........................................
@@ -182,7 +182,7 @@ SC.PluginView = SC.View.extend( //SC.Animatable,
     this.disableAnimation();
     this.set("layout", { height: height, width: width, top: top, left: leftAdjust });
     this.updateLayout();
-    this.set("isShowing", YES);
+    this.set("isShowing", true);
     this.enableAnimation();
     if(curr) curr.remove(dir);
     this.adjust("left", 0);

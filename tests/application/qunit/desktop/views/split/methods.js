@@ -28,9 +28,9 @@ suite("SC.SplitView",{
 });
 
 test("the views are collapsible", function() {
-	equals(YES,view.canCollapseView(view.get('topLeftView')),'the top left view is collapsable');
-	equals(YES,view.canCollapseView(view.get('bottomRightView')),'the bottom right view is collapsable');	
-	equals(YES,view.splitViewCanCollapse(view,view.get('topLeftView')),'should return true');
+	equals(true,view.canCollapseView(view.get('topLeftView')),'the top left view is collapsable');
+	equals(true,view.canCollapseView(view.get('bottomRightView')),'the bottom right view is collapsable');	
+	equals(true,view.splitViewCanCollapse(view,view.get('topLeftView')),'should return true');
 	view.set('canCollapseViews','NO');
 });
 

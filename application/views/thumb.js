@@ -48,7 +48,7 @@ SC.ThumbView = SC.View.extend(
   /**
     Enable this thumb view to control its parent split view.
   */
-  isEnabled: YES,
+  isEnabled: true,
   isEnabledBindingDefault: SC.Binding.bool(),
 
   /** @private */

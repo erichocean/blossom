@@ -49,7 +49,7 @@ suite("SC.SegmentedView", {
 test("Check that properties are mapped correctly", function() {
     view.triggerItemAtIndex(1);
     SC.RunLoop.begin();
-    view.set('isEnabled', YES);
+    view.set('isEnabled', true);
     SC.RunLoop.end();
     equals(view.get('value'), "Item2", "the second item should be selected.");
     var items=view.displayItems();
@@ -63,7 +63,7 @@ test("Check that properties are mapped correctly", function() {
     
     var firstItemEvent = SC.Event.simulateEvent(elem, 'mousedown', { pageX: rect1.left + 1, pageY: rect1.top + 1 });
     view.mouseDown(firstItemEvent);
-    equals(view._isMouseDown, YES, 'mousedown');
+    equals(view._isMouseDown, true, 'mousedown');
     equals(view.get('activeIndex'), 0, '');
     
  });
@@ -73,7 +73,7 @@ test("Check that properties are mapped correctly", function() {
  test("Check that mouse actions work", function() {
    view.triggerItemAtIndex(1);
    SC.RunLoop.begin();
-   view.set('isEnabled', YES);
+   view.set('isEnabled', true);
    SC.RunLoop.end();
    
    // Test Mouse Down
@@ -81,7 +81,7 @@ test("Check that properties are mapped correctly", function() {
    var firstItemEvent = SC.Event.simulateEvent(elem, 'mousedown', { pageX: rect1.left + 1, pageY: rect1.top + 1 });
    view.mouseDown(firstItemEvent);
    
-   equals(view._isMouseDown, YES, 'Mouse down flag on mousedown should be ');
+   equals(view._isMouseDown, true, 'Mouse down flag on mousedown should be ');
    equals(view.get('activeIndex'), 0, 'The active item is the first segment.');
    
    // Test Mouse Up
@@ -98,20 +98,20 @@ test("Check that properties are mapped correctly", function() {
    // mouse down and move
    view.mouseDown(thirdItemEvent);
    view.mouseMoved(thirdItemEvent);
-   equals(view._isMouseDown, YES, 'Mouse down flag on mousemoved should be ');
+   equals(view._isMouseDown, true, 'Mouse down flag on mousemoved should be ');
    equals(view.get('activeIndex'), 2, 'The active item is the third segment.');
    
    // try moving mouse while mouse down
    var secondItemEvent = SC.Event.simulateEvent(elem, 'mousedown', { pageX: rect2.left + 1, pageY: rect2.top + 1 });
    view.mouseMoved(secondItemEvent);
-   equals(view._isMouseDown, YES, 'Mouse down flag on mousemoved should be ');
+   equals(view._isMouseDown, true, 'Mouse down flag on mousemoved should be ');
    equals(view.get('activeIndex'), 1, 'The active item should have changed to the second segment.');
    
    // and check that mouse out cancels.
    var noItemEvent = SC.Event.simulateEvent(elem, 'mousedown', { pageX: rect1.left - 5, pageY: rect1.top - 5 });
 
    view.mouseExited(noItemEvent);
-   equals(view._isMouseDown, YES, 'Mouse down flag on mouseout should still be ');
+   equals(view._isMouseDown, true, 'Mouse down flag on mouseout should still be ');
    equals(view.get('activeIndex'), -1, 'The active item is no longer specified.');
    
   });

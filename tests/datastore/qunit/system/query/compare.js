@@ -135,10 +135,10 @@ test("specifying a custom orderBy comparison function", function() {
   q.orderBy = function(rec1, rec2) {
     // We'll be explicit about our use of a custom comparison function, in
     // addition to returning later years first.
-    usedCustomFunction = YES;
+    usedCustomFunction = true;
     return SC.compare(rec2.get('year'), rec1.get('year'));
   };
   q.parse();
   equals(q.compare(rec1,rec2), 1, 'guid 2 should be before guid 1');
-  equals(usedCustomFunction, YES, 'we should have used our custom comparison function');
+  equals(usedCustomFunction, true, 'we should have used our custom comparison function');
 });

@@ -39,11 +39,11 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
     should almost always make requests asynchronous.  You can change this 
     options with the async() helper option (or simply set it directly).
     
-    Defaults to YES. 
+    Defaults to true. 
     
     @property {Boolean}
   */
-  isAsynchronous: YES,
+  isAsynchronous: true,
 
   /**
     Processes the request and response as JSON if possible.  You can change
@@ -284,22 +284,22 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   /**
     Converts the current request to be asynchronous.
 
-    @property {Boolean} flag YES to make asynchronous, NO or undefined
+    @property {Boolean} flag true to make asynchronous, NO or undefined
     @returns {SC.Request} receiver
   */
   async: function(flag) {
-    if (flag === undefined) flag = YES;
+    if (flag === undefined) flag = true;
     return this.set('isAsynchronous', flag);
   },
   
   /**
     Converts the current request to use JSON.
     
-    @property {Boolean} flag YES to make JSON, NO or undefined
+    @property {Boolean} flag true to make JSON, NO or undefined
     @returns {SC.Request} receiver
   */
   json: function(flag) {
-    if (flag === undefined) flag = YES;
+    if (flag === undefined) flag = true;
     if (flag) this.set('isXML', NO);
     return this.set('isJSON', flag);
   },
@@ -307,11 +307,11 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   /**
     Converts the current request to use XML.
     
-    @property {Boolean} flag YES to make XML, NO or undefined
+    @property {Boolean} flag true to make XML, NO or undefined
     @returns {SC.Request} recevier
   */
   xml: function(flag) {
-    if (flag === undefined) flag = YES ;
+    if (flag === undefined) flag = true ;
     if (flag) this.set('isJSON', NO);
     return this.set('isXML', flag);
   },
@@ -381,11 +381,11 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
     
     You can also pass "generic" status codes such as 200, 300, or 400, which
     will be invoked anytime the status code is the range if a more specific 
-    notifier was not registered first and returned YES.  
+    notifier was not registered first and returned true.  
     
     Finally, passing a status code of 0 or no status at all will cause your
     method to be executed no matter what the resulting status is unless a 
-    more specific notifier was registered and returned YES.
+    more specific notifier was registered and returned true.
     
     h2. Callback Format
     
@@ -401,7 +401,7 @@ SC.Request = SC.Object.extend(SC.Copyable, SC.Freezable,
   notify: function(status, target, action, params) {
     
     // normalize status
-    var hasStatus = YES ;
+    var hasStatus = true ;
     if (SC.typeOf(status) !== SC.T_NUMBER) {
       params = SC.A(arguments).slice(2);
       action = target;
@@ -531,7 +531,7 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
     be removed.  Otherwise it will actually be cancelled.
     
     @param {Object} response a response object
-    @returns {Boolean} YES if cancelled
+    @returns {Boolean} true if cancelled
   */
   cancel: function(response) {
 
@@ -543,7 +543,7 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
       this.propertyWillChange('pending');
       pending.removeObject(response);
       this.propertyDidChange('pending');
-      return YES;
+      return true;
       
     } else if (inflight.indexOf(response) >= 0) {
       
@@ -551,7 +551,7 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
       
       inflight.removeObject(response);
       this.fireRequestIfNeeded();
-      return YES;
+      return true;
 
     } else return NO ;
   },  
@@ -559,14 +559,14 @@ SC.Request.manager = SC.Object.create( SC.DelegateSupport, {
   /**
     Cancels all inflight and pending requests.  
     
-    @returns {Boolean} YES if any items were cancelled.
+    @returns {Boolean} true if any items were cancelled.
   */
   cancelAll: function() {
     if (this.get('pending').length || this.get('inflight').length) {
       this.set('pending', []);
       this.get('inflight').forEach(function(r) { r.cancel(); });
       this.set('inflight', []);
-      return YES;
+      return true;
       
     } else return NO ;
   },

@@ -35,7 +35,7 @@ test("returns classNames if set", function() {
 
 test("clone on next retrieval if classNames(foo) set with cloneOnModify=YES", function() {
   var cl = 'foo bar'.w();
-  context.classNames(cl, YES);
+  context.classNames(cl, true);
   
   var result = context.classNames();
   ok(result !== cl, "class name is NOT same instance");
@@ -65,7 +65,7 @@ suite("SC.RenderContext#hasClass", {
 });
 
 test("should return true if context classNames has class name", function() {
-  equals(YES, context.hasClass('foo'), 'should have foo');
+  equals(true, context.hasClass('foo'), 'should have foo');
 });
 
 test("should return false if context classNames does not have class name", function() {
@@ -94,7 +94,7 @@ test("shoudl return receiver", function() {
 test("should add class name to existing classNames array on currentTag", function() {
   context.addClass('bar');
   same(context.classNames(), ['foo', 'bar'], 'has classes');
-  equals(context._classNamesDidChange, YES, "note did change");
+  equals(context._classNamesDidChange, true, "note did change");
 });
 
 test("should only add class name once - does nothing if name already in array", function() {
@@ -152,9 +152,9 @@ suite("SC.RenderContext#setClass", {
   }
 });
 
-test("should add named class if shouldAdd is YES", function() {
+test("should add named class if shouldAdd is true", function() {
   ok(!context.hasClass("bar"), "precondition - does not have class bar");
-  context.setClass("bar", YES);
+  context.setClass("bar", true);
   ok(context.hasClass("bar"), "now has bar");
 });
 
@@ -165,14 +165,14 @@ test("should remove named class if shouldAdd is NO", function() {
 });
 
 test("should return receiver", function() {
-  equals(context, context.setClass("bar", YES), "returns receiver");
+  equals(context, context.setClass("bar", true), "returns receiver");
 });
 
 test("should add/remove all classes if a hash of class names is passed", function() {
   ok(context.hasClass("foo"), "precondition - has class foo");
   ok(!context.hasClass("bar"), "precondition - does not have class bar");
 
-  context.setClass({ foo: NO, bar: YES });
+  context.setClass({ foo: NO, bar: true });
 
   ok(context.hasClass("bar"), "now has bar");
   ok(!context.hasClass("foo"), "should not have foo ");

@@ -24,7 +24,7 @@ suite("SC.SelectView",{
         { title: "World", pos: 2 },
         { title: "Again", pos: 4}],
       selectedValue: "World",
-      isDue: YES,
+      isDue: true,
       childViews: [
 
         //view1
