@@ -1031,7 +1031,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // Do some initial set up.
     this.computeViewportSize();
     this.focus();
-    SC.app.isAwake = true;
   },
 
   /**

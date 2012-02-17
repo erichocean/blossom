@@ -158,28 +158,30 @@ SC.RunLoop = SC.RunLoop.extend(
     return ret ;
   },
 
-  _sc_didRequestAnimationFrame: false,
-
   /** @private
     Based on global flags, determines if a layout and rendering loop should 
     be called. This is substantially faster than repeatedly requesting a 
     layout and rendering loop with a function call.
   */
-  scheduleLayoutAndRendering: function() {
-    // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
-    if (this._sc_didRequestAnimationFrame) return;
-    if (!SC.app.isAwake) return;
+  scheduleLayoutAndRendering: function closure() {
+    var didRequestAnimationFrame = false;
 
-    if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
-      this._sc_didRequestAnimationFrame = true;
-      var that = this;
-      SC.RequestAnimationFrame(function(timestamp) {
-        // console.log('SC.RequestAnimationFrame() - callback');
-        that._sc_didRequestAnimationFrame = false;
-        SC.app.performLayoutAndRendering(timestamp);
-      });
+    function callback(timestamp) {
+      // console.log('SC.RequestAnimationFrame() - callback');
+      didRequestAnimationFrame = false;
+      SC.app.performLayoutAndRendering(timestamp);
     }
-  },
+
+    return function() {
+      // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
+      if (didRequestAnimationFrame) return;
+
+      if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
+        didRequestAnimationFrame = true;
+        SC.RequestAnimationFrame(callback);
+      }
+    };
+  }(),
 
   /** @private
     Invoked when a timeout actually fires.  Simply cleanup, then begin and end 
