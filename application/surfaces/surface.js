@@ -628,7 +628,7 @@ SC.Surface = SC.Responder.extend({
 
     this.foo = el;
 
-    // HACK: Make sure SproutCore can find this surface.
+    // Make sure Blossom can find this surface.
     SC.Surface.surfaces[id] = this;
   },
 

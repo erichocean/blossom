@@ -41,19 +41,7 @@ if (BLOSSOM) {
 
       SC.app.removeSurface(aSurface);
 
-  In both cases, a default transitions is used.  Pass `false` explicitly to 
-  prevent this default transition:
-
-      SC.app.addSurface(aSurface, false); // no transition will be used
-
-  You can also specify a specific transition:
-
-      var myTransition = SC.SurfaceTransition.create(...);
-      SC.app.addSurface(aSurface, myTransition);
-
-  You can also modify the `surfaces` property directly, but doing so will 
-  *not* cause any transitions to occur (this is equivalent to passing `false` 
-  to `addSurface` and `removeSurface` as the `transition`):
+  You can also modify the `surfaces` property directly:
 
       SC.app.get('surfaces').add(aSurface);
       SC.app.get('surfaces').remove(aSurface);
@@ -157,6 +145,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_runAnimationLoop: function(timestamp) {
     // console.log('SC.Application#_sc_runAnimationLoop()');
     sc_assert(SC.app === this, "SC.Application#_sc_runAnimationLoop() called with this != SC.app.");
+    sc_assert(this._sc_didRequestAnimationLoop, "SC.Application#_sc_runAnimationLoop() called when an animation loop was not requested.");
     this._sc_didRequestAnimationLoop = false;
     SC.isAnimating = true;
     this.get('surfaces').invoke('updateAnimationIfNeeded', timestamp);
