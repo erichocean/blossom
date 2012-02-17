@@ -45,8 +45,8 @@ SC.View = SC.LeafSurface.extend({
   /**
     Finds the layer that is hit by this event, and returns its view.
   */
-  // targetViewForEvent: function(evt) {
-  //   // console.log('SC.ViewSurface#targetViewForEvent(', evt, ')');
+  // targetSurfaceForEvent: function(evt) {
+  //   // console.log('SC.ViewSurface#targetSurfaceForEvent(', evt, ')');
   //   var context = this.getPath('hitTestLayer.context'),
   //       contentView = this.get('contentView'),
   //       hitLayer = null, zIndex = -1,

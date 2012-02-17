@@ -994,7 +994,7 @@ SC.Surface = SC.Responder.extend({
   /**
     Finds the layer that is hit by this event, and returns its view.
   */
-  targetViewForEvent: function(evt) {
+  targetSurfaceForEvent: function(evt) {
     return this;
   },
 

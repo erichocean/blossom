@@ -117,7 +117,7 @@ SC.StageSurface = SC.Surface.extend({
     layer.addShape(shape);
   },
 
-  targetViewForEvent: function(evt) {
+  targetSurfaceForEvent: function(evt) {
     return this;
   },
 

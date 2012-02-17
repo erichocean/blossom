@@ -710,17 +710,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.Application#sendEvent(', action, evt, target, ')');
     var surface, ret;
 
-    // SC.run(function() {
-      // get the target pane
-      if (target) {
-        surface = target.get('surface') ;
-        if (!surface) surface = target.get('container') ;
-      }
-      else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
+    if (target) {
+      surface = target.get('surface') ;
+      if (!surface) surface = target.get('container') ; // FIXME: Why?
+    }
+    else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 
-      // if we found a valid pane, send the event to it
-      ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
-    // }, this);
+    // If we found a valid surface, send the event to it.
+    ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
 
     return ret;
   },
@@ -862,8 +859,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   mousewheel: function(evt) {
-    var view = this.targetViewForEvent(evt) ,
-        handler = this.sendEvent('mouseWheel', evt, view) ;
+    var surface = this.targetSurfaceForEvent(evt) ,
+        handler = this.sendEvent('mouseWheel', evt, surface) ;
   
     return (handler) ? evt.hasCustomEventHandling : true ;
   },
@@ -878,7 +875,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_mouseCanDrag: true,
 
   selectstart: function(evt) {
-    var targetView = this.targetViewForEvent(evt),
+    var targetView = this.targetSurfaceForEvent(evt),
         result = this.sendEvent('selectStart', evt, targetView);
 
     // If the target view implements mouseDragged, then we want to ignore the
@@ -894,8 +891,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   drag: function() { return false; },
 
   contextmenu: function(evt) {
-    var view = this.targetViewForEvent(evt) ;
-    return this.sendEvent('contextMenu', evt, view);
+    var surface = this.targetSurfaceForEvent(evt) ;
+    return this.sendEvent('contextMenu', evt, surface);
   },
 
   // ..........................................................
@@ -904,38 +901,38 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   webkitAnimationStart: function(evt) {
     try {
-      var view = this.targetViewForEvent(evt) ;
-      this.sendEvent('animationDidStart', evt, view) ;
+      var surface = this.targetSurfaceForEvent(evt) ;
+      this.sendEvent('animationDidStart', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidStart: %@'.fmt(e)) ;
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : true;
+    return surface ? evt.hasCustomEventHandling : true;
   },
 
   webkitAnimationIteration: function(evt) {
     try {
-      var view = this.targetViewForEvent(evt) ;
-      this.sendEvent('animationDidIterate', evt, view) ;
+      var surface = this.targetSurfaceForEvent(evt) ;
+      this.sendEvent('animationDidIterate', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidIterate: %@'.fmt(e)) ;
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : true;
+    return surface ? evt.hasCustomEventHandling : true;
   },
 
   webkitAnimationEnd: function(evt) {
     try {
-      var view = this.targetViewForEvent(evt) ;
-      this.sendEvent('animationDidEnd', evt, view) ;
+      var surface = this.targetSurfaceForEvent(evt) ;
+      this.sendEvent('animationDidEnd', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidEnd: %@'.fmt(e)) ;
       throw e;
     }
 
-    return view ? evt.hasCustomEventHandling : true;
+    return surface ? evt.hasCustomEventHandling : true;
   },
 
   /**
@@ -1018,15 +1015,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     works on events with a valid target property.
 
     @param {SC.Event} evt
-    @returns {SC.View} view instance or null
+    @returns {SC.Surface} surface instance or null
   */
-  targetViewForEvent: function(evt) {
-    // console.log('SC.Application#targetViewForEvent()');
-    // FIXME: this only works for panes for now...
-    // debugger;
-    // var surface = evt.target ? SC.Surface.surfaces[evt.target.id] : null,
-    //     ret = surface? surface.targetViewForEvent(evt) : null ;
-
+  targetSurfaceForEvent: function(evt) {
+    // console.log('SC.Application#targetSurfaceForEvent()');
     var parentNode = evt.target, id, ret, surfaces = SC.Surface.surfaces;
 
     while (parentNode && !ret) {
@@ -1035,7 +1027,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       parentNode = parentNode.parentNode;
     }
 
-    ret = ret? ret.targetViewForEvent(evt) : null;
+    ret = ret? ret.targetSurfaceForEvent(evt) : null;
+    sc_assert(ret === null || ret.kindOf(SC.Surface), "Error in SC.Application#targetSurfaceForEvent()");
     return ret;
   },
 
@@ -1183,7 +1176,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
 
     var handler = null, view = this._sc_mouseDownView,
-        targetView = this.targetViewForEvent(evt);
+        targetView = this.targetSurfaceForEvent(evt);
 
     this._sc_lastMouseUpAt = Date.now(); // Why not evt.timeStamp?
 
@@ -1251,7 +1244,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this._sc_lastMouseDownX = evt.clientX;
     this._sc_lastMouseDownY = evt.clientY;
 
-    var fr, view = this.targetViewForEvent(evt);
+    var fr, view = this.targetSurfaceForEvent(evt);
 
     // HACK: InlineTextField needs to loose firstResponder whenever you click 
     // outside the view.  This is a special case as textfields are not 
@@ -1289,7 +1282,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         this._sc_drag.tryToPerform('mouseDragged', evt);
     } else {
       var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
-          view = this.targetViewForEvent(evt);
+          view = this.targetSurfaceForEvent(evt);
 
       // First, collect all the responding view starting with the target view 
       // from the given mouse move event.
