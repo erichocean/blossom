@@ -219,7 +219,6 @@ SC.Observable = {
     } else if (ret && ret.isProperty) {
       if (ret.isCacheable) {
         cache = this._kvo_cache ;
-        if (!cache) cache = this._kvo_cache = {};
         cacheKey = ret.cacheKey;
         return (cache[cacheKey] !== undefined) ? cache[cacheKey] : (cache[cacheKey] = ret.call(this, key));
       } else return ret.call(this,key);
@@ -305,7 +304,6 @@ SC.Observable = {
     if (func && func.isProperty) {
       cache = this._kvo_cache;
       if (func.isVolatile || !cache || (cache[func.lastSetValueKey] !== value)) {
-        if (!cache) cache = this._kvo_cache = {};
 
         cache[func.lastSetValueKey] = value ;
         if (notify) this.propertyWillChange(key) ;
@@ -889,7 +887,8 @@ SC.Observable = {
         }
       }
     }
-    
+
+    this._kvo_cache = {};
   },
   
   // ..........................................
@@ -968,7 +967,6 @@ SC.Observable = {
               console.log("%@...including dependent keys for %@: %@".fmt(spaces, key, keys));
             }
             cache = this._kvo_cache;
-            if (!cache) cache = this._kvo_cache = {};
             while(--loc >= 0) {
               changes.add(key = keys[loc]);
               if (func = this[key]) {
@@ -1307,7 +1305,7 @@ SC.Observable = {
     @returns {SC.Observable}
   */
   allPropertiesDidChange: function() {
-    this._kvo_cache = null; //clear cached props
+    this._kvo_cache = {}; //clear cached props
     this._notifyPropertyObservers('*') ;
     return this ;
   },
