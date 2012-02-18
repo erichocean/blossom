@@ -8,6 +8,7 @@
 sc_require('quaddemo');
 
 var base3 =    "#fdf6e3";
+var green =    "#859900";
 
 function main() {
   // console.log('main()');
@@ -26,6 +27,13 @@ function main() {
       // Draw background.
       ctx.fillStyle = base3;
       ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+      // Draw fps meter.
+      ctx.fillStyle = green;
+      ctx.font = "16pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.fillText(SC.Benchmark.fps(), ctx.width/2, ctx.height/2);
 
       qd.draw(ctx);
     },
