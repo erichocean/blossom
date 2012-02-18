@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*global BLOSSOM sc_assert */
 
 /**
   If set to false, then pressing backspace will falseT navigate to the previous 
@@ -45,6 +46,8 @@ SC.mixin(SC,
 
 SC.DEFAULT_TREE = 'default';
 
+if (BLOSSOM) {
+
 SC.RequestAnimationFrame = function(callback) {
   // console.log('SC.RequestAnimationFrame()');
   var ret = window.requestAnimationFrame ||
@@ -58,3 +61,27 @@ SC.RequestAnimationFrame = function(callback) {
   // if (!ret) throw "This browser is not supported by Blossom.";
   ret.call(window, callback);
 };
+
+/**
+  Modifes a class's .extend() method to generate a `displayPropertiesHash` on 
+  the class's prototype based on its `displayProperties`.
+*/
+SC.extendClassWithDisplayPropertiesHash = function(K) {
+  var f = K.extend;
+  K.extend = function() {
+    var klass = f.apply(K, arguments),
+        displayProperties = klass.prototype.displayProperties,
+        displayPropertiesHash = {}, idx, len, key;
+
+    sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+    for (idx=0, len=displayProperties.length; idx<len; ++idx) {
+      key = displayProperties[idx];
+      sc_assert(displayPropertiesHash[key] === undefined, "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.");
+      displayPropertiesHash[key] = true;
+    }
+    klass.prototype.displayPropertiesHash = displayPropertiesHash;
+    return klass;
+  };
+};
+
+} // BLOSSOM

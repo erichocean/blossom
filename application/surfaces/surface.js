@@ -109,6 +109,7 @@ SC.Surface = SC.Responder.extend({
     @readOnly
   */
   displayProperties: [],
+  displayPropertiesHash: {}, // Required.
 
   /**
     This method is invoked whenever a display property changes.  It will set
@@ -187,6 +188,7 @@ SC.Surface = SC.Responder.extend({
     // console.log('SC.Surface#triggerRendering()');
     this.__needsRendering__ = true;
     SC.needsLayoutAndRendering = true;
+    // Also see code in _sc_notifyPropertyObservers, which should match.
   },
 
   triggerLayoutAndRendering: function() {
@@ -1607,6 +1609,8 @@ SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
     SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
   }
 };
+
+SC.extendClassWithDisplayPropertiesHash(SC.Surface);
 
 SC.Surface.prototype.updateLayoutRules = SC.Layer.prototype.updateLayoutRules;
 

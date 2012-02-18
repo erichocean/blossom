@@ -918,7 +918,8 @@ SC.Observable = {
     var log = SC.LOG_OBSERVERS && !(this.LOG_OBSERVING===false),
         observers, changes, dependents, starObservers, idx, keys, rev,
         members, membersLength, member, memberLoc, target, method, loc, func,
-        context, spaces, cache, hasPropertyObserver = !!this.propertyObserver ;
+        context, spaces, cache, hasPropertyObserver = !!this.propertyObserver,
+        displayPropertiesHash = this.displayPropertiesHash ;
 
     if (log) {
       spaces = SC.KVO_SPACES = (SC.KVO_SPACES || '') + '  ';
@@ -1044,6 +1045,13 @@ SC.Observable = {
         if (hasPropertyObserver) {
           if (log) console.log('%@...firing %@.propertyObserver for key "%@"'.fmt(spaces, this, key));
           this.propertyObserver(this, key, null, rev);
+        }
+
+        if (displayPropertiesHash && (key in displayPropertiesHash)) {
+          // same as this.triggerRendering();
+          console.log('displayPropertyDidChange');
+          this.__needsRendering__ = true;
+          SC.needsLayoutAndRendering = true;
         }
       } // while(changes.length>0)
 

@@ -44,6 +44,8 @@ function main() {
 
     mouseUp: function(evt) {
       // console.log('mouseUp');
+      // var layer = this.get('layer');
+      // layer.set('foo', true);
       this.triggerRendering();
       return qd.mouseup(evt);
     }
