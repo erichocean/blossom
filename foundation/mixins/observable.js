@@ -379,7 +379,7 @@ SC.Observable = {
     this._kvo_changeLevel = (this._kvo_changeLevel || 1) - 1 ;
     var level = this._kvo_changeLevel, changes = this._kvo_changes;
     if ((level<=0) && changes && (changes.length>0) && !SC.Observers.isObservingSuspended) {
-      this._notifyPropertyObservers() ;
+      this._sc_notifyPropertyObservers() ;
     } 
     return this ;
   },
@@ -470,7 +470,7 @@ SC.Observable = {
       }
       
     // otherwise notify property observers immediately
-    } else this._notifyPropertyObservers(key) ;
+    } else this._sc_notifyPropertyObservers(key) ;
     
     return this ;
   },
@@ -910,7 +910,7 @@ SC.Observable = {
   
   // this private method actually notifies the observers for any keys in the
   // observer queue.  If you pass a key it will be added to the queue.
-  _notifyPropertyObservers: function(key) {
+  _sc_notifyPropertyObservers: function(key) {
     sc_assert(this._observableInited, "You must call this.initObservable() first in your init() method.");
     
     SC.Observers.flush(this) ; // hookup as many observers as possible.
@@ -1306,7 +1306,7 @@ SC.Observable = {
   */
   allPropertiesDidChange: function() {
     this._kvo_cache = {}; //clear cached props
-    this._notifyPropertyObservers('*') ;
+    this._sc_notifyPropertyObservers('*') ;
     return this ;
   },
 
