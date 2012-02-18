@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>application/system/application.js</string>
+	<string>application/core.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,6 +21,20 @@
 	<integer>292</integer>
 	<key>metaData</key>
 	<dict>
+		<key>application/core.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>73</integer>
+				<key>line</key>
+				<integer>129</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>71</integer>
+		</dict>
 		<key>application/layers/image.js</key>
 		<dict>
 			<key>caret</key>
@@ -56,14 +70,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>40</integer>
 				<key>line</key>
-				<integer>87</integer>
+				<integer>940</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>918</integer>
 		</dict>
 		<key>application/layers/layout.js</key>
 		<dict>
@@ -239,63 +253,75 @@
 			<key>firstVisibleLine</key>
 			<integer>638</integer>
 		</dict>
+		<key>application/surfaces/composite.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>67</integer>
+				<key>line</key>
+				<integer>45</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>application/surfaces/container.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>77</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>43</integer>
+		</dict>
 		<key>application/surfaces/surface.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>49</integer>
 				<key>line</key>
-				<integer>208</integer>
+				<integer>259</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>175</integer>
+			<integer>225</integer>
 		</dict>
 		<key>application/surfaces/view.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>46</integer>
 				<key>line</key>
-				<integer>341</integer>
+				<integer>229</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>279</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>341</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>341</integer>
-			</dict>
+			<integer>195</integer>
 		</dict>
 		<key>application/system/application.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>33</integer>
+				<integer>77</integer>
 				<key>line</key>
-				<integer>191</integer>
+				<integer>176</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>179</integer>
+			<integer>107</integer>
 		</dict>
 		<key>application/system/root_responder.js</key>
 		<dict>
@@ -414,14 +440,86 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>29</integer>
+				<integer>23</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+		</dict>
+		<key>foundation/mixins/observable.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>60</integer>
+				<key>line</key>
+				<integer>924</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>906</integer>
+		</dict>
+		<key>foundation/private/observer_queue.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>17</integer>
+				<key>line</key>
+				<integer>159</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>110</integer>
+		</dict>
+		<key>foundation/system/binding.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>20</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>20</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>20</integer>
+			</dict>
+		</dict>
+		<key>foundation/system/object.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>314</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>279</integer>
 		</dict>
 		<key>foundation/system/plugin.js</key>
 		<dict>
@@ -653,8 +751,15 @@
 		<string>buildtools/buildtools.js</string>
 		<string>examples/quaddemo/main.js</string>
 		<string>application/system/application.js</string>
+		<string>foundation/mixins/observable.js</string>
+		<string>foundation/private/observer_queue.js</string>
+		<string>foundation/system/binding.js</string>
+		<string>application/core.js</string>
 		<string>application/surfaces/surface.js</string>
+		<string>application/surfaces/composite.js</string>
+		<string>application/surfaces/container.js</string>
 		<string>application/layers/layer.js</string>
+		<string>foundation/system/object.js</string>
 		<string>application/surfaces/view.js</string>
 		<string>application/layers/text.js</string>
 		<string>application/layers/image.js</string>
@@ -667,6 +772,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{600, 191}, {1336, 1227}}</string>
+	<string>{{478, 189}, {1336, 1229}}</string>
 </dict>
 </plist>

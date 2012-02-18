@@ -69,6 +69,7 @@ SC.RequestAnimationFrame = function(callback) {
   defines `displayProperties`.
 */
 SC.AugmentBaseClassWithDisplayProperties = function(K) {
+  sc_assert(K.isClass, "Argument is not a class: "+K);
 
   // Handle displayProperties on the base class.
   var displayProperties = K.prototype.displayProperties,
@@ -76,7 +77,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
 
   if (displayProperties !== undefined) {
     displayPropertiesHash = {};
-    // sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+    sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
     for (idx=0, len=displayProperties.length; idx<len; ++idx) {
       key = displayProperties[idx];
       if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
@@ -118,7 +119,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
 
     if (displayProperties !== undefined) {
       displayPropertiesHash = {};
-      // sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+      sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
       for (idx=0, len=displayProperties.length; idx<len; ++idx) {
         key = displayProperties[idx];
         if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
