@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global process sc_assert */
 
 sc_require('core') ;
 sc_require('mixins/observable') ;
@@ -310,12 +311,11 @@ SC.mixin(SC.Object, /** @scope SC.Object */ {
     @returns {SC.Object} new instance of the receiver class.
   */
   create: function() {
-    var C=this, ret = new C(arguments); 
-    if (SC.ObjectDesigner) {
-      SC.ObjectDesigner.didCreateObject(ret, SC.$A(arguments));
-    }
+    var C=this, ret = new C(arguments);
+
     return ret ; 
   },
+
   /**
     Walk like a duck.  You can use this to quickly test classes.
     

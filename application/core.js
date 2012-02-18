@@ -63,24 +63,93 @@ SC.RequestAnimationFrame = function(callback) {
 };
 
 /**
-  Modifes a class's .extend() method to generate a `displayPropertiesHash` on 
-  the class's prototype based on its `displayProperties`.
+  Adds displayProperties -> displayPropertiesHash handling to the classe's
+  `extend` and `create` methods.  This will be automatically picked up by any 
+  subclasses, so you only need to call this on the base class that first 
+  defines `displayProperties`.
 */
-SC.extendClassWithDisplayPropertiesHash = function(K) {
-  var f = K.extend;
-  K.extend = function() {
-    var klass = f.apply(K, arguments),
-        displayProperties = klass.prototype.displayProperties,
-        displayPropertiesHash = {}, idx, len, key;
+SC.AugmentBaseClassWithDisplayProperties = function(K) {
 
-    sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+  // Handle displayProperties on the base class.
+  var displayProperties = K.prototype.displayProperties,
+      displayPropertiesHash, idx, len, key;
+
+  if (displayProperties !== undefined) {
+    displayPropertiesHash = {};
+    // sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
     for (idx=0, len=displayProperties.length; idx<len; ++idx) {
       key = displayProperties[idx];
-      sc_assert(displayPropertiesHash[key] === undefined, "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.");
+      if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
       displayPropertiesHash[key] = true;
     }
-    klass.prototype.displayPropertiesHash = displayPropertiesHash;
-    return klass;
+    K.prototype.displayPropertiesHash = displayPropertiesHash;
+  }
+
+  K.extend = function(props) {
+    var bench = SC.BENCHMARK_OBJECTS ;
+    if (bench) SC.Benchmark.start('SC.Object.extend') ;
+
+    // build a new constructor and copy class methods.  Do this before 
+    // adding any other properties so they are not overwritten by the copy.
+    var prop, ret = function(props) { return this._object_init(props); } ;
+    for(prop in this) {
+      if (!this.hasOwnProperty(prop)) continue ;
+      ret[prop] = this[prop];
+    }
+
+    // manually copy toString() because some JS engines do not enumerate it
+    if (this.hasOwnProperty('toString')) ret.toString = this.toString;
+
+    // now setup superclass, guid
+    ret.superclass = this ;
+    SC.generateGuid(ret); // setup guid
+
+    ret.subclasses = SC.Set.create();
+    this.subclasses.add(ret); // now we can walk a class hierarchy
+
+    // setup new prototype and add properties to it
+    var base = (ret.prototype = SC.beget(this.prototype));
+    var idx, len = arguments.length;
+    for(idx=0;idx<len;idx++) SC._object_extend(base, arguments[idx]) ;
+    base.constructor = ret; // save constructor
+
+    var displayProperties = base.displayProperties,
+        displayPropertiesHash, key;
+
+    if (displayProperties !== undefined) {
+      displayPropertiesHash = {};
+      // sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+      for (idx=0, len=displayProperties.length; idx<len; ++idx) {
+        key = displayProperties[idx];
+        if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
+        displayPropertiesHash[key] = true;
+      }
+      base.displayPropertiesHash = displayPropertiesHash;
+    }
+
+    if (bench) SC.Benchmark.end('SC.Object.extend') ;
+    return ret ;
+  };
+
+  K.create = function() {
+    var C=this, ret = new C(arguments),
+        hasDisplayProperties = ret.hasOwnProperty('displayProperties'),
+        displayProperties, displayPropertiesHash, idx, len, key;
+
+    if (hasDisplayProperties) {
+      displayProperties = ret.displayProperties;
+      displayPropertiesHash = {};
+      // sc_assert(displayProperties && SC.typeOf(displayProperties) === SC.T_ARRAY);
+      for (idx=0, len=displayProperties.length; idx<len; ++idx) {
+        key = displayProperties[idx];
+        if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
+        displayPropertiesHash[key] = true;
+      }
+      console.log(displayPropertiesHash);
+      ret.displayPropertiesHash = displayPropertiesHash;
+    }
+
+    return ret ; 
   };
 };
 

@@ -109,7 +109,6 @@ SC.Surface = SC.Responder.extend({
     @readOnly
   */
   displayProperties: [],
-  displayPropertiesHash: {}, // Required.
 
   /**
     This method is invoked whenever a display property changes.  It will set
@@ -258,6 +257,7 @@ SC.Surface = SC.Responder.extend({
   }.observes('isPresentInViewport'),
 
   createSurface: function() {
+    // console.log('SC.Surface#createSurface()');
     var element = this.__sc_element__, key;
     // apply the layout style manually for now...
     var layoutStyle = this.get('layoutStyle');
@@ -588,6 +588,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   init: function() {
+    // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
     this.initElement();
     // this.displayDidChange();
@@ -1571,6 +1572,8 @@ SC.Surface = SC.Responder.extend({
 
 });
 
+SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
+
 SC.Surface.OBSERVABLE_STRUCTURES = 'bounds position anchorPoint transform sublayerTransform'.w();
 
 SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
@@ -1609,8 +1612,6 @@ SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
     SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
   }
 };
-
-SC.extendClassWithDisplayPropertiesHash(SC.Surface);
 
 SC.Surface.prototype.updateLayoutRules = SC.Layer.prototype.updateLayoutRules;
 

@@ -38,7 +38,6 @@ SC.Layer = SC.Object.extend({
     @readOnly
   */
   displayProperties: ['foo', 'bar', 'baz'],
-  displayPropertiesHash: { foo: true, bar: true, baz: true }, // Required.
 
   view: function() {
     var view = this.get('view'),
@@ -623,6 +622,7 @@ SC.Layer = SC.Object.extend({
   },
 
   init: function() {
+    // console.log('SC.Layer#init()');
     arguments.callee.base.apply(this, arguments);
 
     // Allocate our own structures to modify in-place. For performance, we 
@@ -938,7 +938,7 @@ SC.Layer = SC.Object.extend({
 
 });
 
-SC.extendClassWithDisplayPropertiesHash(SC.Layer);
+SC.AugmentBaseClassWithDisplayProperties(SC.Layer);
 
 SC.Layer._sc_defineRect = function(x, y, width, height) {
   this.rect(x, y, width, height);

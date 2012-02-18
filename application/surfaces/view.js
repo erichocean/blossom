@@ -227,7 +227,7 @@ SC.View = SC.LeafSurface.extend({
   }.property(),
 
   createSurface: function() {
-    // console.log('SC.ViewSurface#createSurface()');
+    // console.log('SC.View#createSurface()');
 
     // For now, just do this one time.
     if (this._sc_didCreateSurface) return;
