@@ -194,6 +194,7 @@ SC.ScheduleLayoutAndRendering = function closure() {
     // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
     if (didRequestAnimationFrame) return;
 
+    // Viewport size changes occur much less often, so we test second.
     if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
       didRequestAnimationFrame = true;
       SC.RequestAnimationFrame(callback);

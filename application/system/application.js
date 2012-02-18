@@ -133,8 +133,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   performLayoutAndRendering: function(timestamp) {
-    SC.LOG_OBSERVERS = true ;
-    SC.LOG_BINDINGS = true ;
+    SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
     // console.log('SC.Application#performLayoutAndRendering()');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
     sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
@@ -157,8 +156,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
     SC.ScheduleLayoutAndRendering();
-    SC.LOG_BINDINGS = false ;
-    SC.LOG_OBSERVERS = false ;
+    SC.LOG_BINDINGS = SC.LOG_OBSERVERS = false;
   },
 
   // .......................................................
@@ -389,7 +387,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     this._sc_ui = cur;
     if (cur) this.removeSurface(cur);
-    uiContainer.set('surface', cur);
+    uiContainer.set('contentSurface', cur);
 
     if (old && old.didLoseUserInterfaceTo) {
       old.didLoseUserInterfaceTo(cur);

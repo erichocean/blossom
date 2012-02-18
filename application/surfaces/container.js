@@ -12,8 +12,8 @@ if (BLOSSOM) {
 
 /** @class
   `SC.ContainerSurface` implements a swappable surface container.  You can 
-  set the container's `surface` property to a surface, and the surface will 
-  be sized and positioned according to the container's size and position.
+  set the container's `contentSurface` property to a surface, and the surface 
+  will be sized and positioned according to the container's size and position.
 
   In addition, the surface will be animated into place using one of three 
   hardware-accellerated 3D transitions:
@@ -48,17 +48,17 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
     @type SC.Surface or null
   */
-  surface: null,
+  contentSurface: null,
 
   orderInTransition:  SC.ENTER_LEFT,
   replaceTransition:  SC.SLIDE_FLIP_LEFT,
   orderOutTransition: SC.EXIT_RIGHT,
 
-  _sc_surface: null, // Note: Required, we're strict about null checking.
-  _sc_surfaceDidChange: function() {
-    // console.log('SC.ContainerSurface#_sc_surfaceDidChange()');
-    var old = this._sc_surface,
-        cur = this.get('surface'),
+  _sc_contentSurface: null, // Required, we're strict about null checking.
+  _sc_contentSurfaceDidChange: function() {
+    // console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
+    var old = this._sc_contentSurface,
+        cur = this.get('contentSurface'),
         element = this.__sc_element__,
         transition, container, style;
 
@@ -68,13 +68,14 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
     if (old === cur) return; // Nothing to do.
 
-    // Work around a bug with WebKit where the screen is black on first load.
+    // HACK: Work around a WebKit bug where the screen is black on first load.
     if (SC.isExecutingMain) {
-      // HACK: Solves the blackscreen-at-startup-until-resize bug.
-      setTimeout(function() { document.body.insertBefore(document.createElement('div'), null); }, 0);
+      setTimeout(function() {
+        document.body.insertBefore(document.createElement('div'), null);
+      }, 0);
     }
 
-    this._sc_surface = cur;
+    this._sc_contentSurface = cur;
 
     if (cur) {
       cur.set('container', this);
@@ -167,7 +168,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         old.didDetach();
       }
     }
-  }.observes('surface'),
+  }.observes('contentSurface'),
 
   updateLayout: function() {}, // Nothing to do.
   updateDisplay: function() {} // Nothing to do.
