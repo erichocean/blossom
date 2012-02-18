@@ -156,7 +156,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.Benchmark.end(benchKey);
 
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
-    SC.RunLoop.currentRunLoop.scheduleLayoutAndRendering();
+    SC.ScheduleLayoutAndRendering();
     SC.LOG_BINDINGS = false ;
     SC.LOG_OBSERVERS = false ;
   },

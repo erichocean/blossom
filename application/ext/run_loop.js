@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals sc_assert */
+/*globals BLOSSOM sc_assert */
 
 // Create anonymous subclass of SC.RunLoop to add support for processing 
 // view queues and Timers.
@@ -46,7 +46,7 @@ SC.RunLoop = SC.RunLoop.extend(
     this.fireExpiredTimers(); // fire them timers!
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
-    this.scheduleLayoutAndRendering();
+    if (BLOSSOM) SC.ScheduleLayoutAndRendering();
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
   },
@@ -159,31 +159,6 @@ SC.RunLoop = SC.RunLoop.extend(
   },
 
   /** @private
-    Based on global flags, determines if a layout and rendering loop should 
-    be called. This is substantially faster than repeatedly requesting a 
-    layout and rendering loop with a function call.
-  */
-  scheduleLayoutAndRendering: function closure() {
-    var didRequestAnimationFrame = false;
-
-    function callback(timestamp) {
-      // console.log('SC.RequestAnimationFrame() - callback');
-      didRequestAnimationFrame = false;
-      SC.app.performLayoutAndRendering(timestamp);
-    }
-
-    return function() {
-      // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
-      if (didRequestAnimationFrame) return;
-
-      if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
-        didRequestAnimationFrame = true;
-        SC.RequestAnimationFrame(callback);
-      }
-    };
-  }(),
-
-  /** @private
     Invoked when a timeout actually fires.  Simply cleanup, then begin and end 
     a runloop. This will fire any expired timers and reschedule.  Note that
     this function will be called with 'this' set to the global context, 
@@ -198,3 +173,32 @@ SC.RunLoop = SC.RunLoop.extend(
 });
 
 SC.RunLoop.currentRunLoop = SC.RunLoop.create();
+
+if (BLOSSOM) {
+
+/** @private
+  Based on global flags, determines if a layout and rendering loop should 
+  be called. This is substantially faster than repeatedly requesting a 
+  layout and rendering loop with a function call.
+*/
+SC.ScheduleLayoutAndRendering = function closure() {
+  var didRequestAnimationFrame = false;
+
+  function callback(timestamp) {
+    // console.log('SC.RequestAnimationFrame() - callback');
+    didRequestAnimationFrame = false;
+    SC.app.performLayoutAndRendering(timestamp);
+  }
+
+  return function() {
+    // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
+    if (didRequestAnimationFrame) return;
+
+    if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
+      didRequestAnimationFrame = true;
+      SC.RequestAnimationFrame(callback);
+    }
+  };
+}();
+
+} // BLOSSOM
