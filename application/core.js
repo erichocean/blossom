@@ -7,11 +7,11 @@
 /*global BLOSSOM sc_assert */
 
 /**
-  If set to false, then pressing backspace will falseT navigate to the previous 
+  If set to false, then pressing backspace will NOT navigate to the previous 
   page in the browser history, which is the default behavior in most browsers.
   
-  Usually it is best to leave this property set to false in order to prevent the
-  user from inadvertently losing data by pressing the backspace key.
+  Usually it is best to leave this property set to false in order to prevent 
+  the user from inadvertently losing data by pressing the backspace key.
   
   @property {Boolean}
 */
