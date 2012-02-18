@@ -30,6 +30,10 @@ if (BLOSSOM) {
 */
 SC.ContainerSurface = SC.CompositeSurface.extend({
 
+  orderInTransition:  SC.ENTER_LEFT,
+  replaceTransition:  SC.SLIDE_FLIP_LEFT,
+  orderOutTransition: SC.EXIT_RIGHT,
+
   /** @property
     The surface displayed by this container.
 
@@ -49,10 +53,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     @type SC.Surface or null
   */
   contentSurface: null,
-
-  orderInTransition:  SC.ENTER_LEFT,
-  replaceTransition:  SC.SLIDE_FLIP_LEFT,
-  orderOutTransition: SC.EXIT_RIGHT,
 
   _sc_contentSurface: null, // Required, we're strict about null checking.
   _sc_contentSurfaceDidChange: function() {

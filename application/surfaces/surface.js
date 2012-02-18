@@ -110,16 +110,6 @@ SC.Surface = SC.Responder.extend({
   */
   displayProperties: [],
 
-  /**
-    This method is invoked whenever a display property changes.  It will set
-    the needsDisplay property to true.  If you need to perform additional 
-    set up whenever the display changes, you can override this 
-    method as well.
-  */
-  displayDidChange: function() {
-    this.triggerRendering();
-  },
-
   // ..........................................................
   // VISIBILITY SUPPORT
   //
@@ -141,7 +131,7 @@ SC.Surface = SC.Responder.extend({
   _sc_isVisibleDidChange: function() {
     var el = this.__sc_element__;
     el.style.visibility = this.get('isVisible')? "visible" : "hidden";
-    this.displayDidChange();
+    this.triggerRendering();
   }.observes('isVisible'),
 
   // ..........................................................
@@ -234,11 +224,11 @@ SC.Surface = SC.Responder.extend({
   },
 
   updateLayout: function() {
-    console.log('All SC.Surface subclasses should override updateLayout()');
+    throw "All SC.Surface subclasses MUST implement updateLayout(). (Do not call the SC.Surface's implementation.)";
   },
 
   updateDisplay: function() {
-    console.log('All SC.Surface subclasses should override updateDisplay()');
+    throw "All SC.Surface subclasses MUST implement updateDisplay(). (Do not call the SC.Surface's implementation.)";
   },
 
   // ..........................................................
@@ -591,7 +581,6 @@ SC.Surface = SC.Responder.extend({
     // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
     this.initElement();
-    // this.displayDidChange();
 
     this.pane = this; // Needed so that our childViews can get our "pane".
 

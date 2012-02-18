@@ -18,7 +18,7 @@ SC.CompositeSurface = SC.Surface.extend(
   // SURFACE TREE SUPPORT
   //
 
-  // When the sublayers property changes, we need to observe it's members
+  // When the subsurfaces property changes, we need to observe it's members
   // for changes.
   _sc_subsurfaces: null,
   _sc_subsurfacesDidChange: function() {
@@ -33,7 +33,7 @@ SC.CompositeSurface = SC.Surface.extend(
     if (last && last.isEnumerable) last.removeObserver('[]', this, func);
     
     // save new cached values 
-    this._sc_sublayers = cur ;
+    this._sc_subsurfaces = cur ;
     
     // setup new observers
     if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
