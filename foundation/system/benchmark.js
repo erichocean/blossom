@@ -414,6 +414,15 @@ SC.Benchmark = {
     SC.Benchmark.bench(func, name, 1) ;
   },
   
-  _benchCount: 1
+  _benchCount: 1,
+
+  fps: function() {
+    var stat = this._statFor('SC.RunLoop#loop()') ;
+    var avg = (stat.runs > 0) ? (Math.floor(stat.amt * 1000 / stat.runs) / 1000) : 0 ;
+    var stat2 = this._statFor('SC.Application#performLayoutAndRendering()') ;
+    var avg2 = (stat2.runs > 0) ? (Math.floor(stat2.amt * 1000 / stat2.runs) / 1000) : 0 ;
+    
+    console.log("%@ fps at %@x%@".fmt(1000/(avg + avg2)|0, window.innerWidth, window.innerHeight));
+  }
   
 } ;
