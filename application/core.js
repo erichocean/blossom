@@ -83,7 +83,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
       displayPropertiesHash[key] = true;
     }
     K.prototype.displayPropertiesHash = displayPropertiesHash;
-  }
+  } else throw "Base class does not define any displayProperties!";
 
   K.extend = function(props) {
     var bench = SC.BENCHMARK_OBJECTS ;
