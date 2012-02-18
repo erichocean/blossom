@@ -87,7 +87,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
 
   K.extend = function(props) {
     var bench = SC.BENCHMARK_OBJECTS ;
-    if (bench) SC.Benchmark.start('SC.Object.extend') ;
+    if (bench) SC.Benchmark.start('SC.AugmentBaseClassWithDisplayProperties.extend') ;
 
     // build a new constructor and copy class methods.  Do this before 
     // adding any other properties so they are not overwritten by the copy.
@@ -127,7 +127,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
       base.displayPropertiesHash = displayPropertiesHash;
     }
 
-    if (bench) SC.Benchmark.end('SC.Object.extend') ;
+    if (bench) SC.Benchmark.end('SC.AugmentBaseClassWithDisplayProperties.extend') ;
     return ret ;
   };
 
