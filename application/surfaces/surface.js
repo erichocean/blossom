@@ -12,6 +12,8 @@ sc_require('system/property_animation');
 
 if (BLOSSOM) {
 
+SC.surfaces = {};
+
 /** @class
   `SC.Surface` is used to display content within the application's viewport. 
   Each surface lives on the GPU and supports implicit, hardware-accelerated 
@@ -165,6 +167,13 @@ SC.Surface = SC.Responder.extend({
   // LAYOUT & RENDERING SUPPORT
   //
 
+  // __needsDomUpdate__: false,
+  // triggerDomUpdate: function() {
+  //   console.log('SC.Surface#triggerDomUpdate()');
+  //   this.__needsDomUpdate__ = true;
+  //   // SC.needsLayoutAndRendering = true;
+  // },
+
   __needsLayout__: false,
   triggerLayout: function() {
     // console.log('SC.Surface#triggerLayout()');
@@ -188,18 +197,27 @@ SC.Surface = SC.Responder.extend({
   },
 
   performLayoutAndRenderingIfNeeded: function(timestamp) {
-    // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
-    var needsLayout = this.__needsLayout__,
+    console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
+    var needsDomUpdate = this.__needsDomUpdate__,
+        needsLayout = this.__needsLayout__,
         needsDisplay = this.__needsRendering__,
         isVisible = this.get('isVisible');
 
     var benchKey = 'SC.Surface#performLayoutAndRenderingIfNeeded()',
+        // domKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDomUpdate',
         layoutKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsLayout',
         displayKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDisplay';
 
     SC.Benchmark.start(benchKey);
 
     // debugger;
+    // if (needsDomUpdate) {
+    //   SC.Benchmark.start(domKey);
+    //   this.updateDom();
+    //   this.__needsDomUpdate__ = false;
+    //   SC.Benchmark.end(domKey);
+    // }
+
     if (needsLayout && isVisible) {
       SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
@@ -222,6 +240,10 @@ SC.Surface = SC.Responder.extend({
 
     SC.Benchmark.end(benchKey);
   },
+
+  // updateDom: function() {
+  //   throw "All SC.Surface subclasses MUST implement updateDom(). (Do not call the SC.Surface's implementation.)";
+  // },
 
   updateLayout: function() {
     throw "All SC.Surface subclasses MUST implement updateLayout(). (Do not call the SC.Surface's implementation.)";
@@ -419,6 +441,7 @@ SC.Surface = SC.Responder.extend({
     @property SC.Rect
   */
   frame: function(key, value) {
+    console.log('SC.Surface@frame', key, value);
     var frame = this._sc_frame, anchorPoint, bounds, position;
     if (value !== undefined) {
       if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
@@ -439,6 +462,7 @@ SC.Surface = SC.Responder.extend({
       // Cache the new frame so we don't need to compute it later.
       frame.set(value);
       this._sc_frameIsDirty = false;
+      // this.triggerDomUpdate();
     } else {
       if (this._sc_frameIsDirty) {
         anchorPoint = this._sc_anchorPoint;
@@ -574,7 +598,7 @@ SC.Surface = SC.Responder.extend({
     this.foo = el;
 
     // Make sure Blossom can find this surface.
-    SC.Surface.surfaces[id] = this;
+    SC.surfaces[id] = this;
   },
 
   init: function() {
@@ -1298,7 +1322,7 @@ SC.Surface = SC.Responder.extend({
 //         // }
 // 
 //         // Make sure SproutCore can find this view.
-//         SC.Surface.surfaces[this.get('containerId')] = this;
+//         SC.surfaces[this.get('containerId')] = this;
 //       }
 //     }
 //     return element ;
@@ -1603,7 +1627,5 @@ SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
 };
 
 SC.Surface.prototype.updateLayoutRules = SC.Layer.prototype.updateLayoutRules;
-
-SC.Surface.surfaces = {};
 
 } // BLOSSOM

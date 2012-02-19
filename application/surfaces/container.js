@@ -170,6 +170,17 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     }
   }.observes('contentSurface'),
 
+  // updateDom: function() {
+  //   console.log('SC.ContainerSurface#updateDom()');
+  //   var el = this.__sc_element__,
+  //       style = el.style,
+  //       frame = this.get('frame'),
+  //       contentSurface = this.get('contentSurface');
+  // 
+  //   style.width  = frame[2]/*width*/;
+  //   style.height = frame[3]/*height*/;
+  // },
+
   updateLayout: function() {}, // Nothing to do.
   updateDisplay: function() {} // Nothing to do.
 

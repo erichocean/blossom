@@ -134,7 +134,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   performLayoutAndRendering: function(timestamp) {
     SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
-    // console.log('SC.Application#performLayoutAndRendering()');
+    console.log('SC.Application#performLayoutAndRendering()');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
     sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
 
@@ -145,6 +145,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.needsLayoutAndRendering = false; // Do this now so we can reschedule if needed.
 
     // debugger;
+    // var uiContainer = this.get('uiContainer');
+    // if (SC.viewportSizeDidChange) {
+    //   var sz = this.get('viewportSize');
+    //   uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
+    // }
+    // uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
     var ui = this.get('ui');
     if (ui) ui.performLayoutAndRenderingIfNeeded(timestamp);
@@ -1043,7 +1049,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   targetSurfaceForEvent: function(evt) {
     // console.log('SC.Application#targetSurfaceForEvent()');
-    var parentNode = evt.target, id, ret, surfaces = SC.Surface.surfaces;
+    var parentNode = evt.target, id, ret, surfaces = SC.surfaces;
 
     while (parentNode && !ret) {
       id = parentNode.id;
