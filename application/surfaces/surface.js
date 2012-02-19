@@ -577,6 +577,10 @@ SC.Surface = SC.Responder.extend({
     return SC.guidFor(this) ;
   }.property().cacheable(),
 
+  initPsurfaceElement: function(psurface) {
+    console.log('SC.Surface#initPsurfaceElement()');
+  },
+
   /** @private Overriden by subclasses as needed. */
   initElement: function() {
     // Use the element we're given; otherwise, create one.
