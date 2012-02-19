@@ -55,22 +55,23 @@ SC.psurfacesBeingMoved = null;
   known to become attached in the end.
 
   Beyond managing the rendering tree, a major responsibility of a Psurface is 
-  to retrieve and apply animations and transitions to surface properties.
+  to retrieve and apply animations and transitions to surface properties, as 
+  well as handling order-in and order-out transitions.
 
   Property animations and transitions should be done after a Psurface's 
   rendering surface has been added to the rendering tree, but before moving 
   on to the next Psurface.  This happens in three situations:
 
-  - SC.Psurface#push(surface)
   - SC.Psurface#next(surface)
   - SC.Psurface#pop(surface)
+  - SC.Psurface.end(surface)
 
-  In all three commands, the current psurfaces will never be visited again, 
+  In all three situations, the current psurfaces will never be visited again, 
   and its rendering surface (e.g. DOM node) is guaranteed to be in the 
   rendering tree at that point.
 
   The DOM tree itself needs to be built immediatly during the sync algorithm, 
-  beacuse child nodes need to be able to append to their parent nodes.
+  because child DOM nodes need to be able to append to their parent DOM nodes.
 */
 SC.Psurface = function(surfaceId) {
   sc_assert(surfaceId && typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
@@ -111,6 +112,7 @@ SC.currentPsurface = null; // Mostly a safety check to make sure our callers
 SC.Psurface.begin = function(surface) {
   console.log('SC.Psurface#begin()');
 
+  // Sanity check the surface.
   sc_assert(surface && surface.kindOf(SC.Surface));
   sc_assert(surface.get('supersurface') === null);
   sc_assert(SC.surfaces[surface.__id__] === surface);
@@ -119,17 +121,24 @@ SC.Psurface.begin = function(surface) {
   var id = surface.__id__,
       psurface = SC.psurfaces[id];
 
+  // If the psurface already exists, it is in the DOM, and should not have a 
+  // parent (we verify this below).
+
   if (!psurface) {
     if (psurface = SC.psurfacesBeingRemoved[id]) {
       // The psurface has an element, and may have a parent. If the psurface 
       // has a parent, we need to remove it from it's parent.  The psurface 
       // is in the DOM already.
-      
+
+      delete SC.psurfacesBeingRemoved[id];
+
     } else if (psurface = SC.psurfacesBeingMoved[id]) {
       // The psurface has an element, and may have a parent. If the psurface 
       // has a parent, we need to remove it from it's parent.  The psurface 
       // is NOT in the DOM.
-      
+
+      delete SC.psurfacesBeingMoved[id];
+
     } else {
       // We need to create a Psurface for this surface.
       psurface = new SC.Psurface(id);
@@ -137,13 +146,16 @@ SC.Psurface.begin = function(surface) {
       // Ask the surface? Hmm...
       surface.initPsurfaceElement(psurface);
     }
+
+    // The psurface is now current and present in the rendering tree (DOM).
     SC.psurfaces[id] = psurface;
   }
 
-  // Sanity check.
+  // Sanity check the psurface for all code paths.
   sc_assert(psurface && psurface instanceof SC.Psurface && psurface.parent === null);
   sc_assert(SC.psurfaces[id] === psurface);
   sc_assert(psurface.__element__ && document.getElementById(id) === psurface.__element__);
+  sc_assert(psurface.__element__.parentElement === document.body);
 
   return (SC.currentPsurface = psurface);
 };
