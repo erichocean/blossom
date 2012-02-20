@@ -81,9 +81,12 @@ SC.Psurface = function(surfaceId, tagName) {
   // Set all these properties up front so we get the "same" internal class in 
   // browsers like Google Chrome.
   this.__id__ = surfaceId;
-  this.__element__ = null;
 
-  this.tagName = tagName || 'div';
+  var element = document.createElement(tagName || 'div');
+  element.id = surfaceId;
+  sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
+  this.__element__ = element;
+
   this.parent = null;
   this.firstChild = null;
   this.nextSibling = null;
@@ -93,19 +96,6 @@ SC.Psurface = function(surfaceId, tagName) {
 };
 
 SC.Psurface.prototype = {
-
-  createElement: function() {
-    console.log('SC.Psurface#createElement()', this.__id__);
-
-    sc_assert(this.tagName);
-    sc_assert(this.__id__);
-    sc_assert(this.__element__ === null);
-    sc_assert(!document.getElementById(this.__id__));
-
-    var el = document.createElement(this.tagName);
-    el.id = this.__id__;
-    this.__element__ = el;
-  },
 
   push: function(surface) {
     console.log('SC.Psurface#push()');
@@ -134,8 +124,6 @@ SC.Psurface.prototype = {
       firstChild.parent = this;
       SC.psurfaces[id] = firstChild;
 
-      firstChild.createElement();
-      sc_assert(firstChild.__element__);
       el.appendChild(firstChild.__element__);
     }
 
@@ -180,8 +168,6 @@ SC.Psurface.prototype = {
       nextSibling.prevSibling = this;
       SC.psurfaces[id] = nextSibling;
 
-      nextSibling.createElement();
-      sc_assert(nextSibling.__element__);
       el.parentElement.appendChild(nextSibling.__element__);
     }
 
@@ -257,8 +243,6 @@ SC.Psurface.begin = function(surface) {
       sc_assert(!document.getElementById(id));
 
       psurface = new SC.Psurface(id, tagName);
-      psurface.createElement();
-      sc_assert(psurface.__element__);
       document.body.appendChild(psurface.__element__, null);
     }
 
