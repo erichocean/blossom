@@ -448,6 +448,8 @@ SC.Array = {
         oldlen  = this._array_oldLength,
         newlen, length, changes ;
 
+    if (!this._observableInited) this.initObservable();
+
     this.beginPropertyChanges();    
     this.notifyPropertyChange('length'); // flush caches
 
