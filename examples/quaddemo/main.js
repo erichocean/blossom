@@ -63,4 +63,14 @@ function main() {
   SC.app.set('ui', surface);
 
   qd.canvas = surface.get('layer').__sc_element__; // HACK
+
+  // SC.CompositeSurface.create().updatePsurfaceTree();
+  // console.log('*****');
+
+  var s = SC.CompositeSurface.create();
+  s.get('subsurfaces').push(SC.Surface.create(), SC.Surface.create(), SC.Surface.create());
+  s.updatePsurfaceTree();
+
+  // console.log('*****');
+  // SC.CompositeSurface.create().updatePsurfaceTree();
 }

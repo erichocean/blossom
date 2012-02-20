@@ -580,7 +580,7 @@ SC.Surface = SC.Responder.extend({
   }.property().cacheable(),
 
   initPsurfaceElement: function(psurface) {
-    console.log('SC.Surface#initPsurfaceElement()');
+    console.log('SC.Surface#initPsurfaceElement()', psurface.__id__);
     sc_assert(psurface.__element__ === null);
     var el = document.createElement('div');
     el.id = psurface.__id__;
@@ -596,9 +596,9 @@ SC.Surface = SC.Responder.extend({
     var rootPsurface = SC.Psurface.begin(this);
 
     // Sanity check.
-    sc_assert(rootPsurface &&
-              rootPsurface instanceof SC.Psurface &&
-              rootPsurface.__id__ === this.get('id') );
+    sc_assert(rootPsurface);
+    sc_assert(rootPsurface instanceof SC.Psurface);
+    sc_assert(rootPsurface.__id__ === this.get('id'));
 
     // Only defined for composite surfaces.
     if (this.updatePsurface) this.updatePsurface(rootPsurface);

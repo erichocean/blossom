@@ -94,14 +94,80 @@ SC.Psurface.prototype = {
 
   push: function(surface) {
     console.log('SC.Psurface#push()');
+    var el = this.__element__,
+        firstChild = this.firstChild, id = surface.__id__;
+
+    sc_assert(SC.currentPsurface === this);
+    sc_assert(el && document.getElementById(this.__id__) === el);
+
+    if (firstChild) {
+      console.log('unhandled');
+    } else {
+      // Need to create a new Psurface.
+      firstChild = new SC.Psurface(id);
+      firstChild.parent = this;
+      SC.psurfaces[id] = firstChild;
+
+      surface.initPsurfaceElement(firstChild);
+      sc_assert(firstChild.__element__);
+      el.appendChild(firstChild.__element__);
+    }
+
+    // Sanity check firstChild for all code paths.
+    sc_assert(firstChild);
+    sc_assert(firstChild instanceof SC.Psurface);
+    sc_assert(firstChild.parent === this);
+    sc_assert(firstChild.prevSibling === null);
+    sc_assert(firstChild.__element__);
+    sc_assert(firstChild.__element__ === document.getElementById(id));
+    sc_assert(firstChild.__element__.parentElement === this.__element__);
+    sc_assert(SC.psurfaces[id] === firstChild);
+
+    return (SC.currentPsurface = firstChild);
   },
 
   next: function(surface) {
     console.log('SC.Psurface#next()');
+    var el = this.__element__,
+        nextSibling = this.nextSibling, id = surface.__id__;
+
+    sc_assert(SC.currentPsurface === this);
+    sc_assert(el && document.getElementById(this.__id__) === el);
+
+    if (nextSibling) {
+      console.log('unhandled');
+    } else {
+      // Need to create a new Psurface.
+      nextSibling = new SC.Psurface(id);
+      nextSibling.parent = this.parent;
+      nextSibling.prevSibling = this;
+      SC.psurfaces[id] = nextSibling;
+
+      surface.initPsurfaceElement(nextSibling);
+      sc_assert(nextSibling.__element__);
+      el.parentElement.appendChild(nextSibling.__element__);
+    }
+
+    // Sanity check firstChild for all code paths.
+    sc_assert(nextSibling);
+    sc_assert(nextSibling instanceof SC.Psurface);
+    sc_assert(nextSibling.parent === this.parent);
+    sc_assert(nextSibling.prevSibling === this);
+    sc_assert(nextSibling.__element__);
+    sc_assert(nextSibling.__element__ === document.getElementById(id));
+    sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
+    sc_assert(SC.psurfaces[id] === nextSibling);
+
+    return (SC.currentPsurface = nextSibling);
   },
 
-  pop: function(surface) {
+  pop: function() {
     console.log('SC.Psurface#pop()');
+
+    sc_assert(SC.currentPsurface === this);
+    sc_assert(this.nextSibling === null);
+
+    SC.currentPsurface = this.parent;
   }
 
 };
@@ -139,8 +205,6 @@ SC.Psurface.begin = function(surface) {
     } else {
       // We need to create a Psurface for this surface.
       psurface = new SC.Psurface(id);
-      // FIXME: We need to init the this.element somehow here, right?
-      // Ask the surface? Hmm...
       surface.initPsurfaceElement(psurface);
       sc_assert(psurface.__element__);
       document.body.appendChild(psurface.__element__, null);
@@ -151,9 +215,12 @@ SC.Psurface.begin = function(surface) {
   }
 
   // Sanity check the psurface for all code paths.
-  sc_assert(psurface && psurface instanceof SC.Psurface && psurface.parent === null);
+  sc_assert(psurface);
+  sc_assert(psurface instanceof SC.Psurface);
+  sc_assert(psurface.parent === null);
   sc_assert(SC.psurfaces[id] === psurface);
-  sc_assert(psurface.__element__ && document.getElementById(id) === psurface.__element__);
+  sc_assert(psurface.__element__);
+  sc_assert(document.getElementById(id) === psurface.__element__);
   sc_assert(psurface.__element__.parentElement === document.body);
 
   return (SC.currentPsurface = psurface);
