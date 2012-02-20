@@ -99,9 +99,14 @@ SC.Psurface.prototype = {
         firstChild = this.firstChild,
         id = surface.__id__;
 
-    sc_assert(SC.currentPsurface === this);
+    sc_assert(this === SC.currentPsurface);
     sc_assert(el);
     sc_assert(el === document.getElementById(this.__id__));
+
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface === SC.surfaces[surface.__id__]);
 
     if (firstChild) {
       console.log('unhandled');
@@ -122,12 +127,12 @@ SC.Psurface.prototype = {
     // Sanity check firstChild for all code paths.
     sc_assert(firstChild);
     sc_assert(firstChild instanceof SC.Psurface);
+    sc_assert(firstChild === SC.psurfaces[id]);
     sc_assert(firstChild.parent === this);
     sc_assert(firstChild.prevSibling === null);
     sc_assert(firstChild.__element__);
     sc_assert(firstChild.__element__ === document.getElementById(id));
     sc_assert(firstChild.__element__.parentElement === this.__element__);
-    sc_assert(SC.psurfaces[id] === firstChild);
 
     return (SC.currentPsurface = firstChild);
   },
@@ -138,8 +143,14 @@ SC.Psurface.prototype = {
         nextSibling = this.nextSibling,
         id = surface.__id__;
 
-    sc_assert(SC.currentPsurface === this);
-    sc_assert(el && document.getElementById(this.__id__) === el);
+    sc_assert(this === SC.currentPsurface);
+    sc_assert(el);
+    sc_assert(el === document.getElementById(this.__id__));
+
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface === SC.surfaces[surface.__id__]);
 
     if (nextSibling) {
       console.log('unhandled');
@@ -161,12 +172,12 @@ SC.Psurface.prototype = {
     // Sanity check nextSibling for all code paths.
     sc_assert(nextSibling);
     sc_assert(nextSibling instanceof SC.Psurface);
+    sc_assert(nextSibling === SC.psurfaces[id]);
     sc_assert(nextSibling.parent === this.parent);
     sc_assert(nextSibling.prevSibling === this);
     sc_assert(nextSibling.__element__);
     sc_assert(nextSibling.__element__ === document.getElementById(id));
     sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
-    sc_assert(SC.psurfaces[id] === nextSibling);
 
     return (SC.currentPsurface = nextSibling);
   },
@@ -176,8 +187,9 @@ SC.Psurface.prototype = {
     var el = this.__element__,
         nextSibling = this.nextSibling;
 
-    sc_assert(SC.currentPsurface === this);
-    sc_assert(el && document.getElementById(this.__id__) === el);
+    sc_assert(this === SC.currentPsurface);
+    sc_assert(el);
+    sc_assert(el === document.getElementById(this.__id__));
 
     if (nextSibling) {
       console.log('unhandled');
@@ -198,12 +210,14 @@ SC.currentPsurface = null; // Mostly a safety check to make sure our callers
 SC.Psurface.begin = function(surface) {
   console.log('SC.Psurface#begin()');
 
-  // Sanity check the surface.
-  sc_assert(surface && surface.kindOf(SC.Surface));
-  sc_assert(surface.get('supersurface') === null);
-  sc_assert(SC.surfaces[surface.__id__] === surface);
   sc_assert(SC.currentPsurface === null);
   sc_assert(SC.psurfacesBeingMoved === null);
+
+  // Sanity check the surface.
+  sc_assert(surface);
+  sc_assert(surface.kindOf(SC.Surface));
+  sc_assert(surface.get('supersurface') === null);
+  sc_assert(surface === SC.surfaces[surface.__id__]);
 
   SC.psurfacesBeingMoved = {};
 
@@ -216,7 +230,7 @@ SC.Psurface.begin = function(surface) {
   if (!psurface) {
     if (psurface = SC.psurfacesBeingRemoved[id]) {
       // The psurface has an element, and may have a parent. If the psurface 
-      // has a parent, we need to remove it from it's parent.  The psurface 
+      // has a parent, we need to remove it from it's parent. The psurface 
       // is in the DOM already.
 
       delete SC.psurfacesBeingRemoved[id];
@@ -238,10 +252,10 @@ SC.Psurface.begin = function(surface) {
   // Sanity check the psurface for all code paths.
   sc_assert(psurface);
   sc_assert(psurface instanceof SC.Psurface);
+  sc_assert(psurface === SC.psurfaces[id]);
   sc_assert(psurface.parent === null);
-  sc_assert(SC.psurfaces[id] === psurface);
   sc_assert(psurface.__element__);
-  sc_assert(document.getElementById(id) === psurface.__element__);
+  sc_assert(psurface.__element__ === document.getElementById(id));
   sc_assert(psurface.__element__.parentElement === document.body);
 
   return (SC.currentPsurface = psurface);
@@ -250,16 +264,20 @@ SC.Psurface.begin = function(surface) {
 SC.Psurface.end = function(surface) {
   console.log('SC.Psurface#end()');
 
-  sc_assert(surface && surface.kindOf(SC.Surface));
+  // Sanity check the surface.
+  sc_assert(surface);
+  sc_assert(surface.kindOf(SC.Surface));
+  sc_assert(surface.get('supersurface') === null);
+  sc_assert(surface === SC.surfaces[surface.__id__]);
 
   var psurface = SC.psurfaces[surface.__id__];
 
-  sc_assert(psurface && psurface.parent === null);
-  sc_assert(SC.currentPsurface === psurface);
+  sc_assert(psurface);
+  sc_assert(psurface === SC.currentPsurface);
+  sc_assert(psurface.parent === null);
 
   SC.currentPsurface = null;
   SC.psurfacesBeingMoved = null;
-  return psurface;
 };
 
 } // BLOSSOM
