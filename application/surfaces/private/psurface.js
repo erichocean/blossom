@@ -74,7 +74,8 @@ SC.psurfacesBeingMoved = null;
   because child DOM nodes need to be able to append to their parent DOM nodes.
 */
 SC.Psurface = function(surfaceId) {
-  sc_assert(surfaceId && typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
+  sc_assert(surfaceId);
+  sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
   sc_assert(SC.surfaces[surfaceId], "new SC.Psurface(): Invalid `surfaceId`: surface is not in the `SC.surfaces` hash.");
 
   // Set all these properties up front so we get the "same" internal class in 
@@ -95,15 +96,20 @@ SC.Psurface.prototype = {
   push: function(surface) {
     console.log('SC.Psurface#push()');
     var el = this.__element__,
-        firstChild = this.firstChild, id = surface.__id__;
+        firstChild = this.firstChild,
+        id = surface.__id__;
 
     sc_assert(SC.currentPsurface === this);
-    sc_assert(el && document.getElementById(this.__id__) === el);
+    sc_assert(el);
+    sc_assert(el === document.getElementById(this.__id__));
 
     if (firstChild) {
       console.log('unhandled');
+
     } else {
       // Need to create a new Psurface.
+      sc_assert(!document.getElementById(id));
+
       firstChild = new SC.Psurface(id);
       firstChild.parent = this;
       SC.psurfaces[id] = firstChild;
@@ -129,15 +135,19 @@ SC.Psurface.prototype = {
   next: function(surface) {
     console.log('SC.Psurface#next()');
     var el = this.__element__,
-        nextSibling = this.nextSibling, id = surface.__id__;
+        nextSibling = this.nextSibling,
+        id = surface.__id__;
 
     sc_assert(SC.currentPsurface === this);
     sc_assert(el && document.getElementById(this.__id__) === el);
 
     if (nextSibling) {
       console.log('unhandled');
+
     } else {
       // Need to create a new Psurface.
+      sc_assert(!document.getElementById(id));
+
       nextSibling = new SC.Psurface(id);
       nextSibling.parent = this.parent;
       nextSibling.prevSibling = this;
@@ -148,7 +158,7 @@ SC.Psurface.prototype = {
       el.parentElement.appendChild(nextSibling.__element__);
     }
 
-    // Sanity check firstChild for all code paths.
+    // Sanity check nextSibling for all code paths.
     sc_assert(nextSibling);
     sc_assert(nextSibling instanceof SC.Psurface);
     sc_assert(nextSibling.parent === this.parent);
@@ -163,8 +173,17 @@ SC.Psurface.prototype = {
 
   pop: function() {
     console.log('SC.Psurface#pop()');
+    var el = this.__element__,
+        nextSibling = this.nextSibling;
 
     sc_assert(SC.currentPsurface === this);
+    sc_assert(el && document.getElementById(this.__id__) === el);
+
+    if (nextSibling) {
+      console.log('unhandled');
+    }
+
+    // Sanity check this for all code paths.
     sc_assert(this.nextSibling === null);
 
     SC.currentPsurface = this.parent;
@@ -204,6 +223,8 @@ SC.Psurface.begin = function(surface) {
 
     } else {
       // We need to create a Psurface for this surface.
+      sc_assert(!document.getElementById(id));
+
       psurface = new SC.Psurface(id);
       surface.initPsurfaceElement(psurface);
       sc_assert(psurface.__element__);
