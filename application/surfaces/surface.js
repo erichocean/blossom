@@ -594,7 +594,7 @@ SC.Surface = SC.Responder.extend({
     console.log('SC.Surface#updatePsurfaceTree()');
 
     sc_assert(!this.get('supersurface'), "SC.Surface#updatePsurfaceTree() can only be called on a root surface.");
-    sc_assert(SC.surfaces[this.get('id')] === this, "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
+    sc_assert(this === SC.surfaces[this.get('id')], "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
 
     var rootPsurface = SC.Psurface.begin(this);
 

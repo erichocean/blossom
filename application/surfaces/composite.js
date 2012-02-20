@@ -21,11 +21,14 @@ SC.CompositeSurface = SC.Surface.extend(
   updatePsurface: function(psurface) {
     console.log('SC.CompositeSurface#updatePsurface()');
 
+    // Sanity check the Psurface.
+    sc_assert(psurface);
+    sc_assert(psurface instanceof SC.Psurface);
     sc_assert(psurface.__element__);
     sc_assert(psurface.__element__ === document.getElementById(this.get('id')));
 
     var subsurfaces = this.get('subsurfaces'), cur;
-    if (subsurfaces.get('length') > 0) {
+    if (subsurfaces && subsurfaces.get('length') > 0) {
       subsurfaces.forEach(function(surface, idx) {
         if (idx === 0) cur = psurface.push(surface);
         else cur = cur.next(surface);

@@ -471,6 +471,19 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   }.observes('menuSurface'),
 
   // ..........................................................
+  // PSURFACE SUPPORT (Private)
+  //
+
+  updatePsurfaces: function() {
+    console.log('SC.Application#updatePsurfaces()');
+
+    this.get('surfaces').invoke('updatePsurfaceTree');
+    // var ui = this.get('ui');
+    // if (ui) ui.updatePsurfaceTree();
+  },
+
+
+  // ..........................................................
   // VIEWPORT STATE
   //
 

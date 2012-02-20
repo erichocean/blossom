@@ -67,14 +67,16 @@ function main() {
   // SC.CompositeSurface.create().updatePsurfaceTree();
   // console.log('*****');
 
-  var s = SC.CompositeSurface.create(),
-      s2 = SC.CompositeSurface.create(),
-      s3 = SC.CompositeSurface.create();
+  var s  = SC.ContainerSurface.create(),
+      s2 = SC.ContainerSurface.create(),
+      s3 = SC.ContainerSurface.create();
     
-  s2.get('subsurfaces').push(SC.Surface.create(), SC.Surface.create(), SC.Surface.create());
-  s3.get('subsurfaces').push(SC.Surface.create(), s2, SC.Surface.create());
-  s.get('subsurfaces').push(SC.Surface.create(), s3, SC.Surface.create());
-  s.updatePsurfaceTree();
+  s2.get('subsurfaces').push(SC.View.create(), SC.View.create(), SC.View.create());
+  s3.get('subsurfaces').push(SC.View.create(), s2, SC.View.create());
+  s.get('subsurfaces') .push(SC.View.create(), s3, SC.View.create());
+
+  SC.app.get('surfaces').add(s);
+  SC.app.updatePsurfaces();
 
   // console.log('*****');
   // SC.CompositeSurface.create().updatePsurfaceTree();
