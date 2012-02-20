@@ -68,10 +68,12 @@ function main() {
   // console.log('*****');
 
   var s = SC.CompositeSurface.create(),
-      s2 = SC.CompositeSurface.create();
+      s2 = SC.CompositeSurface.create(),
+      s3 = SC.CompositeSurface.create();
     
   s2.get('subsurfaces').push(SC.Surface.create(), SC.Surface.create(), SC.Surface.create());
-  s.get('subsurfaces').push(SC.Surface.create(), s2, SC.Surface.create());
+  s3.get('subsurfaces').push(SC.Surface.create(), s2, SC.Surface.create());
+  s.get('subsurfaces').push(SC.Surface.create(), s3, SC.Surface.create());
   s.updatePsurfaceTree();
 
   // console.log('*****');
