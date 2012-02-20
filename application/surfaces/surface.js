@@ -199,7 +199,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   performLayoutAndRenderingIfNeeded: function(timestamp) {
-    console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
+    // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
     var needsDomUpdate = this.__needsDomUpdate__,
         needsLayout = this.__needsLayout__,
         needsDisplay = this.__needsRendering__,

@@ -76,7 +76,6 @@ function main() {
   s.get('subsurfaces') .push(SC.View.create(), s3, SC.View.create());
 
   SC.app.get('surfaces').add(s);
-  SC.app.updatePsurfaces();
 
   // console.log('*****');
   // SC.CompositeSurface.create().updatePsurfaceTree();
