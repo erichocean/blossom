@@ -9,6 +9,7 @@ sc_require('system/responder');
 sc_require('layers/layer');
 sc_require('layers/layout');
 sc_require('system/property_animation');
+sc_require('surfaces/private/psurface');
 
 if (BLOSSOM) {
 
@@ -146,6 +147,7 @@ SC.Surface = SC.Responder.extend({
     @property SC.Surface
     @readOnly
   */
+  _sc_supersurface: null,
   supersurface: function(key, value) {
     if (value !== undefined) {
       sc_assert(value === null || value.kindOf(SC.Surface), "SC.Surface@supersurface must either be null or an SC.Surface instance.");
@@ -533,12 +535,6 @@ SC.Surface = SC.Responder.extend({
   */
   container: null,
 
-  // ..........................................................
-  // DOM SUPPORT (Private, Browser-only)
-  //
-
-  __sc_element__: null,
-
   /* @private */
   getPath: function(path) {
     var ary = path.split('.'),
@@ -568,6 +564,12 @@ SC.Surface = SC.Responder.extend({
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
 
+  // ..........................................................
+  // PSURFACE SUPPORT (Private)
+  //
+
+  __sc_element__: null,
+
   /** @private
     The ID to use when building CSS rules for this container surface.
   */
@@ -579,6 +581,29 @@ SC.Surface = SC.Responder.extend({
 
   initPsurfaceElement: function(psurface) {
     console.log('SC.Surface#initPsurfaceElement()');
+    sc_assert(psurface.__element__ === null);
+    var el = document.createElement('div');
+    el.id = psurface.__id__;
+    psurface.__element__ = el;
+  },
+
+  updatePsurfaceTree: function() {
+    console.log('SC.Surface#updatePsurfaceTree()');
+
+    sc_assert(!this.get('supersurface'), "SC.Surface#updatePsurfaceTree() can only be called on a root surface.");
+    sc_assert(SC.surfaces[this.get('id')] === this, "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
+
+    var rootPsurface = SC.Psurface.begin(this);
+
+    // Sanity check.
+    sc_assert(rootPsurface &&
+              rootPsurface instanceof SC.Psurface &&
+              rootPsurface.__id__ === this.get('id') );
+
+    // Only defined for composite surfaces.
+    if (this.updatePsurface) this.updatePsurface(rootPsurface);
+
+    SC.Psurface.end(this); // Required.
   },
 
   /** @private Overriden by subclasses as needed. */
@@ -605,9 +630,16 @@ SC.Surface = SC.Responder.extend({
     SC.surfaces[id] = this;
   },
 
+  // ..........................................................
+  // MISC
+  //
+
   init: function() {
     // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
+
+    this.__id__ = this.get('id');
+
     this.initElement();
 
     this.pane = this; // Needed so that our childViews can get our "pane".

@@ -33,7 +33,7 @@ SC.psurfacesBeingMoved = null;
   - SC.Psurface.begin(surface)
   - SC.Psurface#push(surface)
   - SC.Psurface#next(surface)
-  - SC.Psurface#pop(surface)
+  - SC.Psurface#pop()
   - SC.Psurface.end(surface)
 
   These operations correspond to a top-down traversal of the Psurface _from 
@@ -79,12 +79,13 @@ SC.Psurface = function(surfaceId) {
 
   // Set all these properties up front so we get the "same" internal class in 
   // browsers like Google Chrome.
-  this.id = surfaceId;
+  this.__id__ = surfaceId;
+  this.__element__ = null;
+
   this.parent = null;
   this.firstChild = null;
   this.nextSibling = null;
   this.prevSibling = null;
-  this.__element__ = null;
 
   return this;
 };
@@ -117,6 +118,9 @@ SC.Psurface.begin = function(surface) {
   sc_assert(surface.get('supersurface') === null);
   sc_assert(SC.surfaces[surface.__id__] === surface);
   sc_assert(SC.currentPsurface === null);
+  sc_assert(SC.psurfacesBeingMoved === null);
+
+  SC.psurfacesBeingMoved = {};
 
   var id = surface.__id__,
       psurface = SC.psurfaces[id];
@@ -132,19 +136,14 @@ SC.Psurface.begin = function(surface) {
 
       delete SC.psurfacesBeingRemoved[id];
 
-    } else if (psurface = SC.psurfacesBeingMoved[id]) {
-      // The psurface has an element, and may have a parent. If the psurface 
-      // has a parent, we need to remove it from it's parent.  The psurface 
-      // is NOT in the DOM.
-
-      delete SC.psurfacesBeingMoved[id];
-
     } else {
       // We need to create a Psurface for this surface.
       psurface = new SC.Psurface(id);
       // FIXME: We need to init the this.element somehow here, right?
       // Ask the surface? Hmm...
       surface.initPsurfaceElement(psurface);
+      sc_assert(psurface.__element__);
+      document.body.appendChild(psurface.__element__, null);
     }
 
     // The psurface is now current and present in the rendering tree (DOM).
@@ -171,6 +170,7 @@ SC.Psurface.end = function(surface) {
   sc_assert(SC.currentPsurface === psurface);
 
   SC.currentPsurface = null;
+  SC.psurfacesBeingMoved = null;
   return psurface;
 };
 

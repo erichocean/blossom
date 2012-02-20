@@ -15,6 +15,25 @@ SC.CompositeSurface = SC.Surface.extend(
   isCompositeSurface: true,
 
   // ..........................................................
+  // PSURFACE SUPPORT (Private)
+  //
+
+  updatePsurface: function(psurface) {
+    console.log('SC.CompositeSurface#updatePsurface()');
+    sc_assert(psurface.__element__ && document.getElementById(this.get('id')) === psurface.__element__);
+    var subsurfaces = this.get('subsurfaces');
+    if (subsurfaces.get('length') > 0) {
+      subsurfaces.forEach(function(surface, idx) {
+        if (idx === 0) psurface.push(surface);
+        else psurface.next(surface);
+
+        if (surface.updatePsurface) surface.updatePsurface();
+      }, this);
+      psurface.pop();
+    }
+  },
+
+  // ..........................................................
   // SURFACE TREE SUPPORT
   //
 
