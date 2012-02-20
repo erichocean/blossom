@@ -73,7 +73,7 @@ SC.psurfacesBeingMoved = null;
   The DOM tree itself needs to be built immediatly during the sync algorithm, 
   because child DOM nodes need to be able to append to their parent DOM nodes.
 */
-SC.Psurface = function(surfaceId) {
+SC.Psurface = function(surfaceId, tagName) {
   sc_assert(surfaceId);
   sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
   sc_assert(SC.surfaces[surfaceId], "new SC.Psurface(): Invalid `surfaceId`: surface is not in the `SC.surfaces` hash.");
@@ -83,6 +83,7 @@ SC.Psurface = function(surfaceId) {
   this.__id__ = surfaceId;
   this.__element__ = null;
 
+  this.tagName = tagName || 'div';
   this.parent = null;
   this.firstChild = null;
   this.nextSibling = null;
@@ -93,11 +94,25 @@ SC.Psurface = function(surfaceId) {
 
 SC.Psurface.prototype = {
 
+  createElement: function() {
+    console.log('SC.Psurface#createElement()', this.__id__);
+
+    sc_assert(this.tagName);
+    sc_assert(this.__id__);
+    sc_assert(this.__element__ === null);
+    sc_assert(!document.getElementById(this.__id__));
+
+    var el = document.createElement(this.tagName);
+    el.id = this.__id__;
+    this.__element__ = el;
+  },
+
   push: function(surface) {
     console.log('SC.Psurface#push()');
     var el = this.__element__,
         firstChild = this.firstChild,
-        id = surface.__id__;
+        id = surface.__id__,
+        tagName = surface.__tagName__;
 
     sc_assert(this === SC.currentPsurface);
     sc_assert(el);
@@ -115,11 +130,11 @@ SC.Psurface.prototype = {
       // Need to create a new Psurface.
       sc_assert(!document.getElementById(id));
 
-      firstChild = new SC.Psurface(id);
+      firstChild = new SC.Psurface(id, tagName);
       firstChild.parent = this;
       SC.psurfaces[id] = firstChild;
 
-      surface.initPsurfaceElement(firstChild);
+      firstChild.createElement();
       sc_assert(firstChild.__element__);
       el.appendChild(firstChild.__element__);
     }
@@ -141,7 +156,8 @@ SC.Psurface.prototype = {
     console.log('SC.Psurface#next()');
     var el = this.__element__,
         nextSibling = this.nextSibling,
-        id = surface.__id__;
+        id = surface.__id__,
+        tagName = surface.__tagName__;
 
     sc_assert(this === SC.currentPsurface);
     sc_assert(el);
@@ -159,12 +175,12 @@ SC.Psurface.prototype = {
       // Need to create a new Psurface.
       sc_assert(!document.getElementById(id));
 
-      nextSibling = new SC.Psurface(id);
+      nextSibling = new SC.Psurface(id, tagName);
       nextSibling.parent = this.parent;
       nextSibling.prevSibling = this;
       SC.psurfaces[id] = nextSibling;
 
-      surface.initPsurfaceElement(nextSibling);
+      nextSibling.createElement();
       sc_assert(nextSibling.__element__);
       el.parentElement.appendChild(nextSibling.__element__);
     }
@@ -222,6 +238,7 @@ SC.Psurface.begin = function(surface) {
   SC.psurfacesBeingMoved = {};
 
   var id = surface.__id__,
+      tagName = surface.__tagName__,
       psurface = SC.psurfaces[id];
 
   // If the psurface already exists, it is in the DOM, and should not have a 
@@ -239,8 +256,8 @@ SC.Psurface.begin = function(surface) {
       // We need to create a Psurface for this surface.
       sc_assert(!document.getElementById(id));
 
-      psurface = new SC.Psurface(id);
-      surface.initPsurfaceElement(psurface);
+      psurface = new SC.Psurface(id, tagName);
+      psurface.createElement();
       sc_assert(psurface.__element__);
       document.body.appendChild(psurface.__element__, null);
     }

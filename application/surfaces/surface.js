@@ -579,16 +579,7 @@ SC.Surface = SC.Responder.extend({
     return SC.guidFor(this) ;
   }.property().cacheable(),
 
-  initPsurfaceElement: function(psurface) {
-    console.log('SC.Surface#initPsurfaceElement()', psurface.__id__);
-
-    sc_assert(psurface.__element__ === null);
-    sc_assert(!document.getElementById(psurface.__id__));
-
-    var el = document.createElement('div');
-    el.id = psurface.__id__;
-    psurface.__element__ = el;
-  },
+  __tagName__: 'div',
 
   updatePsurfaceTree: function() {
     console.log('SC.Surface#updatePsurfaceTree()');
