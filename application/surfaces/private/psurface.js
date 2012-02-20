@@ -120,7 +120,7 @@ SC.Psurface.prototype = {
       // Need to create a new Psurface.
       sc_assert(!document.getElementById(id));
 
-      firstChild = new SC.Psurface(id, tagName);
+      firstChild = this.firstChild = new SC.Psurface(id, tagName);
       firstChild.parent = this;
       SC.psurfaces[id] = firstChild;
 
@@ -131,6 +131,7 @@ SC.Psurface.prototype = {
     sc_assert(firstChild);
     sc_assert(firstChild instanceof SC.Psurface);
     sc_assert(firstChild === SC.psurfaces[id]);
+    sc_assert(firstChild === this.firstChild);
     sc_assert(firstChild.parent === this);
     sc_assert(firstChild.prevSibling === null);
     sc_assert(firstChild.__element__);
@@ -163,7 +164,7 @@ SC.Psurface.prototype = {
       // Need to create a new Psurface.
       sc_assert(!document.getElementById(id));
 
-      nextSibling = new SC.Psurface(id, tagName);
+      nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
       nextSibling.parent = this.parent;
       nextSibling.prevSibling = this;
       SC.psurfaces[id] = nextSibling;
@@ -175,6 +176,7 @@ SC.Psurface.prototype = {
     sc_assert(nextSibling);
     sc_assert(nextSibling instanceof SC.Psurface);
     sc_assert(nextSibling === SC.psurfaces[id]);
+    sc_assert(nextSibling === this.nextSibling);
     sc_assert(nextSibling.parent === this.parent);
     sc_assert(nextSibling.prevSibling === this);
     sc_assert(nextSibling.__element__);
