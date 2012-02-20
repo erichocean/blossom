@@ -188,8 +188,8 @@ SC.Psurface.prototype = {
         nextSibling = this.nextSibling;
 
     sc_assert(this === SC.currentPsurface);
-    sc_assert(el);
-    sc_assert(el === document.getElementById(this.__id__));
+    sc_assert(this.__element__);
+    sc_assert(this.__element__ === document.getElementById(this.__id__));
 
     if (nextSibling) {
       console.log('unhandled');

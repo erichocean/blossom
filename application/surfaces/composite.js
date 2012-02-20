@@ -30,7 +30,7 @@ SC.CompositeSurface = SC.Surface.extend(
         if (idx === 0) cur = psurface.push(surface);
         else cur = cur.next(surface);
 
-        if (cur.updatePsurface) cur.updatePsurface();
+        if (surface.updatePsurface) surface.updatePsurface(cur);
       }, this);
       cur.pop();
     }
