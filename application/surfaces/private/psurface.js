@@ -9,7 +9,6 @@ if (BLOSSOM) {
 
 SC.psurfaces = {};
 SC.psurfacesBeingRemoved = {};
-SC.psurfacesBeingMoved = null;
 
 /** @private
   A presentation surface (Psurface) is a lightweight representation of the 
@@ -50,7 +49,7 @@ SC.psurfacesBeingMoved = null;
   held in the `SC.psurfacesBeingRemoved` hash.
 
   While bringing a presentation tree in sync with a surface tree, the 
-  `SC.psurfacesBeingMoved` hash can be used to remember Psurfaces that are 
+  `SC._sc_psurfacesBeingMoved` hash can be used to remember Psurfaces that are 
   temporarily detached from the currently syncing Psurface tree, but are 
   known to become attached in the end.
 
@@ -80,7 +79,7 @@ SC.Psurface = function(surfaceId, tagName) {
 
   // Set all these properties up front so we get the "same" internal class in 
   // browsers like Google Chrome.
-  this.__id__ = surfaceId;
+  this.id = surfaceId;
 
   var element = document.createElement(tagName || 'div');
   element.id = surfaceId;
@@ -95,127 +94,64 @@ SC.Psurface = function(surfaceId, tagName) {
   return this;
 };
 
-SC.Psurface.prototype = {
+/** @private These properties are used during tree traversal. */
+SC._sc_currentPsurface     = null;
+SC._sc_psurfaceColor       = null;
+SC._sc_psurfacesBeingMoved = null;
 
-  push: function(surface) {
-    console.log('SC.Psurface#push()');
-    var el = this.__element__,
-        firstChild = this.firstChild,
-        id = surface.__id__,
-        tagName = surface.__tagName__;
+/*
+  How this works
+  ==============
 
-    sc_assert(this === SC.currentPsurface);
-    sc_assert(el);
-    sc_assert(el === document.getElementById(this.__id__));
+  Initially, each psurface is 'white' (represented by undefined):
 
-    // Sanity check the surface.
-    sc_assert(surface);
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(surface === SC.surfaces[surface.__id__]);
+      SC._sc_psurfaceColor[psurface.id] === undefined;
 
-    if (firstChild) {
-      console.log('unhandled');
+  When a psurface is initially discovered, it's color it set to 'grey'.  
+  Initially discovery happens during three commands:
+  - `SC.Psurface.begin()` -- discovers the root psurface
+  - `SC.Psurface#push()`  -- discovers the "pushed" surface
+  - `SC.Psurface#next()`  -- discovers the "next" surface
 
-    } else {
-      // Need to create a new Psurface.
-      sc_assert(!document.getElementById(id));
+  When a `push()`, `next()`, or `pop()` call is made on a surface, it can be 
+  either 'grey' or 'black'.  _The color is important!_  In order to match the 
+  calling tree exactly, it is necessary to base the behavior of a node based 
+  on it's current color for these commands.
 
-      firstChild = this.firstChild = new SC.Psurface(id, tagName);
-      firstChild.parent = this;
-      SC.psurfaces[id] = firstChild;
+  If a _grey_ psurface has `push()` called on it, that means the calling tree 
+  has a child node here.
 
-      el.appendChild(firstChild.__element__);
-    }
+  If a _grey_ psurface has `next()` called on it, that means the calling tree 
+  _does not have any child nodes here_.  However, the psurface might, so they 
+  will need to be removed. In addition, the current psurface has at least one 
+  more sibling.
 
-    // Sanity check firstChild for all code paths.
-    sc_assert(firstChild);
-    sc_assert(firstChild instanceof SC.Psurface);
-    sc_assert(firstChild === SC.psurfaces[id]);
-    sc_assert(firstChild === this.firstChild);
-    sc_assert(firstChild.parent === this);
-    sc_assert(firstChild.prevSibling === null);
-    sc_assert(firstChild.__element__);
-    sc_assert(firstChild.__element__ === document.getElementById(id));
-    sc_assert(firstChild.__element__.parentElement === this.__element__);
+  If a _grey_ psurface has `pop()` called on it, that means the calling tree 
+  has just this current node as a child. Any children and/or future siblings 
+  of the psurface should be removed.
 
-    return (SC.currentPsurface = firstChild);
-  },
+  If a _black_ psurface has `push()` called on it, that's an error.  `push()` 
+  can only be called on a psurface that is 'grey'.
 
-  next: function(surface) {
-    console.log('SC.Psurface#next()');
-    var el = this.__element__,
-        nextSibling = this.nextSibling,
-        id = surface.__id__,
-        tagName = surface.__tagName__;
+  If a _black_ psurface has `next()` called on it, that means the calling 
+  tree does have child nodes of the current psurface (which were handled by a 
+  previous `push()` call), and it also means the current psurface has at 
+  least one more sibling.
 
-    sc_assert(this === SC.currentPsurface);
-    sc_assert(el);
-    sc_assert(el === document.getElementById(this.__id__));
-
-    // Sanity check the surface.
-    sc_assert(surface);
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(surface === SC.surfaces[surface.__id__]);
-
-    if (nextSibling) {
-      console.log('unhandled');
-
-    } else {
-      // Need to create a new Psurface.
-      sc_assert(!document.getElementById(id));
-
-      nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
-      nextSibling.parent = this.parent;
-      nextSibling.prevSibling = this;
-      SC.psurfaces[id] = nextSibling;
-
-      el.parentElement.appendChild(nextSibling.__element__);
-    }
-
-    // Sanity check nextSibling for all code paths.
-    sc_assert(nextSibling);
-    sc_assert(nextSibling instanceof SC.Psurface);
-    sc_assert(nextSibling === SC.psurfaces[id]);
-    sc_assert(nextSibling === this.nextSibling);
-    sc_assert(nextSibling.parent === this.parent);
-    sc_assert(nextSibling.prevSibling === this);
-    sc_assert(nextSibling.__element__);
-    sc_assert(nextSibling.__element__ === document.getElementById(id));
-    sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
-
-    return (SC.currentPsurface = nextSibling);
-  },
-
-  pop: function() {
-    console.log('SC.Psurface#pop()');
-    var el = this.__element__,
-        nextSibling = this.nextSibling;
-
-    sc_assert(this === SC.currentPsurface);
-    sc_assert(this.__element__);
-    sc_assert(this.__element__ === document.getElementById(this.__id__));
-
-    if (nextSibling) {
-      console.log('unhandled');
-    }
-
-    // Sanity check this for all code paths.
-    sc_assert(this.nextSibling === null);
-
-    SC.currentPsurface = this.parent;
-  }
-
-};
-
-/** @private */
-SC.currentPsurface = null; // Mostly a safety check to make sure our callers
-                           // use our API correctly.
-
+  If a _black_ psurface has `pop()` called on it, that means the calling tree 
+  does have child nodes of the current psurface (which were handled by a 
+  previous `push()` call), and it also means the current psurface has no more 
+  siblings.
+*/
 SC.Psurface.begin = function(surface) {
   console.log('SC.Psurface#begin()');
+  var id = surface.__id__,
+      tagName = surface.__tagName__,
+      psurface = SC.psurfaces[id];
 
-  sc_assert(SC.currentPsurface === null);
-  sc_assert(SC.psurfacesBeingMoved === null);
+  sc_assert(SC._sc_currentPsurface === null);
+  sc_assert(SC._sc_psurfaceColor === null);
+  sc_assert(SC._sc_psurfacesBeingMoved === null);
 
   // Sanity check the surface.
   sc_assert(surface);
@@ -223,11 +159,8 @@ SC.Psurface.begin = function(surface) {
   sc_assert(surface.get('supersurface') === null);
   sc_assert(surface === SC.surfaces[surface.__id__]);
 
-  SC.psurfacesBeingMoved = {};
-
-  var id = surface.__id__,
-      tagName = surface.__tagName__,
-      psurface = SC.psurfaces[id];
+  SC._sc_psurfaceColor = {};
+  SC._sc_psurfacesBeingMoved = {};
 
   // If the psurface already exists, it is in the DOM, and should not have a 
   // parent (we verify this below).
@@ -261,11 +194,214 @@ SC.Psurface.begin = function(surface) {
   sc_assert(psurface.__element__ === document.getElementById(id));
   sc_assert(psurface.__element__.parentElement === document.body);
 
-  return (SC.currentPsurface = psurface);
+  // We've discovered this psurface.
+  SC._sc_psurfaceColor[id] = 'grey';
+
+  return (SC._sc_currentPsurface = psurface);
+};
+
+SC.Psurface.prototype = {
+
+  push: function(surface) {
+    console.log('SC.Psurface#push()');
+    var el = this.__element__,
+        firstChild = this.firstChild,
+        id = surface.__id__,
+        tagName = surface.__tagName__,
+        myId = this.id,
+        myColor = SC._sc_psurfaceColor[myId];
+
+    // This psurface should have already been discovered, and push() should 
+    // never have been called on this node before (otherwise, we'd be black).
+    sc_assert(myColor === 'grey');
+
+    sc_assert(this === SC._sc_currentPsurface);
+    sc_assert(el);
+    sc_assert(el === document.getElementById(this.id));
+
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface === SC.surfaces[surface.__id__]);
+
+    if (firstChild) {
+      if (firstChild.id !== id) {
+        throw 'unhandled';
+      }
+
+    } else {
+      // Need to create a new Psurface.
+      sc_assert(!document.getElementById(id));
+
+      firstChild = this.firstChild = new SC.Psurface(id, tagName);
+      firstChild.parent = this;
+      SC.psurfaces[id] = firstChild;
+
+      el.appendChild(firstChild.__element__);
+    }
+
+    // Sanity check firstChild for all code paths.
+    sc_assert(firstChild);
+    sc_assert(firstChild instanceof SC.Psurface);
+    sc_assert(firstChild === SC.psurfaces[id]);
+    sc_assert(firstChild === this.firstChild);
+    sc_assert(firstChild.parent === this);
+    sc_assert(firstChild.prevSibling === null);
+    sc_assert(firstChild.__element__);
+    sc_assert(firstChild.__element__ === document.getElementById(id));
+    sc_assert(firstChild.__element__.parentElement === this.__element__);
+
+    // We've discovered firstChild.
+    SC._sc_psurfaceColor[id] = 'grey';
+
+    // We've been visited.
+    SC._sc_psurfaceColor[myId] = 'black';
+
+    return (SC._sc_currentPsurface = firstChild);
+  },
+
+  next: function(surface) {
+    console.log('SC.Psurface#next()');
+    var el = this.__element__,
+        nextSibling = this.nextSibling,
+        id = surface.__id__,
+        tagName = surface.__tagName__,
+        myId = this.id,
+        myColor = SC._sc_psurfaceColor[myId];
+
+    sc_assert(myColor === 'grey' || myColor === 'black');
+
+    sc_assert(this === SC._sc_currentPsurface);
+    sc_assert(el);
+    sc_assert(el === document.getElementById(this.id));
+
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface === SC.surfaces[surface.__id__]);
+
+    function moveChildren(psurface) {
+      var next = psurface.firstChild, child;
+      while (next) {
+        child = next;
+        next = child.nextSibling;
+        sc_assert(SC.psurfaces[child.id]);
+        delete SC.psurfaces[child.id];
+        SC._sc_psurfacesBeingMoved[child.id] = child;
+        moveChildren(child);
+      }
+    }
+
+    if (myColor === 'grey') {
+      // This happens when this should have no children.
+      if (this.firstChild) {
+        // We need to remove our children.  This is somewhat complicated, the 
+        // children we are removing could exist somewhere else in the tree, 
+        // so the children (and their children) need to be accessible.
+        var next = this.firstChild, child;
+        while (next) {
+          child = next;
+          next = child.nextSibling;
+          child.parent = null;
+          child.prevSibling = null;
+          child.nextSibling = null;
+          el.removeChild(child.__element__);
+
+          // Need to move detached surfaces from active to "being moved".
+          sc_assert(SC.psurfaces[child.id]);
+          delete SC.psurfaces[child.id];
+          SC._sc_psurfacesBeingMoved[child.id] = child;
+          moveChildren(child);
+        }
+      }
+
+      if (nextSibling) {
+        if (nextSibling.id !== id) {
+          throw 'unhandled';
+        }
+
+      } else {
+        // Need to create a new Psurface.
+        sc_assert(!document.getElementById(id));
+
+        nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
+        nextSibling.parent = this.parent;
+        nextSibling.prevSibling = this;
+        SC.psurfaces[id] = nextSibling;
+
+        el.parentElement.appendChild(nextSibling.__element__);
+      }
+
+      // We've been visited.
+      SC._sc_psurfaceColor[myId] = 'black';
+
+    } else { // myColor === 'black'
+      if (nextSibling) {
+        if (nextSibling.id !== id) {
+          throw 'unhandled';
+        }
+
+      } else {
+        // Need to create a new Psurface.
+        sc_assert(!document.getElementById(id));
+
+        nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
+        nextSibling.parent = this.parent;
+        nextSibling.prevSibling = this;
+        SC.psurfaces[id] = nextSibling;
+
+        el.parentElement.appendChild(nextSibling.__element__);
+      }
+    }
+
+    // Sanity check nextSibling for all code paths.
+    sc_assert(nextSibling);
+    sc_assert(nextSibling instanceof SC.Psurface);
+    sc_assert(nextSibling === SC.psurfaces[id]);
+    sc_assert(nextSibling === this.nextSibling);
+    sc_assert(nextSibling.parent === this.parent);
+    sc_assert(nextSibling.prevSibling === this);
+    sc_assert(nextSibling.__element__);
+    sc_assert(nextSibling.__element__ === document.getElementById(id));
+    sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
+
+    // We've discovered nextSibling.
+    SC._sc_psurfaceColor[id] = "grey";
+
+    return (SC._sc_currentPsurface = nextSibling);
+  },
+
+  pop: function() {
+    console.log('SC.Psurface#pop()');
+    var el = this.__element__,
+        nextSibling = this.nextSibling;
+
+    // This psurface should have already been discovered.
+    sc_assert(SC._sc_psurfaceColor[this.id] === "grey");
+
+    sc_assert(this === SC._sc_currentPsurface);
+    sc_assert(this.__element__);
+    sc_assert(this.__element__ === document.getElementById(this.id));
+
+    if (nextSibling) {
+      throw 'unhandled';
+    }
+
+    // Sanity check this for all code paths.
+    sc_assert(this.nextSibling === null);
+
+    SC._sc_currentPsurface = this.parent;
+  }
+
 };
 
 SC.Psurface.end = function(surface) {
   console.log('SC.Psurface#end()');
+  var id = surface.__id__,
+      psurface = SC.psurfaces[id],
+      color = SC._sc_psurfaceColor[id];
+
+  sc_assert(color === 'grey' || color === 'black');
 
   // Sanity check the surface.
   sc_assert(surface);
@@ -273,14 +409,18 @@ SC.Psurface.end = function(surface) {
   sc_assert(surface.get('supersurface') === null);
   sc_assert(surface === SC.surfaces[surface.__id__]);
 
-  var psurface = SC.psurfaces[surface.__id__];
-
   sc_assert(psurface);
-  sc_assert(psurface === SC.currentPsurface);
+  sc_assert(psurface === SC._sc_currentPsurface);
   sc_assert(psurface.parent === null);
 
-  SC.currentPsurface = null;
-  SC.psurfacesBeingMoved = null;
+  // We've been visited.
+  SC._sc_psurfaceColor[id] = "black";
+
+  console.log(SC._sc_psurfaceColor);
+
+  SC._sc_currentPsurface     = null;
+  SC._sc_psurfaceColor       = null;
+  SC._sc_psurfacesBeingMoved = null;
 };
 
 } // BLOSSOM

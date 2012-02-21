@@ -54,6 +54,9 @@ function main() {
       // console.log('mouseUp');
       var layer = this.get('layer');
       layer.set('foo', true);
+
+      s.get('subsurfaces').objectAt(1).set('subsurfaces', []);
+
       this.triggerRendering();
       return qd.mouseup(evt);
     }

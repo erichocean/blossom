@@ -592,7 +592,7 @@ SC.Surface = SC.Responder.extend({
     // Sanity check.
     sc_assert(rootPsurface);
     sc_assert(rootPsurface instanceof SC.Psurface);
-    sc_assert(rootPsurface.__id__ === this.get('id'));
+    sc_assert(rootPsurface.id === this.get('id'));
 
     // Only defined for composite surfaces.
     if (this.updatePsurface) this.updatePsurface(rootPsurface);

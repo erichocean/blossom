@@ -135,6 +135,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   performLayoutAndRendering: function(timestamp) {
     SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
     // console.log('SC.Application#performLayoutAndRendering()');
+    console.log('==========================================');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
     sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
 
