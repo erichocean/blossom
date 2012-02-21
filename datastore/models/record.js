@@ -998,6 +998,18 @@ SC.Record.mixin( /** @scope SC.Record */ {
   */
   ignoreUnknownProperties: false,
 
+  stringForStatus: function(status) {
+    var ret = [];
+
+    for (var prop in this) {
+      if (prop.match(/[A-Z_]$/) && this[prop]===status) {
+        ret.push(prop);
+      }
+    }
+
+    return ret.join(" ");
+  },
+
   // ..........................................................
   // CONSTANTS
   //

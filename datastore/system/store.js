@@ -394,8 +394,9 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     editables[storeKey] = 1 ; // use number for dense array support
 
     var that = this;
-    this._propagateToChildren(storeKey, function(storeKey){
+    this._propagateToChildren(storeKey, function(storeKey) {
       that.writeDataHash(storeKey, null, status);
+      that.notifyPropertyChange('status');
     });
 
     return this ;
