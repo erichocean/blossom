@@ -56,6 +56,7 @@ function main() {
       layer.set('foo', true);
 
       s.get('subsurfaces').objectAt(1).set('subsurfaces', []);
+      // s.get('subsurfaces').objectAt(1).get('subsurfaces').push(SC.View.create());
 
       this.triggerRendering();
       return qd.mouseup(evt);

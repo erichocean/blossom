@@ -8,7 +8,6 @@
 if (BLOSSOM) {
 
 SC.psurfaces = {};
-SC.psurfacesBeingRemoved = {};
 
 /** @private
   A presentation surface (Psurface) is a lightweight representation of the 
@@ -16,9 +15,9 @@ SC.psurfacesBeingRemoved = {};
   transitions to it. 
 
   A Psurface's corresponding rendering surface is *always* in the rendering 
-  tree at the beginning of an event loop if it exists in either the 
-  `SC.psurfaces` or `SC.psurfacesBeingRemoved` hashes.  (The rendering tree 
-  is the DOM tree when Blossom is running in the browser.)
+  tree at the beginning of an event loop if it exists in the `SC.psurfaces` 
+  hash.  (The rendering tree is the DOM tree when Blossom is running in the 
+  browser.)
 
   A Psurface's only purpose in life is to quickly sync up with the surface 
   tree during a display loop, updating the rendering tree to match during the 
@@ -44,9 +43,7 @@ SC.psurfacesBeingRemoved = {};
   Four global hashes are used to maintain state during this process.  In the 
   `SC.surfaces` hash, each surface that is in the surface tree has an entry. 
   In the `SC.psurfaces` hash, each Psurface whose corresponding rendering 
-  surface is in the render tree is reperesent, _with the exception_ of those 
-  Psurfaces that are in the process of being removed.  These Psurfaces are 
-  held in the `SC.psurfacesBeingRemoved` hash.
+  surface is in the render tree is represented.
 
   While bringing a presentation tree in sync with a surface tree, the 
   `SC._sc_psurfacesBeingMoved` hash can be used to remember Psurfaces that are 
@@ -166,20 +163,11 @@ SC.Psurface.begin = function(surface) {
   // parent (we verify this below).
 
   if (!psurface) {
-    if (psurface = SC.psurfacesBeingRemoved[id]) {
-      // The psurface has an element, and may have a parent. If the psurface 
-      // has a parent, we need to remove it from it's parent. The psurface 
-      // is in the DOM already.
+    // We need to create a Psurface for this surface.
+    sc_assert(!document.getElementById(id));
 
-      delete SC.psurfacesBeingRemoved[id];
-
-    } else {
-      // We need to create a Psurface for this surface.
-      sc_assert(!document.getElementById(id));
-
-      psurface = new SC.Psurface(id, tagName);
-      document.body.appendChild(psurface.__element__, null);
-    }
+    psurface = new SC.Psurface(id, tagName);
+    document.body.appendChild(psurface.__element__, null);
 
     // The psurface is now current and present in the rendering tree (DOM).
     SC.psurfaces[id] = psurface;
@@ -267,7 +255,9 @@ SC.Psurface.prototype = {
         id = surface.__id__,
         tagName = surface.__tagName__,
         myId = this.id,
-        myColor = SC._sc_psurfaceColor[myId];
+        myColor = SC._sc_psurfaceColor[myId],
+        psurfaces = SC.psurfaces,
+        surfacesBeingMoved = SC._sc_psurfacesBeingMoved;
 
     sc_assert(myColor === 'grey' || myColor === 'black');
 
@@ -281,24 +271,27 @@ SC.Psurface.prototype = {
     sc_assert(surface === SC.surfaces[surface.__id__]);
 
     function moveChildren(psurface) {
-      var next = psurface.firstChild, child;
+      var next = psurface.firstChild, child, id;
       while (next) {
         child = next;
         next = child.nextSibling;
-        sc_assert(SC.psurfaces[child.id]);
-        delete SC.psurfaces[child.id];
-        SC._sc_psurfacesBeingMoved[child.id] = child;
-        moveChildren(child);
+        id = child.id;
+        sc_assert(psurfaces[id]);
+        delete psurfaces[id];
+        surfacesBeingMoved[child.id] = child;
+        if (child.firstChild) moveChildren(child);
       }
     }
 
     if (myColor === 'grey') {
-      // This happens when this should have no children.
+      // This case happens when this psurface should have no children.
       if (this.firstChild) {
         // We need to remove our children.  This is somewhat complicated, the 
         // children we are removing could exist somewhere else in the tree, 
-        // so the children (and their children) need to be accessible.
-        var next = this.firstChild, child;
+        // so the children (and their children) need to be accessible.  In 
+        // addition, we don't want to tear down the whole tree, as this would 
+        // involve a lot of DOM manipulation.
+        var next = this.firstChild, child, childId;
         while (next) {
           child = next;
           next = child.nextSibling;
@@ -306,11 +299,12 @@ SC.Psurface.prototype = {
           child.prevSibling = null;
           child.nextSibling = null;
           el.removeChild(child.__element__);
+          childId = child.id;
 
           // Need to move detached surfaces from active to "being moved".
-          sc_assert(SC.psurfaces[child.id]);
-          delete SC.psurfaces[child.id];
-          SC._sc_psurfacesBeingMoved[child.id] = child;
+          sc_assert(psurfaces[childId]);
+          delete psurfaces[childId];
+          surfacesBeingMoved[childId] = child;
           moveChildren(child);
         }
       }
@@ -327,7 +321,7 @@ SC.Psurface.prototype = {
         nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
         nextSibling.parent = this.parent;
         nextSibling.prevSibling = this;
-        SC.psurfaces[id] = nextSibling;
+        psurfaces[id] = nextSibling;
 
         el.parentElement.appendChild(nextSibling.__element__);
       }
@@ -348,7 +342,7 @@ SC.Psurface.prototype = {
         nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
         nextSibling.parent = this.parent;
         nextSibling.prevSibling = this;
-        SC.psurfaces[id] = nextSibling;
+        psurfaces[id] = nextSibling;
 
         el.parentElement.appendChild(nextSibling.__element__);
       }
@@ -357,7 +351,7 @@ SC.Psurface.prototype = {
     // Sanity check nextSibling for all code paths.
     sc_assert(nextSibling);
     sc_assert(nextSibling instanceof SC.Psurface);
-    sc_assert(nextSibling === SC.psurfaces[id]);
+    sc_assert(nextSibling === psurfaces[id]);
     sc_assert(nextSibling === this.nextSibling);
     sc_assert(nextSibling.parent === this.parent);
     sc_assert(nextSibling.prevSibling === this);
