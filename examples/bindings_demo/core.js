@@ -93,14 +93,13 @@ function main() {
       ctx.translate(100,100);
 
       for (var idx=0, len=boxes.length; idx<len; ++idx) {
-        var box = boxes[idx],
-            x = idx % COLUMNS, y = 0, row = 1;
-
+        // Calculate this box's location on the grid.
+        var x = idx % COLUMNS, y = 0, row = 1;
         while (row*COLUMNS <= idx) y = row++;
 
         ctx.save();
-        ctx.translate(x*25, y*25); // position on the grid
-        box.render(ctx);
+        ctx.translate(x*35, y*35); // Position box on the grid (no CSS!)
+        boxes[idx].render(ctx);
         ctx.restore();
       }
 

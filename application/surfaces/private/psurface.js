@@ -197,7 +197,9 @@ SC.Psurface.prototype = {
         id = surface.__id__,
         tagName = surface.__tagName__,
         myId = this.id,
-        myColor = SC._sc_psurfaceColor[myId];
+        myColor = SC._sc_psurfaceColor[myId],
+        psurfaces = SC.psurfaces,
+        surfacesBeingMoved = SC._sc_psurfacesBeingMoved;
 
     // This psurface should have already been discovered, and push() should 
     // never have been called on this node before (otherwise, we'd be black).
@@ -214,7 +216,10 @@ SC.Psurface.prototype = {
 
     if (firstChild) {
       if (firstChild.id !== id) {
-        throw 'unhandled';
+        var child = psurfaces[id];
+        if (child) {
+          // We need to move the 
+        }
       }
 
     } else {
