@@ -56,7 +56,7 @@ function validatePsurfaces() {
     sc_assert(psurface.firstChild === nextPsurface);
     sc_assert(element.firstElementChild === nextElement);
     sc_assert(!nextPsurface.prevSibling);
-    sc_assert(!nextElement.prevElementSibling);
+    sc_assert(!nextElement.previousElementSibling);
     psurface = nextPsurface;
     element = nextElement;
   }
@@ -67,7 +67,7 @@ function validatePsurfaces() {
     sc_assert(psurface.nextSibling === nextPsurface);
     sc_assert(psurface === nextPsurface.prevSibling);
     sc_assert(element.nextElementSibling === nextElement);
-    sc_assert(element === nextElement.prevElementSibling);
+    sc_assert(element === nextElement.previousElementSibling);
     psurface = nextPsurface;
     element = nextElement;
   }
@@ -298,8 +298,12 @@ function test() {
   // Make up to five tree modifications.
   while (times--) modifyTree();
 
-  // Update the Psurfaces tree manually (this is the code we are fuzz testing).
-  tree.updatePsurfaceTree();
+  try {
+    // Update the Psurfaces tree manually (this is the code we are fuzz testing).
+    tree.updatePsurfaceTree();
+  } catch (e) {
+    console.log(e);
+  }
 
   // Validate the Psurfaces tree, and the DOM.
   validatePsurfaces();
