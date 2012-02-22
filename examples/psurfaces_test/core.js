@@ -1,13 +1,99 @@
-/*globals base3 green */
+/*globals base3 green sc_assert */
 
 var tree = SC.ContainerSurface.create();
 
-function validatePsurfaces() {
-  
-}
+var container = null;
 
-function validateDOM() {
-  
+function validatePsurfaces() {
+  var ary = Object.keys(SC.surfaces),
+      length = ary.length;
+
+  // First make sure that we don't have any dangling surfaces.
+  ary.forEach(function(key) {
+    var surface = SC.surfaces[key];
+    if (surface === tree || surface === surface || surface === container) return;
+    else sc_assert(surface.get('supersurface'));
+  });
+
+  // Now validate the tree. Exactly one psurface should exist for each 
+  // surface in the tree, the parent-child relationships should match, and 
+  // the psurfaces's element should be the element with the same id in the 
+  // DOM, and have the same parent-child relationship.
+  // 
+  // Note: this does not validate the ordering of psurfaces and DOM elements.
+  (function validateChildren(parent) {
+    var pid = parent.get('id'), psurface, pelement;
+    psurface = SC.psurfaces[pid];
+    sc_assert(psurface);
+    sc_assert(psurface.id === pid);
+    pelement = document.getElementById(pid);
+    sc_assert(pelement);
+    sc_assert(psurface.__element__ === pelement);
+
+    var subsurfaces = parent.get('subsurfaces');
+    if (!subsurfaces) return;
+    else {
+      subsurfaces.forEach(function(surface) {
+        sc_assert(surface.get('supersurface') === parent);
+
+        var id = surface.get('id'),
+            element = document.getElementById(id);
+        sc_assert(element.parentElement === pelement);
+      });
+      subsurfaces.forEach(validateChildren);
+    }
+  })(tree);
+
+  // At this point, the psurfaces tree and DOM tree have the same nodes and 
+  // parent-child relationships, but siblings may not be in the correct order.
+  // To test this, we walk the surfaces tree in order, issuing the correct 
+  // commands as we do to also walk the psurface and element trees in order.
+  var psurface, element, nextPsurface, nextElement;
+
+  function push(surface) {
+    nextPsurface = SC.psurfaces[surface.get('id')];
+    nextElement = document.getElementById(surface.get('id'));
+    sc_assert(psurface.firstChild === nextPsurface);
+    sc_assert(element.firstElementChild === nextElement);
+    sc_assert(!nextPsurface.prevSibling);
+    sc_assert(!nextElement.prevElementSibling);
+    psurface = nextPsurface;
+    element = nextElement;
+  }
+
+  function next(surface) {
+    nextPsurface = SC.psurfaces[surface.get('id')];
+    nextElement = document.getElementById(surface.get('id'));
+    sc_assert(psurface.nextSibling === nextPsurface);
+    sc_assert(psurface === nextPsurface.prevSibling);
+    sc_assert(element.nextElementSibling === nextElement);
+    sc_assert(element === nextElement.prevElementSibling);
+    psurface = nextPsurface;
+    element = nextElement;
+  }
+
+  function pop() {
+    sc_assert(!psurface.nextSibling);
+    sc_assert(!element.nextElementSibling);
+    psurface = psurface.parent;
+    element = element.parentNode;
+  }
+
+  psurface = SC.psurfaces[tree.get('id')];
+  element = document.getElementById(tree.get('id'));
+
+  (function visitSubsurfaces(parent) {
+    var subsurfaces = parent.get('subsurfaces'), cur;
+    if (subsurfaces && subsurfaces.get('length') > 0) {
+      subsurfaces.forEach(function(surface, idx) {
+        if (idx === 0) push(surface);
+        else next(surface);
+
+        visitSubsurfaces(surface);
+      });
+      pop();
+    }
+  })(tree);
 }
 
 var surface = SC.View.create({
@@ -42,7 +128,6 @@ var surface = SC.View.create({
 
     // Validate the Psurfaces tree, and the DOM.
     validatePsurfaces();
-    validateDOM();
   }
 
 });
@@ -59,7 +144,10 @@ function fetchLeaf() {
     idx = Math.floor(Math.random()*length);
     leaf = SC.surfaces[ary[idx]];
   }
-  return leaf.isLeafSurface? leaf : null;
+  var ret = leaf.isLeafSurface? leaf : null;
+  if (ret && ret === surface) ret = null;
+  if (ret) sc_assert(leaf.get('supersurface'));
+  return ret;
 }
 
 function childIsInParent(parent, child) {
@@ -119,6 +207,8 @@ function fetchComposite(parent, withChildren) {
     }
   }
 
+  if (found && composite === container) found = false;
+  if (found && composite !== tree) sc_assert(composite.get('supersurface'));
   return found? composite : null;
 }
 
@@ -136,13 +226,13 @@ function removeChild(child) {
   if (child === surface || child === tree) return false;
   var supersurface = child.get('supersurface');
   supersurface.get('subsurfaces').removeObject(child);
-  delete SC.subsurfaces[child.get('id')];
+  delete SC.surfaces[child.get('id')];
   return true;
 }
 
 function moveChild(composite, child) {
   if (removeChild(child) && insertChild(composite, child)) {
-    SC.subsurfaces[child.get('id')] = child;
+    SC.surfaces[child.get('id')] = child;
   }
 }
 
@@ -152,13 +242,17 @@ function modifyTree() {
   switch (Math.floor(Math.random()*11)) {
     case 0: // Add a leaf to an arbitrary composite surface
       composite = fetchComposite(null, false);
-      leaf = SC.View.create();
-      if (composite && leaf) insertChild(composite, leaf);
+      if (composite) {
+        leaf = SC.View.create();
+        insertChild(composite, leaf);
+      }
       break;
     case 1: // Add a composite to an arbitrary composite surface
       composite = fetchComposite(null, false);
-      node = SC.ContainerSurface.create();
-      if (composite && node) insertChild(composite, node);
+      if (composite) {
+        node = SC.ContainerSurface.create();
+        insertChild(composite, node);
+      }
       break;
     case 2: // Remove an arbitary leaf
       leaf = fetchLeaf();
@@ -208,5 +302,6 @@ function modifyTree() {
 function main() {
   SC.Application.create(); // Assigns itself automatically to SC.app
   SC.app.set('ui', surface);
+  container = SC.app.get('uiContainer');
   SC.app.addSurface(tree);
 }

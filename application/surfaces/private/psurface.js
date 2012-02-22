@@ -12,7 +12,7 @@ SC.psurfaces = {};
 /** @private
   A presentation surface (Psurface) is a lightweight representation of the 
   surface tree used to manage the rendering tree and apply animations and 
-  transitions to it. 
+  transitions to it.
 
   A Psurface's corresponding rendering surface is *always* in the rendering 
   tree at the beginning of an event loop if it exists in the `SC.psurfaces` 
@@ -219,6 +219,9 @@ SC.Psurface.prototype = {
         var child = psurfaces[id];
         if (child) {
           // We need to move the 
+          throw "unhandled";
+        } else {
+          throw "unhandled";
         }
       }
 
