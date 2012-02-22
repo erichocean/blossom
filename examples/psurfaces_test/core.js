@@ -4,6 +4,8 @@ var tree = SC.ContainerSurface.create();
 
 var container = null;
 
+var log = null;
+
 function validatePsurfaces() {
   var ary = Object.keys(SC.surfaces),
       length = ary.length;
@@ -143,6 +145,8 @@ function fetchLeaf() {
 }
 
 function childIsInParent(parent, child) {
+  if (parent === child) return true; // Abort.
+
   var subsurfaces = parent.get('subsurfaces');
 
   function checkChildren(surface) {
@@ -232,66 +236,96 @@ function modifyTree() {
   var node, leaf, composite;
   // debugger;
   switch (Math.floor(Math.random()*11)) {
-    case 0: // Add a leaf to an arbitrary composite surface
-      composite = fetchComposite(null, false);
+    case 0:
+       composite = fetchComposite(null, false);
       if (composite) {
         leaf = SC.View.create();
+        log.push("Add a new leaf (%@) to an arbitrary composite surface (%@).".fmt(leaf.get('id'), composite.get('id')));
         insertChild(composite, leaf);
       }
       break;
-    case 1: // Add a composite to an arbitrary composite surface
+    case 1:
       composite = fetchComposite(null, false);
       if (composite) {
         node = SC.ContainerSurface.create();
+        log.push("Add a new composite (%@) to an arbitrary composite surface (%@).".fmt(node.get('id'), composite.get('id')));
         insertChild(composite, node);
       }
       break;
-    case 2: // Remove an arbitary leaf
+    case 2:
       leaf = fetchLeaf();
-      if (leaf) removeChild(leaf);
+      if (leaf) {
+        log.push("Remove an arbitrary leaf (%@).".fmt(leaf.get('id')));
+        removeChild(leaf);
+      }
       break;
-    case 3: // Remove an arbitrary composite w/o children
+    case 3:
       composite = fetchComposite(null, false);
-      if (composite) removeChild(composite);
+      if (composite) {
+        log.push("// Remove an arbitrary composite w/o children (%@).".fmt(composite.get('id')));
+        removeChild(composite);
+      }
       break;
-    case 4: // Remove an arbitrary composite w/children
+    case 4:
       composite = fetchComposite(null, true);
-      if (composite) removeChild(composite);
+      if (composite) {
+        log.push("Remove an arbitrary composite w/children (%@).".fmt(composite.get('id')));
+        removeChild(composite);
+      }
       break;
-    case 5: // Move an arbitrary leaf to another composite w/o children
+    case 5:
       leaf = fetchLeaf();
       composite = fetchComposite(null, false);
-      if (leaf && composite) moveChild(composite, leaf);
+      if (leaf && composite) {
+        log.push("Move an arbitrary leaf (%@) to another composite w/o children (%@).".fmt(leaf.get('id'), composite.get('id')));
+        moveChild(composite, leaf);
+      }
       break;
-    case 6: // Move an arbitrary leaf to another composite w/ children
+    case 6:
       leaf = fetchLeaf();
       composite = fetchComposite(null, true);
-      if (leaf && composite) moveChild(composite, leaf);
+      if (leaf && composite) {
+        log.push("Move an arbitrary leaf (%@) to another composite w/ children (%@).".fmt(leaf.get('id'), composite.get('id')));
+        moveChild(composite, leaf);
+      }
       break;
-    case 7: // Move an arbitary composite w/o children to another composite w/o children
+    case 7:
       composite = fetchComposite(null, false);
       node = fetchComposite(composite, false);
-      if (composite && node) moveChild(node, composite);
+      if (composite && node) {
+        log.push("Move an arbitrary composite w/o children (%@) to another composite w/o children (%@).".fmt(composite.get('id'), node.get('id')));
+        moveChild(node, composite);
+      }
       break;
-    case 8: // Move an arbitary composite w/o children to another composite w/children
+    case 8:
       composite = fetchComposite(null, false);
       node = fetchComposite(composite, true);
-      if (composite && node) moveChild(node, composite);
+      if (composite && node) {
+        log.push("Move an arbitrary composite w/o children (%@) to another composite w/children (%@).".fmt(composite.get('id'), node.get('id')));
+        moveChild(node, composite);
+      }
       break;
-    case 9: // Move an arbitary composite w/ children to another composite w/o children
+    case 9:
       composite = fetchComposite(null, true);
       node = fetchComposite(composite, false);
-      if (composite && node) moveChild(node, composite);
+      if (composite && node) {
+        log.push("Move an arbitrary composite w/ children (%@) to another composite w/o children (%@).".fmt(composite.get('id'), node.get('id')));
+        moveChild(node, composite);
+      }
       break;
-    case 10: // Move an arbitary composite w/ children to another composite w/children
+    case 10:
       composite = fetchComposite(null, true);
       node = fetchComposite(composite, true);
-      if (composite && node) moveChild(node, composite);
+      if (composite && node) {
+        log.push("Move an arbitary composite w/ children (%@) to another composite w/children (%@).".fmt(composite.get('id'), node.get('id')));
+        moveChild(node, composite);
+      }
       break;
   }
 }
 
 function test() {
+  log = [];
   var times = Math.floor(Math.random()*6); // up to 5 modifications
   while (times === 0) times = Math.floor(Math.random()*6);
 
@@ -303,6 +337,7 @@ function test() {
     tree.updatePsurfaceTree();
   } catch (e) {
     console.log(e);
+    console.log(log.join('\n'));
   }
 
   // Validate the Psurfaces tree, and the DOM.

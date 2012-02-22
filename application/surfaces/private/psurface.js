@@ -200,7 +200,7 @@ SC.Psurface.prototype = {
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
         surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
-        nextChild, childElement;
+        child, nextChild, childElement, prev, next;
 
     // This psurface should have already been discovered, and push() should 
     // never have been called on this node before (otherwise, we'd be black).
@@ -217,14 +217,14 @@ SC.Psurface.prototype = {
 
     if (firstChild) {
       if (firstChild.id !== id) {
-        var child = psurfaces[id];
+        child = psurfaces[id];
         if (child) {
           nextChild = firstChild;
           firstChild = child;
 
           // We need to remove firstChild from wherever it is now.
-          var prev = firstChild.prevSibling,
-              next = firstChild.nextSibling;
+          prev = firstChild.prevSibling;
+          next = firstChild.nextSibling;
 
           childElement = firstChild.__element__;
 
@@ -238,6 +238,9 @@ SC.Psurface.prototype = {
             // Move to first.
             next.prevSibling = null;
             next.parent.firstChild = next;
+          } else {
+            // We're the only child.
+            firstChild.parent.firstChild = null;
           }
 
           firstChild.prevSibling = null;
@@ -269,14 +272,54 @@ SC.Psurface.prototype = {
       }
 
     } else {
-      // Need to create a new Psurface.
-      sc_assert(!document.getElementById(id));
+      child = psurfaces[id];
+      if (child) {
+        firstChild = child;
 
-      firstChild = this.firstChild = new SC.Psurface(id, tagName);
-      firstChild.parent = this;
-      SC.psurfaces[id] = firstChild;
+        // We need to remove firstChild from wherever it is now.
+        prev = firstChild.prevSibling;
+        next = firstChild.nextSibling;
 
-      el.appendChild(firstChild.__element__);
+        childElement = firstChild.__element__;
+
+        if (prev && next) {
+          // Splice.
+          prev.nextSibling = next;
+          next.prevSibling = prev;
+        } else if (prev) {
+          prev.nextSibling = null;
+        } else if (next) {
+          // Move to first.
+          next.prevSibling = null;
+          next.parent.firstChild = next;
+        } else {
+          // We're the only child.
+          firstChild.parent.firstChild = null;
+        }
+
+        firstChild.prevSibling = null;
+
+        // The DOM handles the list management for us.
+        sc_assert(childElement);
+        sc_assert(childElement.parentNode);
+        childElement.parentNode.removeChild(childElement);
+
+        firstChild.parent = this;
+        this.firstChild = firstChild;
+        firstChild.nextSibling = null;
+
+        el.appendChild(childElement);
+
+      } else {
+        // Need to create a new Psurface.
+        sc_assert(!document.getElementById(id));
+
+        firstChild = this.firstChild = new SC.Psurface(id, tagName);
+        firstChild.parent = this;
+        SC.psurfaces[id] = firstChild;
+
+        el.appendChild(firstChild.__element__);
+      }
     }
 
     // Sanity check firstChild for all code paths.
