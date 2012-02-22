@@ -1049,7 +1049,7 @@ SC.Observable = {
 
         if (displayPropertiesHash && (key in displayPropertiesHash)) {
           // same as this.triggerRendering();
-          console.log('displayPropertyDidChange');
+          // console.log('displayPropertyDidChange');
           this.__needsRendering__ = true;
           SC.needsLayoutAndRendering = true;
         }
