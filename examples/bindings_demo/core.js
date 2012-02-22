@@ -30,8 +30,6 @@ var boxes;
 var blossomInit = function(surface) {
     boxes = _.map(_.range(N), function(i) {
         var box = Box.create();
-        // var view = BoxView.create({model: box});
-        // view.appendTo('#grid');
         box.set('number', i);
         box.set('surface', surface);
         return box;
@@ -57,7 +55,6 @@ function main() {
   var surface = SC.View.create({
 
     updateDisplay: function() {
-      // console.log('updateDisplay');
       var ctx = this.getPath('layer.context');
 
       ctx.save();
@@ -85,9 +82,7 @@ function main() {
             content = box.get('content');
 
         // Have to do our own layout:
-        var itemsPerRow = 20,
-            rows = (len/itemsPerRow)|0, // we want an integer here
-            x = idx % itemsPerRow,
+        var x = idx % 20,
             y;
 
         if (idx < 20) y = 0;
