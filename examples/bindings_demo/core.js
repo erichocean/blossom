@@ -2,6 +2,8 @@
 
 var N = 100;
 
+var PI2 = 2*Math.PI;
+
 var Box = SC.Object.extend({
 
   top: 0,
@@ -21,6 +23,21 @@ var Box = SC.Object.extend({
     this.set('content', count % 100);
     this.endPropertyChanges();
     this.get('surface').triggerRendering();
+  },
+
+  render: function(ctx) {
+    var top = this.get('top'),
+        left = this.get('left'),
+        color = 'rgb(0,0,' + this.get('color') + ')',
+        content = this.get('content');
+
+    ctx.translate(top, left);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(5,5,10,0,PI2);
+    ctx.fill();
+    ctx.fillStyle = 'white';
+    ctx.fillText(content, 5, 5);
   }
 
 });
@@ -47,7 +64,7 @@ var blossomAnimate = function() {
   setTimeout(blossomAnimate, 0);
 };
 
-var PI2 = 2*Math.PI;
+var COLUMNS = 20;
 
 function main() {
   SC.Application.create(); // Assigns itself automatically to SC.app
@@ -72,35 +89,18 @@ function main() {
 
       ctx.font = "9pt Calibri";
 
+      // Inset the entire grid from the edge of the window.
       ctx.translate(100,100);
 
       for (var idx=0, len=boxes.length; idx<len; ++idx) {
         var box = boxes[idx],
-            top = box.get('top'),
-            left = box.get('left'),
-            color = 'rgb(0,0,' + box.get('color') + ')',
-            content = box.get('content');
+            x = idx % COLUMNS, y = 0, row = 1;
 
-        // Have to do our own layout:
-        var x = idx % 20,
-            y;
+        while (row*COLUMNS <= idx) y = row++;
 
-        if (idx < 20) y = 0;
-        else if (idx < 40) y = 1;
-        else if (idx < 60) y = 2;
-        else if (idx < 80) y = 3;
-        else y = 4;
-
-        // console.log(x,y);
         ctx.save();
-        ctx.translate(x*25, y*25); // grid
-        ctx.translate(top, left);
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(5,5,10,0,PI2);
-        ctx.fill();
-        ctx.fillStyle = 'white';
-        ctx.fillText(content, 5, 5);
+        ctx.translate(x*25, y*25); // position on the grid
+        box.render(ctx);
         ctx.restore();
       }
 
