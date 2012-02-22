@@ -96,6 +96,8 @@ function validatePsurfaces() {
   })(tree);
 }
 
+var timeout;
+
 var surface = SC.View.create({
 
   updateDisplay: function() {
@@ -117,17 +119,7 @@ var surface = SC.View.create({
   },
 
   mouseDown: function() {
-    var times = Math.floor(Math.random()*6); // up to 5 modifications
-    while (times === 0) times = Math.floor(Math.random()*6);
-
-    // Make up to five tree modifications.
-    while (times--) modifyTree();
-
-    // Update the Psurfaces tree manually (this is the code we are fuzz testing).
-    tree.updatePsurfaceTree();
-
-    // Validate the Psurfaces tree, and the DOM.
-    validatePsurfaces();
+    clearTimeout(timeout);
   }
 
 });
@@ -299,9 +291,25 @@ function modifyTree() {
   }
 }
 
+function test() {
+  var times = Math.floor(Math.random()*6); // up to 5 modifications
+  while (times === 0) times = Math.floor(Math.random()*6);
+
+  // Make up to five tree modifications.
+  while (times--) modifyTree();
+
+  // Update the Psurfaces tree manually (this is the code we are fuzz testing).
+  tree.updatePsurfaceTree();
+
+  // Validate the Psurfaces tree, and the DOM.
+  validatePsurfaces();
+  timeout = setTimeout(test, 0);
+}
+
 function main() {
   SC.Application.create(); // Assigns itself automatically to SC.app
   SC.app.set('ui', surface);
   container = SC.app.get('uiContainer');
   SC.app.addSurface(tree);
+  timeout = setTimeout(test, 0);
 }
