@@ -198,27 +198,17 @@ SC.Surface = SC.Responder.extend({
 
   performLayoutAndRenderingIfNeeded: function(timestamp) {
     // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
-    var needsDomUpdate = this.__needsDomUpdate__,
-        needsLayout = this.__needsLayout__,
+    var needsLayout = this.__needsLayout__,
         needsDisplay = this.__needsRendering__,
         isVisible = this.get('isVisible');
 
     var benchKey = 'SC.Surface#performLayoutAndRenderingIfNeeded()',
-        // domKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDomUpdate',
         layoutKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsLayout',
         displayKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDisplay';
 
     SC.Benchmark.start(benchKey);
 
-    // debugger;
-    // if (needsDomUpdate) {
-    //   SC.Benchmark.start(domKey);
-    //   this.updateDom();
-    //   this.__needsDomUpdate__ = false;
-    //   SC.Benchmark.end(domKey);
-    // }
-
-    if (needsLayout && isVisible) {
+    // if (needsLayout && isVisible) {
       SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
         this.updateLayout();
@@ -226,9 +216,9 @@ SC.Surface = SC.Responder.extend({
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
-    }
+    // }
 
-    if (needsDisplay && isVisible) {
+    // if (needsDisplay && isVisible) {
       SC.Benchmark.start(displayKey);
       if (this.get('isPresentInViewport')) {
         this.updateDisplay();
@@ -236,7 +226,7 @@ SC.Surface = SC.Responder.extend({
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(displayKey);
-    }
+    // }
 
     SC.Benchmark.end(benchKey);
   },

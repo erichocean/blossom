@@ -128,10 +128,10 @@ SC.View = SC.LeafSurface.extend({
   //
 
   updateLayout: function() {
+    // console.log('SC.View#updateLayout()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateLayout()';
     SC.Benchmark.start(benchKey);
 
-    console.log('SC.ViewSurface#updateLayout()', SC.guidFor(this));
     var layer = this.getPath('contentView.layer');
     if (layer) layer.updateLayout();
 
@@ -139,12 +139,12 @@ SC.View = SC.LeafSurface.extend({
   },
 
   updateDisplay: function() {
+    // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
         updateKey = 'SC.ViewSurface#updateDisplay() - update',
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
-    console.log('SC.ViewSurface#updateDisplay()', SC.guidFor(this));
     sc_assert(document.getElementById(this.__sc_element__.id));
     var layer = this.getPath('contentView.layer');
 

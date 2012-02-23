@@ -151,16 +151,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.isAnimating = true;
     SC.needsLayoutAndRendering = false; // Do this now so we can reschedule if needed.
 
-    // debugger;
-    // var uiContainer = this.get('uiContainer');
-    // if (SC.viewportSizeDidChange) {
-    //   var sz = this.get('viewportSize');
-    //   uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
-    // }
-    // uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
+    // FIXME: Need to do all four stages of layout!
+
+    var uiContainer = this.get('uiContainer');
+    if (SC.viewportSizeDidChange) {
+      var sz = this.get('viewportSize');
+      uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
+    }
+    uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
-    var ui = this.get('ui');
-    if (ui) ui.performLayoutAndRenderingIfNeeded(timestamp);
 
     SC.isAnimating = false;
     SC.viewportSizeDidChange = false;
@@ -381,7 +380,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       });
 
       uiContainer.set('isPresentInViewport', true);
-      // SC.addToSurfacesHash(uiContainer);
     }
     return uiContainer;
   }.property(),
@@ -492,8 +490,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.Application#updatePsurfaces()');
 
     this.get('surfaces').invoke('updatePsurfaceTree', surfaces);
-    // var ui = this.get('ui');
-    // if (ui) ui.updatePsurfaceTree();
   },
 
 

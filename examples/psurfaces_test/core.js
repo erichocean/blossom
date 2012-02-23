@@ -8,9 +8,12 @@ var log = null;
 
 var timeout;
 
+var tests = 0;
+
 var surface = SC.View.create({
 
   updateDisplay: function() {
+    // console.log('updateDisplay');
     var ctx = this.getPath('layer.context');
 
     // Draw background.
@@ -27,6 +30,9 @@ var surface = SC.View.create({
     ctx.fillText("the corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-60);
     ctx.fillText("being updated and exhaustively verified for correctness.", ctx.width/2, (ctx.height/2)-20);
     ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+60);
+
+    ctx.fillStyle = blue;
+    ctx.fillText("Completed "+tests+" tests.", ctx.width/2, (ctx.height/2)+205);
   },
 
   mouseDown: function() {
@@ -370,8 +376,6 @@ function printTree(parent, depth) {
   }
 }
 
-var tests = 0;
-
 var modificationsPerTest = 6;
 
 function test() {
@@ -403,11 +407,7 @@ function test() {
   // Validate the Psurfaces tree, and the DOM.
   validatePsurfaces();
 
-  var ctx = surface.getPath('layer.context');
-  ctx.fillStyle = base3;
-  ctx.fillRect((ctx.width/2)-150, (ctx.height/2)+180, 300, 50);
-  ctx.fillStyle = blue;
-  ctx.fillText("Completed "+tests+" tests.", ctx.width/2, (ctx.height/2)+205);
+  surface.triggerRendering();
 
   timeout = setTimeout(test, 0);
   SC.RunLoop.end();
