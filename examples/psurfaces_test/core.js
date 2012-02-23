@@ -279,7 +279,9 @@ function moveChild(composite, child) {
 function modifyTree() {
   var node, leaf, composite;
   // debugger;
-  switch (Math.floor(Math.random()*11)) {
+  var weight = Math.floor(Math.random()*11);
+  weight = Math.floor(Math.random()*weight);
+  switch (Math.floor(Math.random()*weight)) {
     case 0:
       composite = fetchComposite(null, false);
       if (composite) {
@@ -298,34 +300,13 @@ function modifyTree() {
       break;
     case 2:
       leaf = fetchLeaf();
-      if (leaf) {
-        log.push("Remove an arbitrary leaf (%@).".fmt(leaf.get('id')));
-        removeChild(leaf);
-      }
-      break;
-    case 3:
-      composite = fetchComposite(null, false);
-      if (composite) {
-        log.push("Remove an arbitrary composite w/o children (%@).".fmt(composite.get('id')));
-        removeChild(composite);
-      }
-      break;
-    case 4:
-      composite = fetchComposite(null, true);
-      if (composite) {
-        log.push("Remove an arbitrary composite w/children (%@).".fmt(composite.get('id')));
-        removeChild(composite);
-      }
-      break;
-    case 5:
-      leaf = fetchLeaf();
       composite = fetchComposite(null, false);
       if (leaf && composite) {
         log.push("Move an arbitrary leaf (%@) to another composite w/o children (%@).".fmt(leaf.get('id'), composite.get('id')));
         moveChild(composite, leaf);
       }
       break;
-    case 6:
+    case 3:
       leaf = fetchLeaf();
       composite = fetchComposite(null, true);
       if (leaf && composite) {
@@ -333,7 +314,7 @@ function modifyTree() {
         moveChild(composite, leaf);
       }
       break;
-    case 7:
+    case 4:
       composite = fetchComposite(null, false);
       node = fetchComposite(composite, false);
       if (composite && node) {
@@ -341,7 +322,7 @@ function modifyTree() {
         moveChild(node, composite);
       }
       break;
-    case 8:
+    case 5:
       composite = fetchComposite(null, false);
       node = fetchComposite(composite, true);
       if (composite && node) {
@@ -349,7 +330,7 @@ function modifyTree() {
         moveChild(node, composite);
       }
       break;
-    case 9:
+    case 6:
       composite = fetchComposite(null, true);
       node = fetchComposite(composite, false);
       if (composite && node) {
@@ -357,12 +338,33 @@ function modifyTree() {
         moveChild(node, composite);
       }
       break;
-    case 10:
+    case 7:
       composite = fetchComposite(null, true);
       node = fetchComposite(composite, true);
       if (composite && node) {
         log.push("Move an arbitary composite w/ children (%@) to another composite w/children (%@).".fmt(composite.get('id'), node.get('id')));
         moveChild(node, composite);
+      }
+      break;
+    case 8:
+      leaf = fetchLeaf();
+      if (leaf) {
+        log.push("Remove an arbitrary leaf (%@).".fmt(leaf.get('id')));
+        removeChild(leaf);
+      }
+      break;
+    case 9:
+      composite = fetchComposite(null, false);
+      if (composite) {
+        log.push("Remove an arbitrary composite w/o children (%@).".fmt(composite.get('id')));
+        removeChild(composite);
+      }
+      break;
+    case 10:
+      composite = fetchComposite(null, true);
+      if (composite) {
+        log.push("Remove an arbitrary composite w/children (%@).".fmt(composite.get('id')));
+        removeChild(composite);
       }
       break;
   }
@@ -389,11 +391,13 @@ function printTree(parent, depth) {
 
 var tests = 0;
 
+var modificationsPerTest = 6;
+
 function test() {
   tests++;
   log = [];
-  var times = Math.floor(Math.random()*6); // up to 5 modifications
-  while (times === 0) times = Math.floor(Math.random()*6);
+  var times = Math.floor(Math.random()*modificationsPerTest);
+  while (times === 0) times = Math.floor(Math.random()*modificationsPerTest);
 
   // printTree(tree);
 
