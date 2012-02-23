@@ -138,7 +138,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     //     // correct size.
     //     element.insertBefore(container, null); // add to DOM
     //     element.style.opacity = 1;
-    //     cur.didAttach();
     // 
     //   // replace
     //   } else if (old && cur) {
@@ -157,8 +156,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     //     // The order is important here, otherwise the layers won't have the 
     //     // correct size.
     //     element.replaceChild(container, old.__sc_element__);
-    //     cur.didAttach();
-    //     old.didDetach();
     // 
     //   // order out
     //   } else if (old && !cur) {
@@ -166,7 +163,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     // 
     //     element.removeChild(old.__sc_element__);
     //     element.style.opacity = 0;
-    //     old.didDetach();
     //   }
     // }
   }.observes('contentSurface'),

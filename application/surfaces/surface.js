@@ -167,13 +167,6 @@ SC.Surface = SC.Responder.extend({
   // LAYOUT & RENDERING SUPPORT
   //
 
-  // __needsDomUpdate__: false,
-  // triggerDomUpdate: function() {
-  //   console.log('SC.Surface#triggerDomUpdate()');
-  //   this.__needsDomUpdate__ = true;
-  //   // SC.needsLayoutAndRendering = true;
-  // },
-
   __needsLayout__: false,
   triggerLayout: function() {
     // console.log('SC.Surface#triggerLayout()');
@@ -208,39 +201,27 @@ SC.Surface = SC.Responder.extend({
 
     SC.Benchmark.start(benchKey);
 
-    // if (needsLayout && isVisible) {
+    if (needsLayout && isVisible) {
       SC.Benchmark.start(layoutKey);
       if (this.get('isPresentInViewport')) {
-        this.updateLayout();
+        if (this.updateLayout) this.updateLayout();
         this.__needsLayout__ = false;
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
-    // }
+    }
 
-    // if (needsDisplay && isVisible) {
+    if (needsDisplay && isVisible) {
       SC.Benchmark.start(displayKey);
       if (this.get('isPresentInViewport')) {
-        this.updateDisplay();
+        if (this.updateDisplay) this.updateDisplay();
         this.__needsRendering__ = false;
       } // else leave it set to true, we'll update it when it again becomes 
         // visible in the viewport
       SC.Benchmark.end(displayKey);
-    // }
+    }
 
     SC.Benchmark.end(benchKey);
-  },
-
-  // updateDom: function() {
-  //   throw "All SC.Surface subclasses MUST implement updateDom(). (Do not call the SC.Surface's implementation.)";
-  // },
-
-  updateLayout: function() {
-    throw "All SC.Surface subclasses MUST implement updateLayout(). (Do not call the SC.Surface's implementation.)";
-  },
-
-  updateDisplay: function() {
-    throw "All SC.Surface subclasses MUST implement updateDisplay(). (Do not call the SC.Surface's implementation.)";
   },
 
   // ..........................................................
@@ -1290,24 +1271,6 @@ SC.Surface = SC.Responder.extend({
 //     }
 //     return element ;
 //   }.property(),
-
-  didAttach: function() {
-    // var container = this.get('container');
-    // 
-    // // Okay, the order here is very important; otherwise, the layers will 
-    // // not know their correct size.
-    // 
-    // this.createLayersForContainer(container);
-    // this.render(this.getPath('layer.context'), true);
-    // 
-    // container = null; // avoid memory leak
-  },
-
-  didDetach: function() {
-    // console.log('Implement me! Destroy layers...');
-  },
-
-  render: function(context) {},
 
   // ...........................................
   // LAYOUT SUPPORT

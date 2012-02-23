@@ -15,6 +15,50 @@ SC.CompositeSurface = SC.Surface.extend(
   isCompositeSurface: true,
 
   // ..........................................................
+  // LAYOUT & RENDERING SUPPORT
+  //
+
+  performLayoutAndRenderingIfNeeded: function(timestamp) {
+    // console.log('SC.CompositeSurface#performLayoutAndRenderingIfNeeded()');
+    var needsLayout = this.__needsLayout__,
+        needsDisplay = this.__needsRendering__,
+        isVisible = this.get('isVisible'),
+        subsurfaces = this.get('subsurfaces');
+
+    var benchKey = 'SC.CompositeSurface#performLayoutAndRenderingIfNeeded()',
+        layoutKey = 'SC.CompositeSurface#performLayoutAndRenderingIfNeeded(): needsLayout',
+        displayKey = 'SC.CompositeSurface#performLayoutAndRenderingIfNeeded(): needsDisplay';
+
+    SC.Benchmark.start(benchKey);
+
+    if (needsLayout && isVisible) {
+      SC.Benchmark.start(layoutKey);
+      if (this.get('isPresentInViewport')) {
+        if (this.updateLayout) this.updateLayout();
+        this.__needsLayout__ = false;
+      } // else leave it set to true, we'll update it when it again becomes 
+        // visible in the viewport
+      SC.Benchmark.end(layoutKey);
+    }
+
+    if (needsDisplay && isVisible) {
+      SC.Benchmark.start(displayKey);
+      if (this.get('isPresentInViewport')) {
+        if (this.updateDisplay) this.updateDisplay();
+        this.__needsRendering__ = false;
+      } // else leave it set to true, we'll update it when it again becomes 
+        // visible in the viewport
+      SC.Benchmark.end(displayKey);
+    }
+
+    SC.Benchmark.end(benchKey);
+
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].performLayoutAndRenderingIfNeeded(timestamp);
+    }
+  },
+
+  // ..........................................................
   // PSURFACE SUPPORT (Private)
   //
 
