@@ -174,6 +174,7 @@ SC.Psurface.begin = function(surface) {
     sc_assert(!document.getElementById(id));
 
     psurface = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
+    surface.__contentSizeNeedsUpdate__ = false;
     document.body.appendChild(psurface.__element__, null);
 
     // The psurface is now current and present in the rendering tree (DOM).
@@ -192,7 +193,7 @@ SC.Psurface.begin = function(surface) {
   // We've discovered this psurface.
   SC._sc_psurfaceColor[id] = 1; // grey
 
-  if (psurface.useContentSize && surface.__contentSizeNeedsUpdate__) {
+  if (useContentSize && surface.__contentSizeNeedsUpdate__) {
     var el = psurface.__element__;
     el.width = surface.__contentWidth__;
     el.height = surface.__contentHeight__;
@@ -271,6 +272,7 @@ SC.Psurface.prototype = {
 
           nextChild = firstChild;
           firstChild = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
+          surface.__contentSizeNeedsUpdate__ = false;
           childElement = firstChild.__element__;
         }
 
@@ -330,6 +332,7 @@ SC.Psurface.prototype = {
         sc_assert(!document.getElementById(id));
 
         firstChild = this.firstChild = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
+        surface.__contentSizeNeedsUpdate__ = false;
         firstChild.parent = this;
         SC.psurfaces[id] = firstChild;
 
@@ -351,7 +354,7 @@ SC.Psurface.prototype = {
     // We've discovered firstChild.
     SC._sc_psurfaceColor[id] = 1; // grey
 
-    if (firstChild.useContentSize && surface.__contentSizeNeedsUpdate__) {
+    if (useContentSize && surface.__contentSizeNeedsUpdate__) {
       el = firstChild.__element__;
       el.width = surface.__contentWidth__;
       el.height = surface.__contentHeight__;
@@ -477,6 +480,7 @@ SC.Psurface.prototype = {
 
           nextChild = nextSibling;
           nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
+          surface.__contentSizeNeedsUpdate__ = false;
           childElement = nextSibling.__element__;
         }
 
@@ -536,6 +540,7 @@ SC.Psurface.prototype = {
         sc_assert(!document.getElementById(id));
 
         nextSibling = this.nextSibling = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
+        surface.__contentSizeNeedsUpdate__ = false;
         nextSibling.parent = this.parent;
         nextSibling.prevSibling = this;
         psurfaces[id] = nextSibling;
@@ -558,7 +563,7 @@ SC.Psurface.prototype = {
     // We've discovered nextSibling.
     SC._sc_psurfaceColor[id] = 1; // grey
 
-    if (nextSibling.useContentSize && surface.__contentSizeNeedsUpdate__) {
+    if (useContentSize && surface.__contentSizeNeedsUpdate__) {
       el = nextSibling.__element__;
       el.width = surface.__contentWidth__;
       el.height = surface.__contentHeight__;
