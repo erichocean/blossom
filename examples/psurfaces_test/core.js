@@ -1,4 +1,4 @@
-/*globals base3 green sc_assert */
+/*globals base3 green blue sc_assert */
 
 var tree = SC.ContainerSurface.create();
 
@@ -22,10 +22,11 @@ var surface = SC.View.create({
     ctx.font = "16pt Calibri";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-60);
-    ctx.fillText("The corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)+20);
-    ctx.fillText("being repeatedly modified and then exhaustively verified.", ctx.width/2, (ctx.height/2)+60);
-    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)-20);
+    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-100);
+    ctx.fillText("The corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-20);
+    ctx.fillText("being repeatedly modified and then exhaustively verified.", ctx.width/2, (ctx.height/2)+20);
+    ctx.fillStyle = blue;
+    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+100);
   },
 
   mouseDown: function() {
