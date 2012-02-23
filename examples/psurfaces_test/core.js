@@ -6,15 +6,65 @@ var container = null;
 
 var log = null;
 
+var timeout;
+
+var surface = SC.View.create({
+
+  updateDisplay: function() {
+    var ctx = this.getPath('layer.context');
+
+    // Draw background.
+    ctx.fillStyle = base3;
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+    // Draw text.
+    ctx.fillStyle = green;
+    ctx.font = "16pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-60);
+    ctx.fillText("The corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)+20);
+    ctx.fillText("being repeatedly modified and then exhaustively verified.", ctx.width/2, (ctx.height/2)+60);
+    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)-20);
+  },
+
+  mouseDown: function() {
+    clearTimeout(timeout);
+  }
+
+});
+
 function validatePsurfaces() {
   var ary = Object.keys(SC.surfaces),
+      ary2 = Object.keys(SC.psurfaces),
       length = ary.length;
 
   // First make sure that we don't have any dangling surfaces.
   ary.forEach(function(key) {
-    var surface = SC.surfaces[key];
-    if (surface === tree || surface === surface || surface === container) return;
-    else sc_assert(surface.get('supersurface'));
+    var s = SC.surfaces[key];
+    if (s === tree || s === surface || s === container) return;
+    else sc_assert(s.get('supersurface'));
+  });
+
+  // Then verify that there is exactly one psurface for each surface.
+
+  // Remove keys that won't have a psurface.
+  ary = ary.filter(function(key) {
+    var s = SC.surfaces[key];
+    if (s === surface || s === container) return false;
+    else return true;
+  });
+
+  // Mkae the two arrays have the same order.
+  ary.sort();
+  ary2.sort();
+
+  // Lengths should be the same.
+  sc_assert(ary.length === ary2.length);
+
+  // Keys should be the same.
+  ary.forEach(function(key, idx) {
+    sc_assert(key === ary2[idx]);
   });
 
   // Now validate the tree. Exactly one psurface should exist for each 
@@ -97,34 +147,6 @@ function validatePsurfaces() {
     }
   })(tree);
 }
-
-var timeout;
-
-var surface = SC.View.create({
-
-  updateDisplay: function() {
-    var ctx = this.getPath('layer.context');
-
-    // Draw background.
-    ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
-
-    // Draw text.
-    ctx.fillStyle = green;
-    ctx.font = "16pt Calibri";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-60);
-    ctx.fillText("Click anywhere to randomly modify the surface tree.", ctx.width/2, (ctx.height/2)-20);
-    ctx.fillText("The corresponding Psurface and rendering tree (DOM)", ctx.width/2, (ctx.height/2)+20);
-    ctx.fillText("is exhaustively verified after each modification.", ctx.width/2, (ctx.height/2)+60);
-  },
-
-  mouseDown: function() {
-    clearTimeout(timeout);
-  }
-
-});
 
 function fetchLeaf() {
   var ary = Object.keys(SC.surfaces),
@@ -210,26 +232,47 @@ function fetchComposite(parent, withChildren) {
 
 function insertChild(composite, child) {
   if (child === surface || child === tree) return false;
+
   var subsurfaces = composite.get('subsurfaces'),
       len = subsurfaces.get('length'),
       idx = Math.floor(Math.random()*len);
 
   subsurfaces.insertAt(idx, child);
+
+  (function addToSurfaces(parent) {
+    SC.surfaces[parent.get('id')] = parent;
+    var subsurfaces = parent.get('subsurfaces');
+    if (subsurfaces) {
+      subsurfaces.forEach(function(surface) {
+        addToSurfaces(surface);
+      });
+    }
+  })(child);
+  
   return true;
 }
 
 function removeChild(child) {
   if (child === surface || child === tree) return false;
+
   var supersurface = child.get('supersurface');
   supersurface.get('subsurfaces').removeObject(child);
-  delete SC.surfaces[child.get('id')];
+
+  (function removeFromSurfaces(parent) {
+    delete SC.surfaces[parent.get('id')];
+    var subsurfaces = parent.get('subsurfaces');
+    if (subsurfaces) {
+      subsurfaces.forEach(function(surface) {
+        removeFromSurfaces(surface);
+      });
+    }
+  })(child);
+  
   return true;
 }
 
 function moveChild(composite, child) {
-  if (removeChild(child) && insertChild(composite, child)) {
-    SC.surfaces[child.get('id')] = child;
-  }
+  if (removeChild(child)) insertChild(composite, child);
 }
 
 function modifyTree() {
@@ -333,7 +376,7 @@ function spaces(depth) {
 
 function printTree(parent, depth) {
   depth = depth === undefined? 0 : depth;
-  console.log(spaces(depth)+parent.get('id'));
+  console.log(spaces(depth)+parent.get('id')+' ('+(parent.isCompositeSurface? 'composite':'leaf')+')');
   depth++;
   var subsurfaces = parent.get('subsurfaces');
   if (subsurfaces) {
@@ -348,7 +391,7 @@ function test() {
   var times = Math.floor(Math.random()*6); // up to 5 modifications
   while (times === 0) times = Math.floor(Math.random()*6);
 
-  printTree(tree);
+  // printTree(tree);
 
   // Make up to five tree modifications.
   while (times--) modifyTree();

@@ -542,13 +542,14 @@ SC.Psurface.prototype = {
     // console.log('SC.Psurface#pop()');
     var el = this.__element__,
         nextSibling = this.nextSibling,
+        myId = this.id,
         psurfaces = SC.psurfaces,
         surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
         next;
 
     function moveChildren(psurface) {
-      var child, id;
-      next = psurface.firstChild;
+      var child, id,
+          next = psurface.firstChild;
       while (next) {
         child = next;
         next = child.nextSibling;
@@ -560,7 +561,7 @@ SC.Psurface.prototype = {
       }
     }
 
-    if (SC._sc_psurfaceColor[this.id] === "grey") {
+    if (SC._sc_psurfaceColor[myId] === "grey") {
       // We should not have any children.
       if (this.firstChild) {
         // We need to remove our children.  This is somewhat complicated, the 
@@ -587,7 +588,12 @@ SC.Psurface.prototype = {
         }
         this.firstChild = null;
       }
+
+      // We've been visited.
+      SC._sc_psurfaceColor[myId] = 'black';
     }
+
+    sc_assert(SC._sc_psurfaceColor[myId] === 'black');
 
     sc_assert(this === SC._sc_currentPsurface);
     sc_assert(this.__element__);
@@ -619,6 +625,7 @@ SC.Psurface.prototype = {
 
     // Sanity check this for all code paths.
     sc_assert(this.nextSibling === null);
+    sc_assert(this.__element__.nextElementSibling === null);
 
     SC._sc_currentPsurface = this.parent;
   }
@@ -629,9 +636,51 @@ SC.Psurface.end = function(surface) {
   // console.log('SC.Psurface#end()');
   var id = surface.__id__,
       psurface = SC.psurfaces[id],
-      color = SC._sc_psurfaceColor[id];
+      psurfaces = SC.psurfaces,
+      el = psurface.__element__;
 
-  sc_assert(color === 'grey' || color === 'black');
+  function removeChildren(psurface) {
+    var child, id,
+        next = psurface.firstChild;
+    while (next) {
+      child = next;
+      next = child.nextSibling;
+      id = child.id;
+      sc_assert(psurfaces[id]);
+      delete psurfaces[id];
+      if (child.firstChild) removeChildren(child);
+    }
+  }
+
+  if (SC._sc_psurfaceColor[id] === 'grey') {
+    // We should not have any children.
+    if (psurface.firstChild) {
+      // We do not need to move our children -- the tree is empty except for
+      // the root node.
+      var child, childId,
+          next = psurface.firstChild;
+      while (next) {
+        child = next;
+        next = child.nextSibling;
+        child.parent = null;
+        child.prevSibling = null;
+        child.nextSibling = null;
+        el.removeChild(child.__element__);
+        childId = child.id;
+
+        // Need to move detached surfaces from active to "being moved".
+        sc_assert(psurfaces[childId]);
+        delete psurfaces[childId];
+        removeChildren(child);
+      }
+      psurface.firstChild = null;
+    }
+
+    // We've been visited.
+    SC._sc_psurfaceColor[id] = 'black';
+  }
+
+  sc_assert(SC._sc_psurfaceColor[id] === 'black');
 
   // Sanity check the surface.
   sc_assert(surface);
