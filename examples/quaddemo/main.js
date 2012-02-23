@@ -22,18 +22,23 @@ function main() {
 
     updateDisplay: function() {
       // console.log('updateDisplay');
-      var ctx = this.getPath('layer.context');
+      var psurface = SC.psurfaces[this.__id__],
+          canvas = psurface? psurface.__element__ : null,
+          ctx = canvas? canvas.getContext('2d') : null,
+          w = canvas.width, h = canvas.height;
+
+      qd.canvas = canvas; // HACK
 
       // Draw background.
       ctx.fillStyle = base3;
-      ctx.fillRect(0, 0, ctx.width, ctx.height);
+      ctx.fillRect(0, 0, w, h);
 
       // Draw fps meter.
       ctx.fillStyle = green;
       ctx.font = "16pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
-      ctx.fillText(SC.Benchmark.fps(), ctx.width/2, ctx.height/2);
+      ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
 
       qd.draw(ctx);
     },
@@ -53,11 +58,6 @@ function main() {
     mouseUp: function(evt) {
       // console.log('mouseUp');
       var layer = this.get('layer');
-      layer.set('foo', true);
-
-      s.get('subsurfaces').objectAt(1).set('subsurfaces', []);
-      // s.get('subsurfaces').objectAt(1).get('subsurfaces').push(SC.View.create());
-
       this.triggerRendering();
       return qd.mouseup(evt);
     }
@@ -65,22 +65,4 @@ function main() {
   });
 
   SC.app.set('ui', surface);
-
-  qd.canvas = surface.get('layer').__sc_element__; // HACK
-
-  // SC.CompositeSurface.create().updatePsurfaceTree();
-  // console.log('*****');
-
-  var s  = SC.ContainerSurface.create(),
-      s2 = SC.ContainerSurface.create(),
-      s3 = SC.ContainerSurface.create();
-    
-  s2.get('subsurfaces').push(SC.View.create(), SC.View.create(), SC.View.create());
-  s3.get('subsurfaces').push(SC.View.create(), s2, SC.View.create());
-  s.get('subsurfaces') .push(SC.View.create(), s3, SC.View.create());
-
-  SC.app.get('surfaces').add(s);
-
-  // console.log('*****');
-  // SC.CompositeSurface.create().updatePsurfaceTree();
 }

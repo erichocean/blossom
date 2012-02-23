@@ -45,17 +45,64 @@ SC.View = SC.LeafSurface.extend({
 
   __useContentSize__: true, // we need our width and height attributes set
 
+  layers: [],
+
+  // ..........................................................
+  // LAYER TREE SUPPORT
+  //
+
+  // When the subsurfaces property changes, we need to observe it's members
+  // for changes.
+  _sc_layers: null,
+  _sc_layersDidChange: function() {
+    // console.log("SC.View#_sc_layersDidChange()");
+    var cur  = this.get('layers'),
+        last = this._sc_layers,
+        func = this._sc_layersMembersDidChange;
+
+    if (last === cur) return this; // nothing to do
+
+    // teardown old observer
+    sc_assert(last? last.isEnumerable : true);
+    if (last) last.removeObserver('[]', this, func);
+
+    // save new cached values 
+    sc_assert(cur && cur.constructor.prototype === Array.prototype);
+    this._sc_subsurfaces = cur;
+
+    // setup new observers
+    sc_assert(cur? cur.isEnumerable : true);
+    if (cur) cur.addObserver('[]', this, func);
+
+    // process the changes
+    this._sc_layersMembersDidChange();
+  }.observes('layers'),
+
+  _sc_layersMembersDidChange: function() {
+    // console.log("SC.View#_sc_layersMembersDidChange()");
+    var layers = this.get('layers');
+
+    // FIXME: Do this smarter!
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].set('view', this);
+    }
+
+    this.triggerLayoutAndRendering();
+  },
+
   // ..........................................................
   // RENDERING SUPPORT
   //
 
   updateLayout: function() {
     // console.log('SC.View#updateLayout()', SC.guidFor(this));
-    var benchKey = 'SC.ViewSurface#updateLayout()';
+    var benchKey = 'SC.View#updateLayout()';
     SC.Benchmark.start(benchKey);
 
-    var layer = this.getPath('contentView.layer');
-    if (layer) layer.updateLayout();
+    var layers = this.get('layers');
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].updateLayout();
+    }
 
     SC.Benchmark.end(benchKey);
   },
@@ -67,14 +114,13 @@ SC.View = SC.LeafSurface.extend({
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
-    // sc_assert(document.getElementById(this.__sc_element__.id));
-    var layer = this.get('layer');
+    SC.Benchmark.start(updateKey);
+    var layers = this.get('layers');
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].updateLayout();
+    }
+    SC.Benchmark.end(updateKey);
 
-    // SC.Benchmark.start(updateKey);
-    // if (layer) layer.updateDisplay();
-    // SC.Benchmark.end(updateKey);
-
-    // var ctx = this.getPath('layer.context'),
     var psurface = SC.psurfaces[this.__id__],
         canvas = psurface? psurface.__element__ : null,
         ctx = canvas? canvas.getContext('2d') : null,
@@ -90,7 +136,9 @@ SC.View = SC.LeafSurface.extend({
     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
     SC.Benchmark.start(copyKey);
-    // if (layer) layer.copyIntoContext(ctx);
+    for (idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].copyIntoContext(ctx);
+    }
     SC.Benchmark.end(copyKey);
 
     // Draw lines overlay.
