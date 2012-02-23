@@ -222,6 +222,16 @@ SC.Surface = SC.Responder.extend({
     }
 
     SC.Benchmark.end(benchKey);
+
+    // This code is technically only needed for composite surfaces, but for 
+    // performance and code reuse, we fold the implementation into here 
+    // instead of calling `arguments.callee.base.apply(this, arguments)` in 
+    // `SC.CompositeSurface`.
+    var subsurfaces = this.get('subsurfaces');
+    if (subsurfaces === null) return;
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].performLayoutAndRenderingIfNeeded(timestamp);
+    }
   },
 
   // ..........................................................
