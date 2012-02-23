@@ -21,7 +21,7 @@ SC.CompositeSurface = SC.Surface.extend(
   updatePsurface: function(psurface, surfaces) {
     // console.log('SC.CompositeSurface#updatePsurface()');
 
-    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurface() can only be called an active surfaces.");
+    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurface() can only be called on active surfaces.");
 
     // Sanity check the Psurface.
     sc_assert(psurface);

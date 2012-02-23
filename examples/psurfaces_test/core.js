@@ -2,7 +2,7 @@
 
 var tree = SC.ContainerSurface.create();
 
-var container = null;
+var uiContainer = null;
 
 var log = null;
 
@@ -15,6 +15,8 @@ var surface = SC.View.create({
   updateDisplay: function() {
     // console.log('updateDisplay');
     var ctx = this.getPath('layer.context');
+
+    if (!ctx) return;
 
     // Draw background.
     ctx.fillStyle = base3;
@@ -49,20 +51,11 @@ function validatePsurfaces() {
   // First make sure that we don't have any dangling surfaces.
   ary.forEach(function(key) {
     var s = SC.surfaces[key];
-    if (s === tree || s === surface || s === container) return;
+    if (s === tree || s === surface || s === uiContainer) return;
     else sc_assert(s.get('supersurface'));
   });
 
   // Then verify that there is exactly one psurface for each surface.
-
-  // Remove keys that won't have a psurface.
-  ary = ary.filter(function(key) {
-    var s = SC.surfaces[key];
-    if (s === surface || s === container) return false;
-    else return true;
-  });
-
-  // Mkae the two arrays have the same order.
   ary.sort();
   ary2.sort();
 
@@ -234,7 +227,7 @@ function fetchComposite(parent, withChildren) {
     }
   }
 
-  if (found && composite === container) found = false;
+  if (found && composite === uiContainer) found = false;
   if (found && composite !== tree) sc_assert(composite.get('supersurface'));
   return found? composite : null;
 }
@@ -398,6 +391,7 @@ function test() {
     }
 
     // Update the Psurfaces tree manually (this is the code we are fuzz testing).
+    uiContainer.updatePsurfaceTree(surfaces);
     tree.updatePsurfaceTree(surfaces);
   } catch (e) {
     console.log(e);
@@ -416,7 +410,7 @@ function test() {
 function main() {
   SC.Application.create(); // Assigns itself automatically to SC.app
   SC.app.set('ui', surface);
-  container = SC.app.get('uiContainer');
+  uiContainer = SC.app.get('uiContainer');
   SC.app.addSurface(tree);
   timeout = setTimeout(test, 0);
 }

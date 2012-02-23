@@ -366,13 +366,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(value === undefined); // We're read only.
     var uiContainer = this._sc_uiContainer;
     if (!uiContainer) {
-      var uiElement = document.getElementById('ui');
-      sc_assert(uiElement);
-
       // Don't bind the `ui` property, we need to send some delegate methods 
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
-        __sc_element__: uiElement,
+        __id__: 'ui',
         bounds: this.computeViewportSize(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
@@ -489,6 +486,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   updatePsurfaces: function(surfaces) {
     // console.log('SC.Application#updatePsurfaces()');
 
+    this.get('uiContainer').updatePsurfaceTree(surfaces);
     this.get('surfaces').invoke('updatePsurfaceTree', surfaces);
   },
 

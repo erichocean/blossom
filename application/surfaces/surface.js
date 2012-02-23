@@ -249,35 +249,6 @@ SC.Surface = SC.Responder.extend({
 
   isPresentInViewport: false,
 
-  _sc_isPresentInViewportDidChange: function() {
-    // console.log('SC.Surface#_sc_isPresentInViewportDidChange()', SC.guidFor(this));
-
-    // Either (a) we set up our layers, or (b) we schedule them to be 
-    // destroyed at the end of the run loop.
-    if (this.get('isPresentInViewport')) this.createSurface();
-    else this.invokeLast(this.destroySurfaceIfNeeded);
-  }.observes('isPresentInViewport'),
-
-  createSurface: function() {
-    // console.log('SC.Surface#createSurface()');
-    var element = this.__sc_element__, key;
-    // apply the layout style manually for now...
-    var layoutStyle = this.get('layoutStyle');
-    // console.log(layoutStyle);
-    for (key in layoutStyle) {
-      if (!layoutStyle.hasOwnProperty(key)) continue;
-      if (layoutStyle[key] !== null) {
-        element.style[key] = layoutStyle[key];
-      }
-    }
-  },
-
-  destroySurfaceIfNeeded: function() {
-    if (!this.get('isPresentInViewport')) this.destroySurface();
-  },
-
-  destroySurface: function() {},
-
   // ..........................................................
   // LAYOUT SUPPORT
   //
@@ -575,7 +546,7 @@ SC.Surface = SC.Responder.extend({
     if (surfaces) surfaces[this.__id__] = this;
 
     sc_assert(!this.get('supersurface'), "SC.Surface#updatePsurfaceTree() can only be called on a root surface.");
-    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
+    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurfaceTree() can only be called on active surfaces.");
 
     var rootPsurface = SC.Psurface.begin(this);
 
@@ -590,27 +561,6 @@ SC.Surface = SC.Responder.extend({
     SC.Psurface.end(this); // Required.
   },
 
-  /** @private Overriden by subclasses as needed. */
-  initElement: function() {
-    // Use the element we're given; otherwise, create one.
-    var el = this.__sc_element__, id;
-    if (!el) {
-      el = this.__sc_element__ = document.createElement('div');
-      el.id = this.__id__;
-    } else {
-      id = el.id;
-      if (id) this.__id__ = id;
-      else el.id = this.__id__;
-    }
-
-    // el.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
-    // el.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
-    // el.style.webkitTransform = "translateZ(0)";
-    // el.style.webkitTransform = "rotateY(45deg)";
-
-    this.foo = el;
-  },
-
   // ..........................................................
   // MISC
   //
@@ -619,9 +569,7 @@ SC.Surface = SC.Responder.extend({
     // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
 
-    this.__id__ = SC.guidFor(this);
-
-    this.initElement(); // FIXME: Remove
+    if (!this.__id__) this.__id__ = SC.guidFor(this);
 
     if (SC.app) {
       this.__sc_needFirstResponderInit__ = false;

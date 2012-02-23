@@ -58,11 +58,10 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
   _sc_contentSurfaceDidChange: function() {
     // console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
     var old = this._sc_contentSurface,
-        cur = this.get('contentSurface'),
-        element = this.__sc_element__,
-        transition, container, style;
+        cur = this.get('contentSurface');
+        // element = this.__sc_element__,
+        // transition, container, style;
 
-    sc_assert(element);
     sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_surface is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.ContainerSurface@surface must either be null or an SC.Surface instance.");
 
@@ -83,91 +82,93 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
     }
 
-    if (!old && cur)      transition = this.get('orderInTransition');
-    else if (old && cur)  transition = this.get('replaceTransition');
-    else if (old && !cur) transition = this.get('orderOutTransition');
-    else sc_assert(false);
+    // FIXME: This logic needs to be applied to surfaces, not the DOM!
 
-    // transition = null; // force no transition
-    if (old) transition = null;
-    if (transition) {
-      
-      // order in
-      if (!old && cur) {
-        container = cur.__sc_element__;
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-
-        style = container.style;
-        style.display  = 'block';
-        style.position = 'absolute';
-        // style.top      = '0px';
-        // style.left     = '0px';
-        // style.width    = '100%';
-        // style.height   = '100%';
-        style.webkitBackfaceVisibility = 'hidden';
-        style.webkitTransform = 'rotateY(180deg)';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        element.insertBefore(container, null); // add to DOM
-        sc_assert(document.getElementById(container.id));
-        element.style.opacity = '1';
-        element.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
-        cur.didAttach();
-      }
-
-    // Update the UI without any 3D transition.
-    } else {
-
-      // order in
-      if (!old && cur) {
-        container = cur.__sc_element__;
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-
-        style = container.style;
-        style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        element.insertBefore(container, null); // add to DOM
-        element.style.opacity = 1;
-        cur.didAttach();
-
-      // replace
-      } else if (old && cur) {
-        container = cur.__sc_element__;
-        sc_assert(container);
-        sc_assert(!document.getElementById(container.id));
-        sc_assert(document.getElementById(old.__sc_element__.id));
-
-        style = container.style;
-        style.position = 'absolute';
-        style.top      = '0px';
-        style.left     = '0px';
-        style.width    = '100%';
-        style.height   = '100%';
-
-        // The order is important here, otherwise the layers won't have the 
-        // correct size.
-        element.replaceChild(container, old.__sc_element__);
-        cur.didAttach();
-        old.didDetach();
-
-      // order out
-      } else if (old && !cur) {
-        sc_assert(document.getElementById(old.__sc_element__.id));
-
-        element.removeChild(old.__sc_element__);
-        element.style.opacity = 0;
-        old.didDetach();
-      }
-    }
+    // if (!old && cur)      transition = this.get('orderInTransition');
+    // else if (old && cur)  transition = this.get('replaceTransition');
+    // else if (old && !cur) transition = this.get('orderOutTransition');
+    // else sc_assert(false);
+    // 
+    // // transition = null; // force no transition
+    // if (old) transition = null;
+    // if (transition) {
+    //   
+    //   // order in
+    //   if (!old && cur) {
+    //     container = cur.__sc_element__;
+    //     sc_assert(container);
+    //     sc_assert(!document.getElementById(container.id));
+    // 
+    //     style = container.style;
+    //     style.display  = 'block';
+    //     style.position = 'absolute';
+    //     // style.top      = '0px';
+    //     // style.left     = '0px';
+    //     // style.width    = '100%';
+    //     // style.height   = '100%';
+    //     style.webkitBackfaceVisibility = 'hidden';
+    //     style.webkitTransform = 'rotateY(180deg)';
+    // 
+    //     // The order is important here, otherwise the layers won't have the 
+    //     // correct size.
+    //     element.insertBefore(container, null); // add to DOM
+    //     sc_assert(document.getElementById(container.id));
+    //     element.style.opacity = '1';
+    //     element.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
+    //     cur.didAttach();
+    //   }
+    // 
+    // // Update the UI without any 3D transition.
+    // } else {
+    // 
+    //   // order in
+    //   if (!old && cur) {
+    //     container = cur.__sc_element__;
+    //     sc_assert(container);
+    //     sc_assert(!document.getElementById(container.id));
+    // 
+    //     style = container.style;
+    //     style.position = 'absolute';
+    //     style.top      = '0px';
+    //     style.left     = '0px';
+    //     style.width    = '100%';
+    //     style.height   = '100%';
+    // 
+    //     // The order is important here, otherwise the layers won't have the 
+    //     // correct size.
+    //     element.insertBefore(container, null); // add to DOM
+    //     element.style.opacity = 1;
+    //     cur.didAttach();
+    // 
+    //   // replace
+    //   } else if (old && cur) {
+    //     container = cur.__sc_element__;
+    //     sc_assert(container);
+    //     sc_assert(!document.getElementById(container.id));
+    //     sc_assert(document.getElementById(old.__sc_element__.id));
+    // 
+    //     style = container.style;
+    //     style.position = 'absolute';
+    //     style.top      = '0px';
+    //     style.left     = '0px';
+    //     style.width    = '100%';
+    //     style.height   = '100%';
+    // 
+    //     // The order is important here, otherwise the layers won't have the 
+    //     // correct size.
+    //     element.replaceChild(container, old.__sc_element__);
+    //     cur.didAttach();
+    //     old.didDetach();
+    // 
+    //   // order out
+    //   } else if (old && !cur) {
+    //     sc_assert(document.getElementById(old.__sc_element__.id));
+    // 
+    //     element.removeChild(old.__sc_element__);
+    //     element.style.opacity = 0;
+    //     old.didDetach();
+    //   }
+    // }
   }.observes('contentSurface'),
 
   updateLayout: function() {
