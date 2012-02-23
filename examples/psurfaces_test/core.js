@@ -370,7 +370,6 @@ function modifyTree() {
   }
 }
 
-
 function spaces(depth) {
   var ret = "", idx, len;
   for (idx = 0, len = depth; idx<len; ++idx) ret += "  ";

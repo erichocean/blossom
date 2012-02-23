@@ -104,16 +104,16 @@ SC._sc_psurfacesBeingMoved = null;
 
       SC._sc_psurfaceColor[psurface.id] === undefined;
 
-  When a psurface is initially discovered, it's color it set to 'grey'.  
+  When a psurface is initially discovered, it's color it set to 'grey' (1).  
   Initially discovery happens during three commands:
   - `SC.Psurface.begin()` -- discovers the root psurface
   - `SC.Psurface#push()`  -- discovers the "pushed" surface
   - `SC.Psurface#next()`  -- discovers the "next" surface
 
   When a `push()`, `next()`, or `pop()` call is made on a surface, it can be 
-  either 'grey' or 'black'.  _The color is important!_  In order to match the 
-  calling tree exactly, it is necessary to base the behavior of a node based 
-  on it's current color for these commands.
+  either 'grey' (1) or 'black' (2).  _The color is important!_  In order to 
+  match the calling tree exactly, it is necessary to base the behavior of a 
+  node based on it's current color for these commands.
 
   If a _grey_ psurface has `push()` called on it, that means the calling tree 
   has a child node here.
@@ -183,7 +183,7 @@ SC.Psurface.begin = function(surface) {
   sc_assert(psurface.__element__.parentElement === document.body);
 
   // We've discovered this psurface.
-  SC._sc_psurfaceColor[id] = 'grey';
+  SC._sc_psurfaceColor[id] = 1; // grey
 
   return (SC._sc_currentPsurface = psurface);
 };
@@ -204,7 +204,7 @@ SC.Psurface.prototype = {
 
     // This psurface should have already been discovered, and push() should 
     // never have been called on this node before (otherwise, we'd be black).
-    sc_assert(myColor === 'grey');
+    sc_assert(myColor === 1); // grey
 
     sc_assert(this === SC._sc_currentPsurface);
     sc_assert(el);
@@ -334,10 +334,10 @@ SC.Psurface.prototype = {
     sc_assert(firstChild.__element__.parentElement === this.__element__);
 
     // We've discovered firstChild.
-    SC._sc_psurfaceColor[id] = 'grey';
+    SC._sc_psurfaceColor[id] = 1; // grey
 
     // We've been visited.
-    SC._sc_psurfaceColor[myId] = 'black';
+    SC._sc_psurfaceColor[myId] = 2; // black
 
     return (SC._sc_currentPsurface = firstChild);
   },
@@ -354,7 +354,7 @@ SC.Psurface.prototype = {
         surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
         next, prev, child, childId, childElement, nextChild;
 
-    sc_assert(myColor === 'grey' || myColor === 'black');
+    sc_assert(myColor === 1 || myColor === 2); // grey or black
 
     sc_assert(this === SC._sc_currentPsurface);
     sc_assert(el);
@@ -378,7 +378,7 @@ SC.Psurface.prototype = {
       }
     }
 
-    if (myColor === 'grey') {
+    if (myColor === 1) { // grey
       // This case happens when this psurface should have no children.
       if (this.firstChild) {
         // We need to remove our children.  This is somewhat complicated, the 
@@ -407,11 +407,11 @@ SC.Psurface.prototype = {
       }
 
       // We've been visited.
-      SC._sc_psurfaceColor[myId] = 'black';
+      SC._sc_psurfaceColor[myId] = 2; // black
 
     }
 
-    sc_assert(SC._sc_psurfaceColor[myId] === 'black');
+    sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
 
     if (nextSibling) {
       if (nextSibling.id !== id) {
@@ -533,7 +533,7 @@ SC.Psurface.prototype = {
     sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
 
     // We've discovered nextSibling.
-    SC._sc_psurfaceColor[id] = "grey";
+    SC._sc_psurfaceColor[id] = 1; // grey
 
     return (SC._sc_currentPsurface = nextSibling);
   },
@@ -561,7 +561,7 @@ SC.Psurface.prototype = {
       }
     }
 
-    if (SC._sc_psurfaceColor[myId] === "grey") {
+    if (SC._sc_psurfaceColor[myId] === 1) { // grey
       // We should not have any children.
       if (this.firstChild) {
         // We need to remove our children.  This is somewhat complicated, the 
@@ -590,10 +590,10 @@ SC.Psurface.prototype = {
       }
 
       // We've been visited.
-      SC._sc_psurfaceColor[myId] = 'black';
+      SC._sc_psurfaceColor[myId] = 2; // black
     }
 
-    sc_assert(SC._sc_psurfaceColor[myId] === 'black');
+    sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
 
     sc_assert(this === SC._sc_currentPsurface);
     sc_assert(this.__element__);
@@ -652,7 +652,7 @@ SC.Psurface.end = function(surface) {
     }
   }
 
-  if (SC._sc_psurfaceColor[id] === 'grey') {
+  if (SC._sc_psurfaceColor[id] === 1) { // grey
     // We should not have any children.
     if (psurface.firstChild) {
       // We do not need to move our children -- the tree is empty except for
@@ -677,10 +677,10 @@ SC.Psurface.end = function(surface) {
     }
 
     // We've been visited.
-    SC._sc_psurfaceColor[id] = 'black';
+    SC._sc_psurfaceColor[id] = 2; // black
   }
 
-  sc_assert(SC._sc_psurfaceColor[id] === 'black');
+  sc_assert(SC._sc_psurfaceColor[id] === 2); // black
 
   // Sanity check the surface.
   sc_assert(surface);
@@ -693,7 +693,7 @@ SC.Psurface.end = function(surface) {
   sc_assert(psurface.parent === null);
 
   // We've been visited.
-  SC._sc_psurfaceColor[id] = "black";
+  SC._sc_psurfaceColor[id] = 2; // black
 
   // console.log(SC._sc_psurfaceColor);
 
