@@ -22,10 +22,10 @@ var surface = SC.View.create({
     ctx.font = "16pt Calibri";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-100);
-    ctx.fillText("The corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-20);
-    ctx.fillText("being repeatedly modified and then exhaustively verified.", ctx.width/2, (ctx.height/2)+20);
-    ctx.fillStyle = blue;
+    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-180);
+    ctx.fillText("The surface tree  is being repeatedly modified, and then", ctx.width/2, (ctx.height/2)-100);
+    ctx.fillText("the corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-60);
+    ctx.fillText("being updated and exhaustively verified for correctness.", ctx.width/2, (ctx.height/2)+20);
     ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+100);
   },
 
@@ -387,7 +387,10 @@ function printTree(parent, depth) {
   }
 }
 
+var tests = 0;
+
 function test() {
+  tests++;
   log = [];
   var times = Math.floor(Math.random()*6); // up to 5 modifications
   while (times === 0) times = Math.floor(Math.random()*6);
@@ -407,6 +410,13 @@ function test() {
 
   // Validate the Psurfaces tree, and the DOM.
   validatePsurfaces();
+
+  var ctx = surface.getPath('layer.context');
+  ctx.fillStyle = base3;
+  ctx.fillRect((ctx.width/2)-150, (ctx.height/2)+180, 300, 50);
+  ctx.fillStyle = blue;
+  ctx.fillText("Completed "+tests+" tests.", ctx.width/2, (ctx.height/2)+205);
+
   timeout = setTimeout(test, 0);
 }
 
