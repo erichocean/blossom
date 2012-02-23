@@ -158,13 +158,16 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       var sz = this.get('viewportSize');
       uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
     }
+
+    this.updatePsurfaces(surfaces);
+
+    // FIXME: Really need to do layout _before_ updating Psurfaces, and 
+    // display afterwards.
     uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
 
     SC.isAnimating = false;
     SC.viewportSizeDidChange = false;
-
-    this.updatePsurfaces(surfaces);
 
     SC.Benchmark.end(benchKey);
 

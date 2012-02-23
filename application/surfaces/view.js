@@ -139,33 +139,36 @@ SC.View = SC.LeafSurface.extend({
   },
 
   updateDisplay: function() {
-    // console.log('SC.View#updateDisplay()', SC.guidFor(this));
+    console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
         updateKey = 'SC.ViewSurface#updateDisplay() - update',
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
-    sc_assert(document.getElementById(this.__sc_element__.id));
-    var layer = this.getPath('contentView.layer');
+    // sc_assert(document.getElementById(this.__sc_element__.id));
+    // var layer = this.getPath('contentView.layer');
 
-    SC.Benchmark.start(updateKey);
-    if (layer) layer.updateDisplay();
-    SC.Benchmark.end(updateKey);
+    // SC.Benchmark.start(updateKey);
+    // if (layer) layer.updateDisplay();
+    // SC.Benchmark.end(updateKey);
 
-    var ctx = this.getPath('layer.context'),
-        w = ctx.width, h = ctx.height;
+    // var ctx = this.getPath('layer.context'),
+    var psurface = SC.psurfaces[this.__id__],
+        canvas = psurface? psurface.__element__ : null,
+        ctx = canvas? canvas.getContext('2d') : null,
+        w = canvas.width, h = canvas.height;
 
     sc_assert(ctx);
 
     // Draw background.
     ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.fillRect(0, 0, w, h);
     // ctx.strokeStyle = base0;
     // ctx.lineWidth = 2; // overlap of 1 on the inside
     // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
     SC.Benchmark.start(copyKey);
-    if (layer) layer.copyIntoContext(ctx);
+    // if (layer) layer.copyIntoContext(ctx);
     SC.Benchmark.end(copyKey);
 
     // Draw lines overlay.
@@ -197,11 +200,15 @@ SC.View = SC.LeafSurface.extend({
   // DOM SUPPORT (Private, Browser-only)
   //
 
-  initElement: function() {
-    arguments.callee.base.apply(this, arguments);
-    var element = this.__sc_element__;
-    this._sc_contentViewDidChange();
-  },
+  __tagName__: 'canvas',
+
+  __useContentSize__: true, // we need our width and height attributes set
+
+  // initElement: function() {
+  //   arguments.callee.base.apply(this, arguments);
+  //   var element = this.__sc_element__;
+  //   this._sc_contentViewDidChange();
+  // },
 
   // ..........................................................
   // VIEWPORT SUPPORT

@@ -530,6 +530,8 @@ SC.Surface = SC.Responder.extend({
 
   __tagName__: 'div',
 
+  __useContentSize__: false,
+
   // Note: this only ever called on roots.
   updatePsurfaceTree: function(surfaces) {
     // console.log('SC.Surface#updatePsurfaceTree()');

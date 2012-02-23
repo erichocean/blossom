@@ -13,28 +13,33 @@ var tests = 0;
 var surface = SC.View.create({
 
   updateDisplay: function() {
-    // console.log('updateDisplay');
-    var ctx = this.getPath('layer.context');
+    console.log('updateDisplay');
+    // var ctx = this.getPath('layer.context');
+
+    var psurface = SC.psurfaces[this.__id__],
+        canvas = psurface? psurface.__element__ : null,
+        ctx = canvas? canvas.getContext('2d') : null,
+        w = canvas.width, h = canvas.height;
 
     if (!ctx) return;
 
     // Draw background.
     ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.fillRect(0, 0, w, h);
 
     // Draw text.
     ctx.fillStyle = green;
     ctx.font = "16pt Calibri";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-180);
-    ctx.fillText("The surface tree is being repeatedly modified, and then", ctx.width/2, (ctx.height/2)-100);
-    ctx.fillText("the corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-60);
-    ctx.fillText("being updated and exhaustively verified for correctness.", ctx.width/2, (ctx.height/2)-20);
-    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+60);
+    ctx.fillText("Welcome to the SC.Psurface fuzz tester.", w/2, (h/2)-180);
+    ctx.fillText("The surface tree is being repeatedly modified, and then", w/2, (h/2)-100);
+    ctx.fillText("the corresponding Psurface and rendering tree (DOM) is", w/2, (h/2)-60);
+    ctx.fillText("being updated and exhaustively verified for correctness.", w/2, (h/2)-20);
+    ctx.fillText("Click anywhere to end the fuzz test.", w/2, (h/2)+60);
 
     ctx.fillStyle = blue;
-    ctx.fillText("Completed "+tests+" tests.", ctx.width/2, (ctx.height/2)+205);
+    ctx.fillText("Completed "+tests+" tests.", w/2, (h/2)+205);
   },
 
   mouseDown: function() {
@@ -266,7 +271,7 @@ function modifyTree() {
     case 0:
       composite = fetchComposite(null, false);
       if (composite) {
-        leaf = SC.View.create();
+        leaf = SC.LeafSurface.create();
         log.push("Add a new leaf (%@) to an arbitrary composite surface (%@).".fmt(leaf.get('id'), composite.get('id')));
         insertChild(composite, leaf);
       }
@@ -274,7 +279,7 @@ function modifyTree() {
     case 1:
       composite = fetchComposite(null, false);
       if (composite) {
-        node = SC.ContainerSurface.create();
+        node = SC.CompositeSurface.create();
         log.push("Add a new composite (%@) to an arbitrary composite surface (%@).".fmt(node.get('id'), composite.get('id')));
         insertChild(composite, node);
       }

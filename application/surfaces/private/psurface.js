@@ -69,7 +69,7 @@ SC.psurfaces = {};
   The DOM tree itself needs to be built immediatly during the sync algorithm, 
   because child DOM nodes need to be able to append to their parent DOM nodes.
 */
-SC.Psurface = function(surfaceId, tagName) {
+SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
   sc_assert(surfaceId);
   sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
   sc_assert(SC.surfaces[surfaceId], "new SC.Psurface(): Invalid `surfaceId`: surface is not in the `SC.surfaces` hash.");
@@ -83,10 +83,16 @@ SC.Psurface = function(surfaceId, tagName) {
   sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
   this.__element__ = element;
 
+  if (useContentSize) {
+    element.width = width;
+    element.height = height;
+  }
+
   this.parent = null;
   this.firstChild = null;
   this.nextSibling = null;
   this.prevSibling = null;
+  this.useContentSize = useContentSize;
 
   return this;
 };
@@ -144,6 +150,7 @@ SC.Psurface.begin = function(surface) {
   // console.log('SC.Psurface#begin()');
   var id = surface.__id__,
       tagName = surface.__tagName__,
+      useContentSize = surface.__useContentSize__,
       psurface = SC.psurfaces[id];
 
   sc_assert(SC._sc_currentPsurface === null);
@@ -166,7 +173,7 @@ SC.Psurface.begin = function(surface) {
     // We need to create a Psurface for this surface.
     sc_assert(!document.getElementById(id));
 
-    psurface = new SC.Psurface(id, tagName);
+    psurface = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
     document.body.appendChild(psurface.__element__, null);
 
     // The psurface is now current and present in the rendering tree (DOM).
@@ -185,6 +192,13 @@ SC.Psurface.begin = function(surface) {
   // We've discovered this psurface.
   SC._sc_psurfaceColor[id] = 1; // grey
 
+  if (psurface.useContentSize && surface.__contentSizeNeedsUpdate__) {
+    var el = psurface.__element__;
+    el.width = surface.__contentWidth__;
+    el.height = surface.__contentHeight__;
+    surface.__contentSizeNeedsUpdate__ = false;
+  }
+
   return (SC._sc_currentPsurface = psurface);
 };
 
@@ -196,6 +210,7 @@ SC.Psurface.prototype = {
         firstChild = this.firstChild,
         id = surface.__id__,
         tagName = surface.__tagName__,
+        useContentSize = surface.__useContentSize__,
         myId = this.id,
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
@@ -255,7 +270,7 @@ SC.Psurface.prototype = {
           sc_assert(!document.getElementById(id));
 
           nextChild = firstChild;
-          firstChild = SC.psurfaces[id] =  new SC.Psurface(id, tagName);
+          firstChild = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
           childElement = firstChild.__element__;
         }
 
@@ -314,7 +329,7 @@ SC.Psurface.prototype = {
         // Need to create a new Psurface.
         sc_assert(!document.getElementById(id));
 
-        firstChild = this.firstChild = new SC.Psurface(id, tagName);
+        firstChild = this.firstChild = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
         firstChild.parent = this;
         SC.psurfaces[id] = firstChild;
 
@@ -336,6 +351,13 @@ SC.Psurface.prototype = {
     // We've discovered firstChild.
     SC._sc_psurfaceColor[id] = 1; // grey
 
+    if (firstChild.useContentSize && surface.__contentSizeNeedsUpdate__) {
+      el = firstChild.__element__;
+      el.width = surface.__contentWidth__;
+      el.height = surface.__contentHeight__;
+      surface.__contentSizeNeedsUpdate__ = false;
+    }
+
     // We've been visited.
     SC._sc_psurfaceColor[myId] = 2; // black
 
@@ -348,6 +370,7 @@ SC.Psurface.prototype = {
         nextSibling = this.nextSibling,
         id = surface.__id__,
         tagName = surface.__tagName__,
+        useContentSize = surface.__useContentSize__,
         myId = this.id,
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
@@ -453,7 +476,7 @@ SC.Psurface.prototype = {
           sc_assert(!document.getElementById(id));
 
           nextChild = nextSibling;
-          nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName);
+          nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
           childElement = nextSibling.__element__;
         }
 
@@ -512,7 +535,7 @@ SC.Psurface.prototype = {
         // Need to create a new Psurface.
         sc_assert(!document.getElementById(id));
 
-        nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
+        nextSibling = this.nextSibling = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
         nextSibling.parent = this.parent;
         nextSibling.prevSibling = this;
         psurfaces[id] = nextSibling;
@@ -534,6 +557,13 @@ SC.Psurface.prototype = {
 
     // We've discovered nextSibling.
     SC._sc_psurfaceColor[id] = 1; // grey
+
+    if (nextSibling.useContentSize && surface.__contentSizeNeedsUpdate__) {
+      el = nextSibling.__element__;
+      el.width = surface.__contentWidth__;
+      el.height = surface.__contentHeight__;
+      surface.__contentSizeNeedsUpdate__ = false;
+    }
 
     return (SC._sc_currentPsurface = nextSibling);
   },

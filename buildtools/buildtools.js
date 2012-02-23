@@ -520,6 +520,7 @@ BT.App = BT.Target.extend({
     // ret += '        -webkit-transform-origin: 50 50;\n';
     // ret += '        -webkit-transform: rotate(45deg);\n';
     // ret += '      }\n';
+    ret += '      #ui { width: 100%; height: 100%; position: absolute; }\n';
     ret += '    </style>\n';
 
     ret += '  </head>\n';

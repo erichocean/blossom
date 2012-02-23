@@ -14,6 +14,17 @@ SC.LeafSurface = SC.Surface.extend(
 
   isLeafSurface: true,
 
+  triggerContentSizeUpdate: function() {
+    this.__needsRendering__ = true;
+    this.__contentSizeNeedsUpdate__ = true;
+    SC.needsLayoutAndRendering = true;
+  },
+
+  __contentWidth__: 0,
+  __contentHeight__: 0,
+
+  __contentSizeNeedsUpdate__: false,
+
   // ..........................................................
   // SURFACE TREE SUPPORT
   //
