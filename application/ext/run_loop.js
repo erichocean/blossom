@@ -46,7 +46,8 @@ SC.RunLoop = SC.RunLoop.extend(
     this.fireExpiredTimers(); // fire them timers!
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
-    if (BLOSSOM) SC.ScheduleLayoutAndRendering();
+    // if (BLOSSOM) SC.ScheduleLayoutAndRendering();
+    if (BLOSSOM) SC.app.performLayoutAndRendering(this.get('startTime'));
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
   },

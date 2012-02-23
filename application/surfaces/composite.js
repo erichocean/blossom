@@ -21,8 +21,6 @@ SC.CompositeSurface = SC.Surface.extend(
   updatePsurface: function(psurface, surfaces) {
     // console.log('SC.CompositeSurface#updatePsurface()');
 
-    if (surfaces) surfaces[this.__id__] = this;
-
     sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurface() can only be called an active surfaces.");
 
     // Sanity check the Psurface.
@@ -35,11 +33,13 @@ SC.CompositeSurface = SC.Surface.extend(
     if (subsurfaces && subsurfaces.get('length') > 0) {
       for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
         var surface = subsurfaces[idx];
+
+        if (surfaces) surfaces[surface.__id__] = surface;
+
         if (idx === 0) cur = psurface.push(surface);
         else cur = cur.next(surface);
 
         if (surface.updatePsurface) surface.updatePsurface(cur, surfaces);
-        else if (surfaces) surfaces[surface.__id__] = surface;
       }
       cur.pop();
     }
@@ -65,7 +65,7 @@ SC.CompositeSurface = SC.Surface.extend(
     if (last) last.removeObserver('[]', this, func);
 
     // save new cached values 
-    sc_assert(cur && cur.prototype === Array.prototype);
+    sc_assert(cur && cur.constructor.prototype === Array.prototype);
     this._sc_subsurfaces = cur;
 
     // setup new observers

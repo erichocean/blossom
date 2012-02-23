@@ -606,11 +606,11 @@ SC.Surface = SC.Responder.extend({
     var el = this.__sc_element__, id;
     if (!el) {
       el = this.__sc_element__ = document.createElement('div');
-      id = el.id = this.get('id');
+      el.id = this.__id__;
     } else {
       id = el.id;
-      if (id) this.set('id', id);
-      else el.id = this.get('id')
+      if (id) this.__id__ = id;
+      else el.id = this.__id__;
     }
 
     // el.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
@@ -619,9 +619,6 @@ SC.Surface = SC.Responder.extend({
     // el.style.webkitTransform = "rotateY(45deg)";
 
     this.foo = el;
-
-    // Make sure Blossom can find this surface.
-    // SC.surfaces[id] = this;
   },
 
   // ..........................................................
@@ -634,9 +631,7 @@ SC.Surface = SC.Responder.extend({
 
     this.__id__ = SC.guidFor(this);
 
-    this.initElement();
-
-    this.pane = this; // Needed so that our childViews can get our "pane".
+    this.initElement(); // FIXME: Remove
 
     if (SC.app) {
       this.__sc_needFirstResponderInit__ = false;

@@ -91,6 +91,8 @@ function validatePsurfaces() {
 
         var id = surface.get('id'),
             element = document.getElementById(id);
+
+        sc_assert(element);
         sc_assert(element.parentElement === pelement);
       });
       subsurfaces.forEach(validateChildren);
@@ -240,16 +242,6 @@ function insertChild(composite, child) {
 
   subsurfaces.insertAt(idx, child);
 
-  // (function addToSurfaces(parent) {
-  //   SC.surfaces[parent.get('id')] = parent;
-  //   var subsurfaces = parent.get('subsurfaces');
-  //   if (subsurfaces) {
-  //     subsurfaces.forEach(function(surface) {
-  //       addToSurfaces(surface);
-  //     });
-  //   }
-  // })(child);
-  
   return true;
 }
 
@@ -259,16 +251,6 @@ function removeChild(child) {
   var supersurface = child.get('supersurface');
   supersurface.get('subsurfaces').removeObject(child);
 
-  // (function removeFromSurfaces(parent) {
-  //   delete SC.surfaces[parent.get('id')];
-  //   var subsurfaces = parent.get('subsurfaces');
-  //   if (subsurfaces) {
-  //     subsurfaces.forEach(function(surface) {
-  //       removeFromSurfaces(surface);
-  //     });
-  //   }
-  // })(child);
-  
   return true;
 }
 
@@ -393,6 +375,7 @@ var tests = 0;
 var modificationsPerTest = 6;
 
 function test() {
+  SC.RunLoop.begin();
   tests++;
   log = [];
   var times = Math.floor(Math.random()*modificationsPerTest);
@@ -404,8 +387,14 @@ function test() {
   while (times--) modifyTree();
 
   try {
+    var surfaces = null;
+    if (SC.surfacesHashNeedsUpdate) {
+      SC.surfacesHashNeedsUpdate = false;
+      SC.surfaces = surfaces = {};
+    }
+
     // Update the Psurfaces tree manually (this is the code we are fuzz testing).
-    tree.updatePsurfaceTree();
+    tree.updatePsurfaceTree(surfaces);
   } catch (e) {
     console.log(e);
     console.log(log.join('\n'));
@@ -421,6 +410,7 @@ function test() {
   ctx.fillText("Completed "+tests+" tests.", ctx.width/2, (ctx.height/2)+205);
 
   timeout = setTimeout(test, 0);
+  SC.RunLoop.end();
 }
 
 function main() {
