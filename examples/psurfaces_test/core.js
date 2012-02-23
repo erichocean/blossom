@@ -25,8 +25,8 @@ var surface = SC.View.create({
     ctx.fillText("Welcome to the SC.Psurface fuzz tester.", ctx.width/2, (ctx.height/2)-180);
     ctx.fillText("The surface tree  is being repeatedly modified, and then", ctx.width/2, (ctx.height/2)-100);
     ctx.fillText("the corresponding Psurface and rendering tree (DOM) is", ctx.width/2, (ctx.height/2)-60);
-    ctx.fillText("being updated and exhaustively verified for correctness.", ctx.width/2, (ctx.height/2)+20);
-    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+100);
+    ctx.fillText("being updated and exhaustively verified for correctness.", ctx.width/2, (ctx.height/2)-20);
+    ctx.fillText("Click anywhere to end the fuzz test.", ctx.width/2, (ctx.height/2)+60);
   },
 
   mouseDown: function() {
