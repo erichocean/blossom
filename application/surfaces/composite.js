@@ -19,7 +19,7 @@ SC.CompositeSurface = SC.Surface.extend(
   //
 
   updatePsurface: function(psurface) {
-    console.log('SC.CompositeSurface#updatePsurface()');
+    // console.log('SC.CompositeSurface#updatePsurface()');
 
     // Sanity check the Psurface.
     sc_assert(psurface);

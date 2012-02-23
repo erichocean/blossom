@@ -132,7 +132,7 @@ function fetchLeaf() {
       idx = Math.floor(Math.random()*length),
       tries = 0, leaf;
 
-  console.log(ary);
+  // console.log(ary);
   leaf = SC.surfaces[ary[idx]];
   while (leaf && !leaf.isLeafSurface && tries++ !== length) {
     idx = Math.floor(Math.random()*length);
@@ -237,7 +237,7 @@ function modifyTree() {
   // debugger;
   switch (Math.floor(Math.random()*11)) {
     case 0:
-       composite = fetchComposite(null, false);
+      composite = fetchComposite(null, false);
       if (composite) {
         leaf = SC.View.create();
         log.push("Add a new leaf (%@) to an arbitrary composite surface (%@).".fmt(leaf.get('id'), composite.get('id')));
@@ -262,7 +262,7 @@ function modifyTree() {
     case 3:
       composite = fetchComposite(null, false);
       if (composite) {
-        log.push("// Remove an arbitrary composite w/o children (%@).".fmt(composite.get('id')));
+        log.push("Remove an arbitrary composite w/o children (%@).".fmt(composite.get('id')));
         removeChild(composite);
       }
       break;
@@ -324,10 +324,31 @@ function modifyTree() {
   }
 }
 
+
+function spaces(depth) {
+  var ret = "", idx, len;
+  for (idx = 0, len = depth; idx<len; ++idx) ret += "  ";
+  return ret;
+}
+
+function printTree(parent, depth) {
+  depth = depth === undefined? 0 : depth;
+  console.log(spaces(depth)+parent.get('id'));
+  depth++;
+  var subsurfaces = parent.get('subsurfaces');
+  if (subsurfaces) {
+    subsurfaces.forEach(function(surface) {
+      printTree(surface, depth);
+    });
+  }
+}
+
 function test() {
   log = [];
   var times = Math.floor(Math.random()*6); // up to 5 modifications
   while (times === 0) times = Math.floor(Math.random()*6);
+
+  printTree(tree);
 
   // Make up to five tree modifications.
   while (times--) modifyTree();

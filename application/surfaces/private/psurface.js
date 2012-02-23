@@ -141,7 +141,7 @@ SC._sc_psurfacesBeingMoved = null;
   siblings.
 */
 SC.Psurface.begin = function(surface) {
-  console.log('SC.Psurface#begin()');
+  // console.log('SC.Psurface#begin()');
   var id = surface.__id__,
       tagName = surface.__tagName__,
       psurface = SC.psurfaces[id];
@@ -191,7 +191,7 @@ SC.Psurface.begin = function(surface) {
 SC.Psurface.prototype = {
 
   push: function(surface) {
-    console.log('SC.Psurface#push()');
+    // console.log('SC.Psurface#push()');
     var el = this.__element__,
         firstChild = this.firstChild,
         id = surface.__id__,
@@ -343,7 +343,7 @@ SC.Psurface.prototype = {
   },
 
   next: function(surface) {
-    console.log('SC.Psurface#next()');
+    // console.log('SC.Psurface#next()');
     var el = this.__element__,
         nextSibling = this.nextSibling,
         id = surface.__id__,
@@ -351,7 +351,8 @@ SC.Psurface.prototype = {
         myId = this.id,
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
-        surfacesBeingMoved = SC._sc_psurfacesBeingMoved;
+        surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
+        next, prev, child, childId, childElement, nextChild;
 
     sc_assert(myColor === 'grey' || myColor === 'black');
 
@@ -385,7 +386,7 @@ SC.Psurface.prototype = {
         // so the children (and their children) need to be accessible.  In 
         // addition, we don't want to tear down the whole tree, as this would 
         // involve a lot of DOM manipulation.
-        var next = this.firstChild, child, childId;
+        next = this.firstChild;
         while (next) {
           child = next;
           next = child.nextSibling;
@@ -398,37 +399,114 @@ SC.Psurface.prototype = {
           // Need to move detached surfaces from active to "being moved".
           sc_assert(psurfaces[childId]);
           delete psurfaces[childId];
+          sc_assert(!surfacesBeingMoved[childId]);
           surfacesBeingMoved[childId] = child;
           moveChildren(child);
         }
         this.firstChild = null;
       }
 
-      if (nextSibling) {
-        if (nextSibling.id !== id) {
-          throw 'unhandled';
-        }
-
-      } else {
-        // Need to create a new Psurface.
-        sc_assert(!document.getElementById(id));
-
-        nextSibling = this.nextSibling = new SC.Psurface(id, tagName);
-        nextSibling.parent = this.parent;
-        nextSibling.prevSibling = this;
-        psurfaces[id] = nextSibling;
-
-        el.parentElement.appendChild(nextSibling.__element__);
-      }
-
       // We've been visited.
       SC._sc_psurfaceColor[myId] = 'black';
 
-    } else { // myColor === 'black'
-      if (nextSibling) {
-        if (nextSibling.id !== id) {
-          throw 'unhandled';
+    }
+
+    sc_assert(SC._sc_psurfaceColor[myId] === 'black');
+
+    if (nextSibling) {
+      if (nextSibling.id !== id) {
+        child = psurfaces[id];
+        if (child) {
+          nextChild = nextSibling;
+          nextSibling = child;
+
+          // We need to remove nextSibling from wherever it is now.
+          prev = nextSibling.prevSibling;
+          next = nextSibling.nextSibling;
+
+          childElement = nextSibling.__element__;
+
+          if (prev && next) {
+            // Splice.
+            prev.nextSibling = next;
+            next.prevSibling = prev;
+          } else if (prev) {
+            prev.nextSibling = null;
+          } else if (next) {
+            // Move to first.
+            next.prevSibling = null;
+            next.parent.firstChild = next;
+          } else {
+            // We're the only child.
+            nextSibling.parent.firstChild = null;
+          }
+
+          nextSibling.prevSibling = this;
+
+          // The DOM handles the list management for us.
+          sc_assert(childElement);
+          sc_assert(childElement.parentNode);
+          childElement.parentNode.removeChild(childElement);
+
+        } else {
+          // We need to create a new Psurface.
+          sc_assert(!document.getElementById(id));
+
+          nextChild = nextSibling;
+          nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName);
+          childElement = nextSibling.__element__;
         }
+
+        // These are the same regardless of whether or not the child node 
+        // already exits, or was created on demand.
+        nextSibling.parent = this.parent;
+        this.nextSibling = nextSibling;
+        nextSibling.prevSibling = this;
+        nextSibling.nextSibling = nextChild;
+        nextChild.prevSibling = nextSibling;
+
+        // Place nextSibling before nextChild.
+        el.parentElement.insertBefore(childElement, nextChild.__element__);
+      }
+
+    } else {
+      child = psurfaces[id];
+      if (child) {
+        nextSibling = this.nextSibling = child;
+
+        // We need to remove nextSibling from wherever it is now.
+        prev = nextSibling.prevSibling;
+        next = nextSibling.nextSibling;
+
+        childElement = nextSibling.__element__;
+
+        if (prev && next) {
+          // Splice.
+          prev.nextSibling = next;
+          next.prevSibling = prev;
+        } else if (prev) {
+          prev.nextSibling = null;
+        } else if (next) {
+          // Move to first.
+          next.prevSibling = null;
+          next.parent.firstChild = next;
+        } else {
+          // We're the only child.
+          nextSibling.parent.firstChild = null;
+        }
+
+        nextSibling.prevSibling = null;
+
+        // The DOM handles the list management for us.
+        sc_assert(childElement);
+        sc_assert(childElement.parentNode);
+        childElement.parentNode.removeChild(childElement);
+
+        nextSibling.parent = this.parent;
+        nextSibling.prevSibling = this;
+        nextSibling.nextSibling = null;
+
+        el.parentElement.appendChild(childElement);
 
       } else {
         // Need to create a new Psurface.
@@ -461,7 +539,7 @@ SC.Psurface.prototype = {
   },
 
   pop: function() {
-    console.log('SC.Psurface#pop()');
+    // console.log('SC.Psurface#pop()');
     var el = this.__element__,
         nextSibling = this.nextSibling,
         psurfaces = SC.psurfaces,
@@ -516,7 +594,8 @@ SC.Psurface.prototype = {
     sc_assert(this.__element__ === document.getElementById(this.id));
 
     if (nextSibling) {
-      // We need to remove nextSibling and store it in tmp.
+      // We need to remove any futher siblings and store them in 
+      // `surfacesBeingMoved`.
       var nextSiblingId;
       next = nextSibling;
       while (next) {
@@ -531,6 +610,7 @@ SC.Psurface.prototype = {
         // Need to move detached surfaces from active to "being moved".
         sc_assert(psurfaces[nextSiblingId]);
         delete psurfaces[nextSiblingId];
+        sc_assert(!surfacesBeingMoved[nextSiblingId]);
         surfacesBeingMoved[nextSiblingId] = nextSibling;
         moveChildren(nextSibling);
       }
@@ -546,7 +626,7 @@ SC.Psurface.prototype = {
 };
 
 SC.Psurface.end = function(surface) {
-  console.log('SC.Psurface#end()');
+  // console.log('SC.Psurface#end()');
   var id = surface.__id__,
       psurface = SC.psurfaces[id],
       color = SC._sc_psurfaceColor[id];
@@ -566,7 +646,7 @@ SC.Psurface.end = function(surface) {
   // We've been visited.
   SC._sc_psurfaceColor[id] = "black";
 
-  console.log(SC._sc_psurfaceColor);
+  // console.log(SC._sc_psurfaceColor);
 
   SC._sc_currentPsurface     = null;
   SC._sc_psurfaceColor       = null;
