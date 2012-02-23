@@ -8,7 +8,7 @@ var fs = require('fs'),
     assert = require('assert'),
     vows = require('vows');
 
-var datastore = require('blossom/datastore');
+var datastore = require('./datastore');
 
 var jsFiles = datastore.get('orderedJavaScriptFiles').map(function(file) {
   return file.get('sourcePath');
