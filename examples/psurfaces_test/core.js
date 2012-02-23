@@ -240,15 +240,15 @@ function insertChild(composite, child) {
 
   subsurfaces.insertAt(idx, child);
 
-  (function addToSurfaces(parent) {
-    SC.surfaces[parent.get('id')] = parent;
-    var subsurfaces = parent.get('subsurfaces');
-    if (subsurfaces) {
-      subsurfaces.forEach(function(surface) {
-        addToSurfaces(surface);
-      });
-    }
-  })(child);
+  // (function addToSurfaces(parent) {
+  //   SC.surfaces[parent.get('id')] = parent;
+  //   var subsurfaces = parent.get('subsurfaces');
+  //   if (subsurfaces) {
+  //     subsurfaces.forEach(function(surface) {
+  //       addToSurfaces(surface);
+  //     });
+  //   }
+  // })(child);
   
   return true;
 }
@@ -259,15 +259,15 @@ function removeChild(child) {
   var supersurface = child.get('supersurface');
   supersurface.get('subsurfaces').removeObject(child);
 
-  (function removeFromSurfaces(parent) {
-    delete SC.surfaces[parent.get('id')];
-    var subsurfaces = parent.get('subsurfaces');
-    if (subsurfaces) {
-      subsurfaces.forEach(function(surface) {
-        removeFromSurfaces(surface);
-      });
-    }
-  })(child);
+  // (function removeFromSurfaces(parent) {
+  //   delete SC.surfaces[parent.get('id')];
+  //   var subsurfaces = parent.get('subsurfaces');
+  //   if (subsurfaces) {
+  //     subsurfaces.forEach(function(surface) {
+  //       removeFromSurfaces(surface);
+  //     });
+  //   }
+  // })(child);
   
   return true;
 }

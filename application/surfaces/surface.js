@@ -13,8 +13,6 @@ sc_require('surfaces/private/psurface');
 
 if (BLOSSOM) {
 
-SC.surfaces = {};
-
 /** @class
   `SC.Surface` is used to display content within the application's viewport. 
   Each surface lives on the GPU and supports implicit, hardware-accelerated 
@@ -574,28 +572,30 @@ SC.Surface = SC.Responder.extend({
     The ID to use when building CSS rules for this container surface.
   */
   id: function(key, value) {
-    if (value) this._sc_id = value;
-    if (this._sc_id) return this._sc_id;
-    return SC.guidFor(this) ;
+    sc_assert(value === undefined);
+    return this.__id__;
   }.property().cacheable(),
 
   __tagName__: 'div',
 
-  updatePsurfaceTree: function() {
+  // Note: this only ever called on roots.
+  updatePsurfaceTree: function(surfaces) {
     // console.log('SC.Surface#updatePsurfaceTree()');
 
+    if (surfaces) surfaces[this.__id__] = this;
+
     sc_assert(!this.get('supersurface'), "SC.Surface#updatePsurfaceTree() can only be called on a root surface.");
-    sc_assert(this === SC.surfaces[this.get('id')], "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
+    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurfaceTree() can only be called an active surfaces.");
 
     var rootPsurface = SC.Psurface.begin(this);
 
     // Sanity check.
     sc_assert(rootPsurface);
     sc_assert(rootPsurface instanceof SC.Psurface);
-    sc_assert(rootPsurface.id === this.get('id'));
+    sc_assert(rootPsurface.id === this.__id__);
 
     // Only defined for composite surfaces.
-    if (this.updatePsurface) this.updatePsurface(rootPsurface);
+    if (this.updatePsurface) this.updatePsurface(rootPsurface, surfaces);
 
     SC.Psurface.end(this); // Required.
   },
@@ -621,7 +621,7 @@ SC.Surface = SC.Responder.extend({
     this.foo = el;
 
     // Make sure Blossom can find this surface.
-    SC.surfaces[id] = this;
+    // SC.surfaces[id] = this;
   },
 
   // ..........................................................
@@ -632,7 +632,7 @@ SC.Surface = SC.Responder.extend({
     // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
 
-    this.__id__ = this.get('id');
+    this.__id__ = SC.guidFor(this);
 
     this.initElement();
 

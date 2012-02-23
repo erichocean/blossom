@@ -142,6 +142,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var benchKey = 'SC.Application#performLayoutAndRendering()';
     SC.Benchmark.start(benchKey);
 
+    var surfaces = null;
+    if (SC.surfacesHashNeedsUpdate) {
+      SC.surfacesHashNeedsUpdate = false;
+      SC.surfaces = surfaces = {};
+    }
+
     SC.isAnimating = true;
     SC.needsLayoutAndRendering = false; // Do this now so we can reschedule if needed.
 
@@ -159,7 +165,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.isAnimating = false;
     SC.viewportSizeDidChange = false;
 
-    this.updatePsurfaces();
+    this.updatePsurfaces(surfaces);
 
     SC.Benchmark.end(benchKey);
 
@@ -230,6 +236,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(surface.kindOf(SC.Surface));
     sc_assert(surface !== this.get('ui'), "Don't add SC.app@ui to the SC.app@surfaces set.");
 
+    SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache
+
     surface.setIfChanged('isPresentInViewport', true);
     surface.setIfChanged('applicationHasFocus', this.get('hasFocus'));
 
@@ -252,6 +260,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(surface !== this.get('ui'), "You must not remove the 'ui' surface directly. Set the 'ui' property to null instead.");
 
     surface.set('isPresentInViewport', false);
+
+    SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache
 
     // If we remove a surface that is currently the menuSurface or 
     // inputSurface, set the correspoding property to null.
@@ -371,6 +381,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       });
 
       uiContainer.set('isPresentInViewport', true);
+      // SC.addToSurfacesHash(uiContainer);
     }
     return uiContainer;
   }.property(),
@@ -477,10 +488,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // PSURFACE SUPPORT (Private)
   //
 
-  updatePsurfaces: function() {
+  updatePsurfaces: function(surfaces) {
     // console.log('SC.Application#updatePsurfaces()');
 
-    this.get('surfaces').invoke('updatePsurfaceTree');
+    this.get('surfaces').invoke('updatePsurfaceTree', surfaces);
     // var ui = this.get('ui');
     // if (ui) ui.updatePsurfaceTree();
   },
@@ -1067,6 +1078,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.Application#targetSurfaceForEvent()');
     var parentNode = evt.target, id, ret, surfaces = SC.surfaces;
 
+    if (surfaces === null) this.updateSurfacesHash();
+
     while (parentNode && !ret) {
       id = parentNode.id;
       if (id) ret = surfaces[id];
@@ -1372,6 +1385,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 });
 
 SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
+
+SC.surfacesHashNeedsUpdate = true;
+SC.surfaces = null;
 
 } // BLOSSOM
 

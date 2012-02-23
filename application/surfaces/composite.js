@@ -18,23 +18,29 @@ SC.CompositeSurface = SC.Surface.extend(
   // PSURFACE SUPPORT (Private)
   //
 
-  updatePsurface: function(psurface) {
+  updatePsurface: function(psurface, surfaces) {
     // console.log('SC.CompositeSurface#updatePsurface()');
+
+    if (surfaces) surfaces[this.__id__] = this;
+
+    sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurface() can only be called an active surfaces.");
 
     // Sanity check the Psurface.
     sc_assert(psurface);
     sc_assert(psurface instanceof SC.Psurface);
     sc_assert(psurface.__element__);
-    sc_assert(psurface.__element__ === document.getElementById(this.get('id')));
+    sc_assert(psurface.__element__ === document.getElementById(this.__id__));
 
     var subsurfaces = this.get('subsurfaces'), cur;
     if (subsurfaces && subsurfaces.get('length') > 0) {
-      subsurfaces.forEach(function(surface, idx) {
+      for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+        var surface = subsurfaces[idx];
         if (idx === 0) cur = psurface.push(surface);
         else cur = cur.next(surface);
 
-        if (surface.updatePsurface) surface.updatePsurface(cur);
-      }, this);
+        if (surface.updatePsurface) surface.updatePsurface(cur, surfaces);
+        else if (surfaces) surfaces[surface.__id__] = surface;
+      }
       cur.pop();
     }
   },
@@ -51,17 +57,20 @@ SC.CompositeSurface = SC.Surface.extend(
     var cur  = this.get('subsurfaces'),
         last = this._sc_subsurfaces,
         func = this._sc_subsurfacesMembersDidChange;
-        
+
     if (last === cur) return this; // nothing to do
 
     // teardown old observer
-    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
-    
+    sc_assert(last? last.isEnumerable : true);
+    if (last) last.removeObserver('[]', this, func);
+
     // save new cached values 
-    this._sc_subsurfaces = cur ;
-    
+    sc_assert(cur && cur.prototype === Array.prototype);
+    this._sc_subsurfaces = cur;
+
     // setup new observers
-    if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
+    sc_assert(cur? cur.isEnumerable : true);
+    if (cur) cur.addObserver('[]', this, func);
 
     // process the changes
     this._sc_subsurfacesMembersDidChange();
@@ -69,7 +78,13 @@ SC.CompositeSurface = SC.Surface.extend(
 
   _sc_subsurfacesMembersDidChange: function() {
     // console.log("SC.Surface#_sc_subsurfacesMembersDidChange()");
-    this.get('subsurfaces').invoke('set', 'supersurface', this);
+    var subsurfaces = this.get('subsurfaces');
+
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].set('supersurface', this);
+    }
+
+    SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache
   },
 
   init: function() {
