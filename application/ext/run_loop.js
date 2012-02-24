@@ -47,7 +47,12 @@ SC.RunLoop = SC.RunLoop.extend(
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
     // if (BLOSSOM) SC.ScheduleLayoutAndRendering();
-    if (BLOSSOM) SC.app.performLayoutAndRendering(this.get('startTime'));
+    if (BLOSSOM) {
+      // Test SC.viewportSizeDidChange last since it's true less often.
+      if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
+        SC.app.performLayoutAndRendering(this.get('startTime'));
+      }
+    }
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
   },
@@ -186,9 +191,11 @@ SC.ScheduleLayoutAndRendering = function closure() {
   var didRequestAnimationFrame = false;
 
   function callback(timestamp) {
-    // console.log('SC.RequestAnimationFrame() - callback');
+    console.log('SC.RequestAnimationFrame() - callback');
     didRequestAnimationFrame = false;
+    SC.isAnimating = true;
     SC.app.performLayoutAndRendering(timestamp);
+    SC.isAnimating = false;
   }
 
   return function() {
@@ -196,7 +203,7 @@ SC.ScheduleLayoutAndRendering = function closure() {
     if (didRequestAnimationFrame) return;
 
     // Viewport size changes occur much less often, so we test second.
-    if (SC.needsLayoutAndRendering) {
+    if (SC.requestAnimationFrame) {
       didRequestAnimationFrame = true;
       SC.RequestAnimationFrame(callback);
     }

@@ -78,21 +78,21 @@ SC.Layer = SC.Object.extend({
   triggerLayout: function() {
     // console.log('SC.Layer#triggerLayout()');
     this.__needsLayout__ = true;
-    SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsLayoutAndRendering = true;
   },
 
   __needsRendering__: false,
   triggerRendering: function() {
     // console.log('SC.Layer#triggerRendering()');
     this.__needsRendering__ = true;
-    SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsLayoutAndRendering = true;
   },
 
   triggerLayoutAndRendering: function() {
     // console.log('SC.Layer#triggerLayoutAndRendering()');
     this.__needsLayout__ = true;
     this.__needsRendering__ = true;
-    SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsLayoutAndRendering = true;
   },
 
   updateLayout: function() {
@@ -627,6 +627,7 @@ SC.Layer = SC.Object.extend({
   },
 
   init: function() {
+    // debugger;
     // console.log('SC.Layer#init()');
     arguments.callee.base.apply(this, arguments);
 
@@ -726,7 +727,9 @@ SC.Layer = SC.Object.extend({
     // subclass can create their own backing layer type (canvas, video, etc.).
     this.initElement();
 
-    this.triggerLayoutAndRendering();
+    // debugger;
+    this.__needsLayout__ = true;
+    this.__needsRendering__ = true;
 
     this._sc_superlayerDidChange();
     // this._sc_needsLayoutDidChange();

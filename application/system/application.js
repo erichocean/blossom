@@ -134,6 +134,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   performLayoutAndRendering: function(timestamp) {
     // SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
+    // debugger;
     // console.log('SC.Application#performLayoutAndRendering()');
     // console.log('==========================================');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
@@ -147,9 +148,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       SC.surfacesHashNeedsUpdate = false;
       SC.surfaces = surfaces = {};
     }
-
-    SC.isAnimating = true;
-    SC.needsLayoutAndRendering = false; // Do this now so we can reschedule if needed.
 
     // FIXME: Need to do all four stages of layout!
 
@@ -166,8 +164,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
 
-    SC.isAnimating = false;
     SC.viewportSizeDidChange = false;
+    SC.needsLayoutAndRendering = false;
 
     SC.Benchmark.end(benchKey);
 
