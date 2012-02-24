@@ -117,7 +117,7 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.start(updateKey);
     var layers = this.get('layers');
     for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].updateLayout();
+      layers[idx].updateDisplay();
     }
     SC.Benchmark.end(updateKey);
 
@@ -131,10 +131,8 @@ SC.View = SC.LeafSurface.extend({
     // Draw background.
     ctx.fillStyle = base3;
     ctx.fillRect(0, 0, w, h);
-    // ctx.strokeStyle = base0;
-    // ctx.lineWidth = 2; // overlap of 1 on the inside
-    // ctx.strokeRect(0, 0, ctx.width, ctx.height);
 
+    // Draw layers.
     SC.Benchmark.start(copyKey);
     for (idx=0, len=layers.length; idx<len; ++idx) {
       layers[idx].copyIntoContext(ctx);
