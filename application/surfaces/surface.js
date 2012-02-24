@@ -139,6 +139,10 @@ SC.Surface = SC.Responder.extend({
   // SURFACE TREE SUPPORT
   //
 
+  surface: function() {
+    return this;
+  }.property(),
+
   /**
     Specifies receiver's supersurface.
 

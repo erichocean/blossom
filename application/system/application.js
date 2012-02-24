@@ -772,9 +772,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     if (target) {
       surface = target.get('surface') ;
-      // if (!surface) surface = target.get('container') ; // FIXME: Why?
+      if (!surface) surface = target.get('container') ; // FIXME: Why?
     }
     else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
+
+    if (surface === this) surface = null;
 
     // If we found a valid surface, send the event to it.
     ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
