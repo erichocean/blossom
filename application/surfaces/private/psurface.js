@@ -84,6 +84,7 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
   element.id = surfaceId;
   if (DEBUG_PSURFACES) sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
   this.__element__ = element;
+  element.style.position = 'absolute';
 
   if (useContentSize) {
     element.width = width;
@@ -197,19 +198,34 @@ SC.Psurface.begin = function(surface) {
   }
 
   // We've discovered this psurface.
-  SC._sc_psurfaceColor[id] = 1; // grey
-
-  if (useContentSize && surface.__contentSizeNeedsUpdate__) {
-    var el = psurface.__element__;
-    el.width = surface.__contentWidth__;
-    el.height = surface.__contentHeight__;
-    surface.__contentSizeNeedsUpdate__ = false;
-  }
+  psurface.discover(surface);
 
   return (SC._sc_currentPsurface = psurface);
 };
 
 SC.Psurface.prototype = {
+
+  discover: function(surface) {
+    SC._sc_psurfaceColor[this.id] = 1; // grey
+
+    var el = this.__element__;
+    if (this.useContentSize && surface.__contentSizeNeedsUpdate__) {
+      el.width  = surface.__contentWidth__;
+      el.height = surface.__contentHeight__;
+      surface.__contentSizeNeedsUpdate__ = false;
+    }
+
+    if (surface.__frameDidChange__) {
+      var style = el.style,
+          frame = surface.get('frame');
+
+      // debugger;
+      style.top    = frame[0]/*x*/;
+      style.left   = frame[1]/*y*/;
+      style.width  = frame[2]/*width*/;
+      style.height = frame[3]/*height*/;
+    }
+  },
 
   push: function(surface) {
     // console.log('SC.Psurface#push()');
@@ -366,14 +382,7 @@ SC.Psurface.prototype = {
     }
 
     // We've discovered firstChild.
-    SC._sc_psurfaceColor[id] = 1; // grey
-
-    if (useContentSize && surface.__contentSizeNeedsUpdate__) {
-      el = firstChild.__element__;
-      el.width = surface.__contentWidth__;
-      el.height = surface.__contentHeight__;
-      surface.__contentSizeNeedsUpdate__ = false;
-    }
+    firstChild.discover(surface);
 
     // We've been visited.
     SC._sc_psurfaceColor[myId] = 2; // black
@@ -585,14 +594,7 @@ SC.Psurface.prototype = {
     }
 
     // We've discovered nextSibling.
-    SC._sc_psurfaceColor[id] = 1; // grey
-
-    if (useContentSize && surface.__contentSizeNeedsUpdate__) {
-      el = nextSibling.__element__;
-      el.width = surface.__contentWidth__;
-      el.height = surface.__contentHeight__;
-      surface.__contentSizeNeedsUpdate__ = false;
-    }
+    nextSibling.discover(surface);
 
     return (SC._sc_currentPsurface = nextSibling);
   },

@@ -431,6 +431,11 @@ SC.Surface = SC.Responder.extend({
       position = this._sc_position;
 
       // debugger;
+      value[0] = Math.floor(value[0]);
+      value[1] = Math.floor(value[1]);
+      value[2] = Math.ceil(value[2]);
+      value[3] = Math.ceil(value[3]);
+      // debugger;
 
       // The bounds' size should have the same size as the frame. Set this 
       // first so that the position can take into account the new size.
@@ -438,12 +443,13 @@ SC.Surface = SC.Responder.extend({
       bounds[3]/*height*/ = value[3]/*height*/;
 
       // Position is updated relative to the bounds' origin, taking into account the layer's anchorPoint.
-      position[0]/*x*/ = -((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/);
-      position[1]/*y*/ = -((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/);
+      position[0]/*x*/ = Math.ceil(-((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/));
+      position[1]/*y*/ = Math.ceil(-((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/));
 
       // Cache the new frame so we don't need to compute it later.
       frame.set(value);
       this._sc_frameIsDirty = false;
+      this.__frameDidChange__  = true;
       this.triggerLayoutAndRendering();
     } else {
       if (this._sc_frameIsDirty) {
@@ -452,12 +458,12 @@ SC.Surface = SC.Responder.extend({
         position = this._sc_position;
 
         // The x and y coordinates take into account the bounds, anchorPoint, and position properties.
-        frame[0]/*x*/ = (-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) + position[0]/*x*/;
-        frame[1]/*y*/ = (-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) + position[1]/*y*/;
+        frame[0]/*x*/ = Math.ceil((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) + position[0]/*x*/);
+        frame[1]/*y*/ = Math.ceil((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) + position[1]/*y*/);
 
         // The frame has the same size as the bounds.
-        frame[2]/*width*/  = bounds[2]/*width*/;
-        frame[3]/*height*/ = bounds[3]/*height*/;
+        frame[2]/*width*/  = Math.floor(bounds[2]/*width*/);
+        frame[3]/*height*/ = Math.floor(bounds[3]/*height*/);
 
         this._sc_frameIsDirty = false;
       }
@@ -541,6 +547,7 @@ SC.Surface = SC.Responder.extend({
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
     // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    // debugger;
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
 

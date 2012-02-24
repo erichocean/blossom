@@ -379,8 +379,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
         __id__: 'ui',
-        orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
-        replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
+        orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition',  this).oneWay().noDelay(),
+        replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition',  this).oneWay().noDelay(),
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
       });
 

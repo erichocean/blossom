@@ -201,12 +201,12 @@ SC.ScheduleLayoutAndRendering = function closure() {
     SC.Benchmark.end(benchKey);
   }
 
-  return function() {
+  return function(force) {
     // console.log('SC.RunLoop#scheduleLayoutAndRendering()');
     if (didRequestAnimationFrame) return;
 
     // Viewport size changes occur much less often, so we test second.
-    if (SC.requestAnimationFrame) {
+    if (SC.requestAnimationFrame || force) {
       didRequestAnimationFrame = true;
       SC.RequestAnimationFrame(callback);
     }
