@@ -1,4 +1,6 @@
-/*globals base3 green blue sc_assert */
+/*globals DEBUG_PSURFACES base3 green blue sc_assert */
+
+DEBUG_PSURFACES = true; // Force assertions in SC.Psurface to be on.
 
 var tree = SC.ContainerSurface.create();
 

@@ -496,6 +496,7 @@ BT.App = BT.Target.extend({
     ret += '      var FAST_LAYOUT_FUNCTION = false;\n';
     ret += '      var BENCHMARK_LAYOUT_FUNCTION = true;\n';
     ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = true;\n';
+    ret += '      var DEBUG_PSURFACES = false;\n';
     ret += '    </script>\n';
 
     function outputScriptTag(file) {

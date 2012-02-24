@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals BLOSSOM DEBUG_PSURFACES sc_assert */
 
 if (BLOSSOM) {
 
@@ -70,9 +70,11 @@ SC.psurfaces = {};
   because child DOM nodes need to be able to append to their parent DOM nodes.
 */
 SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
-  sc_assert(surfaceId);
-  sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
-  sc_assert(SC.surfaces[surfaceId], "new SC.Psurface(): Invalid `surfaceId`: surface is not in the `SC.surfaces` hash.");
+  if (DEBUG_PSURFACES) {
+    sc_assert(surfaceId);
+    sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
+    sc_assert(SC.surfaces[surfaceId], "new SC.Psurface(): Invalid `surfaceId`: surface is not in the `SC.surfaces` hash.");
+  }
 
   // Set all these properties up front so we get the "same" internal class in 
   // browsers like Google Chrome.
@@ -80,7 +82,7 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
 
   var element = document.createElement(tagName || 'div');
   element.id = surfaceId;
-  sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
+  if (DEBUG_PSURFACES) sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
   this.__element__ = element;
 
   if (useContentSize) {
@@ -153,15 +155,17 @@ SC.Psurface.begin = function(surface) {
       useContentSize = surface.__useContentSize__,
       psurface = SC.psurfaces[id];
 
-  sc_assert(SC._sc_currentPsurface === null);
-  sc_assert(SC._sc_psurfaceColor === null);
-  sc_assert(SC._sc_psurfacesBeingMoved === null);
+  if (DEBUG_PSURFACES) {
+    sc_assert(SC._sc_currentPsurface === null);
+    sc_assert(SC._sc_psurfaceColor === null);
+    sc_assert(SC._sc_psurfacesBeingMoved === null);
 
-  // Sanity check the surface.
-  sc_assert(surface);
-  sc_assert(surface.kindOf(SC.Surface));
-  sc_assert(surface.get('supersurface') === null);
-  sc_assert(surface === SC.surfaces[surface.__id__]);
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface.get('supersurface') === null);
+    sc_assert(surface === SC.surfaces[surface.__id__]);
+  }
 
   SC._sc_psurfaceColor = {};
   SC._sc_psurfacesBeingMoved = {};
@@ -171,7 +175,7 @@ SC.Psurface.begin = function(surface) {
 
   if (!psurface) {
     // We need to create a Psurface for this surface.
-    sc_assert(!document.getElementById(id));
+    if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
     psurface = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
     surface.__contentSizeNeedsUpdate__ = false;
@@ -181,14 +185,16 @@ SC.Psurface.begin = function(surface) {
     SC.psurfaces[id] = psurface;
   }
 
-  // Sanity check the psurface for all code paths.
-  sc_assert(psurface);
-  sc_assert(psurface instanceof SC.Psurface);
-  sc_assert(psurface === SC.psurfaces[id]);
-  sc_assert(psurface.parent === null);
-  sc_assert(psurface.__element__);
-  sc_assert(psurface.__element__ === document.getElementById(id));
-  sc_assert(psurface.__element__.parentElement === document.body);
+  if (DEBUG_PSURFACES) {
+    // Sanity check the psurface for all code paths.
+    sc_assert(psurface);
+    sc_assert(psurface instanceof SC.Psurface);
+    sc_assert(psurface === SC.psurfaces[id]);
+    sc_assert(psurface.parent === null);
+    sc_assert(psurface.__element__);
+    sc_assert(psurface.__element__ === document.getElementById(id));
+    sc_assert(psurface.__element__.parentElement === document.body);
+  }
 
   // We've discovered this psurface.
   SC._sc_psurfaceColor[id] = 1; // grey
@@ -218,18 +224,20 @@ SC.Psurface.prototype = {
         surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
         child, nextChild, childElement, prev, next;
 
-    // This psurface should have already been discovered, and push() should 
-    // never have been called on this node before (otherwise, we'd be black).
-    sc_assert(myColor === 1); // grey
+    if (DEBUG_PSURFACES) {
+      // This psurface should have already been discovered, and push() should 
+      // never have been called on this node before (otherwise, we'd be black).
+      sc_assert(myColor === 1); // grey
 
-    sc_assert(this === SC._sc_currentPsurface);
-    sc_assert(el);
-    sc_assert(el === document.getElementById(this.id));
+      sc_assert(this === SC._sc_currentPsurface);
+      sc_assert(el);
+      sc_assert(el === document.getElementById(this.id));
 
-    // Sanity check the surface.
-    sc_assert(surface);
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(surface === SC.surfaces[surface.__id__]);
+      // Sanity check the surface.
+      sc_assert(surface);
+      sc_assert(surface.kindOf(SC.Surface));
+      sc_assert(surface === SC.surfaces[surface.__id__]);
+    }
 
     if (firstChild) {
       if (firstChild.id !== id) {
@@ -262,13 +270,15 @@ SC.Psurface.prototype = {
           firstChild.prevSibling = null;
 
           // The DOM handles the list management for us.
-          sc_assert(childElement);
-          sc_assert(childElement.parentNode);
+          if (DEBUG_PSURFACES) {
+            sc_assert(childElement);
+            sc_assert(childElement.parentNode);
+          }
           childElement.parentNode.removeChild(childElement);
 
         } else {
           // We need to create a new Psurface.
-          sc_assert(!document.getElementById(id));
+          if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
           nextChild = firstChild;
           firstChild = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
@@ -317,8 +327,10 @@ SC.Psurface.prototype = {
         firstChild.prevSibling = null;
 
         // The DOM handles the list management for us.
-        sc_assert(childElement);
-        sc_assert(childElement.parentNode);
+        if (DEBUG_PSURFACES) {
+          sc_assert(childElement);
+          sc_assert(childElement.parentNode);
+        }
         childElement.parentNode.removeChild(childElement);
 
         firstChild.parent = this;
@@ -329,7 +341,7 @@ SC.Psurface.prototype = {
 
       } else {
         // Need to create a new Psurface.
-        sc_assert(!document.getElementById(id));
+        if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
         firstChild = this.firstChild = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
         surface.__contentSizeNeedsUpdate__ = false;
@@ -340,16 +352,18 @@ SC.Psurface.prototype = {
       }
     }
 
-    // Sanity check firstChild for all code paths.
-    sc_assert(firstChild);
-    sc_assert(firstChild instanceof SC.Psurface);
-    sc_assert(firstChild === SC.psurfaces[id]);
-    sc_assert(firstChild === this.firstChild);
-    sc_assert(firstChild.parent === this);
-    sc_assert(firstChild.prevSibling === null);
-    sc_assert(firstChild.__element__);
-    sc_assert(firstChild.__element__ === document.getElementById(id));
-    sc_assert(firstChild.__element__.parentElement === this.__element__);
+    if (DEBUG_PSURFACES) {
+      // Sanity check firstChild for all code paths.
+      sc_assert(firstChild);
+      sc_assert(firstChild instanceof SC.Psurface);
+      sc_assert(firstChild === SC.psurfaces[id]);
+      sc_assert(firstChild === this.firstChild);
+      sc_assert(firstChild.parent === this);
+      sc_assert(firstChild.prevSibling === null);
+      sc_assert(firstChild.__element__);
+      sc_assert(firstChild.__element__ === document.getElementById(id));
+      sc_assert(firstChild.__element__.parentElement === this.__element__);
+    }
 
     // We've discovered firstChild.
     SC._sc_psurfaceColor[id] = 1; // grey
@@ -380,16 +394,18 @@ SC.Psurface.prototype = {
         surfacesBeingMoved = SC._sc_psurfacesBeingMoved,
         next, prev, child, childId, childElement, nextChild;
 
-    sc_assert(myColor === 1 || myColor === 2); // grey or black
+    if (DEBUG_PSURFACES) {
+      sc_assert(myColor === 1 || myColor === 2); // grey or black
 
-    sc_assert(this === SC._sc_currentPsurface);
-    sc_assert(el);
-    sc_assert(el === document.getElementById(this.id));
+      sc_assert(this === SC._sc_currentPsurface);
+      sc_assert(el);
+      sc_assert(el === document.getElementById(this.id));
 
-    // Sanity check the surface.
-    sc_assert(surface);
-    sc_assert(surface.kindOf(SC.Surface));
-    sc_assert(surface === SC.surfaces[surface.__id__]);
+      // Sanity check the surface.
+      sc_assert(surface);
+      sc_assert(surface.kindOf(SC.Surface));
+      sc_assert(surface === SC.surfaces[surface.__id__]);
+    }
 
     function moveChildren(psurface) {
       var next = psurface.firstChild, child, id;
@@ -397,7 +413,7 @@ SC.Psurface.prototype = {
         child = next;
         next = child.nextSibling;
         id = child.id;
-        sc_assert(psurfaces[id]);
+        if (DEBUG_PSURFACES) sc_assert(psurfaces[id]);
         delete psurfaces[id];
         surfacesBeingMoved[child.id] = child;
         if (child.firstChild) moveChildren(child);
@@ -423,9 +439,11 @@ SC.Psurface.prototype = {
           childId = child.id;
 
           // Need to move detached surfaces from active to "being moved".
-          sc_assert(psurfaces[childId]);
+          if (DEBUG_PSURFACES) {
+            sc_assert(psurfaces[childId]);
+            sc_assert(!surfacesBeingMoved[childId]);
+          }
           delete psurfaces[childId];
-          sc_assert(!surfacesBeingMoved[childId]);
           surfacesBeingMoved[childId] = child;
           moveChildren(child);
         }
@@ -437,7 +455,7 @@ SC.Psurface.prototype = {
 
     }
 
-    sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
+    if (DEBUG_PSURFACES) sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
 
     if (nextSibling) {
       if (nextSibling.id !== id) {
@@ -470,13 +488,15 @@ SC.Psurface.prototype = {
           nextSibling.prevSibling = this;
 
           // The DOM handles the list management for us.
-          sc_assert(childElement);
-          sc_assert(childElement.parentNode);
+          if (DEBUG_PSURFACES) {
+            sc_assert(childElement);
+            sc_assert(childElement.parentNode);
+          }
           childElement.parentNode.removeChild(childElement);
 
         } else {
           // We need to create a new Psurface.
-          sc_assert(!document.getElementById(id));
+          if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
           nextChild = nextSibling;
           nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
@@ -525,8 +545,10 @@ SC.Psurface.prototype = {
         nextSibling.prevSibling = null;
 
         // The DOM handles the list management for us.
-        sc_assert(childElement);
-        sc_assert(childElement.parentNode);
+        if (DEBUG_PSURFACES) {
+          sc_assert(childElement);
+          sc_assert(childElement.parentNode);
+        }
         childElement.parentNode.removeChild(childElement);
 
         nextSibling.parent = this.parent;
@@ -537,7 +559,7 @@ SC.Psurface.prototype = {
 
       } else {
         // Need to create a new Psurface.
-        sc_assert(!document.getElementById(id));
+        if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
         nextSibling = this.nextSibling = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
         surface.__contentSizeNeedsUpdate__ = false;
@@ -549,16 +571,18 @@ SC.Psurface.prototype = {
       }
     }
 
-    // Sanity check nextSibling for all code paths.
-    sc_assert(nextSibling);
-    sc_assert(nextSibling instanceof SC.Psurface);
-    sc_assert(nextSibling === psurfaces[id]);
-    sc_assert(nextSibling === this.nextSibling);
-    sc_assert(nextSibling.parent === this.parent);
-    sc_assert(nextSibling.prevSibling === this);
-    sc_assert(nextSibling.__element__);
-    sc_assert(nextSibling.__element__ === document.getElementById(id));
-    sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
+    if (DEBUG_PSURFACES) {
+      // Sanity check nextSibling for all code paths.
+      sc_assert(nextSibling);
+      sc_assert(nextSibling instanceof SC.Psurface);
+      sc_assert(nextSibling === psurfaces[id]);
+      sc_assert(nextSibling === this.nextSibling);
+      sc_assert(nextSibling.parent === this.parent);
+      sc_assert(nextSibling.prevSibling === this);
+      sc_assert(nextSibling.__element__);
+      sc_assert(nextSibling.__element__ === document.getElementById(id));
+      sc_assert(nextSibling.__element__.parentElement === this.__element__.parentElement);
+    }
 
     // We've discovered nextSibling.
     SC._sc_psurfaceColor[id] = 1; // grey
@@ -589,7 +613,7 @@ SC.Psurface.prototype = {
         child = next;
         next = child.nextSibling;
         id = child.id;
-        sc_assert(psurfaces[id]);
+        if (DEBUG_PSURFACES) sc_assert(psurfaces[id]);
         delete psurfaces[id];
         surfacesBeingMoved[child.id] = child;
         if (child.firstChild) moveChildren(child);
@@ -616,7 +640,7 @@ SC.Psurface.prototype = {
           childId = child.id;
 
           // Need to move detached surfaces from active to "being moved".
-          sc_assert(psurfaces[childId]);
+          if (DEBUG_PSURFACES) sc_assert(psurfaces[childId]);
           delete psurfaces[childId];
           surfacesBeingMoved[childId] = child;
           moveChildren(child);
@@ -628,11 +652,13 @@ SC.Psurface.prototype = {
       SC._sc_psurfaceColor[myId] = 2; // black
     }
 
-    sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
+    if (DEBUG_PSURFACES) {
+      sc_assert(SC._sc_psurfaceColor[myId] === 2); // black
 
-    sc_assert(this === SC._sc_currentPsurface);
-    sc_assert(this.__element__);
-    sc_assert(this.__element__ === document.getElementById(this.id));
+      sc_assert(this === SC._sc_currentPsurface);
+      sc_assert(this.__element__);
+      sc_assert(this.__element__ === document.getElementById(this.id));
+    }
 
     if (nextSibling) {
       // We need to remove any futher siblings and store them in 
@@ -649,18 +675,22 @@ SC.Psurface.prototype = {
         nextSiblingId = nextSibling.id;
 
         // Need to move detached surfaces from active to "being moved".
-        sc_assert(psurfaces[nextSiblingId]);
+        if (DEBUG_PSURFACES) {
+          sc_assert(psurfaces[nextSiblingId]);
+          sc_assert(!surfacesBeingMoved[nextSiblingId]);
+        }
         delete psurfaces[nextSiblingId];
-        sc_assert(!surfacesBeingMoved[nextSiblingId]);
         surfacesBeingMoved[nextSiblingId] = nextSibling;
         moveChildren(nextSibling);
       }
       this.nextSibling = null;
     }
 
-    // Sanity check this for all code paths.
-    sc_assert(this.nextSibling === null);
-    sc_assert(this.__element__.nextElementSibling === null);
+    if (DEBUG_PSURFACES) {
+      // Sanity check this for all code paths.
+      sc_assert(this.nextSibling === null);
+      sc_assert(this.__element__.nextElementSibling === null);
+    }
 
     SC._sc_currentPsurface = this.parent;
   }
@@ -681,7 +711,7 @@ SC.Psurface.end = function(surface) {
       child = next;
       next = child.nextSibling;
       id = child.id;
-      sc_assert(psurfaces[id]);
+      if (DEBUG_PSURFACES) sc_assert(psurfaces[id]);
       delete psurfaces[id];
       if (child.firstChild) removeChildren(child);
     }
@@ -704,7 +734,7 @@ SC.Psurface.end = function(surface) {
         childId = child.id;
 
         // Need to move detached surfaces from active to "being moved".
-        sc_assert(psurfaces[childId]);
+        if (DEBUG_PSURFACES) sc_assert(psurfaces[childId]);
         delete psurfaces[childId];
         removeChildren(child);
       }
@@ -715,17 +745,19 @@ SC.Psurface.end = function(surface) {
     SC._sc_psurfaceColor[id] = 2; // black
   }
 
-  sc_assert(SC._sc_psurfaceColor[id] === 2); // black
+  if (DEBUG_PSURFACES) {
+    sc_assert(SC._sc_psurfaceColor[id] === 2); // black
 
-  // Sanity check the surface.
-  sc_assert(surface);
-  sc_assert(surface.kindOf(SC.Surface));
-  sc_assert(surface.get('supersurface') === null);
-  sc_assert(surface === SC.surfaces[surface.__id__]);
+    // Sanity check the surface.
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+    sc_assert(surface.get('supersurface') === null);
+    sc_assert(surface === SC.surfaces[surface.__id__]);
 
-  sc_assert(psurface);
-  sc_assert(psurface === SC._sc_currentPsurface);
-  sc_assert(psurface.parent === null);
+    sc_assert(psurface);
+    sc_assert(psurface === SC._sc_currentPsurface);
+    sc_assert(psurface.parent === null);
+  }
 
   // We've been visited.
   SC._sc_psurfaceColor[id] = 2; // black
