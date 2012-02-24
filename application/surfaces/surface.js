@@ -194,15 +194,13 @@ SC.Surface = SC.Responder.extend({
     SC.needsRendering = true;
   },
 
-  performLayoutAndRenderingIfNeeded: function(timestamp) {
-    // console.log('SC.Surface#performLayoutAndRenderingIfNeeded()');
+  performLayoutIfNeeded: function(timestamp) {
+    // console.log('SC.Surface#performLayoutIfNeeded()');
     var needsLayout = this.__needsLayout__,
-        needsDisplay = this.__needsRendering__,
         isVisible = this.get('isVisible');
 
-    var benchKey = 'SC.Surface#performLayoutAndRenderingIfNeeded()',
-        layoutKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsLayout',
-        displayKey = 'SC.Surface#performLayoutAndRenderingIfNeeded(): needsDisplay';
+    var benchKey = 'SC.Surface#performLayoutIfNeeded()',
+        layoutKey = 'SC.Surface#performLayoutIfNeeded(): needsLayout';
 
     SC.Benchmark.start(benchKey);
 
@@ -215,6 +213,30 @@ SC.Surface = SC.Responder.extend({
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
     }
+
+    SC.Benchmark.end(benchKey);
+
+    // This code is technically only needed for composite surfaces, but for 
+    // performance and code reuse, we fold the implementation into here 
+    // instead of calling `arguments.callee.base.apply(this, arguments)` in 
+    // `SC.CompositeSurface`.
+    var subsurfaces = this.get('subsurfaces');
+    if (subsurfaces === null) return;
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].performLayoutIfNeeded(timestamp);
+    }
+  },
+
+  performRenderingIfNeeded: function(timestamp) {
+    // console.log('SC.Surface#performRenderingIfNeeded()');
+    var needsLayout = this.__needsLayout__,
+        needsDisplay = this.__needsRendering__,
+        isVisible = this.get('isVisible');
+
+    var benchKey = 'SC.Surface#performRenderingIfNeeded()',
+        displayKey = 'SC.Surface#performRenderingIfNeeded(): needsDisplay';
+
+    SC.Benchmark.start(benchKey);
 
     if (needsDisplay && isVisible) {
       SC.Benchmark.start(displayKey);
@@ -235,7 +257,7 @@ SC.Surface = SC.Responder.extend({
     var subsurfaces = this.get('subsurfaces');
     if (subsurfaces === null) return;
     for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
-      subsurfaces[idx].performLayoutAndRenderingIfNeeded(timestamp);
+      subsurfaces[idx].performRenderingIfNeeded(timestamp);
     }
   },
 

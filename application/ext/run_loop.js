@@ -192,10 +192,13 @@ SC.ScheduleLayoutAndRendering = function closure() {
 
   function callback(timestamp) {
     console.log('SC.RequestAnimationFrame() - callback');
+    var benchKey = 'SC.RunLoop#animationLoop()';
+    SC.Benchmark.start(benchKey);
     didRequestAnimationFrame = false;
     SC.isAnimating = true;
     SC.app.performLayoutAndRendering(timestamp);
     SC.isAnimating = false;
+    SC.Benchmark.end(benchKey);
   }
 
   return function() {

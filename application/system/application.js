@@ -158,13 +158,20 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
     }
 
+    if (SC.needsLayout) {
+      uiContainer.performLayoutIfNeeded(timestamp);
+      this.get('surfaces').invoke('performLayoutIfNeeded', timestamp);
+    }
+
     this.updatePsurfaces(surfaces);
 
-    // FIXME: Really need to do layout _before_ updating Psurfaces, and 
-    // display afterwards.
-    uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
-    this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
+    if (SC.needsRendering) {
+      uiContainer.performRenderingIfNeeded(timestamp);
+      this.get('surfaces').invoke('performRenderingIfNeeded', timestamp);
+    }
 
+    // Set these to false last, we don't want to accidently trigger another
+    // call to this method on the next run loop.
     SC.needsLayout = false;
     SC.needsRendering = false;
     SC.viewportSizeDidChange = false;

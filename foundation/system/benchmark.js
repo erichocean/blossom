@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals $A*/
+/*globals global */
 
 sc_require('core') ;
  
@@ -206,7 +206,7 @@ SC.Benchmark = {
     
     // replace with this helper.
     object[method] = function() {
-      var key = '%@(%@)'.fmt(method, $A(arguments).join(', ')) ;
+      var key = '%@(%@)'.fmt(method, SC.$A(arguments).join(', ')) ;
       SC.Benchmark.start(key, topLevelOnly) ;
       var ret = __func.apply(this, arguments) ;
       SC.Benchmark.end(key) ;
@@ -419,7 +419,7 @@ SC.Benchmark = {
   fps: function() {
     var stat = this._statFor('SC.RunLoop#loop()') ;
     var avg = (stat.runs > 0) ? (Math.floor(stat.amt * 1000 / stat.runs) / 1000) : 0 ;
-    var stat2 = this._statFor('SC.Application#performLayoutAndRendering()') ;
+    var stat2 = this._statFor('SC.RunLoop#animationLoop()') ;
     var avg2 = (stat2.runs > 0) ? (Math.floor(stat2.amt * 1000 / stat2.runs) / 1000) : 0 ;
     
     return "%@ fps at %@x%@".fmt(1000/(avg + avg2)|0, window.innerWidth, window.innerHeight);
