@@ -45,6 +45,12 @@ SC.View = SC.LeafSurface.extend({
 
   __useContentSize__: true, // we need our width and height attributes set
 
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.layers = [];
+    this._sc_layersDidChange();
+  },
+
   layers: [],
 
   // ..........................................................
@@ -84,7 +90,7 @@ SC.View = SC.LeafSurface.extend({
 
     // FIXME: Do this smarter!
     for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].set('view', this);
+      layers[idx].set('surface', this);
     }
 
     this.triggerLayoutAndRendering();
@@ -108,7 +114,7 @@ SC.View = SC.LeafSurface.extend({
   },
 
   updateDisplay: function() {
-    console.log('SC.View#updateDisplay()', SC.guidFor(this));
+    // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
         updateKey = 'SC.ViewSurface#updateDisplay() - update',
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';

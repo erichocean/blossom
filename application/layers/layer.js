@@ -111,12 +111,14 @@ SC.Layer = SC.Object.extend({
   },
 
   updateDisplay: function() {
+    // console.log('SC.Layer#updateDisplay()');
     var benchKey = 'SC.Layer#updateDisplay()';
     SC.Benchmark.start(benchKey);
 
     // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var ctx = this.get('context');
 
+    // debugger;
     if (this.__needsRendering__) {
       ctx.save();
       this.display(ctx);
@@ -144,6 +146,7 @@ SC.Layer = SC.Object.extend({
 
   copyIntoContext: function(ctx) {
     var t = this._sc_transformFromSuperlayerToLayer;
+    // debugger;
     ctx.save();
     ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.drawLayer(this, 0, 0);
@@ -290,6 +293,7 @@ SC.Layer = SC.Object.extend({
             anchorPoint = this.get('anchorPoint'),
             pbounds;
 
+        // debugger;
         if (container) {
           sc_assert(!surface);
           sc_assert(!superlayer);
@@ -301,7 +305,7 @@ SC.Layer = SC.Object.extend({
           pbounds = superlayer.get('bounds');
           // debugger;
         } else if (surface) {
-          // Use our superlayer's bounds.
+          // Use our surfaces's bounds.
           pbounds = surface.get('bounds');
         } else {
           // Give width and height a try, otherwise we'll get the minimum
@@ -720,6 +724,8 @@ SC.Layer = SC.Object.extend({
     // This is a specialized initializer for our subclasses, so that each 
     // subclass can create their own backing layer type (canvas, video, etc.).
     this.initElement();
+
+    this.triggerLayoutAndRendering();
 
     this._sc_superlayerDidChange();
     // this._sc_needsLayoutDidChange();

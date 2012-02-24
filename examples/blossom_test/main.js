@@ -80,12 +80,12 @@ function drawButton(ctx, pressed) {
 var MyLayer = SC.Layer.extend({
 
   render: function(ctx) {
+    console.log('MyLayer.render()', SC.guidFor(this));
     var benchKey = 'MyLayer#render()';
     SC.Benchmark.start(benchKey);
 
-    console.log('MyView.render()', SC.guidFor(this));
     ctx.beginPath();
-    this.get('layer').renderHitTestPath(ctx);
+    this.renderHitTestPath(ctx);
     ctx.fillStyle = green;
     ctx.fill();
 
@@ -189,6 +189,10 @@ function main() {
     //   })
     // })
   });
+
+  surface.get('layers').pushObject(MyLayer.create({
+    layout: { centerX: 0, centerY: 0, width: 600, height: 480 }
+  }));
 
   SC.Application.create();
   SC.app.set('ui', surface);
