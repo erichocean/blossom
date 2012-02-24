@@ -174,14 +174,18 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     }
   }.observes('contentSurface'),
 
-  _sc_frameDidChange: function() {
+  _sc_containerFrameDidChange: function() {
+    // console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
     var frame = this.get('frame'),
         contentSurface = this.get('contentSurface');
 
-    if (contentSurface && contentSurface.__useContentSize__) {
-      contentSurface.__contentWidth__ = frame.width;
-      contentSurface.__contentHeight__ = frame.height;
-      contentSurface.triggerContentSizeUpdate();
+    if (contentSurface) {
+      contentSurface.set('frame', frame);
+      if (contentSurface.__useContentSize__) {
+        contentSurface.__contentWidth__ = frame.width;
+        contentSurface.__contentHeight__ = frame.height;
+        contentSurface.triggerContentSizeUpdate();
+      }
     }
   }.observes('frame'),
 

@@ -133,7 +133,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   performLayoutAndRendering: function(timestamp) {
-    SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
+    // SC.LOG_OBSERVERS = SC.LOG_BINDINGS = true;
     // console.log('SC.Application#performLayoutAndRendering()');
     // console.log('==========================================');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
@@ -155,7 +155,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     var uiContainer = this.get('uiContainer');
     if (SC.viewportSizeDidChange) {
-      var sz = this.get('viewportSize');
+      var sz = this.computeViewportSize();
       uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
     }
 
@@ -173,7 +173,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     sc_assert(!SC.RunLoop.currentRunLoop.flushApplicationQueues(), "The run loop should not be needed during layout and rendering.");
     SC.ScheduleLayoutAndRendering();
-    SC.LOG_BINDINGS = SC.LOG_OBSERVERS = false;
+    // SC.LOG_BINDINGS = SC.LOG_OBSERVERS = false;
   },
 
   // .......................................................
@@ -373,15 +373,21 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
         __id__: 'ui',
-        bounds: this.computeViewportSize(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition', this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition', this).oneWay().noDelay(),
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
       });
 
+      var sz = this.computeViewportSize();
+      uiContainer.set('container', this);
       uiContainer.set('isPresentInViewport', true);
     }
     return uiContainer;
+  }.property(),
+
+  bounds: function() {
+    var sz = this.computeViewportSize();
+    return SC.MakeRect(0, 0, sz[0]/*width*/, sz[1]/*height*/);
   }.property(),
 
   _sc_ui: null, // Note: Required, we're strict about null checking.
@@ -766,7 +772,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     if (target) {
       surface = target.get('surface') ;
-      if (!surface) surface = target.get('container') ; // FIXME: Why?
+      // if (!surface) surface = target.get('container') ; // FIXME: Why?
     }
     else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 

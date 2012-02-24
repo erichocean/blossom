@@ -346,6 +346,7 @@ SC.Surface = SC.Responder.extend({
             pbounds;
 
         if (container) {
+          // debugger;
           // Use the container's bounds as the parents bounds.
           pbounds = container.get('bounds');
         } else {
@@ -393,7 +394,7 @@ SC.Surface = SC.Responder.extend({
     @property SC.Rect
   */
   frame: function(key, value) {
-    console.log('SC.Surface@frame', key, value);
+    // console.log('SC.Surface@frame', key, value);
     var frame = this._sc_frame, anchorPoint, bounds, position;
     if (value !== undefined) {
       if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
@@ -401,6 +402,8 @@ SC.Surface = SC.Responder.extend({
       anchorPoint = this._sc_anchorPoint;
       bounds = this._sc_bounds;
       position = this._sc_position;
+
+      // debugger;
 
       // The bounds' size should have the same size as the frame. Set this 
       // first so that the position can take into account the new size.
@@ -414,7 +417,7 @@ SC.Surface = SC.Responder.extend({
       // Cache the new frame so we don't need to compute it later.
       frame.set(value);
       this._sc_frameIsDirty = false;
-      // this.triggerDomUpdate();
+      this.triggerLayoutAndRendering();
     } else {
       if (this._sc_frameIsDirty) {
         anchorPoint = this._sc_anchorPoint;

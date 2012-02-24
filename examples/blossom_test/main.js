@@ -82,7 +82,7 @@ var MyLayer = SC.Layer.extend({
   cornerRadius: 15,
 
   render: function(ctx) {
-    console.log('MyLayer.render()', SC.guidFor(this));
+    // console.log('MyLayer.render()', SC.guidFor(this));
     var benchKey = 'MyLayer#render()';
     SC.Benchmark.start(benchKey);
 

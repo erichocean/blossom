@@ -100,6 +100,17 @@ SC.View = SC.LeafSurface.extend({
   // RENDERING SUPPORT
   //
 
+  triggerLayoutAndRendering: function() {
+    // console.log('SC.View#triggerLayoutAndRendering()', SC.guidFor(this));
+    arguments.callee.base.apply(this, arguments);
+    var layers = this.get('layers');
+
+    // FIXME: Do this smarter!
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].triggerLayoutAndRendering();
+    }
+  },
+
   updateLayout: function() {
     // console.log('SC.View#updateLayout()', SC.guidFor(this));
     var benchKey = 'SC.View#updateLayout()';

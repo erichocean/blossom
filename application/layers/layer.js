@@ -305,6 +305,7 @@ SC.Layer = SC.Object.extend({
           pbounds = superlayer.get('bounds');
           // debugger;
         } else if (surface) {
+          // debugger;
           // Use our surfaces's bounds.
           pbounds = surface.get('bounds');
         } else {
