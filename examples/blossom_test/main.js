@@ -86,7 +86,7 @@ var MyLayer = SC.Layer.extend({
 
     ctx.beginPath();
     this.renderHitTestPath(ctx);
-    ctx.fillStyle = green;
+    ctx.fillStyle = this.get('color');
     ctx.fill();
 
     // Draw some text.
@@ -191,7 +191,18 @@ function main() {
   });
 
   surface.get('layers').pushObject(MyLayer.create({
-    layout: { centerX: 0, centerY: 0, width: 600, height: 480 }
+    layout: { centerX: -50, centerY: -50, width: 600, height: 480 },
+    color: green
+  }));
+
+  surface.get('layers').pushObject(MyLayer.create({
+    layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
+    color: orange
+  }));
+
+  surface.get('layers').pushObject(MyLayer.create({
+    layout: { centerX: 50, centerY: 50, width: 600, height: 480 },
+    color: blue
   }));
 
   SC.Application.create();
