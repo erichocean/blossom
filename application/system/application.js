@@ -150,8 +150,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       SC.surfaces = surfaces = {};
     }
 
-    // FIXME: Need to do all four stages of layout!
-
     var uiContainer = this.get('uiContainer');
     if (SC.viewportSizeDidChange) {
       var sz = this.computeViewportSize();
@@ -159,6 +157,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
 
     if (SC.needsLayout) {
+      // FIXME: Need to do all four stages of layout!
       uiContainer.performLayoutIfNeeded(timestamp);
       this.get('surfaces').invoke('performLayoutIfNeeded', timestamp);
     }

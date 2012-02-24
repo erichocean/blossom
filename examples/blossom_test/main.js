@@ -111,12 +111,12 @@ function main() {
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -40, centerY: -40, width: 600, height: 480 },
-    color: green
+    color: magenta
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -20, centerY: -20, width: 600, height: 480 },
-    color: orange
+    color: violet
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
