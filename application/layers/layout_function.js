@@ -250,10 +250,10 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
       // bounds.width  = width;
       // bounds.height = height;
 
-      Float32Array.prototype.__lookupSetter__('x').call(position, x + anchorX * width);
-      Float32Array.prototype.__lookupSetter__('y').call(position, y + anchorY * height);
-      Float32Array.prototype.__lookupSetter__('width').call(bounds, width);
-      Float32Array.prototype.__lookupSetter__('height').call(bounds, height);
+      Float32Array.prototype.__lookupSetter__('x').call(position, Math.floor(x + anchorX * width));
+      Float32Array.prototype.__lookupSetter__('y').call(position, Math.floor(y + anchorY * height));
+      Float32Array.prototype.__lookupSetter__('width').call(bounds, Math.floor(width));
+      Float32Array.prototype.__lookupSetter__('height').call(bounds, Math.floor(height));
 
       if (shouldBenchmark) {
         SC.Benchmark.end(benchKey);
