@@ -79,6 +79,8 @@ function drawButton(ctx, pressed) {
 
 var MyLayer = SC.Layer.extend({
 
+  cornerRadius: 15,
+
   render: function(ctx) {
     console.log('MyLayer.render()', SC.guidFor(this));
     var benchKey = 'MyLayer#render()';
