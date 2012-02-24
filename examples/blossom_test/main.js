@@ -126,6 +126,42 @@ function main() {
 
   SC.Application.create();
   SC.app.set('ui', surface);
+
+  // var pane = SC.View.create({
+  //   updateDisplay: function() {
+  //     console.log('pane#updateDisplay()', SC.guidFor(this));
+  //     var psurface = SC.psurfaces[this.__id__],
+  //         canvas = psurface? psurface.__element__ : null,
+  //         ctx = canvas? canvas.getContext('2d') : null,
+  //         w = canvas.width, h = canvas.height;
+  // 
+  //     console.log('w',w,'h',h);
+  // 
+  //     ctx.save();
+  // 
+  //     // Draw background.
+  //     ctx.fillStyle = 'white';
+  //     ctx.fillRect(0, 0, w, h);
+  // 
+  //     // Draw fps meter.
+  //     ctx.fillStyle = green;
+  //     ctx.font = "16pt Calibri";
+  //     ctx.textBaseline = "middle";
+  //     ctx.textAlign = "center";
+  //     ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
+  // 
+  //     ctx.restore();
+  //   }
+  // });
+  // 
+  // var frame = SC.MakeRect(0,0, 300, 200);
+  // pane.set('frame', frame);
+  // pane.__contentWidth__ = frame.width;
+  // pane.__contentHeight__ = frame.height;
+  // pane.triggerContentSizeUpdate();
+  // pane.triggerLayoutAndRendering();
+  // 
+  // SC.app.get('surfaces').add(pane);
 }
 
   // layerTree: {
