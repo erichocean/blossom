@@ -175,14 +175,14 @@ SC.Surface = SC.Responder.extend({
   triggerLayout: function() {
     // console.log('SC.Surface#triggerLayout()');
     this.__needsLayout__ = true;
-    SC.needsLayoutAndRendering = true;
+    SC.needsLayout = true;
   },
 
   __needsRendering__: false,
   triggerRendering: function() {
     // console.log('SC.Surface#triggerRendering()');
     this.__needsRendering__ = true;
-    SC.needsLayoutAndRendering = true;
+    SC.needsRendering = true;
     // Also see code in _sc_notifyPropertyObservers, which should match.
   },
 
@@ -190,7 +190,8 @@ SC.Surface = SC.Responder.extend({
     // console.log('SC.Surface#triggerLayoutAndRendering()');
     this.__needsLayout__ = true;
     this.__needsRendering__ = true;
-    SC.needsLayoutAndRendering = true;
+    SC.needsLayout = true;
+    SC.needsRendering = true;
   },
 
   performLayoutAndRenderingIfNeeded: function(timestamp) {

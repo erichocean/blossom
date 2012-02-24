@@ -1051,7 +1051,7 @@ SC.Observable = {
           // same as this.triggerRendering();
           // console.log('displayPropertyDidChange');
           this.__needsRendering__ = true;
-          SC.needsLayoutAndRendering = true;
+          SC.needsRendering = true;
         }
       } // while(changes.length>0)
 

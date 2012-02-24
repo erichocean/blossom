@@ -49,7 +49,7 @@ SC.RunLoop = SC.RunLoop.extend(
     // if (BLOSSOM) SC.ScheduleLayoutAndRendering();
     if (BLOSSOM) {
       // Test SC.viewportSizeDidChange last since it's true less often.
-      if (SC.needsLayoutAndRendering || SC.viewportSizeDidChange) {
+      if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange) {
         SC.app.performLayoutAndRendering(this.get('startTime'));
       }
     }
@@ -199,7 +199,7 @@ SC.ScheduleLayoutAndRendering = function closure() {
   }
 
   return function() {
-    // console.log('SC.RunLoop#scheduleLayoutAndRendering()', SC.needsLayoutAndRendering, SC.viewportSizeDidChange);
+    // console.log('SC.RunLoop#scheduleLayoutAndRendering()');
     if (didRequestAnimationFrame) return;
 
     // Viewport size changes occur much less often, so we test second.

@@ -17,7 +17,7 @@ SC.LeafSurface = SC.Surface.extend(
   triggerContentSizeUpdate: function() {
     this.__needsRendering__ = true;
     this.__contentSizeNeedsUpdate__ = true;
-    SC.needsLayoutAndRendering = true;
+    SC.needsLayout = true;
   },
 
   __contentWidth__: 0,

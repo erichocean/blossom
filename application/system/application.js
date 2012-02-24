@@ -18,7 +18,8 @@ sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 
-SC.needsLayoutAndRendering = false;
+SC.needsLayout = false;
+SC.needsRendering = false;
 
 /** @class
   This class is the brains behind a Blossom application.  You must create 
@@ -164,8 +165,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     uiContainer.performLayoutAndRenderingIfNeeded(timestamp);
     this.get('surfaces').invoke('performLayoutAndRenderingIfNeeded', timestamp);
 
+    SC.needsLayout = false;
+    SC.needsRendering = false;
     SC.viewportSizeDidChange = false;
-    SC.needsLayoutAndRendering = false;
 
     SC.Benchmark.end(benchKey);
 

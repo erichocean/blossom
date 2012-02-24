@@ -78,21 +78,21 @@ SC.Layer = SC.Object.extend({
   triggerLayout: function() {
     // console.log('SC.Layer#triggerLayout()');
     this.__needsLayout__ = true;
-    if (this.get('surface')) SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsLayout = true;
   },
 
   __needsRendering__: false,
   triggerRendering: function() {
     // console.log('SC.Layer#triggerRendering()');
     this.__needsRendering__ = true;
-    if (this.get('surface')) SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsRendering = true;
   },
 
   triggerLayoutAndRendering: function() {
     // console.log('SC.Layer#triggerLayoutAndRendering()');
     this.__needsLayout__ = true;
     this.__needsRendering__ = true;
-    if (this.get('surface')) SC.needsLayoutAndRendering = true;
+    if (this.get('surface')) SC.needsLayout = SC.needsRendering = true;
   },
 
   updateLayout: function() {
