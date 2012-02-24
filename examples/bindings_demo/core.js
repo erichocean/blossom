@@ -72,20 +72,23 @@ function main() {
   var surface = SC.View.create({
 
     updateDisplay: function() {
-      var ctx = this.getPath('layer.context');
+      var psurface = SC.psurfaces[this.__id__],
+          canvas = psurface? psurface.__element__ : null,
+          ctx = canvas? canvas.getContext('2d') : null,
+          w = canvas.width, h = canvas.height;
 
       ctx.save();
 
       // Draw background.
       ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, ctx.width, ctx.height);
+      ctx.fillRect(0, 0, w, h);
 
       // Draw fps meter.
       ctx.fillStyle = green;
       ctx.font = "16pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
-      ctx.fillText(SC.Benchmark.fps(), ctx.width/2, ctx.height/2);
+      ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
 
       ctx.font = "9pt Calibri";
 
