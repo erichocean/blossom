@@ -363,6 +363,7 @@ SC.Surface = SC.Responder.extend({
     @property SC.Rect
   */
   bounds: function(key, value) {
+    throw 'bounds';
     if (value !== undefined) {
       sc_assert(SC.IsRect(value));
       throw "No implementation for SC.Surface#set('bounds', value)";
@@ -426,9 +427,9 @@ SC.Surface = SC.Responder.extend({
     if (value !== undefined) {
       if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
 
-      anchorPoint = this._sc_anchorPoint;
-      bounds = this._sc_bounds;
-      position = this._sc_position;
+      // anchorPoint = this._sc_anchorPoint;
+      // bounds = this._sc_bounds;
+      // position = this._sc_position;
 
       // debugger;
       value[0] = Math.floor(value[0]);
@@ -439,12 +440,12 @@ SC.Surface = SC.Responder.extend({
 
       // The bounds' size should have the same size as the frame. Set this 
       // first so that the position can take into account the new size.
-      bounds[2]/*width*/  = value[2]/*width*/;
-      bounds[3]/*height*/ = value[3]/*height*/;
-
-      // Position is updated relative to the bounds' origin, taking into account the layer's anchorPoint.
-      position[0]/*x*/ = Math.ceil(-((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/));
-      position[1]/*y*/ = Math.ceil(-((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/));
+      // bounds[2]/*width*/  = value[2]/*width*/;
+      // bounds[3]/*height*/ = value[3]/*height*/;
+      // 
+      // // Position is updated relative to the bounds' origin, taking into account the layer's anchorPoint.
+      // position[0]/*x*/ = Math.ceil(-((-bounds[2]/*width*/  * anchorPoint[0]/*x*/ - bounds[0]/*x*/) - value[0]/*x*/));
+      // position[1]/*y*/ = Math.ceil(-((-bounds[3]/*height*/ * anchorPoint[1]/*y*/ - bounds[1]/*y*/) - value[1]/*y*/));
 
       // Cache the new frame so we don't need to compute it later.
       frame.set(value);
@@ -546,7 +547,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
-    // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     // debugger;
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },

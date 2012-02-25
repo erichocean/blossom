@@ -130,13 +130,13 @@ function main() {
 
   var pane = SC.View.create({
     updateDisplay: function() {
-      console.log('pane#updateDisplay()', SC.guidFor(this));
+      // console.log('pane#updateDisplay()', SC.guidFor(this));
       var psurface = SC.psurfaces[this.__id__],
           canvas = psurface? psurface.__element__ : null,
           ctx = canvas? canvas.getContext('2d') : null,
           w = canvas.width, h = canvas.height;
   
-      console.log('w',w,'h',h);
+      // console.log('w',w,'h',h);
   
       ctx.save();
   
@@ -152,6 +152,35 @@ function main() {
       ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
   
       ctx.restore();
+    },
+
+    mouseDown: function(evt) {
+      // console.log('pane#mouseDown');
+      this._clientX = evt.clientX;
+      this._clientY = evt.clientY;
+      return true;
+    },
+
+    mouseDragged: function(evt) {
+      // console.log('pane#mouseDragged');
+      var frame = this.get('frame');
+      frame.x = frame.x + evt.clientX - this._clientX;
+      frame.y = frame.y + evt.clientY - this._clientY;
+      this._clientX = evt.clientX;
+      this._clientY = evt.clientY;
+      this.set('frame', frame);
+      return true;
+    },
+
+    mouseUp: function(evt) {
+      // console.log('pane#mouseUp');
+      var frame = this.get('frame');
+      frame.x = frame.x + evt.clientX - this._clientX;
+      frame.y = frame.y + evt.clientY - this._clientY;
+      delete this._clientX;
+      delete this._clientY;
+      this.set('frame', frame);
+      return true;
     }
   });
   

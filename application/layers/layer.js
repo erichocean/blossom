@@ -307,7 +307,7 @@ SC.Layer = SC.Object.extend({
         } else if (surface) {
           // debugger;
           // Use our surfaces's bounds.
-          pbounds = surface.get('bounds');
+          pbounds = surface.get('frame');
         } else {
           // Give width and height a try, otherwise we'll get the minimum
           // possible size once `this._sc_layoutFunction()` runs.

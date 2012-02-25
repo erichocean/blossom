@@ -220,8 +220,8 @@ SC.Psurface.prototype = {
           frame = surface.get('frame');
 
       // debugger;
-      style.top    = frame[0]/*x*/;
-      style.left   = frame[1]/*y*/;
+      style.left   = frame[0]/*x*/;
+      style.top    = frame[1]/*y*/;
       style.width  = frame[2]/*width*/;
       style.height = frame[3]/*height*/;
     }
