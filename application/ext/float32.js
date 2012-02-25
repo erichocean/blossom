@@ -501,6 +501,17 @@ Float32Array.prototype.__defineSetter__('y', function(val) {
   if (owner) owner.structureDidChange(this, this.keyName, 'y', old, val);
 });
 
+Float32Array.prototype.__defineGetter__('z', function() {
+  return this[2];
+});
+
+Float32Array.prototype.__defineSetter__('z', function(val) {
+  var old = this[2];
+  this[2] = val;
+  var owner = this.owner;
+  if (owner) owner.structureDidChange(this, this.keyName, 'z', old, val);
+});
+
 Float32Array.prototype.__defineGetter__('w', function() {
   return this.length === 2 ? this[0] : this[2];
 });
