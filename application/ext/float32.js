@@ -464,6 +464,14 @@ SC.IsTransform3D = function(mat) {
   return (mat.length === 16 && mat.constructor === Float32Array);
 };
 
+SC.CopyTransform3DTo = function(src, dest) {
+  sc_assert(src !== dest);
+  sc_assert(src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dest.length === 16 && dest.constructor === Float32Array);
+
+  dest.set(src);
+};
+
 // Below are ways to access these structures using names, rather than
 // indices. They are designed to match the equivalent structure in Cocoa/
 // Core Animation.
