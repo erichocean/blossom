@@ -512,22 +512,11 @@ BT.App = BT.Target.extend({
     files.forEach(outputScriptTag);
 
     ret += '    <style>\n';
-    ret += '      .sc-pane { position: absolute; margin: 0; }\n';
-    // ret += '      #foo {\n';
-    // ret += '        top: 10px;\n';
-    // ret += '        left: 10px;\n';
-    // ret += '        height: 100px;\n';
-    // ret += '        width: 100px;\n';
-    // ret += '        -webkit-transform-origin: 50 50;\n';
-    // ret += '        -webkit-transform: rotate(45deg);\n';
-    // ret += '      }\n';
-    // ret += '      #ui { width: 100%; height: 100%; position: absolute; }\n';
+    ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';
     ret += '    </style>\n';
-
     ret += '  </head>\n';
     
     ret += '  <body style="background: black; margin: 0; overflow: hidden;">\n';
-    // ret += '    <div id="ui" style="width: 100%; height: 100%; position: absolute; opacity: 0; -webkit-transform-style: preserve-3d; -webkit-transition-property: -webkit-transform, opacity; -webkit-transition-duration: 3s, 1.5s; -webkit-transition-delay: 0s, 1.5s; -webkit-transform-origin: right center;"></div>\n';
     ret += '  </body>\n';
     ret += '</html>';
     
