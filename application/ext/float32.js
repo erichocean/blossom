@@ -7,9 +7,22 @@
 
 if (BLOSSOM) {
 
+// offset is in floats, numElements is in floats
+var sc_assert_valid_float32_buffer = function(buffer, offset, numElements) {
+  var bytesNeeded = numElements*Float32Array.BYTES_PER_ELEMENT,
+      offsetInBytes = offset*Float32Array.BYTES_PER_ELEMENT;
+
+  sc_assert(buffer && buffer.constructor === ArrayBuffer);
+  sc_assert(buffer.byteLength-offsetInBytes >= bytesNeeded);
+};
+
 SC.MakeFloat32ArrayBuffer = function(floatCount) {
   return new ArrayBuffer(floatCount*Float32Array.BYTES_PER_ELEMENT);
 };
+
+// ..........................................................
+// 2D Points
+//
 
 SC.MakePoint = function(point, y) {
   var ret, x = point;
@@ -36,15 +49,6 @@ SC.PointApplyAffineTransformTo = function(point, transform, dest) {
   var x = point[0], y = point[1];
   dest[0]/*x*/ = x * transform[0]/*m11*/ + y * transform[2]/*m21*/ + transform[4]/*tx*/;
   dest[1]/*y*/ = x * transform[1]/*m12*/ + y * transform[3]/*m22*/ + transform[5]/*ty*/;
-};
-
-// offset is in floats, numElements is in floats
-var sc_assert_valid_float32_buffer = function(buffer, offset, numElements) {
-  var bytesNeeded = numElements*Float32Array.BYTES_PER_ELEMENT,
-      offsetInBytes = offset*Float32Array.BYTES_PER_ELEMENT;
-
-  sc_assert(buffer && buffer.constructor === ArrayBuffer);
-  sc_assert(buffer.byteLength-offsetInBytes >= bytesNeeded);
 };
 
 // offset is in floats, not bytes
@@ -76,6 +80,74 @@ SC.MakePointFromBuffer = function(buffer, offset, point, y) {
 SC.IsPoint = function(point) {
   return (point.length === 2 && point.constructor === Float32Array);
 };
+
+// ..........................................................
+// 3D Points
+//
+
+SC.MakePoint3D = function(point, y, z) {
+  var ret, x = point;
+
+  if (arguments.length === 3) {
+    ret = new Float32Array(3);     // initialize from function arguments
+    ret[0] = x;
+    ret[1] = y;
+    ret[2] = z;
+
+  } else if (point) {
+    sc_assert(point.length === 3 && point.constructor === Float32Array);
+    ret = new Float32Array(point); // initialize with existing point
+
+  } else {
+    ret = new Float32Array(3);     // zero-initialized
+  }
+
+  return ret;
+};
+
+SC.ZERO_POINT_3D = SC.MakePoint3D();
+
+SC.PointApplyTransform3DTo = function(point, transform, dest) {
+  throw "not implemented";
+  // var x = point[0], y = point[1];
+  // dest[0]/*x*/ = x * transform[0]/*m11*/ + y * transform[2]/*m21*/ + transform[4]/*tx*/;
+  // dest[1]/*y*/ = x * transform[1]/*m12*/ + y * transform[3]/*m22*/ + transform[5]/*ty*/;
+};
+
+// offset is in floats, not bytes
+SC.MakePoint3DFromBuffer = function(buffer, offset, point, y, z) {
+  var ret, x = point;
+
+  sc_assert_valid_float32_buffer(buffer, offset, 2);
+  offset = offset*Float32Array.BYTES_PER_ELEMENT;
+
+  if (arguments.length === 5) {
+    ret = new Float32Array(buffer, offset, 3); // initialize from function arguments
+    ret[0] = x;
+    ret[1] = y;
+    ret[2] = z;
+
+  } else if (point) {
+    sc_assert(point.length === 3 && point.constructor === Float32Array);
+    ret = new Float32Array(buffer, offset, 3);
+    ret.set(point);                            // initialize with existing point
+
+  } else {
+    ret = new Float32Array(buffer, offset, 3);
+    ret.set(SC.ZERO_POINT_3D);                 // zero-initialize
+  }
+
+  sc_assert(ret.length === 3);
+  return ret;
+};
+
+SC.IsPoint3D = function(point) {
+  return (point.length === 3 && point.constructor === Float32Array);
+};
+
+// ..........................................................
+// Sizes
+//
 
 SC.MakeSize = function(size, height) {
   var ret, width = size;
@@ -142,6 +214,10 @@ SC.EqualSize = function(size, size2) {
   else if (size[0] === size2[0] && size[1] === size2[1]) return true;
   else return false;
 };
+
+// ..........................................................
+// Rects
+//
 
 SC.MakeRect = function(rect, y, width, height) {
   var ret, x = rect;
@@ -221,6 +297,10 @@ SC.MakeLayoutValuesFromBuffer = function(buffer, offset) {
 SC.IsRect = function(rect) {
   return (rect.length === 4 && rect.constructor === Float32Array);
 };
+
+// ..........................................................
+// Affine Transforms
+//
 
 SC.MakeAffineTransform = function(mat, m12,
                                   m21, m22,  tx, ty)
@@ -358,6 +438,10 @@ SC.AffineTransformInvertTo = function(src, dest) {
 };
 
 sc_assert(SC.IsIdentityAffineTransform(SC.AFFINE_TRANSFORM_IDENTITY));
+
+// ..........................................................
+// 3D Transforms
+//
 
 SC.MakeTransform3D = function(mat, m12, m13, m14,
                               m21, m22, m23, m24,
