@@ -91,6 +91,10 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
     element.height = height;
   }
 
+  if (surfaceId !== 'ui') {
+    element.style.webkitBoxShadow = "0px 10px 15px rgba(1,1,1,0.5)";
+  }
+
   this.parent = null;
   this.firstChild = null;
   this.nextSibling = null;
