@@ -272,7 +272,7 @@ SC.Surface = SC.Responder.extend({
 
   /**
     Defines the anchor point of the layer's bounds rectangle. Animatable.
-    
+
     @property SC.Point
   */
   anchorPoint: function(key, value) {
@@ -297,8 +297,6 @@ SC.Surface = SC.Responder.extend({
     property, or the superlayer's sublayerTransform property. The value of 
     frame is before these transforms have been applied.
 
-    Note: `frame` is not observable.
-
     @property SC.Rect
   */
   frame: function(key, value) {
@@ -313,14 +311,14 @@ SC.Surface = SC.Responder.extend({
       value[3] = Math.ceil(value[3]);
 
       // Cache the new frame so we don't need to compute it later.
-      frame.set(value);
+      if (frame !== value) frame.set(value);
       this.__frameDidChange__  = true;
       this.triggerLayoutAndRendering();
     } else {
-      return SC.MakeRect(frame); // give caller a copy
+      return frame;
     }
   }.property(),
-  
+
   // rasterizationScale: 1.0, // The scale at which to rasterize content, relative to the coordinate space of the layer. Animatable
 
   // /**
@@ -396,8 +394,12 @@ SC.Surface = SC.Responder.extend({
   },
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
-    console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
+    // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     // debugger;
+    if (key === 'frame' && oldvalue !== newvalue) {
+      this.__frameDidChange__ = true;
+      this.triggerLayoutAndRendering();
+    }
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
 
@@ -502,6 +504,8 @@ SC.Surface = SC.Responder.extend({
       this._sc_hasSublayerTransform = false;
     }
 
+    this._sc_frame = SC.MakeRectFromBuffer(buf, 14);
+
     // Float32Array's prototype has been enhanced with custom getters and 
     // setters using named property keys (x, y, width, height, m11, tx, etc.)
     // These getters and setters are kvo-compliant if we configure them to
@@ -513,9 +517,6 @@ SC.Surface = SC.Responder.extend({
       structure.owner = that;
       structure.keyName = key;
     });
-
-    this._sc_frame = SC.MakeRectFromBuffer(buf, 14);
-    // this._sc_frameIsDirty = true; // force re-compute on get('frame')
 
     this._sc_transformFromSuperlayerToLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 18);
     this._sc_transformFromLayerToSuperlayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 24);
@@ -1169,6 +1170,6 @@ SC.Surface.OBSERVABLE_STRUCTURES = 'bounds position anchorPoint transform sublay
 //   }
 // };
 
-SC.Surface.OBSERVABLE_STRUCTURES = 'anchorPoint transform sublayerTransform'.w();
+SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform sublayerTransform'.w();
 
 } // BLOSSOM

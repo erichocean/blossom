@@ -168,7 +168,6 @@ function main() {
       frame.y = frame.y + evt.clientY - this._clientY;
       this._clientX = evt.clientX;
       this._clientY = evt.clientY;
-      this.set('frame', frame);
       return true;
     },
 
@@ -179,7 +178,6 @@ function main() {
       frame.y = frame.y + evt.clientY - this._clientY;
       delete this._clientX;
       delete this._clientY;
-      this.set('frame', frame);
       return true;
     }
   });

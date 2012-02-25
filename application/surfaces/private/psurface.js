@@ -228,6 +228,7 @@ SC.Psurface.prototype = {
       style.top    = frame[1]/*y*/;
       style.width  = frame[2]/*width*/;
       style.height = frame[3]/*height*/;
+      surface.__frameDidChange__ = false;
     }
   },
 
