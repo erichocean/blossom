@@ -271,17 +271,6 @@ SC.Surface = SC.Responder.extend({
   cornerRadius: 0,
 
   /**
-    Defines the anchor point of the layer's bounds rectangle. Animatable.
-
-    @property SC.Point
-  */
-  anchorPoint: function(key, value) {
-    if (value !== undefined) {
-      throw "No implementation for SC.Surface#set('anchorPoint', value)";
-    } else return this._sc_anchorPoint;
-  }.property(),
-
-  /**
     Specifies receiver's frame rectangle in the superlayer's coordinate space.
 
     The value of frame is derived from the bounds, anchorPoint and position 
@@ -322,34 +311,48 @@ SC.Surface = SC.Responder.extend({
 
   // rasterizationScale: 1.0, // The scale at which to rasterize content, relative to the coordinate space of the layer. Animatable
 
-  // /**
-  //   Specifies a transform applied to each sublayer when rendering. Animatable.
-  // 
-  //   @property SC.AffineTransform
-  // */
-  // sublayerTransform: function(key, value) {
-  //   if (value !== undefined) {
-  //     throw "No implementation for SC.Surface#set('sublayerTransform', value)";
-  //   } else return this._sc_sublayerTransform;
-  // }.property(),
-  // 
-  // _sc_sublayerTransformDidChange: function() {
-  //   if (SC.IsIdentityAffineTransform(this._sc_sublayerTransform)) {
-  //     this._sc_hasSublayerTransform = false;
-  //   } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
-  // }.observes('sublayerTransform'),
-  // 
-  // /**
-  //   Specifies a transform applied to each sublayer when rendering. Animatable.
-  // 
-  //   @property SC.AffineTransform
-  // */
-  // transform: function(key, value) {
-  //   if (value !== undefined) {
-  //     throw "No implementation for SC.Surface#set('transform', value)";
-  //   } else return this._sc_transform;
-  // }.property(),
-  // 
+  /**
+    Defines the anchor point of the layer's bounds rectangle. Animatable.
+
+    @property SC.Point3D
+  */
+  anchorPoint: function(key, value) {
+    if (value !== undefined) {
+      if (!SC.IsPoint3D(value)) throw new TypeError("SC.Surface's 'anchorPoint' property can only be set to an SC.Point3D.");
+      throw "No implementation for SC.Surface#set('anchorPoint', value)";
+    } else return this._sc_anchorPoint;
+  }.property(),
+
+  /**
+    Specifies a transform applied to each sublayer when rendering. Animatable.
+  
+    @property SC.Transform3D
+  */
+  sublayerTransform: function(key, value) {
+    if (value !== undefined) {
+      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'sublayerTransform' property can only be set to an SC.Transform3D.");
+      throw "No implementation for SC.Surface#set('sublayerTransform', value)";
+    } else return this._sc_sublayerTransform;
+  }.property(),
+  
+  _sc_sublayerTransformDidChange: function() {
+    if (SC.IsIdentityTransform3D(this._sc_sublayerTransform)) {
+      this._sc_hasSublayerTransform = false;
+    } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
+  }.observes('sublayerTransform'),
+  
+  /**
+    Specifies a transform applied to each sublayer when rendering. Animatable.
+  
+    @property SC.Transform3D
+  */
+  transform: function(key, value) {
+    if (value !== undefined) {
+      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'transform' property can only be set to an SC.Transform3D.");
+      throw "No implementation for SC.Surface#set('transform', value)";
+    } else return this._sc_transform;
+  }.property(),
+  
   // /**
   //   Returns the visible region of the receiver, in its own coordinate space.
   //   
@@ -361,14 +364,6 @@ SC.Surface = SC.Responder.extend({
   // visibleRect: function(key, value) {
   //   throw "No implementation for SC.Surface#get/set('visibleRect', value)";
   // }.property(),
-  // 
-  // /**
-  //   Specifies receiver's superlayer.
-  // 
-  //   @property SC.Surface
-  //   @readOnly
-  // */
-  // container: null,
 
   /* @private */
   getPath: function(path) {
@@ -470,7 +465,7 @@ SC.Surface = SC.Responder.extend({
     // improves memory locality, and since these structures are frequently 
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(44); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(39); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -480,32 +475,37 @@ SC.Surface = SC.Responder.extend({
       return this[key] !== P[key] && this[key] && !this[key].isProperty;
     }
 
-    if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
-      this._sc_anchorPoint = SC.MakePointFromBuffer(buf, 0, this.anchorPoint);
-      delete this.anchorPoint; // let the prototype shine through
+    if (hasNonPrototypeNonComputedDefaultProperty('frame')) {
+      this._sc_frame = SC.MakeRectFromBuffer(buf, 0, this.frame);
+      delete this.frame; // let the prototype shine through
     } else {
-      this._sc_anchorPoint = SC.MakePointFromBuffer(buf, 0, 0.5, 0.5);
+      this._sc_frame = SC.MakeRectFromBuffer(buf, 0);
     }
 
     if (hasNonPrototypeNonComputedDefaultProperty('transform')) {
-      this._sc_transform = SC.MakeIdentityAffineTransformFromBuffer(buf, 2, this.transform);
+      this._sc_transform = SC.MakeTransform3DFromBuffer(buf, 4, this.transform);
       delete this.transform; // let the prototype shine through
     } else {
-      this._sc_transform = SC.MakeIdentityAffineTransformFromBuffer(buf, 2);
+      this._sc_transform = SC.MakeIdentityTransform3DFromBuffer(buf, 4);
     }
 
     if (hasNonPrototypeNonComputedDefaultProperty('sublayerTransform')) {
-      this._sc_sublayerTransform = SC.MakeIdentityAffineTransformFromBuffer(buf, 8, this.sublayerTransform);
+      this._sc_sublayerTransform = SC.MakeTransform3DFromBuffer(buf, 20, this.sublayerTransform);
       delete this.sublayerTransform; // let the prototype shine through
-      if (SC.IsIdentityAffineTransform(this._sc_sublayerTransform)) {
+      if (SC.IsIdentityTransform3D(this._sc_sublayerTransform)) {
         this._sc_hasSublayerTransform = false;
       } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
     } else {
-      this._sc_sublayerTransform = SC.MakeIdentityAffineTransformFromBuffer(buf, 8);
+      this._sc_sublayerTransform = SC.MakeIdentityTransform3DFromBuffer(buf, 20);
       this._sc_hasSublayerTransform = false;
     }
 
-    this._sc_frame = SC.MakeRectFromBuffer(buf, 14);
+    if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
+      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 36, this.anchorPoint);
+      delete this.anchorPoint; // let the prototype shine through
+    } else {
+      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 36, 0.5, 0.5, 0.0);
+    }
 
     // Float32Array's prototype has been enhanced with custom getters and 
     // setters using named property keys (x, y, width, height, m11, tx, etc.)
@@ -518,16 +518,6 @@ SC.Surface = SC.Responder.extend({
       structure.owner = that;
       structure.keyName = key;
     });
-
-    this._sc_transformFromSuperlayerToLayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 18);
-    this._sc_transformFromLayerToSuperlayer = SC.MakeIdentityAffineTransformFromBuffer(buf, 24);
-    this._sc_transformFromSuperlayerToLayerIsDirty = this._sc_transformFromLayerToSuperlayerIsDirty = true; // force re-compute
-
-    // This is used by various methods for temporary computations.
-    this._sc_tmpTransform = SC.MakeAffineTransformFromBuffer(buf, 30);
-    this._sc_tmpPoint = SC.MakePointFromBuffer(buf, 36);
-    this._sc_tmpPoint2 = SC.MakePointFromBuffer(buf, 38);
-    this._sc_tmpRect = SC.MakeRectFromBuffer(buf, 40);
   },
 
   // /* @private

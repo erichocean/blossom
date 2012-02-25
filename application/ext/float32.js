@@ -504,7 +504,7 @@ SC.MakeTransform3DFromBuffer = function(buffer, offset, mat, m12, m13, m14,
 {
   var ret, m11 = mat;
 
-  sc_assert_valid_float32_buffer(buffer, offset);
+  sc_assert_valid_float32_buffer(buffer, offset, 16);
   offset = offset*Float32Array.BYTES_PER_ELEMENT;
 
   if (arguments.length === 18) {
