@@ -928,6 +928,7 @@ SC.mixin(Function.prototype,
     this.cacheKey = "__cache__" + guid ;
     this.lastSetValueKey = "__lastValue__" + guid ;
     this.isProperty = true ;
+    this.isVolatile = true ;
     return this ;
   },
   
@@ -948,7 +949,8 @@ SC.mixin(Function.prototype,
   cacheable: function(aFlag) {
     this.isProperty = true ;  // also make a property just in case
     if (!this.dependentKeys) this.dependentKeys = [] ;
-    this.isCacheable = (aFlag === undefined) ? true : aFlag ;
+    this.isCacheable = true ;
+    this.isVolatile = !!aFlag ;
     return this ;
   },
   
