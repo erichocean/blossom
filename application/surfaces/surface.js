@@ -305,6 +305,7 @@ SC.Surface = SC.Responder.extend({
     if (value !== undefined) {
       if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
 
+      // TODO: Probably shouldn't be altering the caller's frame here, right?
       value[0] = Math.floor(value[0]);
       value[1] = Math.floor(value[1]);
       value[2] = Math.ceil(value[2]);
