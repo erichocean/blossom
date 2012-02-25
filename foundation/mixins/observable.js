@@ -1162,10 +1162,6 @@ SC.Observable = {
     current value.  Depending on how expensive a get() is on this property,
     this may be more efficient.
 
-    NOTE: By default, the set() method will not set the value unless it has
-    changed. However, this check can skipped by setting .property().idempotent(false)
-    setIfChanged() may be useful in this case.
-
     @param key {String} the key to change
     @param value {Object} the value to change
     @returns {SC.Observable}

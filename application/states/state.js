@@ -199,7 +199,7 @@ SC.State = SC.Object.extend(
     }
     
     return del.statechartAcquireLocationForState(sc, this);
-  }.property().idempotent(),
+  }.property(),
   
   init: function() {
     arguments.callee.base.apply(this, arguments);

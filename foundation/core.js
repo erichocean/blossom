@@ -934,16 +934,16 @@ SC.mixin(Function.prototype,
   
   /**
     You can call this method on a computed property to indicate that the 
-    property is cacheable (or not cacheable).  By default all computed 
-    properties are not cached.  Enabling this feature will allow SproutCore
-    to cache the return value of your computed property and to use that
-    value until one of your dependent properties changes or until you 
-    invoke propertyDidChange() and name the computed property itself.
+    property is cacheable.  By default all computed properties are not 
+    cached.  Enabling this feature will allow SproutCore to cache the return 
+    value of your computed property and to use that value until one of your 
+    dependent properties changes or until you invoke propertyDidChange() and 
+    name the computed property itself.
     
     If you do not specify this option, computed properties are assumed to be
     not cacheable.
     
-    @param {Boolean} aFlag optionally indicate cacheable or no, default true
+    @param {Boolean} aFlag optionally indicate the .set() method should be called even if the arguments haven't changed
     @returns {Function} reciever
   */
   cacheable: function(aFlag) {
@@ -955,26 +955,16 @@ SC.mixin(Function.prototype,
   },
   
   /**
-    Indicates that the computed property is volatile.  Normally SproutCore 
-    assumes that your computed property is idempotent.  That is, calling 
-    set() on your property more than once with the same value has the same
-    effect as calling it only once.  
-    
-    All non-computed properties are idempotent and normally you should make
-    your computed properties behave the same way.  However, if you need to
-    make your property change its return value everytime your method is
-    called, you may chain this to your property to make it volatile.
-    
-    If you do not specify this option, properties are assumed to be 
-    non-volatile. 
-    
-    @param {Boolean} aFlag optionally indicate state, default to true
+    Normally, a computed property has .set() called regardless. If you only 
+    want .set() to be called the first time with identical arguments, you 
+    can apply this method to the computed property.
+
     @returns {Function} receiver
   */
-  idempotent: function(aFlag) {
+  idempotent: function() {
     this.isProperty = true;  // also make a property just in case
     if (!this.dependentKeys) this.dependentKeys = [] ;
-    this.isVolatile = (aFlag === undefined) ? true : aFlag ;
+    this.isVolatile = false ;
     return this ;
   },
   
