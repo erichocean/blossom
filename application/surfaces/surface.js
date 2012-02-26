@@ -96,22 +96,14 @@ SC.Surface = SC.Responder.extend({
   //
 
   /**
-    You can set this array to include any properties that should immediately
-    invalidate the display.  The display will be automatically invalidated
-    when one of these properties change (`this.__needsDisplay__` will be set 
-    to `true`).
-
-    Implementation note:  `isVisible` is also effectively a display property,
-    but it is not declared as such because the same effect is implemented
-    inside `_sc_isVisibleDidChange()`.  This avoids having two observers on
-    `isVisible`, which is:
-      a.  More efficient
-      b.  More correct, because we can guarantee the order of operations
+    You can set this array to include any properties that should cause 
+    rendering to occur (this is equivalent to calling 
+    `this.triggerRendering()` when one of these properties is set).
 
     @property {Array}
     @readOnly
   */
-  displayProperties: 'backgroundColor cornerRadius zIndex'.w(),
+  displayProperties: 'backgroundColor cornerRadius zIndex isVisible'.w(),
 
   /**
     A string that evaluates to a CSS color.  Animatable.
@@ -123,23 +115,6 @@ SC.Surface = SC.Responder.extend({
   cornerRadius: 0,
 
   zIndex: 0,
-
-  // ..........................................................
-  // VIEWPORT SUPPORT
-  //
-
-  /**
-    Set to `true` when the surface is part of a surface tree that is
-    currently present in the viewport; `false` otherwise.
-
-    @property {Boolean}
-    @isReadOnly
-  */
-  isPresentInViewport: false,
-
-  // ..........................................................
-  // VISIBILITY SUPPORT
-  //
 
   /**
     The isVisible property determines if the view is shown in the view
@@ -155,11 +130,18 @@ SC.Surface = SC.Responder.extend({
   isVisible: true,
   isVisibleBindingDefault: SC.Binding.bool(),
 
-  _sc_isVisibleDidChange: function() {
-    var el = this.__sc_element__;
-    el.style.visibility = this.get('isVisible')? "visible" : "hidden";
-    this.triggerRendering();
-  }.observes('isVisible'),
+  // ..........................................................
+  // VIEWPORT SUPPORT
+  //
+
+  /**
+    Set to `true` when the surface is part of a surface tree that is
+    currently present in the viewport; `false` otherwise.
+
+    @property {Boolean}
+    @isReadOnly
+  */
+  isPresentInViewport: false,
 
   // ..........................................................
   // RESPONDER SUPPORT
@@ -181,7 +163,7 @@ SC.Surface = SC.Responder.extend({
   supersurface: function(key, value) {
     if (value !== undefined) {
       sc_assert(value === null || value.kindOf(SC.Surface), "SC.Surface@supersurface must either be null or an SC.Surface instance.");
-      sc_assert(value? value.get('subsurfaces').contains(this) : true, "The supersurface must already contain this surface in its subsurfaces array.");
+      sc_assert(value? value.get('subsurfaces') !== null && value.get('subsurfaces').contains(this) : true, "The supersurface must already contain this surface in its subsurfaces array.");
       this._sc_supersurface = value;
     } else return this._sc_supersurface;
   }.property(),
