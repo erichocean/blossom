@@ -19,10 +19,10 @@ if (BLOSSOM) {
   3D animation and transitions. Surfaces are responders, and will be
   forwarded events that occur to them by the application.
 
-  Usually you will not work directly with the `SC.Surface` class, but with one
-  of its subclasses.  Subclasses of `SC.CompositeSurface` arrange surfaces in
-  a hierarchy, allowing their layout to depend on their parent's position and
-  size, rather than the application's viewport.
+  Usually you will not work directly with the `SC.Surface` class, but with 
+  one of its subclasses.  Subclasses of `SC.CompositeSurface` arrange 
+  surfaces in a hierarchy, their frames are relative to their parent's frame, 
+  rather than the application's viewport.
 
   A surface should only consume resources when it is present in the viewport.
   You can observe the `isPresentInViewport` property for changes; it will be
@@ -43,12 +43,9 @@ if (BLOSSOM) {
      mySurface = SC.ImageSurface.create(...);
      SC.app.addSurface(mySurface);
 
-  Once a surface has been added to the app, it will be sized and positioned
-  according to the layout you have specified relative to the application's
-  viewport.  It will then automatically resize if necessary when the
-  application's viewport changes size.
-
-  The surface's `isPresentInViewport` property will also be set to true.
+  Once a surface has been added to the app, it's `frame` property is used to 
+  position the surface relative to the application's viewport.  The surface's 
+  `isPresentInViewport` property will also be set to true.
 
   Removing a Surface from the Viewport
   ------------------------------------
@@ -57,12 +54,16 @@ if (BLOSSOM) {
 
       SC.app.removeSurface(mySurface);
 
-  The surface's `isPresentInViewport` property will also be set to false.
+  The surface's `isPresentInViewport` property will be set to false.
 
-  A surface's underlying graphics resources are released when it is no longer
+  A surface's underlying graphics resources are released when it is no longer 
   present in the viewport.  This occurs at the end of the run loop, so it is
   okay to remove a surface temporarily and move it somewhere else – it's
   resources will remain untouched during that time.
+
+  If the surface consume any other resources for drawing, such as `SC.Layer` 
+  instances, those resources should be released as well (`SC.Surface` cannot 
+  do this for you).
 
   Receiving Events
   ----------------
@@ -75,10 +76,10 @@ if (BLOSSOM) {
 
   Or, you can set the surface as the app's `inputSurface`:
 
-      SC.app.set('inputPane', aSurface);
+      SC.app.set('inputSurface', aSurface);
 
-  For surfaces that manage other responders, such as `SC.ViewSurface`, the
-  events will be forwarded on to the appropriate responder within the surface.
+  For surfaces that manage other responders, such as `SC.View`, the events 
+  will be forwarded on to the appropriate responder within the surface.
 
   @extends SC.Responder
   @since Blossom 1.0
@@ -86,7 +87,7 @@ if (BLOSSOM) {
 SC.Surface = SC.Responder.extend({
 
   isSurface: true,
-  isResponderContext: true, // We can dispatch events and actions.
+  isResponderContext: true, // We can dispatch to other responders.
 
   concatenatedProperties: ['displayProperties'],
 
@@ -97,7 +98,8 @@ SC.Surface = SC.Responder.extend({
   /**
     You can set this array to include any properties that should immediately
     invalidate the display.  The display will be automatically invalidated
-    when one of these properties change.
+    when one of these properties change (`this.__needsDisplay__` will be set 
+    to `true`).
 
     Implementation note:  `isVisible` is also effectively a display property,
     but it is not declared as such because the same effect is implemented
@@ -160,12 +162,14 @@ SC.Surface = SC.Responder.extend({
   }.observes('isVisible'),
 
   // ..........................................................
-  // SURFACE TREE SUPPORT
+  // RESPONDER SUPPORT
   //
 
-  surface: function() {
-    return this;
-  }.property(),
+  surface: function() { return this; }.property(),
+
+  // ..........................................................
+  // SURFACE TREE SUPPORT
+  //
 
   /**
     Specifies receiver's supersurface.
@@ -183,11 +187,12 @@ SC.Surface = SC.Responder.extend({
   }.property(),
 
   /**
-    An array containing the receiver's subsurfaces.
+    An array containing the receiver's subsurfaces, or `null` if the surface 
+    does not support subsurfaces at all.
 
-    The subsurfaces are listed in back to front order. Defaults to null.
+    The subsurfaces are listed in back to front order.
 
-    @property Array
+    @property Array or null
   */
   subsurfaces: null,
 
@@ -670,31 +675,31 @@ SC.Surface = SC.Responder.extend({
   },
 
   /**
-    Attempts to send the event down the responder chain for this pane.  If you
-    pass a target, this method will begin with the target and work up the
-    responder chain.  Otherwise, it will begin with the current rr
-    and walk up the chain looking for any responder that implements a handler
+    Attempts to send the event down the responder chain for this surface.  If 
+    you pass a target, this method will begin with the target and work up the 
+    responder chain.  Otherwise, it will begin with the current responder 
+    and walk up the chain looking for any responder that implements a handler 
     for the passed method and returns true when executed.
 
     @param {String} action
     @param {SC.Event} evt
-    @param {Object} target
-    @returns {Object} object that handled the event
+    @param {SC.Responder} target
+    @returns {SC.Object} object that handled the event
   */
   sendEvent: function(action, evt, target) {
     // console.log('SC.Surface#sendEvent(', action, evt, target, ')');
     var handler ;
 
-    // walk up the responder chain looking for a method to handle the event
+    // Walk up the responder chain looking for a method to handle the event.
     if (!target) target = this.get('firstResponder') ;
     while(target && !target.tryToPerform(action, evt)) {
 
-      // even if someone tries to fill in the nextResponder on the pane, stop
-      // searching when we hit the pane.
+      // Even if someone tries to fill in the nextResponder on the surface, 
+      // stop searching when we hit the surface.
       target = (target === this) ? null : target.get('nextResponder') ;
     }
 
-    // if no handler was found in the responder chain, try the default
+    // If no handler was found in the responder chain, try the default
     if (!target && (target = this.get('defaultResponder'))) {
       if (typeof target === SC.T_STRING) {
         target = SC.objectForPropertyPath(target);
@@ -704,8 +709,9 @@ SC.Surface = SC.Responder.extend({
       else target = target.tryToPerform(action, evt) ? target : null ;
     }
 
-    // if we don't have a default responder or no responders in the responder
-    // chain handled the event, see if the pane itself implements the event
+    // If we don't have a default responder or no responders in the responder
+    // chain handled the event, see if the surface itself implements the 
+    // event.
     else if (!target && !(target = this.get('defaultResponder'))) {
       target = this.tryToPerform(action, evt) ? this : null ;
     }
@@ -714,39 +720,37 @@ SC.Surface = SC.Responder.extend({
   },
 
   performKeyEquivalent: function(keystring, evt) {
-    var ret = arguments.callee.base.apply(this, arguments); // try normal view behavior first
-    if (!ret) {
-      var defaultResponder = this.get('defaultResponder') ;
-      if (defaultResponder) {
-        // try default responder's own performKeyEquivalent method,
-        // if it has one...
-        if (defaultResponder.performKeyEquivalent) {
-          ret = defaultResponder.performKeyEquivalent(keystring, evt) ;
-        }
+    var ret = false, defaultResponder = this.get('defaultResponder') ;
+    if (defaultResponder) {
+      // Try default responder's own performKeyEquivalent method,
+      // if it has one...
+      if (defaultResponder.performKeyEquivalent) {
+        ret = defaultResponder.performKeyEquivalent(keystring, evt) ;
+      }
 
-        // even if it does have one, if it doesn't handle the event, give
-        // methodName-style key equivalent handling a try
-        if (!ret && defaultResponder.tryToPerform) {
-          ret = defaultResponder.tryToPerform(keystring, evt) ;
-        }
+      // Even if it does have one, if it doesn't handle the event, give
+      // methodName-style key equivalent handling a try.
+      if (!ret && defaultResponder.tryToPerform) {
+        ret = defaultResponder.tryToPerform(keystring, evt) ;
       }
     }
     return ret ;
   },
 
   /** @private
-    If the user presses the tab key and the pane does not have a first
+    If the user presses the tab key and the surface does not have a first
     responder, try to give it to the next eligible responder.
 
-    If the keyDown event reaches the pane, we can assume that no responders in
-    the responder chain, nor the default responder, handled the event.
+    If the keyDown event reaches the surface, we can assume that no 
+    responders in the responder chain, nor the default responder, handled the 
+    event.
   */
   keyDown: function(evt) {
     var nextValidKeyView;
 
-    // Handle tab key presses if we don't have a first responder already
+    // Handle tab key presses if we don't have a first responder already.
     if (evt.which === 9 && !this.get('firstResponder')) {
-      // Cycle forwards by default, backwards if the shift key is held
+      // Cycle forwards by default, backwards if the shift key is held.
       if (evt.shiftKey) {
         nextValidKeyView = this.get('previousValidKeyView');
       } else {
