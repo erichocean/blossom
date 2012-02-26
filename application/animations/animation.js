@@ -7,23 +7,19 @@
 
 if (BLOSSOM) {
 
-SC.ENTER_LEFT = 'enter-left';
-SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
-SC.EXIT_RIGHT = 'exit-right';
+SC.Animation = SC.Object.extend(SC.DelegateSupport, {
 
-SC.SurfaceTransition = SC.Object.extend({
+  delegate: null,
 
-  kind: null, // one of 'order-in', 'order-out', or 'replace'
+  key: null,
 
-  // a surface
-  from: null,
+  duration: 250, // in milliseconds
 
-  // a surface
-  to: null,
+  delay: 0,      // in milliseconds
 
-  beginTransition: function() {},
-
-  endTransition: function() {}
+  defaultValueForKey: function(key) {
+    return null; // Implies default "zero" value for the specific key type.
+  }
 
 });
 

@@ -100,6 +100,8 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
   this.nextSibling = null;
   this.prevSibling = null;
   this.useContentSize = useContentSize;
+  this.transitionsRuleIndex = -1; // No rule at first.
+  this.animationsRuleIndex = -1; // No rule at first.
 
   return this;
 };
@@ -209,8 +211,11 @@ SC.Psurface.begin = function(surface) {
 
 SC.Psurface.prototype = {
 
+  sharedStyleSheet: null, // Delay creating this until the document is ready.
+
   discover: function(surface) {
-    SC._sc_psurfaceColor[this.id] = 1; // grey
+    var id = this.id;
+    SC._sc_psurfaceColor[id] = 1; // grey
 
     var el = this.__element__;
     if (this.useContentSize && surface.__contentSizeNeedsUpdate__) {
@@ -230,6 +235,68 @@ SC.Psurface.prototype = {
       style.height = frame[3]/*height*/;
       surface.__frameDidChange__ = false;
     }
+
+    // Handle property transitions.
+    var transitions = SC.surfaceTransitions[id] || false;
+    if (transitions) {
+      var properties = [] ,
+          durations = [],
+          timingFunctions = [],
+          delays = [],
+          ss = this.sharedStyleSheet || SC.Psurface.sharedStyleSheet();
+
+      for (var key in transitions) {
+        var transition = transitions[key];
+        if (transition && transition.isPropertyAnimation) {
+          properties.push(key);
+          durations.push(transition.__duration__);
+          timingFunctions.push(transition.__timingFunction__);
+          delays.push(transition.__delay__);
+        }
+      }
+
+      // FIXME: WebKit-only.
+      var propertyRule = '-webkit-transition-property: '+properties.join(', '),
+          durationRule = '-webkit-transition-duration: '+durations.join(', '),
+          timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', '),
+          delayRule = '-webkit-transition-delay: '+delays.join(', '),
+          rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n');
+
+      // console.log(rule);
+      var transitionsRuleIndex = this.transitionsRuleIndex;
+      if (transitionsRuleIndex >= 0) ss.deleteRule(transitionsRuleIndex);
+      this.transitionsRuleIndex = ss.insertRule( '#'+id+' { '+rule+'; }', ss.cssRules? ss.cssRules.length : 0 );
+    }
+
+    // Handle property animations.
+    // var animations = SC.surfaceAnimations[id] || false;
+    // if (animations) {
+    //   properties = [];
+    //   durations = [];
+    //   timingFunctions = [];
+    //   delays = [];
+    //   ss = this.sharedStyleSheet || SC.Psurface.sharedStyleSheet();
+    // 
+    //   for (key in transitions) {
+    //     var animation = animations[key];
+    //     if (animation && animation.isPropertyAnimation) {
+    //       properties.push(key);
+    //       durations.push(animation.__duration__);
+    //       timingFunctions.push(animation.__timingFunction__);
+    //       delays.push(animation.__delay__);
+    //     }
+    //   }
+    // 
+    //   // FIXME: WebKit-only.
+    //   propertyRule = '-webkit-transition-property: '+properties.join(', ');
+    //   durationRule = '-webkit-transition-duration: '+durations.join(', ');
+    //   timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', ');
+    //   delayRule = '-webkit-transition-delay: '+delays.join(', ');
+    //   rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n');
+    // 
+    //   // console.log(rule);
+    //   ss.insertRule( '#'+id+' { '+rule+'; }', ss.cssRules? ss.cssRules.length : 0 );
+    // }
   },
 
   push: function(surface) {
@@ -774,6 +841,23 @@ SC.Psurface.end = function(surface) {
   SC._sc_currentPsurface     = null;
   SC._sc_psurfaceColor       = null;
   SC._sc_psurfacesBeingMoved = null;
+};
+
+/** @private */
+SC.Psurface.sharedStyleSheet = function() {
+  var head, element, ss;
+
+  if (DEBUG_PSURFACES) sc_assert(!this.prototype.sharedStyleSheet);
+
+  // Create the stylesheet object the hard way (works everywhere).
+  element = document.createElement('style');
+  element.type = 'text/css';
+  head = document.getElementsByTagName('head')[0];
+  head.appendChild(element);
+  
+  // Get the actual stylesheet object, not the DOM element.
+  ss = this.prototype.sharedStyleSheet = document.styleSheets[document.styleSheets.length-1];
+  return ss;
 };
 
 } // BLOSSOM

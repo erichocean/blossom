@@ -53,20 +53,20 @@ SC.PropertyAnimation = SC.Object.extend(
   // className: null
 });
 
-/** @private */
-SC.PropertyAnimation.sharedStyleSheet = function() {
-  var head, ss = this._styleSheet ;
-  if (!ss) {
-    // create the stylesheet object the hard way (works everywhere)
-    ss = document.createElement('style') ;
-    ss.type = 'text/css' ;
-    head = document.getElementsByTagName('head')[0] ;
-    if (!head) head = document.documentElement ; // fix for Opera
-    head.appendChild(ss) ;
-    
-    // get the actual stylesheet object, not the DOM element
-    ss = document.styleSheets[document.styleSheets.length-1] ;
-    this._styleSheet = ss ;
-  }
-  return ss ;
-};
+// /** @private */
+// SC.PropertyAnimation.sharedStyleSheet = function() {
+//   var head, ss = this._styleSheet ;
+//   if (!ss) {
+//     // create the stylesheet object the hard way (works everywhere)
+//     ss = document.createElement('style') ;
+//     ss.type = 'text/css' ;
+//     head = document.getElementsByTagName('head')[0] ;
+//     if (!head) head = document.documentElement ; // fix for Opera
+//     head.appendChild(ss) ;
+//     
+//     // get the actual stylesheet object, not the DOM element
+//     ss = document.styleSheets[document.styleSheets.length-1] ;
+//     this._styleSheet = ss ;
+//   }
+//   return ss ;
+// };

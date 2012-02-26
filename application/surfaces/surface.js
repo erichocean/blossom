@@ -13,6 +13,9 @@ sc_require('surfaces/private/psurface');
 
 if (BLOSSOM) {
 
+SC.surfaceTransitions = {};
+SC.surfaceAnimations  = {};
+
 /** @class
   `SC.Surface` is used to display content within the application's viewport.
   Each surface lives on the GPU and supports implicit, hardware-accelerated
@@ -112,6 +115,24 @@ SC.Surface = SC.Responder.extend({
   */
   backgroundColor: 'transparent',
 
+  _sc_opacity: 1.0, // opaque
+  opacity: function(key, value) {
+    var container, opacity;
+    if (value !== undefined) {
+      container = this.get('container');
+      container.style.opacity = value;
+      opacity = this._sc_opacity = value;
+    } else {
+      opacity = this._sc_opacity;
+      if (!opacity) {
+        container = this.get('container');
+        opacity = this._sc_opacity = container.style.opacity;
+      }
+    }
+    return opacity;
+  }.property(),
+
+
   cornerRadius: 0,
 
   zIndex: 0,
@@ -129,6 +150,12 @@ SC.Surface = SC.Responder.extend({
   */
   isVisible: true,
   isVisibleBindingDefault: SC.Binding.bool(),
+
+  // ..........................................................
+  // ANIMATION SUPPORT
+  //
+
+  transitions: {},
 
   // ..........................................................
   // VIEWPORT SUPPORT
@@ -523,131 +550,6 @@ SC.Surface = SC.Responder.extend({
       structure.keyName = key;
     });
   },
-
-  // ..........................................................
-  // ANIMATION SUPPORT
-  //
-
-  transitions: {},
-
-  transitionsStyle: function() {
-    // create a unique style rule and add it to the shared cursor style sheet
-    var transitionStyle = this._transitionStyle;
-
-    if (!transitionStyle) {
-      var transitions = this.get('transitions') || {},
-          properties = [] ,
-          durations = [],
-          timingFunctions = [],
-          delays = [],
-          ss = SC.PropertyAnimation.sharedStyleSheet();
-
-      this._transitionStyle = transitionStyle = SC.guidFor(this);
-
-      for (var key in transitions) {
-        var transition = transitions[key];
-        if (transition && transition.isPropertyAnimation) {
-          properties.push(key);
-          durations.push(transition.get('duration'));
-          timingFunctions.push(transition.get('timingFunction'));
-          delays.push(transition.get('delay'));
-        }
-      }
-
-      var propertyRule = '-webkit-transition-property: '+properties.join(', '),
-          durationRule = '-webkit-transition-duration: '+durations.join(', '),
-          timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', '),
-          delayRule = '-webkit-transition-delay: '+delays.join(', '),
-          rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n');
-
-      // console.log(rule);
-      if (ss.insertRule) { // WC3
-        // console.log('WC3: adding rule');
-        ss.insertRule(
-          '.'+transitionStyle+' { '+rule+'; }',
-          ss.cssRules ? ss.cssRules.length : 0
-        ) ;
-      } else if (ss.addRule) { // IE
-        // console.log('IE: adding rule');
-        ss.addRule('.'+transitionStyle, rule) ;
-      }
-    }
-
-    return transitionStyle ;
-  }.property(),
-
-  top: function(key, value) {
-    var container, top;
-    if (value !== undefined) {
-      container = this.get('container');
-      container.style.top = value;
-      top = this._sc_top = value;
-    } else {
-      top = this._sc_top;
-      if (!top) {
-        container = this.get('container');
-        top = this._sc_top = container.style.top;
-      }
-    }
-    return top;
-  }.property(),
-
-  left: function(key, value) {
-    var container, left;
-    if (value !== undefined) {
-      container = this.get('container');
-      container.style.left = value;
-      left = this._sc_left = value;
-    } else {
-      left = this._sc_left;
-      if (!left) {
-        container = this.get('container');
-        left = this._sc_left = container.style.left;
-      }
-    }
-    return left;
-  }.property(),
-
-  opacity: function(key, value) {
-    var container, opacity;
-    if (value !== undefined) {
-      container = this.get('container');
-      container.style.opacity = value;
-      opacity = this._sc_opacity = value;
-    } else {
-      opacity = this._sc_opacity;
-      if (!opacity) {
-        container = this.get('container');
-        opacity = this._sc_opacity = container.style.opacity;
-      }
-    }
-    return opacity;
-  }.property(),
-
-  // mousePosition: null,
-  //
-  // updateMousePositionWithEvent: function(evt) {
-  //   var containerPos = this.computeContainerPosition(),
-  //       mouseX = evt.clientX - containerPos.left + window.pageXOffset,
-  //       mouseY = evt.clientY - containerPos.top + window.pageYOffset,
-  //       ret = { x: mouseX, y: mouseY };
-  //
-  //   this.set('mousePosition', ret);
-  //   return ret;
-  // },
-  //
-  // computeContainerPosition: function() {
-  //   var el = this.__sc_element__,
-  //       top = 0, left = 0;
-  //
-  //   while (el && el.tagName != "BODY") {
-  //     top += el.offsetTop;
-  //     left += el.offsetLeft;
-  //     el = el.offsetParent;
-  //   }
-  //
-  //   return { top: top, left: left };
-  // },
 
   /**
     Finds the surface that is hit by this event, and returns its view.
