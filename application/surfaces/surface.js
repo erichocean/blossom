@@ -14,38 +14,38 @@ sc_require('surfaces/private/psurface');
 if (BLOSSOM) {
 
 /** @class
-  `SC.Surface` is used to display content within the application's viewport. 
-  Each surface lives on the GPU and supports implicit, hardware-accelerated 
-  3D animation and transitions. Surfaces are responders, and will be 
+  `SC.Surface` is used to display content within the application's viewport.
+  Each surface lives on the GPU and supports implicit, hardware-accelerated
+  3D animation and transitions. Surfaces are responders, and will be
   forwarded events that occur to them by the application.
 
   Usually you will not work directly with the `SC.Surface` class, but with one
-  of its subclasses.  Subclasses of `SC.CompositeSurface` arrange surfaces in 
-  a hierarchy, allowing their layout to depend on their parent's position and 
+  of its subclasses.  Subclasses of `SC.CompositeSurface` arrange surfaces in
+  a hierarchy, allowing their layout to depend on their parent's position and
   size, rather than the application's viewport.
 
-  A surface should only consume resources when it is present in the viewport. 
-  You can observe the `isPresentInViewport` property for changes; it will be 
-  set to true when the surface is added to the viewport, and false when the 
+  A surface should only consume resources when it is present in the viewport.
+  You can observe the `isPresentInViewport` property for changes; it will be
+  set to true when the surface is added to the viewport, and false when the
   surface is removed.
 
-  Mere presence in the viewport does not imply the surface is visibile. The 
-  surface could be positioned off screen, or have its opacity set to zero, 
-  or be occluded by another surface.  On the other hand, a surface that is 
+  Mere presence in the viewport does not imply the surface is visibile. The
+  surface could be positioned off screen, or have its opacity set to zero,
+  or be occluded by another surface.  On the other hand, a surface that is
   *not* present in the viewport is *never* visible.
 
   Adding a Surface to the Viewport
   --------------------------------
 
-  To add a surface to the viewport, you add the surface to your app, which 
+  To add a surface to the viewport, you add the surface to your app, which
   manages the viewport for you:
 
      mySurface = SC.ImageSurface.create(...);
      SC.app.addSurface(mySurface);
 
-  Once a surface has been added to the app, it will be sized and positioned 
-  according to the layout you have specified relative to the application's 
-  viewport.  It will then automatically resize if necessary when the 
+  Once a surface has been added to the app, it will be sized and positioned
+  according to the layout you have specified relative to the application's
+  viewport.  It will then automatically resize if necessary when the
   application's viewport changes size.
 
   The surface's `isPresentInViewport` property will also be set to true.
@@ -59,25 +59,25 @@ if (BLOSSOM) {
 
   The surface's `isPresentInViewport` property will also be set to false.
 
-  A surface's underlying graphics resources are released when it is no longer 
-  present in the viewport.  This occurs at the end of the run loop, so it is 
-  okay to remove a surface temporarily and move it somewhere else – it's 
+  A surface's underlying graphics resources are released when it is no longer
+  present in the viewport.  This occurs at the end of the run loop, so it is
+  okay to remove a surface temporarily and move it somewhere else – it's
   resources will remain untouched during that time.
 
   Receiving Events
   ----------------
 
-  A surface will automatically receive any mouse events that occur on it for 
-  as long as it is present in the viewport.  To receive keyboard events, 
+  A surface will automatically receive any mouse events that occur on it for
+  as long as it is present in the viewport.  To receive keyboard events,
   however, you must either set the surface as the app's `ui`:
 
       SC.app.set('ui', aSurface);
 
-  Or, you can set the surface as the app's `inputSurface`: 
+  Or, you can set the surface as the app's `inputSurface`:
 
       SC.app.set('inputPane', aSurface);
 
-  For surfaces that manage other responders, such as `SC.ViewSurface`, the 
+  For surfaces that manage other responders, such as `SC.ViewSurface`, the
   events will be forwarded on to the appropriate responder within the surface.
 
   @extends SC.Responder
@@ -109,7 +109,31 @@ SC.Surface = SC.Responder.extend({
     @property {Array}
     @readOnly
   */
-  displayProperties: [],
+  displayProperties: 'backgroundColor cornerRadius zIndex'.w(),
+
+  /**
+    A string that evaluates to a CSS color.  Animatable.
+
+    @property {CSSColor}
+  */
+  backgroundColor: 'transparent',
+
+  cornerRadius: 0,
+
+  zIndex: 0,
+
+  // ..........................................................
+  // VIEWPORT SUPPORT
+  //
+
+  /**
+    Set to `true` when the surface is part of a surface tree that is
+    currently present in the viewport; `false` otherwise.
+
+    @property {Boolean}
+    @isReadOnly
+  */
+  isPresentInViewport: false,
 
   // ..........................................................
   // VISIBILITY SUPPORT
@@ -209,16 +233,16 @@ SC.Surface = SC.Responder.extend({
       if (this.get('isPresentInViewport')) {
         if (this.updateLayout) this.updateLayout();
         this.__needsLayout__ = false;
-      } // else leave it set to true, we'll update it when it again becomes 
+      } // else leave it set to true, we'll update it when it again becomes
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
     }
 
     SC.Benchmark.end(benchKey);
 
-    // This code is technically only needed for composite surfaces, but for 
-    // performance and code reuse, we fold the implementation into here 
-    // instead of calling `arguments.callee.base.apply(this, arguments)` in 
+    // This code is technically only needed for composite surfaces, but for
+    // performance and code reuse, we fold the implementation into here
+    // instead of calling `arguments.callee.base.apply(this, arguments)` in
     // `SC.CompositeSurface`.
     var subsurfaces = this.get('subsurfaces');
     if (subsurfaces === null) return;
@@ -243,16 +267,16 @@ SC.Surface = SC.Responder.extend({
       if (this.get('isPresentInViewport')) {
         if (this.updateDisplay) this.updateDisplay();
         this.__needsRendering__ = false;
-      } // else leave it set to true, we'll update it when it again becomes 
+      } // else leave it set to true, we'll update it when it again becomes
         // visible in the viewport
       SC.Benchmark.end(displayKey);
     }
 
     SC.Benchmark.end(benchKey);
 
-    // This code is technically only needed for composite surfaces, but for 
-    // performance and code reuse, we fold the implementation into here 
-    // instead of calling `arguments.callee.base.apply(this, arguments)` in 
+    // This code is technically only needed for composite surfaces, but for
+    // performance and code reuse, we fold the implementation into here
+    // instead of calling `arguments.callee.base.apply(this, arguments)` in
     // `SC.CompositeSurface`.
     var subsurfaces = this.get('subsurfaces');
     if (subsurfaces === null) return;
@@ -261,30 +285,13 @@ SC.Surface = SC.Responder.extend({
     }
   },
 
-  // ..........................................................
-  // VIEWPORT SUPPORT
-  //
-
-  isPresentInViewport: false,
-
-  zIndex: 0,
-  cornerRadius: 0,
-
   /**
-    Specifies receiver's frame rectangle in the superlayer's coordinate space.
+    Specifies receiver's frame rectangle in the supersurface's coordinate
+    space.  The value of this property is specified in points.  Animatable.
 
-    The value of frame is derived from the bounds, anchorPoint and position 
-    properties. When the frame is set, the receiver's position and the size 
-    of the receiver's bounds are changed to match the new frame rectangle. 
-    The value of this property is specified in points.
-
-    Setting the frame _does not_ cause implicit animation to occur. If you 
-    desire animation, please set the bounds and positions properties 
-    directly.
-
-    Note: The frame does not take into account the layer's transform 
-    property, or the superlayer's sublayerTransform property. The value of 
-    frame is before these transforms have been applied.
+    Note: The frame does not take into account the surface's `transform`
+    property, or the supersurface's `subsurfaceTransform` property. The value
+    of `frame` is before these transforms have been applied.
 
     @property SC.Rect
   */
@@ -324,26 +331,8 @@ SC.Surface = SC.Responder.extend({
   }.property(),
 
   /**
-    Specifies a transform applied to each sublayer when rendering. Animatable.
-  
-    @property SC.Transform3D
-  */
-  sublayerTransform: function(key, value) {
-    if (value !== undefined) {
-      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'sublayerTransform' property can only be set to an SC.Transform3D.");
-      throw "No implementation for SC.Surface#set('sublayerTransform', value)";
-    } else return this._sc_sublayerTransform;
-  }.property(),
-  
-  _sc_sublayerTransformDidChange: function() {
-    if (SC.IsIdentityTransform3D(this._sc_sublayerTransform)) {
-      this._sc_hasSublayerTransform = false;
-    } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
-  }.observes('sublayerTransform'),
-  
-  /**
-    Specifies a transform applied to each sublayer when rendering. Animatable.
-  
+    Specifies a transform applied to the surface when rendering.  Animatable.
+
     @property SC.Transform3D
   */
   transform: function(key, value) {
@@ -352,12 +341,40 @@ SC.Surface = SC.Responder.extend({
       throw "No implementation for SC.Surface#set('transform', value)";
     } else return this._sc_transform;
   }.property(),
-  
+
+  /**
+    Specifies a transform applied to each subsurface when rendering.  
+    Animatable.
+
+    @property SC.Transform3D
+  */
+  subsurfaceTransform: function(key, value) {
+    if (value !== undefined) {
+      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'subsurfaceTransform' property can only be set to an SC.Transform3D.");
+      throw "No implementation for SC.Surface#set('subsurfaceTransform', value)";
+    } else return this._sc_subsurfaceTransform;
+  }.property(),
+
+  _sc_subsurfaceTransformTransformDidChange: function() {
+    if (SC.IsIdentityTransform3D(this._sc_subsurfaceTransform)) {
+      this._sc_hasSubsurfaceTransform = false;
+    } else this._sc_hasSubsurfaceTransform = true; // only true when we don't have the identity transform
+  }.observes('subsurfaceTransform'),
+
+  // ..........................................................
+  // KEY-VALUE CODING SUPPORT
+  //
+
+  isPresentInViewport: false,
+
+  zIndex: 0,
+  cornerRadius: 0,
+
   // /**
   //   Returns the visible region of the receiver, in its own coordinate space.
-  //   
+  //
   //   The visible region is the area not clipped by the containing scroll layer.
-  // 
+  //
   //   @property SC.Rect
   //   @readOnly
   // */
@@ -453,16 +470,16 @@ SC.Surface = SC.Responder.extend({
       this.__sc_needFirstResponderInit__ = false;
       this._sc_firstResponderDidChange();
     } else {
-      // This flag instructs SC.app to execute our 
-      // `_sc_firstResponderDidChange` method when we are first added to the 
+      // This flag instructs SC.app to execute our
+      // `_sc_firstResponderDidChange` method when we are first added to the
       // app's set of surfaces.
       this.__sc_needFirstResponderInit__ = true;
     }
 
-    // Allocate our own structures to modify in-place. For performance, we 
-    // create a single ArrayBuffer up front and have all of the layer's 
-    // graphical structures reference it. This both reduces memory use and 
-    // improves memory locality, and since these structures are frequently 
+    // Allocate our own structures to modify in-place. For performance, we
+    // create a single ArrayBuffer up front and have all of the surface's
+    // graphical structures reference it. This both reduces memory use and
+    // improves memory locality, and since these structures are frequently
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
     var buf = SC.MakeFloat32ArrayBuffer(39); // indicates num of floats needed
@@ -489,15 +506,15 @@ SC.Surface = SC.Responder.extend({
       this._sc_transform = SC.MakeIdentityTransform3DFromBuffer(buf, 4);
     }
 
-    if (hasNonPrototypeNonComputedDefaultProperty('sublayerTransform')) {
-      this._sc_sublayerTransform = SC.MakeTransform3DFromBuffer(buf, 20, this.sublayerTransform);
-      delete this.sublayerTransform; // let the prototype shine through
-      if (SC.IsIdentityTransform3D(this._sc_sublayerTransform)) {
-        this._sc_hasSublayerTransform = false;
-      } else this._sc_hasSublayerTransform = true; // only true when we don't have the identity transform
+    if (hasNonPrototypeNonComputedDefaultProperty('subsurfaceTransform')) {
+      this._sc_subsufaceTransform = SC.MakeTransform3DFromBuffer(buf, 20, this.subsurfaceTransform);
+      delete this.subsurfaceTransform; // let the prototype shine through
+      if (SC.IsIdentityTransform3D(this._sc_subsurfaceTransform)) {
+        this._sc_hasSubsurfaceTransform = false;
+      } else this._sc_hasSubsurfaceTransform = true; // only true when we don't have the identity transform
     } else {
-      this._sc_sublayerTransform = SC.MakeIdentityTransform3DFromBuffer(buf, 20);
-      this._sc_hasSublayerTransform = false;
+      this._sc_subsurfaceTransform = SC.MakeIdentityTransform3DFromBuffer(buf, 20);
+      this._sc_hasSubsurfaceTransform = false;
     }
 
     if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
@@ -507,7 +524,7 @@ SC.Surface = SC.Responder.extend({
       this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 36, 0.5, 0.5, 0.0);
     }
 
-    // Float32Array's prototype has been enhanced with custom getters and 
+    // Float32Array's prototype has been enhanced with custom getters and
     // setters using named property keys (x, y, width, height, m11, tx, etc.)
     // These getters and setters are kvo-compliant if we configure them to
     // be so; do that now.
@@ -519,134 +536,6 @@ SC.Surface = SC.Responder.extend({
       structure.keyName = key;
     });
   },
-
-  // /* @private
-  //   This method computes the accumulated transform from this layer's 
-  //   coordinate system to it's superlayer's coordinate system, taking into 
-  //   account all properties of this layer and this layer's superlayer that 
-  //   go into that accumulated transform. The 
-  //   _sc_computeTransformFromSuperlayerToLayer() method computes the inverse.
-  // 
-  //   This transform is used internally by the various convert*FromLayer() 
-  //   methods to transform points, sizes and rects in this layer's coordinate 
-  //   system to their equivalent values in the layer's superlayer's coordinate 
-  //   system.
-  // 
-  //   Here are the properties that go into this computation:
-  //     - from this layer: anchorPoint, bounds, position, transform
-  //     - from this layer's superlayer: sublayerTransform
-  // */
-  // _sc_computeTransformFromLayerToSuperlayer: function() {
-  //   // Assume our callers have checked to determine if we should be called.
-  //   // if (!this._sc_transformFromLayerToSuperlayerIsDirty) return;
-  //   sc_assert(this._sc_transformFromLayerToSuperlayerIsDirty);
-  // 
-  //   // _sc_transformFromSuperlayerToLayer is just the inverse of _sc_transformFromLayerToSuperlayer. 
-  //   // Make sure it's ready to be inverted first.
-  //   if (this._sc_transformFromSuperlayerToLayerIsDirty) this._sc_computeTransformFromSuperlayerToLayer();
-  // 
-  //   // Actually do the inverse transform now.
-  //   SC.AffineTransformInvertTo(this._sc_transformFromSuperlayerToLayer, this._sc_transformFromLayerToSuperlayer);
-  // 
-  //   this._sc_transformFromLayerToSuperlayerIsDirty = false;
-  // },
-  // 
-  // _sc_computeTransformFromSuperlayerToLayer: function() {
-  //   // Assume our callers have checked to determine if we should be called.
-  //   // if (!this._sc_transformFromSuperlayerToLayerIsDirty) return;
-  //   sc_assert(this._sc_transformFromSuperlayerToLayerIsDirty);
-  // 
-  //   // This implementation is designed to prevent any memory allocations.
-  //   var anchorPoint = this._sc_anchorPoint,
-  //       bounds = this._sc_bounds,
-  //       position = this._sc_position,
-  //       superlayer = this._sc_superlayer,
-  //       transform = this._sc_transform,
-  //       computedAnchorPoint = this._sc_tmpPoint,
-  //       transformedAnchorPoint = this._sc_tmpPoint2,
-  //       transformFromSuperlayer = this._sc_transformFromSuperlayerToLayer;
-  // 
-  //   // Our `transformFromSuperlayer` starts out as just our `transform`. 
-  //   // Later, we'll adjust it to account for `anchorPoint` and `position`.
-  //   SC.CopyAffineTransformTo(transform, transformFromSuperlayer);
-  // 
-  //   // Calculate the computed anchor point within `bounds`.
-  //   computedAnchorPoint[0]/*x*/ = bounds[0]/*x*/ + (bounds[2]/*width*/  * anchorPoint[0]/*x*/);
-  //   computedAnchorPoint[1]/*y*/ = bounds[1]/*y*/ + (bounds[3]/*height*/ * anchorPoint[1]/*y*/);
-  // 
-  //   // Find the new location of our anchorPoint, post-transformation.
-  //   SC.PointApplyAffineTransformTo(computedAnchorPoint, transformFromSuperlayer, transformedAnchorPoint);
-  // 
-  //   // Adjust the co-ordinate system's origin so that (0,0) is at `bounds`' 
-  //   // origin, taking into account `anchorPoint` and `position`, as well as 
-  //   // how `transform` modified the actual location of `anchorPoint`.
-  //   transformFromSuperlayer[4]/*tx*/ = position[0]/*x*/ - computedAnchorPoint[0]/*x*/ + (computedAnchorPoint[0]/*x*/ - transformedAnchorPoint[0]/*x*/);
-  //   transformFromSuperlayer[5]/*ty*/ = position[1]/*y*/ - computedAnchorPoint[1]/*y*/ + (computedAnchorPoint[1]/*y*/ - transformedAnchorPoint[1]/*y*/);
-  // 
-  //   // Our superlayer can apply a sublayerTransform before we are drawn. 
-  //   // Pre-concatenate that to the transform so far if it exists.
-  //   if (superlayer && superlayer._sc_hasSublayerTransform) {
-  //     SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
-  //   }
-  // 
-  //   this._sc_transformFromSuperlayerToLayerIsDirty = false;
-  // },
-  // 
-  // /**
-  //   Converts a point from the specified layer's coordinate system into the 
-  //   receiver's coordinate system and places the result in dest.
-  //   
-  //   @param point the point to convert
-  //   @param layer the layer coordinate system to convert from
-  //   @param dest where to put the resulting point
-  // */
-  // convertPointFromLayerTo: function(point, layer, dest) {
-  //   var tmpTransform = this._sc_tmpTransform;
-  //   SC.Layer.computeLayerTransformTo(layer, this, tmpTransform);
-  //   SC.PointApplyAffineTransformTo(point, tmpTransform, dest);
-  // },
-  // 
-  // /**
-  //   Converts a point from the receiver's coordinate system to the specified 
-  //   layer's coordinate system and places the result in dest.
-  // 
-  //   @param point the point to convert
-  //   @param layer the layer coordinate system to convert to
-  //   @param dest where to put the resulting point
-  // */
-  // convertPointToLayerTo: function(point, layer, dest) {
-  //   var tmpTransform = this._sc_tmpTransform;
-  //   SC.Layer.computeLayerTransformTo(this, layer, tmpTransform);
-  //   SC.PointApplyAffineTransformTo(point, tmpTransform, dest);
-  // },
-  // 
-  // /**
-  //   Converts a rectangle from the specified layer's coordinate system into 
-  //   the receiver's coordinate system and places the result in dest.
-  // 
-  //   @param rect the rect to convert
-  //   @param layer the layer coordinate system to convert from
-  //   @param dest where to put the resulting rect
-  // */
-  // convertRectFromLayerTo: function(rect, layer, dest) {
-  //   var tmpTransform = this._sc_tmpTransform;
-  //   SC.Layer.computeLayerTransformTo(layer, this, tmpTransform);
-  //   SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
-  // },
-  // 
-  // /**
-  //   Converts a rectangle from the receiver's coordinate system to the 
-  //   specified layer's coordinate system and places the result in dest.
-  // 
-  //   @param rect the rect to convert
-  //   @param layer the layer coordinate system to convert to
-  //   @param dest where to put the resulting rect
-  // */
-  // convertRectToLayerTo: function(rect, layer, dest) {
-  //   var tmpTransform = this._sc_tmpTransform;
-  //   SC.Layer.computeLayerTransformTo(this, layer, tmpTransform);
-  //   SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
-  // },
 
   // ..........................................................
   // ANIMATION SUPPORT
@@ -749,42 +638,42 @@ SC.Surface = SC.Responder.extend({
   }.property(),
 
   // mousePosition: null,
-  // 
+  //
   // updateMousePositionWithEvent: function(evt) {
   //   var containerPos = this.computeContainerPosition(),
   //       mouseX = evt.clientX - containerPos.left + window.pageXOffset,
   //       mouseY = evt.clientY - containerPos.top + window.pageYOffset,
   //       ret = { x: mouseX, y: mouseY };
-  // 
+  //
   //   this.set('mousePosition', ret);
   //   return ret;
   // },
-  // 
+  //
   // computeContainerPosition: function() {
   //   var el = this.__sc_element__,
   //       top = 0, left = 0;
-  // 
+  //
   //   while (el && el.tagName != "BODY") {
   //     top += el.offsetTop;
   //     left += el.offsetLeft;
   //     el = el.offsetParent;
   //   }
-  // 
+  //
   //   return { top: top, left: left };
   // },
 
   /**
-    Finds the layer that is hit by this event, and returns its view.
+    Finds the surface that is hit by this event, and returns its view.
   */
   targetSurfaceForEvent: function(evt) {
     return this;
   },
 
   /**
-    Attempts to send the event down the responder chain for this pane.  If you 
-    pass a target, this method will begin with the target and work up the 
-    responder chain.  Otherwise, it will begin with the current rr 
-    and walk up the chain looking for any responder that implements a handler 
+    Attempts to send the event down the responder chain for this pane.  If you
+    pass a target, this method will begin with the target and work up the
+    responder chain.  Otherwise, it will begin with the current rr
+    and walk up the chain looking for any responder that implements a handler
     for the passed method and returns true when executed.
 
     @param {String} action
@@ -878,13 +767,13 @@ SC.Surface = SC.Responder.extend({
   //
 
   /**
-    The first responder.  This is the first responder that should receive 
-    action events.  Whenever you click on a responder, it will usually become 
+    The first responder.  This is the first responder that should receive
+    action events.  Whenever you click on a responder, it will usually become
     `firstResponder`.  You can also make a responder first with code:
 
         theResponder.becomeFirstResponder();
 
-    If this surface is also assigned as the `SC.app@inputSurface`, the 
+    If this surface is also assigned as the `SC.app@inputSurface`, the
     `firstResponder` will have it's `isInputResponder` property set to true.
 
     @property {SC.Responder}
@@ -893,8 +782,8 @@ SC.Surface = SC.Responder.extend({
   firstResponder: null,
 
   /**
-    Makes the passed responder into the new `firstResponder` for this 
-    surface.  This will cause the current `firstResponder` to lose its 
+    Makes the passed responder into the new `firstResponder` for this
+    surface.  This will cause the current `firstResponder` to lose its
     first responder status and possibly its input responder status as well.
 
     @param {SC.Responder} responder
@@ -1010,7 +899,7 @@ SC.Surface = SC.Responder.extend({
   //
 
   /**
-    This property is maintained by SC.Application.  You can monitor it for 
+    This property is maintained by SC.Application.  You can monitor it for
     changes if your surface needs to react to application focus/blur events.
 
     @type Boolean
@@ -1020,19 +909,19 @@ SC.Surface = SC.Responder.extend({
   // createLayersForContainer: function(container, width, height) {
   //   if (this._sc_didCreateLayers) return;
   //   this._sc_didCreateLayers = true;
-  // 
+  //
   //   // SC.Pane only has two layers `layer` and `hitTestLayer`.
   //   var K = this.get('layerClass');
   //   sc_assert(K && K.kindOf(SC.Layer));
-  // 
-  //   // We want to allow the developer to provide a layout hash on the view, 
+  //
+  //   // We want to allow the developer to provide a layout hash on the view,
   //   // or to override the 'layout' computed property.
   //   if (this.hasOwnProperty('layout')) {
-  //     // It's still possible that layout is a computed property. Don't use 
+  //     // It's still possible that layout is a computed property. Don't use
   //     // `get()` to find out!
   //     var layout = this.layout;
   //     if (typeof layout === "object") {
-  //       // We assume `layout` is a layout hash. The layer will throw an 
+  //       // We assume `layout` is a layout hash. The layer will throw an
   //       // exception if `layout` is invalid -- don't test for that here.
   //       this._sc_layer = K.create({
   //         layout: layout,
@@ -1062,8 +951,8 @@ SC.Surface = SC.Responder.extend({
   //         delegate: this
   //       });
   //     }
-  // 
-  //     // Only delete layout if it is not a computed property. This allows 
+  //
+  //     // Only delete layout if it is not a computed property. This allows
   //     // the computed property on the prototype to shine through.
   //     if (typeof layout !== "function" || !layout.isProperty) {
   //       // console.log('deleting layout');
@@ -1084,7 +973,7 @@ SC.Surface = SC.Responder.extend({
   //       delegate: this
   //     });
   //   }
-  // 
+  //
   //   this.notifyPropertyChange('layer');
   //   this.notifyPropertyChange('hitTestLayer');
   // },
@@ -1101,7 +990,7 @@ SC.Surface = SC.Responder.extend({
 // //        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
 //         // element.style.webkitTransform = "translateZ(0)";
 //         element.style.webkitTransform = "rotateY(45deg)";
-// 
+//
 //         // apply the layout style manually for now...
 //         // var layoutStyle = this.get('layoutStyle');
 //         // for (key in layoutStyle) {
@@ -1110,7 +999,7 @@ SC.Surface = SC.Responder.extend({
 //         //     element.style[key] = layoutStyle[key];
 //         //   }
 //         // }
-// 
+//
 //         // Make sure SproutCore can find this view.
 //         SC.surfaces[this.get('containerId')] = this;
 //       }
@@ -1122,45 +1011,6 @@ SC.Surface = SC.Responder.extend({
 
 SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
 
-SC.Surface.OBSERVABLE_STRUCTURES = 'bounds position anchorPoint transform sublayerTransform'.w();
-
-// SC.Surface.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
-//   var ary, idx, layer;
-// 
-//   SC.SetIdentityAffineTransform(dest);
-// 
-//   if (fromLayer) {
-//     layer = fromLayer;
-//     while (layer && layer !== toLayer) {
-//       // layer._sc_transformFromLayerToSuperlayer isn't recomputed immediately. Check to
-//       // see if we need to recompute it now.
-//       if (layer._sc_transformFromLayerToSuperlayerIsDirty) layer._sc_computeTransformFromLayerToSuperlayer();
-//       SC.AffineTransformConcatTo(dest, layer._sc_transformFromLayerToSuperlayer, dest);
-//       layer = layer._sc_superlayer;
-//     }
-// 
-//     if (!toLayer || layer === toLayer) return ; // EARLY EXIT <===============
-//   }
-// 
-//   // Gather layers _up_ the tree, so we can apply their transforms in reverse 
-//   // (down the tree). TODO: Remove this array allocation and use the layers 
-//   // as a linked list.
-//   ary = []; layer = toLayer;
-//   while (layer) {
-//     ary.push(layer);
-//     layer = layer._sc_superlayer;
-//   }
-// 
-//   idx = ary.length;
-//   while (idx--) {
-//     layer = ary[idx];
-//     // layer._sc_transformFromSuperlayerToLayer isn't recomputed immediately. Check to
-//     // see if we need to recompute it now.
-//     if (layer._sc_transformFromSuperlayerToLayerIsDirty) layer._sc_computeTransformFromSuperlayerToLayer();
-//     SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
-//   }
-// };
-
-SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform sublayerTransform'.w();
+SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform subsurfaceTransform'.w();
 
 } // BLOSSOM
