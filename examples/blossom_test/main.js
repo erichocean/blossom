@@ -140,9 +140,8 @@ function main() {
   
       ctx.save();
   
-      // Draw background.
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, w, h);
+      // Clear background.
+      ctx.clearRect(0, 0, w, h);
   
       // Draw fps meter.
       ctx.fillStyle = green;
@@ -180,6 +179,8 @@ function main() {
       delete this._clientX;
       delete this._clientY;
       this.set('opacity', 1.0);
+      var color = "rgb(%@,%@,%@)".fmt(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255));
+      this.set('backgroundColor', color);
       return true;
     }
   });
@@ -190,6 +191,7 @@ function main() {
   pane.__contentHeight__ = frame.height;
   pane.triggerContentSizeUpdate();
   pane.triggerLayoutAndRendering();
+  pane.set('backgroundColor', white);
   
   SC.app.get('surfaces').add(pane);
 }

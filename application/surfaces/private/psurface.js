@@ -260,7 +260,7 @@ SC.Psurface.prototype = {
           durations.push(transition.duration+'ms');
           timingFunctions.push(transition.timingFunction);
           delays.push(transition.delay+'ms');
-          style[key] = transition.value;
+          style[transition.key] = transition.value;
         }
       }
 

@@ -10,7 +10,7 @@ if (BLOSSOM) {
 SC.ptransitionAnimations = {};
 
 SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) {
-  this.key = key;
+  this.key = key.dasherize();
   this.value = value;
   this.duration = duration;
   this.delay = delay;

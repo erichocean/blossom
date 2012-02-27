@@ -114,7 +114,38 @@ SC.Surface = SC.Responder.extend({
 
     @property {CSSColor}
   */
-  backgroundColor: 'transparent',
+  _sc_backgroundColor: 'transparent',
+  backgroundColor: function(key, value) {
+    // console.log('SC.Surface@backgroundColor', value);
+    var backgroundColor = this._sc_backgroundColor;
+    if (value !== undefined) {
+      sc_assert(typeof value === 'string');
+      this._sc_backgroundColor = value;
+
+      // Determine the current transition for this property.
+      var transitions = this.getPath('transitions');
+      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
+      var transition = transitions? transitions[key] : null;
+      if (!transition) transition = SC.Surface.transitions.opacity;
+      sc_assert(transition, "An SC.TransitionAnimation could not be found for 'backgroundColor'.");
+      sc_assert(transition.kindOf(SC.TransitionAnimation));
+
+      // Determine the current duration and delay values for the transition.
+      var transaction = SC.AnimationTransaction.top();
+      sc_assert(transaction);
+      var transactionDuration = transaction.get('duration');
+      var transactionDelay    = transaction.get('delay');
+      var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
+      var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
+
+      // Create an SC.PTransitionAnimation instance and add it.
+      var ptransition = new SC.PTransitionAnimation(key, value, duration, delay, transition.get('timingFunction'));
+      var transitionsHash = SC.surfaceTransitions[this.__id__];
+      if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
+      transitionsHash[key] = ptransition;
+      SC.needsRendering = true;
+    } else return backgroundColor;
+  }.property(),
 
   _sc_opacity: 1.0, // opaque
   opacity: function(key, value) {
@@ -920,7 +951,8 @@ SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
 SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform subsurfaceTransform'.w();
 
 SC.Surface.transitions = {
-  opacity: SC.TransitionAnimation.create({ key: 'opacity' })
+  opacity: SC.TransitionAnimation.create({ key: 'opacity' }),
+  backgroundColor: SC.TransitionAnimation.create({ key: 'backgroundColor' })
 };
 
 } // BLOSSOM
