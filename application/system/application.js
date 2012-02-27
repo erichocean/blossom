@@ -14,7 +14,6 @@ sc_require('mixins/responder_context');
 sc_require('ext/float32');
 sc_require('surfaces/surface');
 sc_require('surfaces/container');
-sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 

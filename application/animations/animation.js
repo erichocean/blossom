@@ -9,6 +9,8 @@ if (BLOSSOM) {
 
 SC.Animation = SC.Object.extend(SC.DelegateSupport, {
 
+  isAnimation: true, // Walk like a duck.
+
   delegate: null,
 
   key: null,

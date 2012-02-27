@@ -6,7 +6,6 @@
 /*globals BLOSSOM sc_assert */
 
 sc_require('surfaces/composite');
-sc_require('surfaces/transitions/surface_transition');
 
 if (BLOSSOM) {
 

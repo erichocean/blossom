@@ -11,6 +11,8 @@ if (BLOSSOM) {
 
 SC.TransitionAnimation = SC.Animation.extend({
 
+  isTransitionAnimation: true, // Walk like a duck.
+
   /**
     This property specifies how a value gets from point A to point B.  You 
     can either use a pre-defined string which identifies a pre-made function, 
