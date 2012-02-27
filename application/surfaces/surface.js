@@ -384,25 +384,6 @@ SC.Surface = SC.Responder.extend({
     } else return this._sc_transform;
   }.property(),
 
-  /**
-    Specifies a transform applied to each subsurface when rendering.  
-    Animatable.
-
-    @property SC.Transform3D
-  */
-  subsurfaceTransform: function(key, value) {
-    if (value !== undefined) {
-      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'subsurfaceTransform' property can only be set to an SC.Transform3D.");
-      throw "No implementation for SC.Surface#set('subsurfaceTransform', value)";
-    } else return this._sc_subsurfaceTransform;
-  }.property(),
-
-  _sc_subsurfaceTransformTransformDidChange: function() {
-    if (SC.IsIdentityTransform3D(this._sc_subsurfaceTransform)) {
-      this._sc_hasSubsurfaceTransform = false;
-    } else this._sc_hasSubsurfaceTransform = true; // only true when we don't have the identity transform
-  }.observes('subsurfaceTransform'),
-
   // ..........................................................
   // KEY-VALUE CODING SUPPORT
   //
@@ -524,7 +505,7 @@ SC.Surface = SC.Responder.extend({
     // improves memory locality, and since these structures are frequently
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(39); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(23); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -548,22 +529,11 @@ SC.Surface = SC.Responder.extend({
       this._sc_transform = SC.MakeIdentityTransform3DFromBuffer(buf, 4);
     }
 
-    if (hasNonPrototypeNonComputedDefaultProperty('subsurfaceTransform')) {
-      this._sc_subsufaceTransform = SC.MakeTransform3DFromBuffer(buf, 20, this.subsurfaceTransform);
-      delete this.subsurfaceTransform; // let the prototype shine through
-      if (SC.IsIdentityTransform3D(this._sc_subsurfaceTransform)) {
-        this._sc_hasSubsurfaceTransform = false;
-      } else this._sc_hasSubsurfaceTransform = true; // only true when we don't have the identity transform
-    } else {
-      this._sc_subsurfaceTransform = SC.MakeIdentityTransform3DFromBuffer(buf, 20);
-      this._sc_hasSubsurfaceTransform = false;
-    }
-
     if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
-      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 36, this.anchorPoint);
+      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 20, this.anchorPoint);
       delete this.anchorPoint; // let the prototype shine through
     } else {
-      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 36, 0.5, 0.5, 0.0);
+      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 20, 0.5, 0.5, 0.0);
     }
 
     // Float32Array's prototype has been enhanced with custom getters and
@@ -927,7 +897,7 @@ SC.Surface = SC.Responder.extend({
 
 SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
 
-SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform subsurfaceTransform'.w();
+SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform'.w();
 
 SC.Surface.transitions = {
   opacity: SC.TransitionAnimation.create({ key: 'opacity' }),
