@@ -174,7 +174,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     SC.needsRendering = false;
     SC.viewportSizeDidChange = false;
     SC.surfaceTransitions = {}; // Reset!
-    SC.surfaceAnimations  = {}; // Reset!
+    // SC.surfaceAnimations  = {}; // Reset!
 
     SC.Benchmark.end(benchKey);
 

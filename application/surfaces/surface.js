@@ -15,7 +15,7 @@ sc_require('animations/transition');
 if (BLOSSOM) {
 
 SC.surfaceTransitions = {};
-SC.surfaceAnimations  = {};
+// SC.surfaceAnimations  = {};
 
 /** @class
   `SC.Surface` is used to display content within the application's viewport.
