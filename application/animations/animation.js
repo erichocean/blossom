@@ -15,7 +15,17 @@ SC.Animation = SC.Object.extend({
 
   duration: 250, // in milliseconds
 
-  delay: 0       // in milliseconds
+  delay: 0,      // in milliseconds,
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    sc_assert(typeof this.get('key') === "string");
+    sc_assert(typeof this.get('duration') === "number");
+    sc_assert(this.get('duration') === Math.floor(this.get('duration'))); // Integral
+    sc_assert(this.get('duration') >= 0);
+    sc_assert(typeof this.get('delay') === "number");
+    sc_assert(this.get('delay') === Math.floor(this.get('delay'))); // Integral
+  }
 
 });
 

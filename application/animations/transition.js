@@ -18,9 +18,14 @@ SC.TransitionAnimation = SC.Animation.extend({
     can either use a pre-defined string which identifies a pre-made function, 
     or you can pass in a string with a cubic-bezier() definition.
 
-    @property null or String
+    @property String
   */
-  timingFunction: 'ease'
+  timingFunction: 'ease',
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    sc_assert(typeof this.get('timingFunction') === "string");
+  }
 
 });
 
