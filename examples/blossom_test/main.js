@@ -158,6 +158,7 @@ function main() {
       // console.log('pane#mouseDown');
       this._clientX = evt.clientX;
       this._clientY = evt.clientY;
+      this.set('opacity', 0.5);
       return true;
     },
 
@@ -178,6 +179,7 @@ function main() {
       frame.y = frame.y + evt.clientY - this._clientY;
       delete this._clientX;
       delete this._clientY;
+      this.set('opacity', 1.0);
       return true;
     }
   });

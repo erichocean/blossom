@@ -5,6 +5,8 @@
 // ==========================================================================
 /*globals BLOSSOM DEBUG_PSURFACES sc_assert */
 
+sc_require('surfaces/private/ptransition_animation');
+
 if (BLOSSOM) {
 
 SC.psurfaces = {};

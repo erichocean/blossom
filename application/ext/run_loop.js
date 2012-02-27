@@ -19,7 +19,12 @@ SC.RunLoop = SC.RunLoop.extend(
   */
   beginRunLoop: function() {
     SC.Benchmark.start(runLoopBenchKey);
-    return arguments.callee.base.apply(this, arguments); // do everything else
+    var ret = arguments.callee.base.apply(this, arguments); // do everything else
+    if (BLOSSOM) {
+      sc_assert(SC.animationTransactions.length === 0);
+      SC.AnimationTransaction.begin();
+    }
+    return ret;
   },
   
   /**
@@ -52,6 +57,10 @@ SC.RunLoop = SC.RunLoop.extend(
       if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange) {
         SC.app.performLayoutAndRendering(this.get('startTime'));
       }
+    }
+    if (BLOSSOM) {
+      SC.AnimationTransaction.end();
+      sc_assert(SC.animationTransactions.length === 0);
     }
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
