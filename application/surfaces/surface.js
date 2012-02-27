@@ -154,6 +154,17 @@ SC.Surface = SC.Responder.extend({
     sc_assert(typeof value === 'string');
   }),
 
+  _sc_borderColor: 'transparent',
+  borderColor: SC.animatablePropertyBuilder('borderColor', function(value) {
+    sc_assert(typeof value === 'string');
+  }),
+
+  _sc_borderWidth: 0,
+  borderWidth: SC.animatablePropertyBuilder('borderWidth', function(value) {
+    sc_assert(typeof value === 'number');
+    sc_assert(value >= 0);
+  }),
+
   _sc_opacity: 1.0, // opaque
   opacity: SC.animatablePropertyBuilder('opacity', function(value) {
     sc_assert(typeof value === 'number');

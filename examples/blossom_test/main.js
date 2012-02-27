@@ -181,6 +181,9 @@ function main() {
       this.set('opacity', 1.0);
       var color = "rgb(%@,%@,%@)".fmt(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255));
       this.set('backgroundColor', color);
+      color = "rgb(%@,%@,%@)".fmt(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255));
+      this.set('borderColor', color);
+      this.set('borderWidth', Math.floor(Math.random()*16));
       return true;
     }
   });
@@ -191,7 +194,9 @@ function main() {
   pane.__contentHeight__ = frame.height;
   pane.triggerContentSizeUpdate();
   pane.triggerLayoutAndRendering();
-  pane.set('backgroundColor', white);
+  pane.set('backgroundColor', "white");
+  pane.set('borderColor', "black");
+  pane.set('borderWidth', 1);
   
   SC.app.get('surfaces').add(pane);
 }

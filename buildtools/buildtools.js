@@ -513,6 +513,8 @@ BT.App = BT.Target.extend({
 
     ret += '    <style>\n';
     ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';
+    ret += '      div, canvas { border-style: solid; border-width: 0; }\n';
+    ret += '      #ui { border-style: none }\n';
     ret += '    </style>\n';
     ret += '  </head>\n';
     
