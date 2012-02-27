@@ -10,6 +10,7 @@ sc_require('surfaces/private/ptransition_animation');
 if (BLOSSOM) {
 
 SC.psurfaces = {};
+SC.psurfaceTransitions = {};
 
 /** @private
   A presentation surface (Psurface) is a lightweight representation of the 
@@ -240,7 +241,8 @@ SC.Psurface.prototype = {
     }
 
     // Handle property transitions.
-    var transitions = SC.surfaceTransitions[id] || false;
+    var transitions = SC.surfaceTransitions[id] || false,
+        currentHash = SC.psurfaceTransitions[id];
     if (transitions) {
       var properties = [],
           durations = [],
@@ -248,8 +250,11 @@ SC.Psurface.prototype = {
           delays = [],
           ss = this.sharedStyleSheet || SC.Psurface.sharedStyleSheet();
 
-      for (var key in transitions) {
-        var transition = transitions[key];
+      if (!currentHash) currentHash = SC.psurfaceTransitions[id] = transitions;
+      else SC.mixin(currentHash, transitions);
+
+      for (var key in currentHash) {
+        var transition = currentHash[key];
         if (transition) {
           properties.push(transition.key);
           durations.push(transition.duration+'ms');

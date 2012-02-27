@@ -8,7 +8,6 @@
 sc_require('system/responder');
 sc_require('layers/layer');
 sc_require('layers/layout');
-sc_require('system/property_animation');
 sc_require('surfaces/private/psurface');
 sc_require('surfaces/private/ptransition_animation');
 sc_require('animations/transition');
@@ -151,7 +150,6 @@ SC.Surface = SC.Responder.extend({
       SC.needsRendering = true;
     } else return opacity;
   }.property(),
-
 
   cornerRadius: 0,
 
