@@ -119,6 +119,7 @@ SC.Surface = SC.Responder.extend({
 
   _sc_opacity: 1.0, // opaque
   opacity: function(key, value) {
+    // console.log('SC.Surface@opacity', value);
     var opacity = this._sc_opacity;
     if (value !== undefined) {
       sc_assert(typeof value === 'number');
@@ -147,6 +148,7 @@ SC.Surface = SC.Responder.extend({
       var transitionsHash = SC.surfaceTransitions[this.__id__];
       if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
       transitionsHash[key] = ptransition;
+      SC.needsRendering = true;
     } else return opacity;
   }.property(),
 

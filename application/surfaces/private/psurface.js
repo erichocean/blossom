@@ -219,7 +219,9 @@ SC.Psurface.prototype = {
     var id = this.id;
     SC._sc_psurfaceColor[id] = 1; // grey
 
-    var el = this.__element__;
+    var el = this.__element__,
+        style = el.style;
+
     if (this.useContentSize && surface.__contentSizeNeedsUpdate__) {
       el.width  = surface.__contentWidth__;
       el.height = surface.__contentHeight__;
@@ -227,8 +229,7 @@ SC.Psurface.prototype = {
     }
 
     if (surface.__frameDidChange__) {
-      var style = el.style,
-          frame = surface.get('frame');
+      var frame = surface.get('frame');
 
       // debugger;
       style.left   = frame[0]/*x*/;
@@ -241,7 +242,7 @@ SC.Psurface.prototype = {
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false;
     if (transitions) {
-      var properties = [] ,
+      var properties = [],
           durations = [],
           timingFunctions = [],
           delays = [],
@@ -249,11 +250,12 @@ SC.Psurface.prototype = {
 
       for (var key in transitions) {
         var transition = transitions[key];
-        if (transition && transition.isPropertyAnimation) {
-          properties.push(key);
-          durations.push(transition.__duration__);
-          timingFunctions.push(transition.__timingFunction__);
-          delays.push(transition.__delay__);
+        if (transition) {
+          properties.push(transition.key);
+          durations.push(transition.duration+'ms');
+          timingFunctions.push(transition.timingFunction);
+          delays.push(transition.delay+'ms');
+          style[key] = transition.value;
         }
       }
 
@@ -854,6 +856,7 @@ SC.Psurface.sharedStyleSheet = function() {
   // Create the stylesheet object the hard way (works everywhere).
   element = document.createElement('style');
   element.type = 'text/css';
+  element.id = 'sharedStyleSheet';
   head = document.getElementsByTagName('head')[0];
   head.appendChild(element);
   
