@@ -178,7 +178,12 @@ SC.Surface = SC.Responder.extend({
     sc_assert(value >= 0);
   }),
 
-  zIndex: 0,
+  _sc_zIndex: 0,
+  zIndex: SC.animatablePropertyBuilder('zIndex', function(value) {
+    sc_assert(typeof value === 'number');
+    sc_assert(Math.floor(value) === value); // Integers only
+    // Negative numbers are allowed.
+  }),
 
   /**
     The isVisible property determines if the view is shown in the view
