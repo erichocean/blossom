@@ -17,11 +17,7 @@ SC.Animation = SC.Object.extend(SC.DelegateSupport, {
 
   duration: 250, // in milliseconds
 
-  delay: 0,      // in milliseconds
-
-  defaultValueForKey: function(key) {
-    return null; // Implies default "zero" value for the specific key type.
-  }
+  delay: 0       // in milliseconds
 
 });
 
