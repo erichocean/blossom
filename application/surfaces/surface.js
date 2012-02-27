@@ -17,6 +17,41 @@ if (BLOSSOM) {
 SC.surfaceTransitions = {};
 // SC.surfaceAnimations  = {};
 
+SC.animatablePropertyBuilder = function(key, assertion) {
+  var privateProperty = '_sc_'+key;
+  return function(key, value) {
+    // console.log('SC.Surface@%@'.fmt(key), value);
+    var property = this[privateProperty];
+    if (value !== undefined) {
+      if (assertion) assertion(value);
+      this[privateProperty] = value;
+
+      // Determine the current transition for this property.
+      var transitions = this.getPath('transitions');
+      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
+      var transition = transitions? transitions[key] : null;
+      if (!transition) transition = SC.Surface.transitions.opacity;
+      sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
+      sc_assert(transition.kindOf(SC.TransitionAnimation));
+
+      // Determine the current duration and delay values for the transition.
+      var transaction = SC.AnimationTransaction.top();
+      sc_assert(transaction);
+      var transactionDuration = transaction.get('duration');
+      var transactionDelay    = transaction.get('delay');
+      var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
+      var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
+
+      // Create an SC.PTransitionAnimation instance and add it.
+      var ptransition = new SC.PTransitionAnimation(key, value, duration, delay, transition.get('timingFunction'));
+      var transitionsHash = SC.surfaceTransitions[this.__id__];
+      if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
+      transitionsHash[key] = ptransition;
+      SC.needsRendering = true;
+    } else return property;
+  }.property();
+};
+
 /** @class
   `SC.Surface` is used to display content within the application's viewport.
   Each surface lives on the GPU and supports implicit, hardware-accelerated
@@ -115,72 +150,16 @@ SC.Surface = SC.Responder.extend({
     @property {CSSColor}
   */
   _sc_backgroundColor: 'transparent',
-  backgroundColor: function(key, value) {
-    // console.log('SC.Surface@backgroundColor', value);
-    var backgroundColor = this._sc_backgroundColor;
-    if (value !== undefined) {
-      sc_assert(typeof value === 'string');
-      this._sc_backgroundColor = value;
-
-      // Determine the current transition for this property.
-      var transitions = this.getPath('transitions');
-      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-      var transition = transitions? transitions[key] : null;
-      if (!transition) transition = SC.Surface.transitions.opacity;
-      sc_assert(transition, "An SC.TransitionAnimation could not be found for 'backgroundColor'.");
-      sc_assert(transition.kindOf(SC.TransitionAnimation));
-
-      // Determine the current duration and delay values for the transition.
-      var transaction = SC.AnimationTransaction.top();
-      sc_assert(transaction);
-      var transactionDuration = transaction.get('duration');
-      var transactionDelay    = transaction.get('delay');
-      var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
-      var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
-
-      // Create an SC.PTransitionAnimation instance and add it.
-      var ptransition = new SC.PTransitionAnimation(key, value, duration, delay, transition.get('timingFunction'));
-      var transitionsHash = SC.surfaceTransitions[this.__id__];
-      if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
-      transitionsHash[key] = ptransition;
-      SC.needsRendering = true;
-    } else return backgroundColor;
-  }.property(),
+  backgroundColor: SC.animatablePropertyBuilder('backgroundColor', function(value) {
+    sc_assert(typeof value === 'string');
+  }),
 
   _sc_opacity: 1.0, // opaque
-  opacity: function(key, value) {
-    // console.log('SC.Surface@opacity', value);
-    var opacity = this._sc_opacity;
-    if (value !== undefined) {
-      sc_assert(typeof value === 'number');
-      sc_assert(value >= 0.0);
-      sc_assert(value <= 1.0);
-      this._sc_opacity = value;
-
-      // Determine the current transition for this property.
-      var transitions = this.getPath('transitions');
-      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-      var transition = transitions? transitions[key] : null;
-      if (!transition) transition = SC.Surface.transitions.opacity;
-      sc_assert(transition, "An SC.TransitionAnimation could not be found for 'opacity'.");
-      sc_assert(transition.kindOf(SC.TransitionAnimation));
-
-      // Determine the current duration and delay values for the transition.
-      var transaction = SC.AnimationTransaction.top();
-      sc_assert(transaction);
-      var transactionDuration = transaction.get('duration');
-      var transactionDelay    = transaction.get('delay');
-      var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
-      var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
-
-      // Create an SC.PTransitionAnimation instance and add it.
-      var ptransition = new SC.PTransitionAnimation(key, value, duration, delay, transition.get('timingFunction'));
-      var transitionsHash = SC.surfaceTransitions[this.__id__];
-      if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
-      transitionsHash[key] = ptransition;
-      SC.needsRendering = true;
-    } else return opacity;
-  }.property(),
+  opacity: SC.animatablePropertyBuilder('opacity', function(value) {
+    sc_assert(typeof value === 'number');
+    sc_assert(value >= 0.0);
+    sc_assert(value <= 1.0);
+  }),
 
   cornerRadius: 0,
 
