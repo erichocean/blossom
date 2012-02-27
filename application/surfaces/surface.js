@@ -142,7 +142,7 @@ SC.Surface = SC.Responder.extend({
     @property {Array}
     @readOnly
   */
-  displayProperties: 'backgroundColor cornerRadius zIndex isVisible'.w(),
+  displayProperties: 'backgroundColor borderColor borderWidth opacity cornerRadius zIndex isVisible'.w(),
 
   /**
     A string that evaluates to a CSS color.  Animatable.
@@ -172,7 +172,11 @@ SC.Surface = SC.Responder.extend({
     sc_assert(value <= 1.0);
   }),
 
-  cornerRadius: 0,
+  _sc_cornerRadius: 0,
+  cornerRadius: SC.animatablePropertyBuilder('cornerRadius', function(value) {
+    sc_assert(typeof value === 'number');
+    sc_assert(value >= 0);
+  }),
 
   zIndex: 0,
 
@@ -400,9 +404,6 @@ SC.Surface = SC.Responder.extend({
   //
 
   isPresentInViewport: false,
-
-  zIndex: 0,
-  cornerRadius: 0,
 
   // /**
   //   Returns the visible region of the receiver, in its own coordinate space.

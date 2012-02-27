@@ -184,6 +184,7 @@ function main() {
       color = "rgb(%@,%@,%@)".fmt(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255));
       this.set('borderColor', color);
       this.set('borderWidth', Math.floor(Math.random()*16));
+      this.set('cornerRadius', Math.floor(Math.random()*31));
       return true;
     }
   });
@@ -197,6 +198,7 @@ function main() {
   pane.set('backgroundColor', "white");
   pane.set('borderColor', "black");
   pane.set('borderWidth', 1);
+  pane.set('cornerRadius', 5);
   
   SC.app.get('surfaces').add(pane);
 }
