@@ -251,7 +251,7 @@ SC.Psurface.prototype = {
           ss = this.sharedStyleSheet || SC.Psurface.sharedStyleSheet();
 
       if (!currentHash) currentHash = SC.psurfaceTransitions[id] = transitions;
-      else SC.mixin(currentHash, transitions);
+      else SC._baseMixin(true, currentHash, transitions);
 
       for (var key in currentHash) {
         var transition = currentHash[key];
