@@ -225,6 +225,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     }
 
     if (this._sc_updateLayoutFirstTime) {
+      console.log('setting default layout first time');
       this._sc_updateLayoutFirstTime = false;
       // If default thickness is < 1, convert from percentage to absolute.
       if (SC.none(desiredThickness) || (desiredThickness > 0 && desiredThickness < 1)) {
@@ -236,20 +237,19 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
       } else { // (autoResizeBehavior === SC.RESIZE_TOP_LEFT)
         this._sc_desiredTopLeftThickness =  splitViewThickness - dividerThickness - desiredThickness;
       }
+
+      // Make sure we don't exceed our min and max values, and that collapse 
+      // settings are respected.  Cached values are required by 
+      // `_sc_updateTopLeftThickness()` below...
+      this._sc_topLeftSurface = this.get('topLeftSurface');
+      this._sc_bottomRightSurface = this.get('bottomRightSurface');
+      this._sc_topLeftSurfaceThickness = this.thicknessForSurface(this.get('topLeftSurface'));
+      this._sc_bottomRightThickness = this.thicknessForSurface(this.get('bottomRightSurface'));
+      this._sc_dividerThickness = this.get('dividerThickness');
+      this._sc_layoutDirection = this.get('layoutDirection');
+
+      this._sc_updateTopLeftThickness(0);
     }
-
-    // Make sure we don't exceed our min and max values, and that collapse 
-    // settings are respected.  Cached values are required by 
-    // `_sc_updateTopLeftThickness()` below...
-    this._sc_topLeftSurface = this.get('topLeftSurface');
-    this._sc_bottomRightSurface = this.get('bottomRightSurface');
-    this._sc_topLeftSurfaceThickness = this.thicknessForSurface(this.get('topLeftSurface'));
-    this._sc_bottomRightThickness = this.thicknessForSurface(this.get('bottomRightSurface'));
-    this._sc_dividerThickness = this.get('dividerThickness');
-    this._sc_layoutDirection = this.get('layoutDirection');
-
-    // This handles min-max settings and collapse parameters.
-    this._sc_updateTopLeftThickness(0);
 
     var topLeftSurface = this.get('topLeftSurface'),
         bottomRightSurface = this.get('bottomRightSurface'),
@@ -432,6 +432,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   },
 
   mouseDragged: function(evt) {
+    // console.log('SC.SplitSurface#mouseDragged()');
     var offset;
 
     if (this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL) {
@@ -487,7 +488,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
   /** @private */
   _sc_updateTopLeftThickness: function(offset) {
-    // console.log('SC.SplitSurface#_sc_updateTopLeftThickness()', offset);
+    // console.log('SC.SplitSurface#_sc_updateTopLeftThickness()', offset, this._sc_topLeftSurfaceThickness);
     var topLeftSurface = this._sc_topLeftSurface,
         bottomRightSurface = this._sc_bottomRightSurface,
         // The current thickness, not the original thickness.
@@ -559,6 +560,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
     // Now apply constrained value.
     if (thickness != this.thicknessForSurface(topLeftSurface)) {
+      // console.log('new thickness', thickness);
       this._sc_desiredTopLeftThickness = thickness;
 
       // Un-collapse if needed.
