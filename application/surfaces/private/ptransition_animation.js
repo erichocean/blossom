@@ -10,9 +10,16 @@ if (BLOSSOM) {
 SC.ptransitionAnimations = {};
 
 SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) {
-  if (key === 'cornerRadius') this.key = 'border-radius';
-  else this.key = key.dasherize();
-  this.value = value;
+  if (key === 'cornerRadius') {
+    this.key = 'border-radius';
+    this.value = value;
+  } else if (key === 'isVisible') {
+    this.key = 'display';
+    this.value = value? 'block': 'none';    
+  } else {
+    this.key = key.dasherize();
+    this.value = value;
+  }
   this.duration = duration;
   this.delay = delay;
   this.timingFunction = timingFunction;

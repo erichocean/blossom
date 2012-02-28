@@ -185,6 +185,10 @@ function main() {
       this.set('borderColor', color);
       this.set('borderWidth', Math.floor(Math.random()*16));
       this.set('cornerRadius', Math.floor(Math.random()*31));
+      if (Math.random() > 0.9) {
+        alert('setting isVisible to false');
+        this.set('isVisible', false);
+      }
       return true;
     }
   });

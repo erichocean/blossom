@@ -196,7 +196,10 @@ SC.Surface = SC.Responder.extend({
 
     @property {Boolean}
   */
-  isVisible: true,
+  _sc_isVisible: true,
+  isVisible: SC.animatablePropertyBuilder('isVisible', function(value) {
+    sc_assert(typeof value === 'boolean');
+  }),
   isVisibleBindingDefault: SC.Binding.bool(),
 
   // ..........................................................
