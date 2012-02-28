@@ -148,6 +148,7 @@ function main() {
       ctx.font = "16pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
+      ctx.fillText("(drag me)", w/2, 50);
       ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
 
       var timingFunction = this.get('timingFunction');
