@@ -30,7 +30,7 @@ SC.animatablePropertyBuilder = function(key, assertion) {
       var transitions = this.getPath('transitions');
       sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
       var transition = transitions? transitions[key] : null;
-      if (!transition) transition = SC.Surface.transitions.opacity;
+      if (!transition) transition = SC.Surface.transitions[key];
       sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
       sc_assert(transition.kindOf(SC.TransitionAnimation));
 
@@ -920,8 +920,13 @@ SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
 SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform'.w();
 
 SC.Surface.transitions = {
-  opacity: SC.TransitionAnimation.create({ key: 'opacity' }),
-  backgroundColor: SC.TransitionAnimation.create({ key: 'backgroundColor' })
+  backgroundColor: SC.TransitionAnimation.create(),
+  borderColor:     SC.TransitionAnimation.create(),
+  borderWidth:     SC.TransitionAnimation.create(),
+  opacity:         SC.TransitionAnimation.create(),
+  cornerRadius:    SC.TransitionAnimation.create(),
+  zIndex:          SC.TransitionAnimation.create(),
+  isVisible:       SC.TransitionAnimation.create()
 };
 
 } // BLOSSOM
