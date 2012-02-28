@@ -168,7 +168,7 @@ function main() {
       transform = SC.Transform3DRotateX(transform, Math.random()*(Math.PI/3));
       transform = SC.Transform3DRotateY(transform, Math.random()*(Math.PI/3));
       transform = SC.Transform3DScale(transform, (Math.random()*2)+0.5, (Math.random()*2)+0.5);
-      transform = SC.Transform3DTranslate(transform, (Math.random()*frame.x/10), (Math.random()*frame.y/10));
+      // transform = SC.Transform3DTranslate(transform, (Math.random()*frame.x/10), (Math.random()*frame.y/10));
       this.set('transform', transform);
       return true;
     },
