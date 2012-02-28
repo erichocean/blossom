@@ -690,6 +690,67 @@ SC.Transform3DRotateZ = function(mat, rad) {
   return ret;
 };
 
+SC.Transform3DScaleX = function(mat, x) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[0] *= x;
+  return ret;
+};
+
+SC.Transform3DScaleY = function(mat, y) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof y === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[5] *= y;
+  return ret;
+};
+
+SC.Transform3DScaleZ = function(mat, z) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof z === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[10] *= z;
+  return ret;
+};
+
+SC.Transform3DScale = function(mat, x, y) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[0]  *= x;
+  ret[5]  *= y;
+  return ret;
+};
+
+SC.Transform3DScale3D = function(mat, x, y, z) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  sc_assert(typeof z === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[0]   *= x;
+  ret[5]   *= y;
+  ret[10]  *= y;
+  return ret;
+};
+
+SC.Transform3DScale3DTo = function(src, x, y, z, dst) {
+  sc_assert(src && src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  sc_assert(typeof z === 'number');
+
+  if (src !== dst) dst.set(src); // Bulk set
+
+  // And then just update the value in-place.
+  dst[0]  *= x;
+  dst[5]  *= y;
+  dst[10] *= z;
+};
+
 // Below are ways to access these structures using names, rather than
 // indices. They are designed to match the equivalent structure in Cocoa/
 // Core Animation.
