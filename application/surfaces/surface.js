@@ -520,8 +520,7 @@ SC.Surface = SC.Responder.extend({
 
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
     // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
-    // debugger;
-    if      (key === 'frame'               && oldvalue !== newvalue) {
+    if (key === 'frame' && oldvalue !== newvalue) {
       this._sc_triggerFrameChange();
       var didChange = false;
       if (member === 'width') {
@@ -533,9 +532,10 @@ SC.Surface = SC.Responder.extend({
       }
       if (didChange) this.triggerContentSizeUpdate();
     }
-    else if (key === 'anchorPoint'         && oldvalue !== newvalue) this._sc_triggerAnchorPointChange();
-    else if (key === 'transform'           && oldvalue !== newvalue) this._sc_triggerTransformChange();
-    else if (key === 'perspectiveOrigin'   && oldvalue !== newvalue) this._sc_triggerPerspectiveOriginChange();
+
+    else if (key === 'anchorPoint'       && oldvalue !== newvalue) this._sc_triggerAnchorPointChange();
+    else if (key === 'transform'         && oldvalue !== newvalue) this._sc_triggerTransformChange();
+    else if (key === 'perspectiveOrigin' && oldvalue !== newvalue) this._sc_triggerPerspectiveOriginChange();
 
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
