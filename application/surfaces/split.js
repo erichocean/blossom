@@ -114,8 +114,48 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
   // add default surfaces
   topLeftSurface: SC.View,
+
+  _sc_topLeftSurfaceDidChange: function() {
+    var old = this._sc_topLeftSurface,
+        cur = this.get('topLeftSurface');
+
+    if (cur && cur.isClass) {
+      this.set('topLeftSurface', cur.create());
+      return;
+    }
+
+    var subsurfaces = this.get('subsurfaces');
+    if (old) subsurfaces.removeObject(old);
+
+    this._sc_topLeftSurface = cur;
+
+    if (cur) subsurfaces.pushObject(cur);
+
+    this.triggerLayoutAndRendering();
+  }.observes('topLeftSurface'),
+
   dividerLayer: SC.Layer,
+
   bottomRightSurface: SC.View,
+
+  _sc_bottomRightSurfaceDidChange: function() {
+    var old = this._sc_bottomRightSurface,
+        cur = this.get('bottomRightSurface');
+
+    if (cur && cur.isClass) {
+      this.set('bottomRightSurface', cur.create());
+      return;
+    }
+
+    var subsurfaces = this.get('subsurfaces');
+    if (old) subsurfaces.removeObject(old);
+
+    this._sc_bottomRightSurface = cur;
+
+    if (cur) subsurfaces.pushObject(cur);
+
+    this.triggerLayoutAndRendering();
+  }.observes('bottomRightSurface'),
 
   /**
     The current thickness for the topLeftSurface
@@ -337,6 +377,15 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
     this.notifyPropertyChange('topLeftThickness');
     this.notifyPropertyChange('bottomRightThickness');
+  },
+
+  updateDisplay: function() {
+    // console.log('SC.SplitSurface#updateDisplay()');
+    var topLeftSurface = this.get('topLeftSurface');
+    if (topLeftSurface) topLeftSurface.updateDisplay();
+
+    var bottomRightSurface = this.get('bottomRightSurface');
+    if (bottomRightSurface) bottomRightSurface.updateDisplay();
   },
 
   /**
@@ -648,6 +697,12 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   */
   splitSurfaceConstrainThickness: function(splitSurface, surface, proposedThickness) {
     return proposedThickness;
+  },
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this._sc_topLeftSurfaceDidChange();
+    this._sc_bottomRightSurfaceDidChange();
   }
 
 });

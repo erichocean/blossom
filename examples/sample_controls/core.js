@@ -75,7 +75,7 @@ function main() {
   }));
 
   SC.Application.create();
-  SC.app.set('ui', surface);
+  // SC.app.set('ui', surface);
   // debugger;
 
   var pane = SC.View.create({
@@ -183,13 +183,20 @@ function main() {
     }
   });
   
-  var frame = SC.MakeRect(50, 50, 300, 200);
-  pane.set('frame', frame);
-  pane.set('backgroundColor', "white");
-  pane.set('borderColor', "black");
-  pane.set('borderWidth', 1);
-  pane.set('cornerRadius', 5);
-  pane.set('zIndex', 1);
-  
-  SC.app.get('surfaces').add(pane);
+  // var frame = SC.MakeRect(50, 50, 300, 200);
+  // pane.set('frame', frame);
+  // pane.set('backgroundColor', "white");
+  // pane.set('borderColor', "black");
+  // pane.set('borderWidth', 1);
+  // pane.set('cornerRadius', 5);
+  // pane.set('zIndex', 1);
+  // 
+  // SC.app.get('surfaces').add(pane);
+
+  var split = SC.SplitSurface.create({
+    topLeftSurface: surface,
+    bottomRightSurface: pane
+  });
+
+  SC.app.set('ui', split);
 }
