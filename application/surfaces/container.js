@@ -117,7 +117,9 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         this.set('opacity', 0.0);
         SC.AnimationTransaction.end();
         var that = this;
+        this.isWaitingToTransition = true;
         setTimeout(function() {
+          that.isWaitingToTransition = false;
           SC.RunLoop.begin();
           var transform = SC.MakeIdentityTransform3D();
           transform = SC.Transform3DTranslateX(transform, frame.width);
@@ -188,9 +190,16 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
   }.observes('contentSurface'),
 
   _sc_containerFrameDidChange: function() {
-    // console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
+    console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
     var frame = this.get('frame'),
         contentSurface = this.get('contentSurface');
+
+    if (!this.isWaitingToTransition) {
+      var transform = SC.MakeIdentityTransform3D();
+      transform = SC.Transform3DTranslateX(transform, frame.width);
+      transform = SC.Transform3DRotateY(transform, -Math.PI);
+      this.set('transform', transform);
+    }
 
     if (contentSurface) {
       contentSurface.set('frame', frame);

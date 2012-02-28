@@ -147,8 +147,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     var uiContainer = this.get('uiContainer');
     if (SC.viewportSizeDidChange) {
-      var sz = this.computeViewportSize();
-      uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
+      var sz = this.computeViewportSize(),
+          frame = uiContainer.get('frame');
+
+      // Avoid needless updates.
+      if (frame[2]/*width*/ !== sz[0] || frame[3]/*height*/ !== sz[1]) {
+        SC.AnimationTransaction.begin({ duration: 0 });
+        uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
+        SC.AnimationTransaction.end();
+      }
     }
 
     if (SC.needsLayout) {
