@@ -27,9 +27,12 @@ SC.animatablePropertyBuilder = function(key, assertion) {
       this[privateProperty] = value;
 
       // Determine the current transition for this property.
-      var transitions = this.getPath('transitions');
-      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-      var transition = transitions? transitions[key] : null;
+      var transition = this.transitionForKey? this.transitionForKey(key) : null;
+      if (!transition) {
+        var transitions = this.getPath('transitions');
+        sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
+        transition = transitions? transitions[key] : null;
+      }
       if (!transition) transition = SC.Surface.transitions[key];
       sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
       sc_assert(transition.kindOf(SC.TransitionAnimation));

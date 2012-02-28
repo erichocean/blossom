@@ -14,8 +14,8 @@ SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) 
     this.key = 'border-radius';
     this.value = value;
   } else if (key === 'isVisible') {
-    this.key = 'display';
-    this.value = value? 'block': 'none';
+    this.key = 'visibility';
+    this.value = value? 'visible': 'hidden';
   } else {
     this.key = key.dasherize();
     this.value = value;
