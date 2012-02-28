@@ -199,6 +199,8 @@ function main() {
       frame.x = Math.random()*(sz.width-frame.width);
       frame.y = Math.random()*(sz.height-frame.height);
 
+      this.shiftKey = evt.shiftKey;
+
       if (Math.random() > 0.9) {
         // alert('setting isVisible to false');
         this.set('isVisible', false);
@@ -219,7 +221,7 @@ function main() {
         name = keys[Math.floor(Math.random()*keys.length)];
         this.set('timingFunction', name);
         return SC.TransitionAnimation.create({
-          duration: 400,
+          duration: this.shiftKey? 2000 : 400,
           timingFunction: SC.TimingFunction.get(name)
         });
       }
