@@ -433,9 +433,12 @@ SC.Surface = SC.Responder.extend({
   // Shared helper.
   _sc_triggerStructureChange: function(key) {
     // Determine the current transition for this property.
-    var transitions = this.getPath('transitions');
-    sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-    var transition = transitions? transitions['anchorPoint'] : null;
+    var transition = this.transitionForKey? this.transitionForKey(key) : null;
+    if (!transition) {
+      var transitions = this.getPath('transitions');
+      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
+      transition = transitions? transitions['anchorPoint'] : null;
+    }
     if (!transition) transition = SC.Surface.transitions[key];
     sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
     sc_assert(transition.kindOf(SC.TransitionAnimation));

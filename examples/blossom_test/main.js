@@ -149,7 +149,12 @@ function main() {
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
-  
+
+      var timingFunction = this.get('timingFunction');
+      if (timingFunction) {
+        ctx.fillText(timingFunction, w/2, h-50);
+      }
+
       ctx.restore();
     },
 
@@ -202,9 +207,22 @@ function main() {
           SC.RunLoop.begin();
           that.set('isVisible', true);
           SC.RunLoop.end();
-        }, 1500);
+        }, 750);
       }
       return true;
+    },
+
+    transitionForKey: function(key) {
+      if (key === 'frame') {
+        var keys = Object.keys(SC.TimingFunction), name;
+        keys = keys.filter(function(key) { return key !== 'get'; });
+        name = keys[Math.floor(Math.random()*keys.length)];
+        this.set('timingFunction', name);
+        return SC.TransitionAnimation.create({
+          duration: 400,
+          timingFunction: SC.TimingFunction.get(name)
+        });
+      }
     }
   });
   
