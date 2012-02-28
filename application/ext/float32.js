@@ -625,9 +625,11 @@ SC.Transform3DRotateX = function(mat, rad) {
   var tmp = SC.temporaryTransform3D;
   tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
 
+  var cos = Math.cos(rad);
+
   // tmp[0]  =  1;   tmp[1]  = 0            ; tmp[2]  = 0             ;    tmp[3]  = 0;
-  /* tmp[4]  =  0;*/ tmp[5]  = Math.cos(rad); tmp[6]  = Math.sin(-rad); // tmp[7]  = 0;
-  /* tmp[8]  =  0;*/ tmp[9]  = Math.sin(rad); tmp[10] = Math.cos( rad); // tmp[11] = 0;
+  /* tmp[4]  =  0;*/ tmp[5]  = cos          ; tmp[6]  = Math.sin(-rad); // tmp[7]  = 0;
+  /* tmp[8]  =  0;*/ tmp[9]  = Math.sin(rad); tmp[10] = cos           ; // tmp[11] = 0;
   // tmp[12] =  0;   tmp[13] = 0            ; tmp[14] = 0             ;    tmp[15] = 1;
 
   SC.Transform3DConcatTo(mat, tmp, mat);
@@ -640,10 +642,12 @@ SC.Transform3DRotateY = function(mat, rad) {
   var tmp = SC.temporaryTransform3D;
   tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
 
-     tmp[0]  =  Math.cos( rad); /*tmp[1]  = 0;*/ tmp[2]  = Math.sin(rad); // tmp[3]  = 0;
-  // tmp[4]  =  0             ;   tmp[5]  = 1;   tmp[6]  = 0            ;    tmp[7]  = 0;
-     tmp[8]  =  Math.sin(-rad); /*tmp[9]  = 0;*/ tmp[10] = Math.cos(rad); // tmp[11] = 0;
-  // tmp[12] =  0             ;   tmp[13] = 0;   tmp[14] = 0            ;    tmp[15] = 1;
+  var cos = Math.cos(rad);
+
+     tmp[0]  = cos           ; /*tmp[1]  = 0;*/ tmp[2]  = Math.sin(rad); // tmp[3]  = 0;
+  // tmp[4]  = 0             ;   tmp[5]  = 1;   tmp[6]  = 0            ;    tmp[7]  = 0;
+     tmp[8]  = Math.sin(-rad); /*tmp[9]  = 0;*/ tmp[10] = cos          ; // tmp[11] = 0;
+  // tmp[12] = 0             ;   tmp[13] = 0;   tmp[14] = 0            ;    tmp[15] = 1;
 
   SC.Transform3DConcatTo(mat, tmp, mat);
 };
@@ -655,8 +659,10 @@ SC.Transform3DRotateZ = function(mat, rad) {
   var tmp = SC.temporaryTransform3D;
   tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
 
-     tmp[0]  =  Math.cos(rad); tmp[1]  = Math.sin(-rad); // tmp[2]  = 0; tmp[3]  = 0;
-     tmp[4]  =  Math.sin(rad); tmp[5]  = Math.cos( rad); // tmp[6]  = 0; tmp[7]  = 0;
+  var cos = Math.cos(rad);
+
+     tmp[0]  =  cos          ; tmp[1]  = Math.sin(-rad); // tmp[2]  = 0; tmp[3]  = 0;
+     tmp[4]  =  Math.sin(rad); tmp[5]  = cos           ; // tmp[6]  = 0; tmp[7]  = 0;
   // tmp[8]  =  0            ; tmp[9]  = 0             ;    tmp[10] = 1; tmp[11] = 0;
   // tmp[12] =  0            ; tmp[13] = 0             ;    tmp[14] = 0; tmp[15] = 1;
 
