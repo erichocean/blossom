@@ -207,6 +207,8 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
         desiredThickness = this.get('defaultThickness'),
         autoResizeBehavior = this.get('autoresizeBehavior');
 
+    SC.AnimationTransaction.begin({ duration: 0 });
+
     var dividerThickness = this.get('dividerThickness');
     dividerThickness = (!SC.none(dividerThickness)) ? dividerThickness : 7;
 
@@ -377,6 +379,8 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
     this.notifyPropertyChange('topLeftThickness');
     this.notifyPropertyChange('bottomRightThickness');
+
+    SC.AnimationTransaction.end();
   },
 
   updateDisplay: function() {
