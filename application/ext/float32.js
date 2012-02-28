@@ -618,8 +618,9 @@ SC.Transform3DConcatTo = function(left, right, dest) {
 
 SC.temporaryTransform3D = SC.MakeIdentityTransform3D();
 
-SC.Transform3DRotateX = function(mat, rad) {
-  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+SC.Transform3DRotateXTo = function(src, rad, dst) {
+  sc_assert(src && src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
   sc_assert(typeof rad === 'number');
 
   var tmp = SC.temporaryTransform3D;
@@ -632,11 +633,12 @@ SC.Transform3DRotateX = function(mat, rad) {
   /* tmp[8]  =  0;*/ tmp[9]  = Math.sin(rad); tmp[10] = cos           ; // tmp[11] = 0;
   // tmp[12] =  0;   tmp[13] = 0            ; tmp[14] = 0             ;    tmp[15] = 1;
 
-  SC.Transform3DConcatTo(mat, tmp, mat);
+  SC.Transform3DConcatTo(src, tmp, dst);
 };
 
-SC.Transform3DRotateY = function(mat, rad) {
-  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+SC.Transform3DRotateYTo = function(src, rad, dst) {
+  sc_assert(src && src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
   sc_assert(typeof rad === 'number');
 
   var tmp = SC.temporaryTransform3D;
@@ -649,11 +651,12 @@ SC.Transform3DRotateY = function(mat, rad) {
      tmp[8]  = Math.sin(-rad); /*tmp[9]  = 0;*/ tmp[10] = cos          ; // tmp[11] = 0;
   // tmp[12] = 0             ;   tmp[13] = 0;   tmp[14] = 0            ;    tmp[15] = 1;
 
-  SC.Transform3DConcatTo(mat, tmp, mat);
+  SC.Transform3DConcatTo(src, tmp, dst);
 };
 
-SC.Transform3DRotateZ = function(mat, rad) {
-  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+SC.Transform3DRotateZTo = function(src, rad, dst) {
+  sc_assert(src && src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
   sc_assert(typeof rad === 'number');
 
   var tmp = SC.temporaryTransform3D;
@@ -666,7 +669,25 @@ SC.Transform3DRotateZ = function(mat, rad) {
   // tmp[8]  =  0            ; tmp[9]  = 0             ;    tmp[10] = 1; tmp[11] = 0;
   // tmp[12] =  0            ; tmp[13] = 0             ;    tmp[14] = 0; tmp[15] = 1;
 
-  SC.Transform3DConcatTo(mat, tmp, mat);
+  SC.Transform3DConcatTo(src, tmp, dst);
+};
+
+SC.Transform3DRotateX = function(mat, rad) {
+  var ret = SC.MakeTransform3D();
+  SC.Transform3DRotateXTo(mat, rad, ret);
+  return ret;
+};
+
+SC.Transform3DRotateY = function(mat, rad) {
+  var ret = SC.MakeTransform3D();
+  SC.Transform3DRotateYTo(mat, rad, ret);
+  return ret;
+};
+
+SC.Transform3DRotateZ = function(mat, rad) {
+  var ret = SC.MakeTransform3D();
+  SC.Transform3DRotateZTo(mat, rad, ret);
+  return ret;
 };
 
 // Below are ways to access these structures using names, rather than
