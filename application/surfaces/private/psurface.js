@@ -252,19 +252,49 @@ SC.Psurface.prototype = {
               durations.push(transition.duration+'ms');
               timingFunctions.push(transition.timingFunction);
               delays.push(transition.delay+'ms');
-              style[transition.key] = transition.value;
             }
             value =  transition.value;
             style.left   = value[0]/*x*/      + 'px';
             style.top    = value[1]/*y*/      + 'px';
             style.width  = value[2]/*width*/  + 'px';
             style.height = value[3]/*height*/ + 'px';
+
           } else {
-            properties.push(transition.key);
+            properties.push(transition.cssKey);
             durations.push(transition.duration+'ms');
             timingFunctions.push(transition.timingFunction);
             delays.push(transition.delay+'ms');
-            style[transition.key] = transition.value;
+
+            // Update element.style
+            if (key === 'perspectiveOrigin') {
+              value =  transition.value;
+              style[transition.key+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+              style[transition.key+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+
+            } else if (key === 'transformOrigin') {
+              value =  transition.value;
+              style[transition.key+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+              style[transition.key+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+              style[transition.key+'-z'] = Math.floor(value[2]/*z*/)+'px';
+
+            } else if (key === 'transform') {
+              value =  transition.value;
+              style[transition.key] = 'matrix3d('+[
+                value[0]  , value[1]  , value[2]  , value[3]  ,
+                value[4]  , value[5]  , value[6]  , value[7]  ,
+                value[8]  , value[9]  , value[10] , value[11] ,
+                value[12] , value[13] , value[14] , value[15]
+
+                // Quick check to see if scale(2) is working:
+                // 2         , value[1]  , value[2]  , value[3]  ,
+                // value[4]  , 2         , value[6]  , value[7]  ,
+                // value[8]  , value[9]  , 2         , value[11] ,
+                // value[12] , value[13] , value[14] , value[15]
+              ].join(', ')+')';
+
+            } else { // The remaining properties are set directly.
+              style[transition.cssKey] = transition.value;
+            }
           }
         }
       }

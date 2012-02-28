@@ -9,17 +9,31 @@ if (BLOSSOM) {
 
 SC.ptransitionAnimations = {};
 
+SC.webkitProperties = {
+  perspective: true,
+  perspectiveOrigin: true,
+  transform: true,
+  transformOrigin: true
+};
+
 SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) {
   if (key === 'cornerRadius') {
-    this.key = 'border-radius';
+    this.cssKey = 'border-radius';
     this.value = value;
+
   } else if (key === 'isVisible') {
-    this.key = 'visibility';
+    this.cssKey = 'visibility';
     this.value = value? 'visible': 'hidden';
+
+  } else if (key in SC.webkitProperties) {
+    this.cssKey = '-webkit-'+key.dasherize();
+    this.value = value;
+
   } else {
-    this.key = key.dasherize();
+    this.cssKey = key.dasherize();
     this.value = value;
   }
+
   this.duration = duration;
   this.delay = delay;
   this.timingFunction = timingFunction;

@@ -121,11 +121,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     sc_assert(SC.app === undefined, "You can only create one instance of SC.Application.");
     SC.app = this;
 
-    SC.ready(this, function() {
-      this.awake();
-      this._sc_perspectiveDidChange();
-      this._sc_uiDidChange();
-    });
+    SC.ready(this, this.awake);
   },
 
   // .......................................................
@@ -333,13 +329,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   perspective: 1000,
 
-  _sc_perspectiveDidChange: function() {
-    var perspective = this.get('perspective');
-    sc_assert(!isNaN(perspective));   // Must be a Number.
-    sc_assert(perspective % 1 === 0); // Must be an Integer (can be negative).
-    document.body.style.webkitPerspective = perspective+'px';
-  }.observes('perspective'),
-
   // .......................................................
   // UI SURFACE
   //
@@ -380,6 +369,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
         __id__: 'ui',
+        persective:                SC.Binding.from('perspective',          this).oneWay().noDelay(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition',  this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition',  this).oneWay().noDelay(),
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
@@ -1077,6 +1067,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // Do some initial set up.
     this.computeViewportSize();
     this.focus();
+    this._sc_uiDidChange();
   },
 
   /**

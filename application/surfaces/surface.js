@@ -145,7 +145,7 @@ SC.Surface = SC.Responder.extend({
     @property {Array}
     @readOnly
   */
-  displayProperties: 'backgroundColor borderColor borderWidth opacity cornerRadius zIndex isVisible'.w(),
+  displayProperties: 'backgroundColor borderColor borderWidth opacity cornerRadius zIndex perspective isVisible'.w(),
 
   /**
     A string that evaluates to a CSS color.  Animatable.
@@ -204,6 +204,148 @@ SC.Surface = SC.Responder.extend({
     sc_assert(typeof value === 'boolean');
   }),
   isVisibleBindingDefault: SC.Binding.bool(),
+
+  _sc_perspective: 1000,
+  perspective: SC.animatablePropertyBuilder('perspective', function(value) {
+    sc_assert(typeof value === 'number');
+    sc_assert(Math.floor(value) === value); // Integers only
+  }),
+
+  /**
+    This property effectively sets the x and y position at which the viewer 
+    appears to be looking at the subsurfaces of this surface.  `x` and `y` 
+    values must be between -1 and 1.  Animatable.
+
+    @property SC.Point
+  */
+  perspectiveOrigin: function(key, value) {
+    var perspectiveOrigin = this._sc_perspectiveOrigin;
+    if (value !== undefined) {
+      if (!SC.IsPoint3D(value)) throw new TypeError("SC.Surface's 'perspectiveOrigin' property can only be set to an SC.Point.");
+      sc_assert(value.x <=  1.0);
+      sc_assert(value.x >= -1.0);
+      sc_assert(value.y <=  1.0);
+      sc_assert(value.y >= -1.0);
+      if (value !== perspectiveOrigin) perspectiveOrigin.set(value);
+      this._sc_triggerPerspectiveOriginChange();
+    } else return anchorPoint;
+  }.property(),
+
+  _sc_triggerPerspectiveOriginChange: function() {
+    // console.log('SC.Surface#_sc_triggerPerspectiveOriginChange());
+    SC.needsRendering = true;
+    this._sc_triggerStructureChange('perspectiveOrigin');
+  },
+
+  /**
+    Specifies receiver's frame rectangle in the supersurface's coordinate
+    space.  The value of this property is specified in points.  Animatable.
+
+    Note: The frame does not take into account the surface's `transform`
+    property, or the supersurface's `subsurfaceTransform` property. The value
+    of `frame` is before these transforms have been applied.
+
+    @property SC.Rect
+  */
+  frame: function(key, value) {
+    // console.log('SC.Surface@frame', key, value);
+    var frame = this._sc_frame;
+    if (value !== undefined) {
+      if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
+
+      // TODO: Probably shouldn't be altering the caller's frame here, right?
+      value[0] = Math.floor(value[0]);
+      value[1] = Math.floor(value[1]);
+      value[2] = Math.ceil(value[2]);
+      value[3] = Math.ceil(value[3]);
+
+      // Cache the new frame so we don't need to compute it later.
+      if (frame !== value) frame.set(value);
+      this._sc_triggerFrameChange('x', 'y', 'width', 'height');
+    } else {
+      return frame;
+    }
+  }.property(),
+
+  // rasterizationScale: 1.0, // The scale at which to rasterize content, relative to the coordinate space of the layer. Animatable
+
+  _sc_triggerFrameChange: function() {
+    // console.log('SC.Surface#_sc_triggerFrameChange());
+    this.triggerLayoutAndRendering();
+    this._sc_triggerStructureChange('frame');
+  },
+
+  /**
+    Specifies a transform applied to the surface when rendering.  Animatable.
+
+    @property SC.Transform3D
+  */
+  transform: function(key, value) {
+    var transform = this._sc_transform;
+    if (value !== undefined) {
+      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'transform' property can only be set to an SC.Transform3D.");
+      if (value !== transform) transform.set(value);
+      this._sc_triggerTransformChange();
+    } else return transform;
+  }.property(),
+
+  _sc_triggerTransformChange: function() {
+    // console.log('SC.Surface#_sc_triggerTransformChange());
+    SC.needsRendering = true;
+    this._sc_triggerStructureChange('transform');
+  },
+
+  /**
+    Establishes the origin for transforms applied to the surface.  Animatable.
+
+    @property SC.Point3D
+  */
+  transformOrigin: function(key, value) {
+    var transformOrigin = this._sc_transformOrigin;
+    if (value !== undefined) {
+      if (!SC.IsPoint3D(value)) throw new TypeError("SC.Surface's 'transformOrigin' property can only be set to an SC.Point3D.");
+      sc_assert(value.x <=  1.0);
+      sc_assert(value.x >= -1.0);
+      sc_assert(value.y <=  1.0);
+      sc_assert(value.y >= -1.0);
+      if (value !== transformOrigin) transformOrigin.set(value);
+      this._sc_triggerTransformOriginChange();
+    } else return transformOrigin;
+  }.property(),
+
+  _sc_triggerTransformOriginChange: function() {
+    // console.log('SC.Surface#_sc_triggerTransformOriginChange());
+    SC.needsRendering = true;
+    this._sc_triggerStructureChange('transformOrigin');
+  },
+
+  // Shared helper.
+  _sc_triggerStructureChange: function(key) {
+    // Determine the current transition for this property.
+    var transition = this.transitionForKey? this.transitionForKey(key) : null;
+    if (!transition) {
+      var transitions = this.getPath('transitions');
+      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
+      transition = transitions? transitions['anchorPoint'] : null;
+    }
+    if (!transition) transition = SC.Surface.transitions[key];
+    sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
+    sc_assert(transition.kindOf(SC.TransitionAnimation));
+
+    // Determine the current duration and delay values for the transition.
+    var transaction = SC.AnimationTransaction.top();
+    sc_assert(transaction);
+    var transactionDuration = transaction.get('duration');
+    var transactionDelay    = transaction.get('delay');
+    var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
+    var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
+
+    // Create an SC.PTransitionAnimation instance and add it.
+    var ptransition = new SC.PTransitionAnimation(key, this['_sc_'+key], duration, delay, transition.get('timingFunction'));
+    var transitionsHash = SC.surfaceTransitions[this.__id__];
+    if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
+    transitionsHash[key] = ptransition;
+  },
 
   // ..........................................................
   // ANIMATION SUPPORT
@@ -355,112 +497,6 @@ SC.Surface = SC.Responder.extend({
 
   isPresentInViewport: false,
 
-  /**
-    Specifies receiver's frame rectangle in the supersurface's coordinate
-    space.  The value of this property is specified in points.  Animatable.
-
-    Note: The frame does not take into account the surface's `transform`
-    property, or the supersurface's `subsurfaceTransform` property. The value
-    of `frame` is before these transforms have been applied.
-
-    @property SC.Rect
-  */
-  frame: function(key, value) {
-    // console.log('SC.Surface@frame', key, value);
-    var frame = this._sc_frame;
-    if (value !== undefined) {
-      if (!SC.IsRect(value)) throw new TypeError("SC.Surface's 'frame' property can only be set to an SC.Rect.");
-
-      // TODO: Probably shouldn't be altering the caller's frame here, right?
-      value[0] = Math.floor(value[0]);
-      value[1] = Math.floor(value[1]);
-      value[2] = Math.ceil(value[2]);
-      value[3] = Math.ceil(value[3]);
-
-      // Cache the new frame so we don't need to compute it later.
-      if (frame !== value) frame.set(value);
-      this._sc_triggerFrameChange('x', 'y', 'width', 'height');
-    } else {
-      return frame;
-    }
-  }.property(),
-
-  // rasterizationScale: 1.0, // The scale at which to rasterize content, relative to the coordinate space of the layer. Animatable
-
-  _sc_triggerFrameChange: function() {
-    // console.log('SC.Surface#_sc_triggerFrameChange());
-    this.triggerLayoutAndRendering();
-    this._sc_triggerStructureChange('frame');
-  },
-
-  /**
-    Defines the anchor point of the layer's bounds rectangle. Animatable.
-
-    @property SC.Point3D
-  */
-  anchorPoint: function(key, value) {
-    var anchorPoint = this._sc_anchorPoint;
-    if (value !== undefined) {
-      if (!SC.IsPoint3D(value)) throw new TypeError("SC.Surface's 'anchorPoint' property can only be set to an SC.Point3D.");
-      if (value !== anchorPoint) anchorPoint.set(value);
-      this._sc_triggerAnchorPointChange();
-    } else return anchorPoint;
-  }.property(),
-
-  _sc_triggerAnchorPointChange: function() {
-    // console.log('SC.Surface#_sc_triggerAnchorPointChange());
-    SC.needsRendering = true;
-    this._sc_triggerStructureChange('anchorPoint');
-  },
-
-  /**
-    Specifies a transform applied to the surface when rendering.  Animatable.
-
-    @property SC.Transform3D
-  */
-  transform: function(key, value) {
-    var transform = this._sc_transform;
-    if (value !== undefined) {
-      if (!SC.IsTransform3D(value)) throw new TypeError("SC.Surface's 'transform' property can only be set to an SC.Transform3D.");
-      if (value !== transform) transform.set(value);
-      this._sc_triggerTransformChange();
-    } else return transform;
-  }.property(),
-
-  _sc_triggerTransformChange: function() {
-    // console.log('SC.Surface#_sc_triggerTransformChange());
-    SC.needsRendering = true;
-    this._sc_triggerStructureChange('transform');
-  },
-
-  // Shared helper.
-  _sc_triggerStructureChange: function(key) {
-    // Determine the current transition for this property.
-    var transition = this.transitionForKey? this.transitionForKey(key) : null;
-    if (!transition) {
-      var transitions = this.getPath('transitions');
-      sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-      transition = transitions? transitions['anchorPoint'] : null;
-    }
-    if (!transition) transition = SC.Surface.transitions[key];
-    sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
-    sc_assert(transition.kindOf(SC.TransitionAnimation));
-
-    // Determine the current duration and delay values for the transition.
-    var transaction = SC.AnimationTransaction.top();
-    sc_assert(transaction);
-    var transactionDuration = transaction.get('duration');
-    var transactionDelay    = transaction.get('delay');
-    var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
-    var delay = transactionDelay !== null? transactionDelay : transition.get('delay');
-
-    // Create an SC.PTransitionAnimation instance and add it.
-    var ptransition = new SC.PTransitionAnimation(key, this['_sc_'+key], duration, delay, transition.get('timingFunction'));
-    var transitionsHash = SC.surfaceTransitions[this.__id__];
-    if (!transitionsHash) transitionsHash = SC.surfaceTransitions[this.__id__] = {};
-    transitionsHash[key] = ptransition;
-  },
-
   // ..........................................................
   // KEY-VALUE CODING SUPPORT
   //
@@ -468,9 +504,10 @@ SC.Surface = SC.Responder.extend({
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
     // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     // debugger;
-    if      (key === 'frame'       && oldvalue !== newvalue) this._sc_triggerFrameChange();
-    else if (key === 'anchorPoint' && oldvalue !== newvalue) this._sc_triggerAnchorPointChange();
-    else if (key === 'transform'   && oldvalue !== newvalue) this._sc_triggerTransformChange();
+    if      (key === 'frame'               && oldvalue !== newvalue) this._sc_triggerFrameChange();
+    else if (key === 'anchorPoint'         && oldvalue !== newvalue) this._sc_triggerAnchorPointChange();
+    else if (key === 'transform'           && oldvalue !== newvalue) this._sc_triggerTransformChange();
+    else if (key === 'perspectiveOrigin'   && oldvalue !== newvalue) this._sc_triggerPerspectiveOriginChange();
 
     this.notifyPropertyChange(key, this['_sc_'+key]);
   },
@@ -577,7 +614,7 @@ SC.Surface = SC.Responder.extend({
     // improves memory locality, and since these structures are frequently
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(23); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(25); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -601,11 +638,18 @@ SC.Surface = SC.Responder.extend({
       this._sc_transform = SC.MakeIdentityTransform3DFromBuffer(buf, 4);
     }
 
-    if (hasNonPrototypeNonComputedDefaultProperty('anchorPoint')) {
-      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 20, this.anchorPoint);
-      delete this.anchorPoint; // let the prototype shine through
+    if (hasNonPrototypeNonComputedDefaultProperty('transformOrigin')) {
+      this._sc_transformOrigin = SC.MakePoint3DFromBuffer(buf, 20, this.transformOrigin);
+      delete this.transformOrigin; // let the prototype shine through
     } else {
-      this._sc_anchorPoint = SC.MakePoint3DFromBuffer(buf, 20, 0.5, 0.5, 0.0);
+      this._sc_transformOrigin = SC.MakePoint3DFromBuffer(buf, 20, 0.5, 0.5, 0.0);
+    }
+
+    if (hasNonPrototypeNonComputedDefaultProperty('perspectiveOrigin')) {
+      this._sc_perspectiveOrigin = SC.MakePointFromBuffer(buf, 23, this.perspectiveOrigin);
+      delete this.perspectiveOrigin; // let the prototype shine through
+    } else {
+      this._sc_perspectiveOrigin = SC.MakePointFromBuffer(buf, 23, 0.5, 0.5);
     }
 
     // Float32Array's prototype has been enhanced with custom getters and
@@ -969,19 +1013,21 @@ SC.Surface = SC.Responder.extend({
 
 SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
 
-SC.Surface.OBSERVABLE_STRUCTURES = 'frame anchorPoint transform'.w();
+SC.Surface.OBSERVABLE_STRUCTURES = 'frame perspectiveOrigin transform transformOrigin'.w();
 
 SC.Surface.transitions = {
-  backgroundColor: SC.TransitionAnimation.create(),
-  borderColor:     SC.TransitionAnimation.create(),
-  borderWidth:     SC.TransitionAnimation.create(),
-  opacity:         SC.TransitionAnimation.create(),
-  cornerRadius:    SC.TransitionAnimation.create(),
-  zIndex:          SC.TransitionAnimation.create(),
-  isVisible:       SC.TransitionAnimation.create(),
-  frame:           SC.TransitionAnimation.create(),
-  anchorPoint:     SC.TransitionAnimation.create(),
-  transform:       SC.TransitionAnimation.create()
+  backgroundColor:   SC.TransitionAnimation.create(),
+  borderColor:       SC.TransitionAnimation.create(),
+  borderWidth:       SC.TransitionAnimation.create(),
+  opacity:           SC.TransitionAnimation.create(),
+  cornerRadius:      SC.TransitionAnimation.create(),
+  zIndex:            SC.TransitionAnimation.create(),
+  isVisible:         SC.TransitionAnimation.create(),
+  frame:             SC.TransitionAnimation.create(),
+  transform:         SC.TransitionAnimation.create(),
+  transformOrigin:   SC.TransitionAnimation.create(),
+  perspective:       SC.TransitionAnimation.create(),
+  perspectiveOrigin: SC.TransitionAnimation.create()
 };
 
 } // BLOSSOM

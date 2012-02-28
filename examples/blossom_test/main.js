@@ -163,6 +163,7 @@ function main() {
       this._clientX = evt.clientX;
       this._clientY = evt.clientY;
       this.set('opacity', 0.5);
+      this.set('transform', this.get('transform'));
       return true;
     },
 
@@ -201,16 +202,16 @@ function main() {
 
       this.shiftKey = evt.shiftKey;
 
-      if (Math.random() > 0.9) {
-        // alert('setting isVisible to false');
-        this.set('isVisible', false);
-        var that = this;
-        setTimeout(function() {
-          SC.RunLoop.begin();
-          that.set('isVisible', true);
-          SC.RunLoop.end();
-        }, 750);
-      }
+      // if (Math.random() > 0.9) {
+      //   // alert('setting isVisible to false');
+      //   this.set('isVisible', false);
+      //   var that = this;
+      //   setTimeout(function() {
+      //     SC.RunLoop.begin();
+      //     that.set('isVisible', true);
+      //     SC.RunLoop.end();
+      //   }, 750);
+      // }
       return true;
     },
 
