@@ -329,6 +329,13 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   perspective: 1000,
 
+  _sc_perspectiveDidChange: function() {
+    var perspective = this.get('perspective');
+    sc_assert(typeof perspective === "number");
+    sc_assert(Math.floor(perspective) === perspective); // Integral
+    document.body.style.webkitPerspective = perspective+'px';
+  }.observes('perspective'),
+
   // .......................................................
   // UI SURFACE
   //
@@ -369,7 +376,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // before the container sees the change to the `ui` property.
       uiContainer = this._sc_uiContainer = SC.ContainerSurface.create({
         __id__: 'ui',
-        persective:                SC.Binding.from('perspective',          this).oneWay().noDelay(),
         orderInTransitionBinding:  SC.Binding.from('uiOrderInTransition',  this).oneWay().noDelay(),
         replaceTransitionBinding:  SC.Binding.from('uiReplaceTransition',  this).oneWay().noDelay(),
         orderOutTransitionBinding: SC.Binding.from('uiOrderOutTransition', this).oneWay().noDelay()
@@ -1068,6 +1074,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this.computeViewportSize();
     this.focus();
     this._sc_uiDidChange();
+    this._sc_perspectiveDidChange();
   },
 
   /**

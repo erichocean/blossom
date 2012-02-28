@@ -229,6 +229,9 @@ SC.Psurface.prototype = {
       surface.__contentSizeNeedsUpdate__ = false;
     }
 
+    // HACK:
+    if (id === 'ui') el.style.webkitTransformStyle = 'preserve-3d';
+
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false,
         currentHash = SC.psurfaceTransitions[id];

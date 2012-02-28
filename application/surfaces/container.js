@@ -9,6 +9,10 @@ sc_require('surfaces/composite');
 
 if (BLOSSOM) {
 
+SC.ENTER_LEFT      = 'enter-left';
+SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
+SC.EXIT_RIGHT      = 'exit-right';
+
 /** @class
   `SC.ContainerSurface` implements a swappable surface container.  You can 
   set the container's `contentSurface` property to a surface, and the surface 
@@ -55,7 +59,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
   _sc_contentSurface: null, // Required, we're strict about null checking.
   _sc_contentSurfaceDidChange: function() {
-    // console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
+    console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
     var old = this._sc_contentSurface,
         cur = this.get('contentSurface'),
         transition, frame = this.get('frame');
@@ -89,12 +93,13 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     else if (old && !cur) transition = this.get('orderOutTransition');
     else sc_assert(false);
     
-    transition = null; // force no transition
-    // if (old) transition = null;
+    // transition = null; // force no transition
+    if (old) transition = null;
     if (transition) {
       
       // order in
       if (!old && cur) {
+        console.log('ordering in');
         // container = cur.__sc_element__;
         // sc_assert(container);
         // sc_assert(!document.getElementById(container.id));
@@ -116,6 +121,41 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         // element.style.opacity = '1';
         // element.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
         // cur.didAttach();
+        if (cur.__useContentSize__) {
+          cur.__contentWidth__ = frame.width;
+          cur.__contentHeight__ = frame.height;
+          cur.triggerContentSizeUpdate();
+        }
+        this.get('subsurfaces').push(cur);
+        cur.set('opacity', 1);
+        var transform = SC.MakeIdentityTransform3D();
+        transform = SC.Transform3DRotateY(transform, Math.PI);
+        SC.AnimationTransaction.begin({ duration: 0 });
+        cur.set('transform', transform);
+        var transformOrigin = cur.get('transformOrigin');
+        transformOrigin.x = 0;
+        transformOrigin.y = 0.5;
+        cur.set('transformOrigin', transformOrigin);
+        cur.set('opacity', 0.0);
+        SC.AnimationTransaction.end();
+        setTimeout(function() {
+          console.log('running animation');
+          SC.RunLoop.begin();
+          var transform = SC.MakeIdentityTransform3D();
+          transform = SC.Transform3DTranslateX(transform, -frame.x);
+          transform = SC.Transform3DRotateY(transform, -2*Math.PI);
+          SC.AnimationTransaction.begin({ duration: 2000 });
+          cur.set('transform', transform);
+          var transformOrigin = cur.get('transformOrigin');
+          transformOrigin.x = 1.0;
+          transformOrigin.y = 0.5;
+          cur.set('transformOrigin', transformOrigin);
+          SC.AnimationTransaction.end();
+          SC.AnimationTransaction.begin({ duration: 1000, delay: 500 });
+          cur.set('opacity', 1.0);
+          SC.AnimationTransaction.end();
+          SC.RunLoop.end();
+        }, 0);
       }
     
     // Update the UI without any 3D transition.
