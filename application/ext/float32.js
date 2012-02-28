@@ -618,6 +618,10 @@ SC.Transform3DConcatTo = function(left, right, dest) {
 
 SC.temporaryTransform3D = SC.MakeIdentityTransform3D();
 
+// ..........................................................
+// 3D Transforms - Rotation
+//
+
 SC.Transform3DRotateXTo = function(src, rad, dst) {
   sc_assert(src && src.length === 16 && src.constructor === Float32Array);
   sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
@@ -690,6 +694,10 @@ SC.Transform3DRotateZ = function(mat, rad) {
   return ret;
 };
 
+// ..........................................................
+// 3D Transforms - Scaling
+//
+
 SC.Transform3DScaleX = function(mat, x) {
   sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
   sc_assert(typeof x === 'number');
@@ -750,6 +758,75 @@ SC.Transform3DScale3DTo = function(src, x, y, z, dst) {
   dst[5]  *= y;
   dst[10] *= z;
 };
+
+// ..........................................................
+// 3D Transforms - Translation
+//
+
+SC.Transform3DTranslateX = function(mat, x) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[12] += x;
+  return ret;
+};
+
+SC.Transform3DTranslateY = function(mat, y) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof y === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[13] += y;
+  return ret;
+};
+
+SC.Transform3DTranslateZ = function(mat, z) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof z === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[14] += z;
+  return ret;
+};
+
+SC.Transform3DTranslate = function(mat, x, y) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[12] += x;
+  ret[13] += y;
+  return ret;
+};
+
+SC.Transform3DTranslate3D = function(mat, x, y, z) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  sc_assert(typeof z === 'number');
+  var ret = SC.MakeTransform3D(mat);
+  ret[12] += x;
+  ret[13] += y;
+  ret[14] += z;
+  return ret;
+};
+
+SC.Transform3DTranslate3DTo = function(src, x, y, z, dst) {
+  sc_assert(src && src.length === 16 && src.constructor === Float32Array);
+  sc_assert(dst && dst.length === 16 && dst.constructor === Float32Array);
+  sc_assert(typeof x === 'number');
+  sc_assert(typeof y === 'number');
+  sc_assert(typeof z === 'number');
+
+  if (src !== dst) dst.set(src); // Bulk set
+
+  // And then just update the value in-place.
+  dst[12] += x;
+  dst[13] += y;
+  dst[14] += z;
+};
+
+// ..........................................................
+// Structure Getters and Setters
+//
 
 // Below are ways to access these structures using names, rather than
 // indices. They are designed to match the equivalent structure in Cocoa/
