@@ -239,6 +239,7 @@ function main() {
   pane.set('borderColor', "black");
   pane.set('borderWidth', 1);
   pane.set('cornerRadius', 5);
+  pane.set('zIndex', 1);
   
   SC.app.get('surfaces').add(pane);
 }
