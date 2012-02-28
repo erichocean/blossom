@@ -197,6 +197,12 @@ function main() {
       if (Math.random() > 0.9) {
         // alert('setting isVisible to false');
         this.set('isVisible', false);
+        var that = this;
+        setTimeout(function() {
+          SC.RunLoop.begin();
+          that.set('isVisible', true);
+          SC.RunLoop.end();
+        }, 1500);
       }
       return true;
     }
