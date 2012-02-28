@@ -164,7 +164,9 @@ function main() {
       this._clientY = evt.clientY;
       this.set('opacity', 0.5);
       var transform = this.get('transform');
-      SC.Transform3DRotateZ(transform, Math.random()*(Math.PI*2));
+      SC.Transform3DRotateX(transform, Math.random()*(Math.PI/3));
+      SC.Transform3DRotateY(transform, Math.random()*(Math.PI/3));
+      // SC.Transform3DRotateZ(transform, Math.random()*(Math.PI*2));
       this.set('transform', transform);
       // this.set('transform', this.get('transform'));
       return true;
@@ -202,6 +204,11 @@ function main() {
       var sz = SC.app.computeViewportSize();
       frame.x = Math.random()*(sz.width-frame.width);
       frame.y = Math.random()*(sz.height-frame.height);
+
+      var transform = this.get('transform');
+      SC.SetIdentityTransform3D(transform);
+      SC.Transform3DRotateZ(transform, Math.random()*(Math.PI*2));
+      this.set('transform', transform);
 
       this.shiftKey = evt.shiftKey;
 
