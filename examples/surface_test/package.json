@@ -1,6 +1,6 @@
 {
-  "name"          : "blossom-blossom_test",
-  "description"   : "Blossom Test Application",
+  "name"          : "blossom-surface_test",
+  "description"   : "Blossom Surface Test Application",
   "url"           : "http://fohr.com/blossom",
   "keywords"      : ["sproutcore", "blossom" , "sample code"],
   "author"        : "Erich Ocean <eocean@fohr.com>",
