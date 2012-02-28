@@ -217,7 +217,7 @@ SC.Psurface.prototype = {
   sharedStyleSheet: null, // Delay creating this until the document is ready.
 
   discover: function(surface) {
-    var id = this.id;
+    var id = this.id, idx, len;
     SC._sc_psurfaceColor[id] = 1; // grey
 
     var el = this.__element__,
@@ -229,17 +229,6 @@ SC.Psurface.prototype = {
       surface.__contentSizeNeedsUpdate__ = false;
     }
 
-    if (surface.__frameDidChange__) {
-      var frame = surface.get('frame');
-
-      // debugger;
-      style.left   = frame[0]/*x*/;
-      style.top    = frame[1]/*y*/;
-      style.width  = frame[2]/*width*/;
-      style.height = frame[3]/*height*/;
-      surface.__frameDidChange__ = false;
-    }
-
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false,
         currentHash = SC.psurfaceTransitions[id];
@@ -248,6 +237,7 @@ SC.Psurface.prototype = {
           durations = [],
           timingFunctions = [],
           delays = [],
+          value,
           ss = this.sharedStyleSheet || SC.Psurface.sharedStyleSheet();
 
       if (!currentHash) currentHash = SC.psurfaceTransitions[id] = transitions;
@@ -256,11 +246,26 @@ SC.Psurface.prototype = {
       for (var key in currentHash) {
         var transition = currentHash[key];
         if (transition) {
-          properties.push(transition.key);
-          durations.push(transition.duration+'ms');
-          timingFunctions.push(transition.timingFunction);
-          delays.push(transition.delay+'ms');
-          style[transition.key] = transition.value;
+          if (key === 'frame') {
+            properties.push('left', 'top', 'width', 'height');
+            for (idx=0, len=4; idx<len; ++idx) {
+              durations.push(transition.duration+'ms');
+              timingFunctions.push(transition.timingFunction);
+              delays.push(transition.delay+'ms');
+              style[transition.key] = transition.value;
+            }
+            value =  transition.value;
+            style.left   = value[0]/*x*/      + 'px';
+            style.top    = value[1]/*y*/      + 'px';
+            style.width  = value[2]/*width*/  + 'px';
+            style.height = value[3]/*height*/ + 'px';
+          } else {
+            properties.push(transition.key);
+            durations.push(transition.duration+'ms');
+            timingFunctions.push(transition.timingFunction);
+            delays.push(transition.delay+'ms');
+            style[transition.key] = transition.value;
+          }
         }
       }
 

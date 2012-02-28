@@ -163,21 +163,25 @@ function main() {
 
     mouseDragged: function(evt) {
       // console.log('pane#mouseDragged');
+      SC.AnimationTransaction.begin({ duration: 0 });
       var frame = this.get('frame');
       frame.x = frame.x + evt.clientX - this._clientX;
       frame.y = frame.y + evt.clientY - this._clientY;
       this._clientX = evt.clientX;
       this._clientY = evt.clientY;
+      SC.AnimationTransaction.end();
       return true;
     },
 
     mouseUp: function(evt) {
       // console.log('pane#mouseUp');
+      SC.AnimationTransaction.begin({ duration: 0 });
       var frame = this.get('frame');
       frame.x = frame.x + evt.clientX - this._clientX;
       frame.y = frame.y + evt.clientY - this._clientY;
       delete this._clientX;
       delete this._clientY;
+      SC.AnimationTransaction.end();
       this.set('opacity', 1.0);
       var color = "rgb(%@,%@,%@)".fmt(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255));
       this.set('backgroundColor', color);
@@ -185,6 +189,11 @@ function main() {
       this.set('borderColor', color);
       this.set('borderWidth', Math.floor(Math.random()*16));
       this.set('cornerRadius', Math.floor(Math.random()*31));
+
+      var sz = SC.app.computeViewportSize();
+      frame.x = Math.random()*(sz.width-frame.width);
+      frame.y = Math.random()*(sz.height-frame.height);
+
       if (Math.random() > 0.9) {
         // alert('setting isVisible to false');
         this.set('isVisible', false);

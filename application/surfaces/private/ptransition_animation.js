@@ -15,7 +15,7 @@ SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) 
     this.value = value;
   } else if (key === 'isVisible') {
     this.key = 'display';
-    this.value = value? 'block': 'none';    
+    this.value = value? 'block': 'none';
   } else {
     this.key = key.dasherize();
     this.value = value;

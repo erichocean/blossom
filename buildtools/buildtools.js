@@ -521,7 +521,7 @@ BT.App = BT.Target.extend({
     ret += '  <body style="background: black; margin: 0; overflow: hidden;">\n';
     ret += '  </body>\n';
     ret += '</html>';
-    
+
     return ret;
   }.property()
 

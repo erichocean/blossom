@@ -610,7 +610,7 @@ Float32Array.prototype.__defineSetter__('w', function(val) {
     this[2] = val;
   }
   var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'w', old, val);
+  if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
 });
 
 Float32Array.prototype.__defineGetter__('width', function() {
@@ -644,7 +644,7 @@ Float32Array.prototype.__defineSetter__('h', function(val) {
     this[3] = val;
   }
   var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'h', old, val);
+  if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
 });
 
 Float32Array.prototype.__defineGetter__('height', function() {
