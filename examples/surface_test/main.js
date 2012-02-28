@@ -211,7 +211,7 @@ function main() {
 
       var transform = this.get('transform');
       SC.SetIdentityTransform3D(transform);
-      transform = SC.Transform3DRotateZ(transform, Math.random()*(Math.PI/3));
+      transform = SC.Transform3DRotateZ(transform, Math.random()*(Math.PI/3)*(Math.random() > 0.5? 1 : -1));
       this.set('transform', transform);
 
       this.shiftKey = evt.shiftKey;
