@@ -36,6 +36,8 @@ var MyLayer = SC.Layer.extend({
     var benchKey = 'MyLayer#render()';
     SC.Benchmark.start(benchKey);
 
+    // console.log('ctx.width', ctx.width, 'ctx.height', ctx.height);
+
     ctx.beginPath();
     this.renderHitTestPath(ctx);
     ctx.fillStyle = this.get('color');
@@ -57,26 +59,24 @@ var MyLayer = SC.Layer.extend({
 });
 
 function main() {
+  SC.Application.create();
+
   var surface = SC.View.create();
 
   surface.get('layers').pushObject(MyLayer.create({
-    layout: { centerX: -40, centerY: -40, width: 600, height: 480 },
+    layout: { centerX: -40, centerY: -40, width: 500, height: 240 },
     color: magenta
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
-    layout: { centerX: -20, centerY: -20, width: 600, height: 480 },
+    layout: { centerX: -20, centerY: -20, width: 500, height: 240 },
     color: violet
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
-    layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
+    layout: { centerX: 0, centerY: 0, width: 500, height: 240 },
     color: blue
   }));
-
-  SC.Application.create();
-  // SC.app.set('ui', surface);
-  // debugger;
 
   var pane = SC.View.create({
     updateDisplay: function() {
@@ -87,6 +87,8 @@ function main() {
           w = canvas.width, h = canvas.height;
 
       ctx.save();
+
+      // console.log('w', w, 'h', h);
 
       // Clear background.
       ctx.clearRect(0, 0, w, h);

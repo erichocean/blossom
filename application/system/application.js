@@ -618,6 +618,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // ACTION HANDLING
   //
 
+  dragDidStart: function(drag) {
+    this._sc_mouseDownSurface = drag;
+    this._sc_drag = drag;
+  },
+
   /**
     Set this to a delegate object that can respond to actions as they are sent
     down the responder chain.

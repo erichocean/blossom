@@ -200,7 +200,9 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     return (direction === SC.LAYOUT_HORIZONTAL) ? ret.width : ret.height;
   },
 
+  _sc_updateLayoutFirstTime: true,
   updateLayout: function() {
+    // console.log('SC.SplitSurface#updateLayout()');
     var layoutDirection = this.get('layoutDirection'),
         frame = this.get('frame'),
         splitViewThickness,
@@ -222,15 +224,18 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
       this._sc_recalculateDivider = false;
     }
 
-    // If default thickness is < 1, convert from percentage to absolute.
-    if (SC.none(desiredThickness) || (desiredThickness > 0 && desiredThickness < 1)) {
-      desiredThickness =  Math.floor((splitViewThickness - (dividerThickness))* (desiredThickness || 0.5));
-    }
+    if (this._sc_updateLayoutFirstTime) {
+      this._sc_updateLayoutFirstTime = false;
+      // If default thickness is < 1, convert from percentage to absolute.
+      if (SC.none(desiredThickness) || (desiredThickness > 0 && desiredThickness < 1)) {
+        desiredThickness =  Math.floor((splitViewThickness - (dividerThickness))* (desiredThickness || 0.5));
+      }
 
-    if (autoResizeBehavior === SC.RESIZE_BOTTOM_RIGHT) {
-      this._sc_desiredTopLeftThickness = desiredThickness ;
-    } else { // (autoResizeBehavior === SC.RESIZE_TOP_LEFT)
-      this._sc_desiredTopLeftThickness =  splitViewThickness - dividerThickness - desiredThickness;
+      if (autoResizeBehavior === SC.RESIZE_BOTTOM_RIGHT) {
+        this._sc_desiredTopLeftThickness = desiredThickness ;
+      } else { // (autoResizeBehavior === SC.RESIZE_TOP_LEFT)
+        this._sc_desiredTopLeftThickness =  splitViewThickness - dividerThickness - desiredThickness;
+      }
     }
 
     // Make sure we don't exceed our min and max values, and that collapse 
@@ -380,6 +385,9 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     this.notifyPropertyChange('topLeftThickness');
     this.notifyPropertyChange('bottomRightThickness');
 
+    if (topLeftSurface) topLeftSurface.updateLayout();
+    if (bottomRightSurface) bottomRightSurface.updateLayout();
+
     SC.AnimationTransaction.end();
   },
 
@@ -417,6 +425,10 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     this._sc_layoutDirection = this.get('layoutDirection');
 
     return true;
+  },
+
+  mouseDown: function(evt) {
+    return this.adjustSplitDivider(evt);
   },
 
   mouseDragged: function(evt) {
@@ -475,6 +487,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
   /** @private */
   _sc_updateTopLeftThickness: function(offset) {
+    // console.log('SC.SplitSurface#_sc_updateTopLeftThickness()', offset);
     var topLeftSurface = this._sc_topLeftSurface,
         bottomRightSurface = this._sc_bottomRightSurface,
         // The current thickness, not the original thickness.
@@ -552,6 +565,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
       topLeftSurface.set('isCollapsed', thickness === 0);
       bottomRightSurface.set('isCollapsed', thickness >= maxAvailable);
 
+      // console.log('SC.SplitSurface: triggering layout and rendering');
       this.triggerLayoutAndRendering();
     }
   },

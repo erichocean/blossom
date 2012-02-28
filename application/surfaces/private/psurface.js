@@ -262,6 +262,15 @@ SC.Psurface.prototype = {
             style.width  = value[2]/*width*/  + 'px';
             style.height = value[3]/*height*/ + 'px';
 
+            // var borderWidth = currentHash['borderWidth'];
+            // if (borderWidth) {
+            //   borderWidth = borderWidth.value;
+            //   // top, right, bottom, and left (in that order)
+            //   var clip = 'rect('+[borderWidth, value[2]/*width*/ - borderWidth*2, value[3]/*height*/ - borderWidth*2, borderWidth].join('px ')+'px)';
+            //   console.log('clip:', clip);
+            //   style.clip = clip;
+            // }
+
           } else {
             properties.push(transition.cssKey);
             durations.push(transition.duration+'ms');
