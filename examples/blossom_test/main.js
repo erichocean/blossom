@@ -186,11 +186,14 @@ function main() {
     },
 
     mouseUp: function(evt) {
-      // console.log('pane#mouseUp');
+      console.log('pane#mouseUp');
       SC.AnimationTransaction.begin({ duration: 0 });
+      this.doingMouseUp = true;
       var frame = this.get('frame');
       frame.x = frame.x + evt.clientX - this._clientX;
       frame.y = frame.y + evt.clientY - this._clientY;
+      this.set('frame', frame);
+      this.doingMouseUp = false;
       delete this._clientX;
       delete this._clientY;
       SC.AnimationTransaction.end();
@@ -216,7 +219,7 @@ function main() {
     },
 
     transitionForKey: function(key) {
-      if (key === 'frame') {
+      if (key === 'frame' && this.doingMouseUp) {
         var keys = Object.keys(SC.TimingFunction), name;
         keys = keys.filter(function(key) { return key !== 'get'; });
         name = keys[Math.floor(Math.random()*keys.length)];
