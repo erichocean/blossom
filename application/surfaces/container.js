@@ -82,6 +82,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
     if (cur) {
       cur.set('container', this);
+      cur.set('frame', frame);
       cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
     }
@@ -99,12 +100,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
       
       // order in
       if (!old && cur) {
-        if (cur.__useContentSize__) {
-          cur.__contentWidth__ = frame.width;
-          cur.__contentHeight__ = frame.height;
-          cur.triggerContentSizeUpdate();
-        }
-        this.get('subsurfaces').push(cur);
+        this.get('subsurfaces').pushObject(cur);
         cur.set('opacity', 1);
         var transform = SC.MakeIdentityTransform3D();
         transform = SC.Transform3DRotateY(transform, Math.PI);
@@ -116,8 +112,11 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         this.set('transformOrigin', transformOrigin);
         this.set('opacity', 0.0);
         SC.AnimationTransaction.end();
-        var that = this;
+
+        // HACK:  Fix me, use a statechart!
         this.isWaitingToTransition = true;
+
+        var that = this;
         setTimeout(function() {
           that.isWaitingToTransition = false;
           SC.RunLoop.begin();
@@ -139,58 +138,23 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
       // order in
       if (!old && cur) {
-        if (cur.__useContentSize__) {
-          cur.__contentWidth__ = frame.width;
-          cur.__contentHeight__ = frame.height;
-          cur.triggerContentSizeUpdate();
-        }
-        this.get('subsurfaces').push(cur);
-        // container = cur.__sc_element__;
-        // sc_assert(container);
-        // sc_assert(!document.getElementById(container.id));
-        // 
-        // style = container.style;
-        // style.position = 'absolute';
-        // style.top      = '0px';
-        // style.left     = '0px';
-        // style.width    = '100%';
-        // style.height   = '100%';
-        //     
-        // // The order is important here, otherwise the layers won't have the 
-        // // correct size.
-        // element.insertBefore(container, null); // add to DOM
-        // element.style.opacity = 1;
-    
+        this.get('subsurfaces').pushObject(cur);
+
       // replace
       } else if (old && cur) {
-        // container = cur.__sc_element__;
-        // sc_assert(container);
-        // sc_assert(!document.getElementById(container.id));
-        // sc_assert(document.getElementById(old.__sc_element__.id));
-        //     
-        // style = container.style;
-        // style.position = 'absolute';
-        // style.top      = '0px';
-        // style.left     = '0px';
-        // style.width    = '100%';
-        // style.height   = '100%';
-        //     
-        // // The order is important here, otherwise the layers won't have the 
-        // // correct size.
-        // element.replaceChild(container, old.__sc_element__);
-    
+        var subsurfaces = this.get('subsurfaces');
+        subsurfaces.removeObject(old);
+        subsurfaces.pushObject(cur);
+
       // order out
       } else if (old && !cur) {
-        // sc_assert(document.getElementById(old.__sc_element__.id));
-        //     
-        // element.removeChild(old.__sc_element__);
-        // element.style.opacity = 0;
+        this.get('subsurfaces').removeObject(old);
       }
     }
   }.observes('contentSurface'),
 
   _sc_containerFrameDidChange: function() {
-    console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
+    // console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
     var frame = this.get('frame'),
         contentSurface = this.get('contentSurface');
 
