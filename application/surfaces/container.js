@@ -59,7 +59,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
 
   _sc_contentSurface: null, // Required, we're strict about null checking.
   _sc_contentSurfaceDidChange: function() {
-    console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
+    // console.log('SC.ContainerSurface#_sc_contentSurfaceDidChange()');
     var old = this._sc_contentSurface,
         cur = this.get('contentSurface'),
         transition, frame = this.get('frame');
@@ -99,28 +99,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
       
       // order in
       if (!old && cur) {
-        console.log('ordering in');
-        // container = cur.__sc_element__;
-        // sc_assert(container);
-        // sc_assert(!document.getElementById(container.id));
-        //     
-        // style = container.style;
-        // style.display  = 'block';
-        // style.position = 'absolute';
-        // // style.top      = '0px';
-        // // style.left     = '0px';
-        // // style.width    = '100%';
-        // // style.height   = '100%';
-        // style.webkitBackfaceVisibility = 'hidden';
-        // style.webkitTransform = 'rotateY(180deg)';
-        //     
-        // // The order is important here, otherwise the layers won't have the 
-        // // correct size.
-        // element.insertBefore(container, null); // add to DOM
-        // sc_assert(document.getElementById(container.id));
-        // element.style.opacity = '1';
-        // element.style.webkitTransform = 'translateX(-100%) rotateY(-180deg)';
-        // cur.didAttach();
         if (cur.__useContentSize__) {
           cur.__contentWidth__ = frame.width;
           cur.__contentHeight__ = frame.height;
@@ -140,7 +118,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         SC.AnimationTransaction.end();
         var that = this;
         setTimeout(function() {
-          console.log('running animation');
           SC.RunLoop.begin();
           var transform = SC.MakeIdentityTransform3D();
           transform = SC.Transform3DTranslateX(transform, frame.width);
@@ -154,10 +131,10 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
           SC.RunLoop.end();
         }, 0);
       }
-    
+
     // Update the UI without any 3D transition.
     } else {
-    
+
       // order in
       if (!old && cur) {
         if (cur.__useContentSize__) {

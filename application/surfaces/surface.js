@@ -237,6 +237,19 @@ SC.Surface = SC.Responder.extend({
     this._sc_triggerStructureChange('perspectiveOrigin');
   },
 
+  triggerContentSizeUpdate: function() {
+    this.__needsRendering__ = true;
+    this.__contentSizeNeedsUpdate__ = true;
+    SC.needsLayout = true;
+  },
+
+  // These only apply to leaf surfaces, but I'm putting them here because the 
+  // frame method is what updates them.
+  __contentWidth__: 0,
+  __contentHeight__: 0,
+
+  __contentSizeNeedsUpdate__: false,
+
   /**
     Specifies receiver's frame rectangle in the supersurface's coordinate
     space.  The value of this property is specified in points.  Animatable.
@@ -262,6 +275,10 @@ SC.Surface = SC.Responder.extend({
       // Cache the new frame so we don't need to compute it later.
       if (frame !== value) frame.set(value);
       this._sc_triggerFrameChange('x', 'y', 'width', 'height');
+
+      this.__contentWidth__  = frame[2]/*width*/;
+      this.__contentHeight__ = frame[3]/*height*/;
+      this.triggerContentSizeUpdate();
     } else {
       return frame;
     }
@@ -504,7 +521,18 @@ SC.Surface = SC.Responder.extend({
   structureDidChange: function(struct, key, member, oldvalue, newvalue) {
     // console.log('SC.Surface#structureDidChangeForKey(', key, member, oldvalue, newvalue, ')');
     // debugger;
-    if      (key === 'frame'               && oldvalue !== newvalue) this._sc_triggerFrameChange();
+    if      (key === 'frame'               && oldvalue !== newvalue) {
+      this._sc_triggerFrameChange();
+      var didChange = false;
+      if (member === 'width') {
+        this.__contentWidth__ = newvalue;
+        didChange = true;
+      } else if (member === 'height') {
+        this.__contentHeight__ = newvalue;
+        didChange = true;
+      }
+      if (didChange) this.triggerContentSizeUpdate();
+    }
     else if (key === 'anchorPoint'         && oldvalue !== newvalue) this._sc_triggerAnchorPointChange();
     else if (key === 'transform'           && oldvalue !== newvalue) this._sc_triggerTransformChange();
     else if (key === 'perspectiveOrigin'   && oldvalue !== newvalue) this._sc_triggerPerspectiveOriginChange();

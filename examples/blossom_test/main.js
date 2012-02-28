@@ -186,7 +186,7 @@ function main() {
     },
 
     mouseUp: function(evt) {
-      console.log('pane#mouseUp');
+      // console.log('pane#mouseUp');
       SC.AnimationTransaction.begin({ duration: 0 });
       this.doingMouseUp = true;
       var frame = this.get('frame');
@@ -219,7 +219,7 @@ function main() {
     },
 
     transitionForKey: function(key) {
-      if (key === 'frame' && this.doingMouseUp) {
+      if (this.doingMouseUp && key === 'frame') {
         var keys = Object.keys(SC.TimingFunction), name;
         keys = keys.filter(function(key) { return key !== 'get'; });
         name = keys[Math.floor(Math.random()*keys.length)];
@@ -234,10 +234,6 @@ function main() {
   
   var frame = SC.MakeRect(50, 50, 300, 200);
   pane.set('frame', frame);
-  pane.__contentWidth__ = frame.width;
-  pane.__contentHeight__ = frame.height;
-  pane.triggerContentSizeUpdate();
-  pane.triggerLayoutAndRendering();
   pane.set('backgroundColor', "white");
   pane.set('borderColor', "black");
   pane.set('borderWidth', 1);
