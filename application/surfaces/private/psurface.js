@@ -268,22 +268,22 @@ SC.Psurface.prototype = {
             // Update element.style
             if (key === 'perspectiveOrigin') {
               value =  transition.value;
-              style[transition.key+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
-              style[transition.key+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+              style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+              style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
 
             } else if (key === 'transformOrigin') {
               value =  transition.value;
-              style[transition.key+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
-              style[transition.key+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
-              style[transition.key+'-z'] = Math.floor(value[2]/*z*/)+'px';
+              style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+              style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+              style[transition.cssKey+'-z'] = Math.floor(value[2]/*z*/)+'px';
 
             } else if (key === 'transform') {
               value =  transition.value;
-              style[transition.key] = 'matrix3d('+[
-                value[0]  , value[1]  , value[2]  , value[3]  ,
-                value[4]  , value[5]  , value[6]  , value[7]  ,
-                value[8]  , value[9]  , value[10] , value[11] ,
-                value[12] , value[13] , value[14] , value[15]
+              style[transition.cssKey] = 'matrix3d('+[
+                value[0] .toFixed(10) , value[1] .toFixed(10) , value[2] .toFixed(10) , value[3] .toFixed(10) ,
+                value[4] .toFixed(10) , value[5] .toFixed(10) , value[6] .toFixed(10) , value[7] .toFixed(10) ,
+                value[8] .toFixed(10) , value[9] .toFixed(10) , value[10].toFixed(10) , value[11].toFixed(10) ,
+                value[12].toFixed(10) , value[13].toFixed(10) , value[14].toFixed(10) , value[15].toFixed(10)
 
                 // Quick check to see if scale(2) is working:
                 // 2         , value[1]  , value[2]  , value[3]  ,
@@ -291,7 +291,6 @@ SC.Psurface.prototype = {
                 // value[8]  , value[9]  , 2         , value[11] ,
                 // value[12] , value[13] , value[14] , value[15]
               ].join(', ')+')';
-
             } else { // The remaining properties are set directly.
               style[transition.cssKey] = transition.value;
             }

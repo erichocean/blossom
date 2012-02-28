@@ -556,6 +556,113 @@ SC.CopyTransform3DTo = function(src, dest) {
   dest.set(src);
 };
 
+SC.Transform3DConcatTo = function(left, right, dest) {
+  var left_m11 = left[0] /*m11*/,
+      left_m12 = left[1] /*m12*/,
+      left_m13 = left[2] /*m13*/,
+      left_m14 = left[3] /*m14*/,
+      left_m21 = left[4] /*m21*/,
+      left_m22 = left[5] /*m22*/,
+      left_m23 = left[6] /*m23*/,
+      left_m24 = left[7] /*m24*/,
+      left_m31 = left[8] /*m31*/,
+      left_m32 = left[9] /*m32*/,
+      left_m33 = left[10]/*m33*/,
+      left_m34 = left[11]/*m34*/,
+      left_m41 = left[12]/*m41*/,
+      left_m42 = left[13]/*m42*/,
+      left_m43 = left[14]/*m43*/,
+      left_m44 = left[15]/*m44*/;
+
+  // Result:
+  //   dest.m11 = left.m11 * right.m11 + left.m12 * right.m21 + left.m13 * right.m31 + left.m14 * right.m41;
+  //   dest.m12 = left.m11 * right.m12 + left.m12 * right.m22 + left.m13 * right.m32 + left.m14 * right.m42;
+  //   dest.m13 = left.m11 * right.m13 + left.m12 * right.m23 + left.m13 * right.m33 + left.m14 * right.m43;
+  //   dest.m14 = left.m11 * right.m14 + left.m12 * right.m24 + left.m13 * right.m34 + left.m14 * right.m44;
+  
+  //   dest.m21 = left.m21 * right.m11 + left.m22 * right.m21 + left.m23 * right.m31 + left.m24 * right.m41;
+  //   dest.m22 = left.m21 * right.m12 + left.m22 * right.m22 + left.m23 * right.m32 + left.m24 * right.m42;
+  //   dest.m23 = left.m21 * right.m13 + left.m22 * right.m23 + left.m23 * right.m33 + left.m24 * right.m43;
+  //   dest.m24 = left.m21 * right.m14 + left.m22 * right.m24 + left.m23 * right.m34 + left.m24 * right.m44;
+
+  //   dest.m31 = left.m31 * right.m11 + left.m32 * right.m21 + left.m33 * right.m31 + left.m34 * right.m41;
+  //   dest.m32 = left.m31 * right.m12 + left.m32 * right.m22 + left.m33 * right.m32 + left.m34 * right.m42;
+  //   dest.m33 = left.m31 * right.m13 + left.m32 * right.m23 + left.m33 * right.m33 + left.m34 * right.m43;
+  //   dest.m34 = left.m31 * right.m14 + left.m32 * right.m24 + left.m33 * right.m34 + left.m34 * right.m44;
+
+  //   dest.m41 = left.m41 * right.m11 + left.m42 * right.m21 + left.m43 * right.m31 + left.m44 * right.m41;
+  //   dest.m42 = left.m41 * right.m12 + left.m42 * right.m22 + left.m43 * right.m32 + left.m44 * right.m42;
+  //   dest.m43 = left.m41 * right.m13 + left.m42 * right.m23 + left.m43 * right.m33 + left.m44 * right.m43;
+  //   dest.m44 = left.m41 * right.m14 + left.m42 * right.m24 + left.m43 * right.m34 + left.m44 * right.m44;
+
+  dest[0]  = left_m11 * right[0] + left_m12 * right[4] + left_m13 * right[8]  + left_m14 * right[12];
+  dest[1]  = left_m11 * right[1] + left_m12 * right[5] + left_m13 * right[9]  + left_m14 * right[13];
+  dest[2]  = left_m11 * right[2] + left_m12 * right[6] + left_m13 * right[10] + left_m14 * right[14];
+  dest[3]  = left_m11 * right[3] + left_m12 * right[7] + left_m13 * right[11] + left_m14 * right[15];
+
+  dest[4]  = left_m21 * right[0] + left_m22 * right[4] + left_m23 * right[8]  + left_m24 * right[12];
+  dest[5]  = left_m21 * right[1] + left_m22 * right[5] + left_m23 * right[9]  + left_m24 * right[13];
+  dest[6]  = left_m21 * right[2] + left_m22 * right[6] + left_m23 * right[10] + left_m24 * right[14];
+  dest[7]  = left_m21 * right[3] + left_m22 * right[7] + left_m23 * right[11] + left_m24 * right[15];
+
+  dest[8]  = left_m31 * right[0] + left_m32 * right[4] + left_m33 * right[8]  + left_m34 * right[12];
+  dest[9]  = left_m31 * right[1] + left_m32 * right[5] + left_m33 * right[9]  + left_m34 * right[13];
+  dest[10] = left_m31 * right[2] + left_m32 * right[6] + left_m33 * right[10] + left_m34 * right[14];
+  dest[11] = left_m31 * right[3] + left_m32 * right[7] + left_m33 * right[11] + left_m34 * right[15];
+
+  dest[12] = left_m41 * right[0] + left_m42 * right[4] + left_m43 * right[8]  + left_m44 * right[12];
+  dest[13] = left_m41 * right[1] + left_m42 * right[5] + left_m43 * right[9]  + left_m44 * right[13];
+  dest[14] = left_m41 * right[2] + left_m42 * right[6] + left_m43 * right[10] + left_m44 * right[14];
+  dest[15] = left_m41 * right[3] + left_m42 * right[7] + left_m43 * right[11] + left_m44 * right[15];
+};
+
+SC.temporaryTransform3D = SC.MakeIdentityTransform3D();
+
+SC.Transform3DRotateX = function(mat, rad) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof rad === 'number');
+
+  var tmp = SC.temporaryTransform3D;
+  tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
+
+  // tmp[0]  =  1;   tmp[1]  = 0            ; tmp[2]  = 0             ;    tmp[3]  = 0;
+  /* tmp[4]  =  0;*/ tmp[5]  = Math.cos(rad); tmp[6]  = Math.sin(-rad); // tmp[7]  = 0;
+  /* tmp[8]  =  0;*/ tmp[9]  = Math.sin(rad); tmp[10] = Math.cos( rad); // tmp[11] = 0;
+  // tmp[12] =  0;   tmp[13] = 0            ; tmp[14] = 0             ;    tmp[15] = 1;
+
+  SC.Transform3DConcatTo(mat, tmp, mat);
+};
+
+SC.Transform3DRotateY = function(mat, rad) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof rad === 'number');
+
+  var tmp = SC.temporaryTransform3D;
+  tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
+
+     tmp[0]  =  Math.cos( rad); /*tmp[1]  = 0;*/ tmp[2]  = Math.sin(rad); // tmp[3]  = 0;
+  // tmp[4]  =  0             ;   tmp[5]  = 1;   tmp[6]  = 0            ;    tmp[7]  = 0;
+     tmp[8]  =  Math.sin(-rad); /*tmp[9]  = 0;*/ tmp[10] = Math.cos(rad); // tmp[11] = 0;
+  // tmp[12] =  0             ;   tmp[13] = 0;   tmp[14] = 0            ;    tmp[15] = 1;
+
+  SC.Transform3DConcatTo(mat, tmp, mat);
+};
+
+SC.Transform3DRotateZ = function(mat, rad) {
+  sc_assert(mat && mat.length === 16 && mat.constructor === Float32Array);
+  sc_assert(typeof rad === 'number');
+
+  var tmp = SC.temporaryTransform3D;
+  tmp.set(SC.TRANSFORM3D_IDENTITY); // Bulk set the 1s and 0s
+
+     tmp[0]  =  Math.cos(rad); tmp[1]  = Math.sin(-rad); // tmp[2]  = 0; tmp[3]  = 0;
+     tmp[4]  =  Math.sin(rad); tmp[5]  = Math.cos( rad); // tmp[6]  = 0; tmp[7]  = 0;
+  // tmp[8]  =  0            ; tmp[9]  = 0             ;    tmp[10] = 1; tmp[11] = 0;
+  // tmp[12] =  0            ; tmp[13] = 0             ;    tmp[14] = 0; tmp[15] = 1;
+
+  SC.Transform3DConcatTo(mat, tmp, mat);
+};
+
 // Below are ways to access these structures using names, rather than
 // indices. They are designed to match the equivalent structure in Cocoa/
 // Core Animation.

@@ -163,7 +163,10 @@ function main() {
       this._clientX = evt.clientX;
       this._clientY = evt.clientY;
       this.set('opacity', 0.5);
-      this.set('transform', this.get('transform'));
+      var transform = this.get('transform');
+      SC.Transform3DRotateZ(transform, Math.random()*(Math.PI*2));
+      this.set('transform', transform);
+      // this.set('transform', this.get('transform'));
       return true;
     },
 
