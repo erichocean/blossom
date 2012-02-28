@@ -157,7 +157,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     var direction = this.get('layoutDirection'),
         ret = surface.get('frame');
 
-    return (direction === SC.LAYOUT_HORIZONTAL) ? ret.width : ret.height ;
+    return (direction === SC.LAYOUT_HORIZONTAL) ? ret.width : ret.height;
   },
 
   updateLayout: function() {
@@ -389,7 +389,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
     if (!isCollapsed && !this.canCollapseSurface(surface)) {
       surface = this._sc_bottomRightSurface ;
-      isCollapsed = surface.get('isCollapsed') || false ;
+      isCollapsed = surface.get('isCollapsed') || false;
       if (!isCollapsed && !this.canCollapseSurface(surface)) return false;
     }
 
@@ -397,9 +397,9 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
       // Remember thickness in it's uncollapsed state.
       this._sc_uncollapsedThickness = this.thicknessForSurface(surface);
       if (surface === this._sc_topLeftSurface) {
-        this._sc_updateTopLeftThickness(this.topLeftThickness() * -1);
+        this._sc_updateTopLeftThickness(this.get('topLeftThickness') * -1);
       } else {
-        this._sc_updateBottomRightThickness(this.bottomRightThickness() * -1);
+        this._sc_updateBottomRightThickness(this.get('bottomRightThickness') * -1);
       }
 
       // If however the split surface decided not to collapse, clear:
@@ -417,23 +417,23 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     }
 
     this._sc_setCursorStyle();
-    return true ;
+    return true;
   },
 
   /** @private */
   _sc_updateTopLeftThickness: function(offset) {
     var topLeftSurface = this._sc_topLeftSurface,
         bottomRightSurface = this._sc_bottomRightSurface,
-        // the current thickness, not the original thickness
+        // The current thickness, not the original thickness.
         topLeftSurfaceThickness = this.thicknessForSurface(topLeftSurface), 
         bottomRightSurfaceThickness = this.thicknessForSurface(bottomRightSurface),
-        minAvailable = this._sc_dividerThickness ,
+        minAvailable = this._sc_dividerThickness,
         maxAvailable = 0,
         proposedThickness = this._sc_topLeftSurfaceThickness + offset,
         direction = this._sc_layoutDirection,
         bottomRightCanCollapse = this.canCollapseSurface(bottomRightSurface),
         thickness = proposedThickness,
-        // constrain to thickness set on top/left
+        // Constrain to thickness set on top/left.
         max = this.get('topLeftMaxThickness'),
         min = this.get('topLeftMinThickness'),
         bottomRightThickness, tlCollapseAtThickness, brCollapseAtThickness;
@@ -446,72 +446,68 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
       maxAvailable += bottomRightSurfaceThickness;
     }
 
-    if (!SC.none(max)) thickness = Math.min(max, thickness) ;
-    if (!SC.none(min)) thickness = Math.max(min, thickness) ;
+    if (!SC.none(max)) thickness = Math.min(max, thickness);
+    if (!SC.none(min)) thickness = Math.max(min, thickness);
 
-    // constrain to thickness set on bottom/right
-    max = this.get('bottomRightMaxThickness') ;
-    min = this.get('bottomRightMinThickness') ;
-    bottomRightThickness = maxAvailable - thickness ;
+    // Constrain to thickness set on bottom/right.
+    max = this.get('bottomRightMaxThickness');
+    min = this.get('bottomRightMinThickness');
+    bottomRightThickness = maxAvailable - thickness;
     if (!SC.none(max)) {
-      bottomRightThickness = Math.min(max, bottomRightThickness) ;
+      bottomRightThickness = Math.min(max, bottomRightThickness);
     }
     if (!SC.none(min)) {
-      bottomRightThickness = Math.max(min, bottomRightThickness) ;
+      bottomRightThickness = Math.max(min, bottomRightThickness);
     }
-    thickness = maxAvailable - bottomRightThickness ;
+    thickness = maxAvailable - bottomRightThickness;
 
-    // constrain to thickness determined by delegate.
-    thickness = this.invokeDelegateMethod(this.delegate, 
-      'splitSurfaceConstrainThickness', this, topLeftSurface, thickness) ;
+    // Constrain to thickness determined by delegate.
+    thickness = this.invokeDelegateMethod(this.delegate, 'splitSurfaceConstrainThickness', this, topLeftSurface, thickness);
 
-    // cannot be more than what's available
-    thickness = Math.min(thickness, maxAvailable) ;
+    // Cannot be more than what's available.
+    thickness = Math.min(thickness, maxAvailable);
 
-    // cannot be less than zero
-    thickness = Math.max(0, thickness) ;
+    // Cannot be less than zero.
+    thickness = Math.max(0, thickness);
 
-    tlCollapseAtThickness = topLeftSurface.get('collapseAtThickness') ;
-    if (!tlCollapseAtThickness) tlCollapseAtThickness = 0 ;
-    brCollapseAtThickness = bottomRightSurface.get('collapseAtThickness') ;
-    brCollapseAtThickness = SC.none(brCollapseAtThickness) ?
-                      maxAvailable : (maxAvailable - brCollapseAtThickness);
+    tlCollapseAtThickness = topLeftSurface.get('collapseAtThickness');
+    if (!tlCollapseAtThickness) tlCollapseAtThickness = 0;
+    brCollapseAtThickness = bottomRightSurface.get('collapseAtThickness');
+    brCollapseAtThickness = SC.none(brCollapseAtThickness) ? maxAvailable : (maxAvailable - brCollapseAtThickness);
 
-    if ((proposedThickness <= tlCollapseAtThickness) && 
-          this.canCollapseSurface(topLeftSurface)) {
-      // want to collapse top/left, check if this doesn't violate the max thickness of bottom/right
+    if ((proposedThickness <= tlCollapseAtThickness) && this.canCollapseSurface(topLeftSurface)) {
+      // Want to collapse top/left, check if this doesn't violate the max thickness of bottom/right.
       max = bottomRightSurface.get('maxThickness');
       if (!max || (minAvailable + maxAvailable) <= max) {
         // collapse top/left view, even if it has a minThickness
         thickness = 0 ;
       }
-    } else if (proposedThickness >= brCollapseAtThickness && 
-              this.canCollapseSurface(bottomRightSurface)) {
-      // want to collapse bottom/right, check if this doesn't violate the max thickness of top/left
+    } else if (proposedThickness >= brCollapseAtThickness && this.canCollapseSurface(bottomRightSurface)) {
+      // Want to collapse bottom/right, check if this doesn't violate the max thickness of top/left.
       max = topLeftSurface.get('maxThickness');
       if (!max || (minAvailable + maxAvailable) <= max) {
-        // collapse bottom/right view, even if it has a minThickness
+        // Collapse bottom/right view, even if it has a minThickness.
         thickness = maxAvailable;
       }
     }
 
-    // now apply constrained value
+    // Now apply constrained value.
     if (thickness != this.thicknessForSurface(topLeftSurface)) {
-      this._sc_desiredTopLeftThickness = thickness ;
+      this._sc_desiredTopLeftThickness = thickness;
 
-      // un-collapse if needed.
-      topLeftSurface.set('isCollapsed', thickness === 0) ;
-      bottomRightSurface.set('isCollapsed', thickness >= maxAvailable) ;
+      // Un-collapse if needed.
+      topLeftSurface.set('isCollapsed', thickness === 0);
+      bottomRightSurface.set('isCollapsed', thickness >= maxAvailable);
 
-      this.updateChildLayout(); // updates child layouts
-      this.displayDidChange(); // updates cursor
+      this.triggerLayoutAndRendering();
     }
   },
 
   _sc_updateBottomRightThickness: function(offset) {
     var topLeftSurface = this._sc_topLeftSurface ,
         bottomRightSurface = this._sc_bottomRightSurface,
-        topLeftSurfaceThickness = this.thicknessForSurface(topLeftSurface), // the current thickness, not the original thickness
+        // The current thickness, not the original thickness.
+        topLeftSurfaceThickness = this.thicknessForSurface(topLeftSurface),
         bottomRightSurfaceThickness = this.thicknessForSurface(bottomRightSurface),
         minAvailable = this._sc_dividerThickness ,
         maxAvailable = 0,
@@ -519,65 +515,66 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
         direction = this._sc_layoutDirection,
         bottomRightCanCollapse = this.canCollapseSurface(bottomRightSurface),
         thickness = proposedThickness,
-        // constrain to thickness set on top/left
+        // Constrain to thickness set on top/left.
         max = this.get('topLeftMaxThickness'),
         min = this.get('topLeftMinThickness'),
         bottomRightThickness, tlCollapseAtThickness, brCollapseAtThickness;
 
-    if (!topLeftSurface.get("isCollapsed")) maxAvailable += topLeftSurfaceThickness ;
-    if (!bottomRightSurface.get("isCollapsed")) maxAvailable += bottomRightSurfaceThickness ;
+    if (!topLeftSurface.get("isCollapsed")) maxAvailable += topLeftSurfaceThickness;
+    if (!bottomRightSurface.get("isCollapsed")) maxAvailable += bottomRightSurfaceThickness;
 
-    if (!SC.none(max)) thickness = Math.min(max, thickness) ;
-    if (!SC.none(min)) thickness = Math.max(min, thickness) ;
+    if (!SC.none(max)) thickness = Math.min(max, thickness);
+    if (!SC.none(min)) thickness = Math.max(min, thickness);
 
-    // constrain to thickness set on bottom/right
-    max = this.get('bottomRightMaxThickness') ;
-    min = this.get('bottomRightMinThickness') ;
+    // Constrain to thickness set on bottom/right.
+    max = this.get('bottomRightMaxThickness');
+    min = this.get('bottomRightMinThickness');
     bottomRightThickness = maxAvailable - thickness ;
-    if (!SC.none(max)) bottomRightThickness = Math.min(max, bottomRightThickness) ;
-    if (!SC.none(min)) bottomRightThickness = Math.max(min, bottomRightThickness) ;
-    thickness = maxAvailable - bottomRightThickness ;
+    if (!SC.none(max)) bottomRightThickness = Math.min(max, bottomRightThickness);
+    if (!SC.none(min)) bottomRightThickness = Math.max(min, bottomRightThickness);
+    thickness = maxAvailable - bottomRightThickness;
 
-    // constrain to thickness determined by delegate.
-    thickness = this.invokeDelegateMethod(this.delegate, 'splitSurfaceConstrainThickness', this, topLeftSurface, thickness) ;
+    // Constrain to thickness determined by delegate.
+    thickness = this.invokeDelegateMethod(this.delegate, 'splitSurfaceConstrainThickness', this, topLeftSurface, thickness);
 
-    // cannot be more than what's available
-    thickness = Math.min(thickness, maxAvailable) ;
+    // Cannot be more than what's available.
+    thickness = Math.min(thickness, maxAvailable);
 
-    // cannot be less than zero
-    thickness = Math.max(0, thickness) ;
+    // Gannot be less than zero.
+    thickness = Math.max(0, thickness);
 
-    tlCollapseAtThickness = topLeftSurface.get('collapseAtThickness') ;
-    if (!tlCollapseAtThickness) tlCollapseAtThickness = 0 ;
-    brCollapseAtThickness = bottomRightSurface.get('collapseAtThickness') ;
+    tlCollapseAtThickness = topLeftSurface.get('collapseAtThickness');
+    if (!tlCollapseAtThickness) tlCollapseAtThickness = 0;
+    brCollapseAtThickness = bottomRightSurface.get('collapseAtThickness');
     brCollapseAtThickness = SC.none(brCollapseAtThickness) ? maxAvailable : (maxAvailable - brCollapseAtThickness);
 
     if ((proposedThickness <= tlCollapseAtThickness) && this.canCollapseSurface(topLeftSurface)) {
-      // want to collapse top/left, check if this doesn't violate the max thickness of bottom/right
+      // Want to collapse top/left, check if this doesn't violate the max 
+      // thickness of bottom/right.
       max = bottomRightSurface.get('maxThickness');
       if (!max || (minAvailable + maxAvailable) <= max) {
-        // collapse top/left view, even if it has a minThickness
-        thickness = 0 ;
+        // Collapse top/left view, even if it has a minThickness.
+        thickness = 0;
       }
     } else if (proposedThickness >= brCollapseAtThickness && this.canCollapseSurface(bottomRightSurface)) {
-      // want to collapse bottom/right, check if this doesn't violate the max thickness of top/left
+      // Want to collapse bottom/right, check if this doesn't violate the max 
+      // thickness of top/left.
       max = topLeftSurface.get('maxThickness');
       if (!max || (minAvailable + maxAvailable) <= max) {
-        // collapse bottom/right view, even if it has a minThickness
+        // Collapse bottom/right view, even if it has a minThickness.
         thickness = maxAvailable;
       }
     }
 
-    // now apply constrained value
+    // Now apply constrained value.
     if (thickness != this.thicknessForSurface(topLeftSurface)) {
-      this._sc_desiredTopLeftThickness = thickness ;
+      this._sc_desiredTopLeftThickness = thickness;
 
       // un-collapse if needed.
-      topLeftSurface.set('isCollapsed', thickness === 0) ;
-      bottomRightSurface.set('isCollapsed', thickness >= maxAvailable) ;
+      topLeftSurface.set('isCollapsed', thickness === 0);
+      bottomRightSurface.set('isCollapsed', thickness >= maxAvailable);
 
-      this.updateChildLayout(); // updates child layouts
-      this.displayDidChange(); // updates cursor
+      this.triggerLayoutAndRendering();
     }
   },
 
@@ -594,26 +591,28 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
         // updates the cursor of the thumb view that called 
         // mouseDownInThumbView() to reflect the status of the drag
         tlThickness = this.thicknessForSurface(topLeftSurface),
-        brThickness = this.thicknessForSurface(bottomRightSurface);
-    this._sc_layoutDirection = this.get('layoutDirection') ;
-    if (topLeftSurface.get('isCollapsed') || 
-      tlThickness === this.get("topLeftMinThickness") || 
-      brThickness == this.get("bottomRightMaxThickness")) {
-      dividerCursor.set('cursorStyle', 
-        this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL ? "e-resize" : "s-resize") ;
-    } else if (bottomRightSurface.get('isCollapsed') || 
-      tlThickness === this.get("topLeftMaxThickness") || 
-      brThickness == this.get("bottomRightMinThickness")) {
-      dividerCursor.set('cursorStyle', 
-        this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL ? "w-resize" : "n-resize") ;
+        brThickness = this.thicknessForSurface(bottomRightSurface),
+        dir;
+
+    dir = this._sc_layoutDirection = this.get('layoutDirection');
+
+    if (topLeftSurface.get('isCollapsed') ||
+        tlThickness === this.get("topLeftMinThickness") ||
+        brThickness == this.get("bottomRightMaxThickness"))
+    {
+      dividerCursor.set('cursorStyle', dir === SC.LAYOUT_HORIZONTAL ? "e-resize" : "s-resize");
+
+    } else if (bottomRightSurface.get('isCollapsed') ||
+               tlThickness === this.get("topLeftMaxThickness") ||
+               brThickness == this.get("bottomRightMinThickness"))
+    {
+      dividerCursor.set('cursorStyle', dir === SC.LAYOUT_HORIZONTAL ? "w-resize" : "n-resize");
+
     } else {
-      if(SC.browser.msie) {
-        dividerCursor.set('cursorStyle', 
-          this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL ? "e-resize" : "n-resize") ;
-      }
-      else {
-        dividerCursor.set('cursorStyle', 
-          this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL ? "ew-resize" : "ns-resize") ;
+      if (SC.browser.msie) {
+        dividerCursor.set('cursorStyle', dir === SC.LAYOUT_HORIZONTAL ? "e-resize" : "n-resize");
+      } else {
+        dividerCursor.set('cursorStyle', dir === SC.LAYOUT_HORIZONTAL ? "ew-resize" : "ns-resize");
       }
     }
   }.observes('layoutDirection'),
@@ -630,8 +629,8 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     @returns {Boolean} true to allow collapse.
   */
   splitSurfaceCanCollapse: function(splitSurface, surface) {
-    if (splitSurface.get('canCollapseSurfaces') === false) return false;
-    else if (surface.get('canCollapse') === false) return false;
+    if (!splitSurface.get('canCollapseSurfaces')) return false;
+    else if (!surface.get('canCollapse')) return false;
     else return true;
   },
 
