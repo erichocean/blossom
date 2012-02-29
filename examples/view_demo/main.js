@@ -112,27 +112,30 @@ function main() {
     mouseMoved: function(evt) {
       if (evt.layer) document.body.style.cursor = "pointer";
       else document.body.style.cursor = "default";
-    // },
-    // 
-    // mouseDown: function(evt) {
-    //   if (evt.layer) alert('Clicked on the '+evt.layer.get('color')+' layer.');
+    },
+
+    mouseDown: function(evt) {
+      if (evt.layer) alert('Clicked on the '+evt.layer.get('color')+' layer.');
     }
 
   });
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -40, centerY: -40, width: 600, height: 480 },
-    color: magenta
+    color: magenta,
+    tag: 1
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -20, centerY: -20, width: 600, height: 480 },
-    color: violet
+    color: violet,
+    tag: 2
   }));
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
-    color: blue
+    color: blue,
+    tag: 3
   }));
 
   console.log('surface is', SC.guidFor(surface));

@@ -247,8 +247,8 @@ SC.View = SC.LeafSurface.extend({
       context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
 
       // First, test our sublayers.
-      var sublayers = layer.get('sublayers'), idx, len;
-      for (idx=0, len=sublayers.length; idx<len; ++idx) {
+      var sublayers = layer.get('sublayers'), idx = sublayers.length;
+      while (idx--) {
         hitTestLayer(sublayers[idx]);
       }
 
@@ -274,8 +274,8 @@ SC.View = SC.LeafSurface.extend({
 
     // Next, begin the hit testing process. When this completes, hitLayer
     // will contain the layer that was hit with the highest zIndex.
-    var layers = this.get('layers'), idx, len;
-    for (idx=0, len=layers.length; idx<len; ++idx) {
+    var layers = this.get('layers'), idx = layers.length;
+    while (idx--) {
       hitTestLayer(layers[idx]);
     }
 
