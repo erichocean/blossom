@@ -135,6 +135,8 @@ function main() {
   pane.set('cornerRadius', 5);
 
   var split = SC.SplitSurface.create({
+    dividerThickness: 0,
+    defaultThickness: 600,
     topLeftSurface: surface,
     bottomRightSurface: split3
   });
