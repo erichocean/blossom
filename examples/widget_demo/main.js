@@ -6,17 +6,26 @@
 /*global WidgetDemo */
 
 function main() {
-  var surface = SC.View.create();
+  var enabledButton = SC.ButtonWidget.create({
+    layout: { centerX: 70, centerY: 0, width: 120, height: 24 },
 
-  surface.get('layers').pushObject(SC.ButtonWidget.create({
-    layout: { centerX: 0, centerY: 0, width: 100, height: 24 },
+    isEnabled: true,
+    title: "I'm enabled",
 
-    title: "click me",
-    // isEnabled: false,
+    action: function() { setTimeout(function() { alert('clicked'); }, 0); }
+  });
+
+  var disbledButton = SC.ButtonWidget.create({
+    layout: { centerX: -70, centerY: 0, width: 120, height: 24 },
+
+    isEnabled: false,
+    title: "I'm disabled",
 
     action: function() { alert('clicked'); }
+  });
 
-  }));
+  var surface = SC.View.create();
+  surface.get('layers').pushObjects([enabledButton, disbledButton]);
 
   SC.Application.create();
   SC.app.set('ui', surface);
