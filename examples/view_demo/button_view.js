@@ -6,7 +6,7 @@
 // Most of this code was taken from SproutCore's SC.ButtonView class, which
 // has an MIT license.
 // ==========================================================================
-/*globals BlossomTest BLOSSOM */
+/*globals ViewDemo BLOSSOM */
 
 /*jslint evil:true */
 
@@ -27,7 +27,7 @@ var blue =     "#268bd2";
 var cyan =     "#2aa198";
 var green =    "#859900";
 
-BlossomTest.ButtonView = SC.View.extend(SC.Control, SC.Button, {
+ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
 
   firstTime: true,
   render: function(context, layer) {

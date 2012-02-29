@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BlossomTest */
+/*globals ViewDemo */
 
 sc_require('sprite_layer');
 
