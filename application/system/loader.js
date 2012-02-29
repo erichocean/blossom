@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
 
 sc_require('system/browser');
 
@@ -19,6 +20,8 @@ SC.bundleIsLoaded = function(bundle) {
 };
 
 SC.loadBundle = function() { throw "SC.loadBundle(): SproutCore is not loaded."; };
+
+if (! BLOSSOM) {
 
 SC.setupBodyClassNames = function() {
   var el = document.body ;
@@ -47,3 +50,5 @@ SC.setupBodyClassNames = function() {
   if ('createTouch' in document) classNames.push('touch');
   el.className = classNames.join(' ') ;
 } ;
+
+} // ! BLOSSOM
