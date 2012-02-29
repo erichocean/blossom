@@ -233,7 +233,7 @@ function main() {
     }
   });
   
-  var frame = SC.MakeRect(50, 50, 300, 200);
+  var frame = SC.MakeRect(50, 50, 400, 200);
   pane.set('frame', frame);
   pane.set('backgroundColor', "white");
   pane.set('borderColor', "black");
