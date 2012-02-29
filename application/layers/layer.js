@@ -158,11 +158,6 @@ SC.Layer = SC.Object.extend({
   // SURFACE SUPPORT
   //
 
-  nextResponder: function() {
-    var superlayer = this.get('superlayer');
-    return superlayer? superlayer : this.get('surface');
-  }.property('superlayer', 'surface'),
-
   /**
     The current surface this layer is a child of (may be null).
     @property {SC.Surface}
