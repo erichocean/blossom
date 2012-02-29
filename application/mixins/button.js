@@ -4,6 +4,17 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals BLOSSOM */
+
+if (BLOSSOM) {
+
+SC.TOGGLE_BEHAVIOR = 'toggle';
+SC.PUSH_BEHAVIOR =   'push';
+SC.TOGGLE_ON_BEHAVIOR = 'on';
+SC.TOGGLE_OFF_BEHAVIOR = 'off';
+SC.HOLD_BEHAVIOR = 'hold';
+
+} // BLOSSOM
 
 /** @namespace
 

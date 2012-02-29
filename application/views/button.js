@@ -618,8 +618,6 @@ SC.TOGGLE_ON_BEHAVIOR = 'on';
 SC.TOGGLE_OFF_BEHAVIOR = 'off';
 SC.HOLD_BEHAVIOR = 'hold';
 
-if (BLOSSOM) {
-
 /**
   The delay after which "click" behavior should transition to "click and hold"
   behavior. This is used by subclasses such as PopupButtonView and
@@ -630,10 +628,6 @@ if (BLOSSOM) {
 */
 SC.ButtonView.CLICK_AND_HOLD_DELAY = 300;
 
-} // BLOSSOM
-
-if (! BLOSSOM) {
-
 /**
   The delay after which "click" behavior should transition to "click and hold"
   behavior. This is used by subclasses such as PopupButtonView and
@@ -643,8 +637,6 @@ if (! BLOSSOM) {
   @type Number
 */
 SC.ButtonView.CLICK_AND_HOLD_DELAY = SC.browser.msie ? 600 : 300;
-
-} // ! BLOSSOM
 
 SC.REGULAR_BUTTON_HEIGHT=24;
 

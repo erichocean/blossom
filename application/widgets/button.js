@@ -2,13 +2,15 @@
 // Project:   Blossom - Modern, Cross-Platform Application Framework
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
-//
-// Most of this code was taken from SproutCore's SC.ButtonView class, which
-// has an MIT license.
 // ==========================================================================
-/*globals ViewDemo BLOSSOM */
+/*globals BLOSSOM CanvasRenderingContext2D HTMLCanvasElement
+  ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
 
-/*jslint evil:true */
+sc_require('widgets/widget');
+sc_require('mixins/control');
+sc_require('mixins/button');
+
+if (BLOSSOM) {
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -26,189 +28,185 @@ var violet =   "#6c71c4";
 var blue =     "#268bd2";
 var cyan =     "#2aa198";
 var green =    "#859900";
+var white =    "white";
 
-ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
+SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
   firstTime: true,
-  render: function(context, layer) {
-    var benchKey = 'BlossomTest.ButtonView#render()';
-    SC.Benchmark.start(benchKey);
+  render: function(ctx) {
+    console.log('SC.ButtonWidget#render()', SC.guidFor(this));
+    ctx.fillStyle = base03;
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
 
-    // console.log('BlossomTest.ButtonView#render()', SC.guidFor(this));
-
-    if (this.firstTime) {
-      var that = this;
-      SC.spriteLayer.registerDependentSprite({
-        spriteLayerDidLoad: function() {
-          // console.log('spriteLayerDidLoad');
-          // SC.LOG_OBSERVERS = true;
-          that.triggerRendering();
-          // that.render(that.getPath('layer.context'), that.get('layer')); // that.displayDidChange(); is slow!
-        }
-      });
-      this.firstTime = false;
-      return;
-    }
-
-    var layout = layer.get('bounds');
-    var title = this.get('displayTitle');
-    var selected = this.get('isSelected'),
-        disabled = !this.get('isEnabled'),
-        mixed = (selected === SC.MIXED_STATE),
-        active = this.get('isActive');
-
-    selected = (selected && (selected !== SC.MIXED_STATE));
-
-    context.clearRect(0, 0, layout.width, layout.height);
-    switch (this.get('theme')) {
-      case 'regular':
-        SC.regularButtonRenderer.render(context,
-            selected, disabled, mixed, active,
-            title,
-            0, 0, layout.width, layout.height
-          );
-        break;
-      case 'square':
-        SC.rectangleButtonRenderer.render(context,
-            selected, disabled, mixed, active,
-            title,
-            0, 0, layout.width, layout.height
-          );
-        break;
-      case 'capsule':
-        SC.capsuleButtonRenderer.render(context,
-            selected, disabled, mixed, active,
-            title,
-            0, 0, layout.width, layout.height
-          );
-        break;
-      case 'checkbox':
-        SC.checkboxButtonRenderer.render(context,
-            selected, disabled, mixed, active,
-            title,
-            0, 0, layout.width, layout.height
-          );
-        break;
-      case 'radio':
-        SC.radioButtonRenderer.render(context,
-            selected, disabled, mixed, active,
-            title,
-            0, 0, layout.width, layout.height
-          );
-        break;
-    }
-
-    SC.Benchmark.end(benchKey);
+    // if (this.firstTime) {
+    //   var that = this;
+    //   SC.spriteLayer.registerDependentSprite({
+    //     spriteLayerDidLoad: function() {
+    //       // console.log('spriteLayerDidLoad');
+    //       // SC.LOG_OBSERVERS = true;
+    //       that.triggerRendering();
+    //       // that.render(that.getPath('layer.context'), that.get('layer')); // that.displayDidChange(); is slow!
+    //     }
+    //   });
+    //   this.firstTime = false;
+    //   return;
+    // }
+    // 
+    // var layout = layer.get('bounds');
+    // var title = this.get('displayTitle');
+    // var selected = this.get('isSelected'),
+    //     disabled = !this.get('isEnabled'),
+    //     mixed = (selected === SC.MIXED_STATE),
+    //     active = this.get('isActive');
+    // 
+    // selected = (selected && (selected !== SC.MIXED_STATE));
+    // 
+    // context.clearRect(0, 0, layout.width, layout.height);
+    // switch (this.get('theme')) {
+    //   case 'regular':
+    //     SC.regularButtonRenderer.render(context,
+    //         selected, disabled, mixed, active,
+    //         title,
+    //         0, 0, layout.width, layout.height
+    //       );
+    //     break;
+    //   case 'square':
+    //     SC.rectangleButtonRenderer.render(context,
+    //         selected, disabled, mixed, active,
+    //         title,
+    //         0, 0, layout.width, layout.height
+    //       );
+    //     break;
+    //   case 'capsule':
+    //     SC.capsuleButtonRenderer.render(context,
+    //         selected, disabled, mixed, active,
+    //         title,
+    //         0, 0, layout.width, layout.height
+    //       );
+    //     break;
+    //   case 'checkbox':
+    //     SC.checkboxButtonRenderer.render(context,
+    //         selected, disabled, mixed, active,
+    //         title,
+    //         0, 0, layout.width, layout.height
+    //       );
+    //     break;
+    //   case 'radio':
+    //     SC.radioButtonRenderer.render(context,
+    //         selected, disabled, mixed, active,
+    //         title,
+    //         0, 0, layout.width, layout.height
+    //       );
+    //     break;
+    // }
   },
-  
+
   /**
-    optionally set this to the theme you want this button to have.  
-    
-    This is used to determine the type of button this is.  You generally 
-    should set a class name on the HTML with the same value to allow CSS 
+    optionally set this to the theme you want this button to have.
+
+    This is used to determine the type of button this is.  You generally
+    should set a class name on the HTML with the same value to allow CSS
     styling.
-    
-    The default SproutCore theme supports "regular", "capsule", "checkbox", 
+
+    The default SproutCore theme supports "regular", "capsule", "checkbox",
     and "radio"
-    
+
     @property {String}
   */
   theme: 'square',
-  
+
   /**
-    Optionally set the behavioral mode of this button.  
-  
+    Optionally set the behavioral mode of this button.
+
     Possible values are:
-    - *SC.PUSH_BEHAVIOR* Pressing the button will trigger an action tied to the 
+    - *SC.PUSH_BEHAVIOR* Pressing the button will trigger an action tied to the
       button. Does not change the value of the button.
-    - *SC.TOGGLE_BEHAVIOR* Pressing the button will invert the current value of 
+    - *SC.TOGGLE_BEHAVIOR* Pressing the button will invert the current value of
       the button. If the button has a mixed value, it will be set to true.
-    - *SC.TOGGLE_ON_BEHAVIOR* Pressing the button will set the current state to 
+    - *SC.TOGGLE_ON_BEHAVIOR* Pressing the button will set the current state to
       true no matter the previous value.
-    - *SC.TOGGLE_OFF_BEHAVIOR* Pressing the button will set the current state to 
+    - *SC.TOGGLE_OFF_BEHAVIOR* Pressing the button will set the current state to
       false no matter the previous value.
-      
+
     @property {String}
   */
   buttonBehavior: SC.PUSH_BEHAVIOR,
 
   /*
-    If buttonBehavior is SC.HOLD_BEHAVIOR, this specifies, in miliseconds, how 
+    If buttonBehavior is SC.HOLD_BEHAVIOR, this specifies, in miliseconds, how
     often to trigger the action. Ignored for other behaviors.
-    
+
     @property {Number}
   */
   holdInterval: 100,
 
   /**
     If true, then this button will be triggered when you hit return.
-    
+
     This is the same as setting the keyEquivalent to 'return'.  This will also
     apply the "def" classname to the button.
-    
+
     @property {Boolean}
   */
   isDefault: false,
   isDefaultBindingDefault: SC.Binding.oneWay().bool(),
-  
+
   /**
     If true, then this button will be triggered when you hit escape.
     This is the same as setting the keyEquivalent to 'escape'.
-    
+
     @property {Boolean}
-  */  
+  */
   isCancel: false,
   isCancelBindingDefault: SC.Binding.oneWay().bool(),
 
   /**
-    The button href value.  This can be used to create localized button href 
+    The button href value.  This can be used to create localized button href
     values.  Setting an empty or null href will set it to javascript:;
-    
+
     @property {String}
   */
   href: '',
 
   /**
-    The name of the action you want triggered when the button is pressed.  
-    
+    The name of the action you want triggered when the button is pressed.
+
     This property is used in conjunction with the target property to execute
-    a method when a regular button is pressed.  These properties are not 
+    a method when a regular button is pressed.  These properties are not
     relevant when the button is used in toggle mode.
-    
+
     If you do not set a target, then pressing a button will cause the
     responder chain to search for a view that implements the action you name
     here.  If you set a target, then the button will try to call the method
     on the target itself.
-    
-    For legacy support, you can also set the action property to a function.  
+
+    For legacy support, you can also set the action property to a function.
     Doing so will cause the function itself to be called when the button is
-    clicked.  It is generally better to use the target/action approach and 
+    clicked.  It is generally better to use the target/action approach and
     to implement your code in a controller of some type.
-    
+
     @property {String}
   */
   action: null,
-  
+
   /**
     The target object to invoke the action on when the button is pressed.
-    
+
     If you set this target, the action will be called on the target object
     directly when the button is clicked.  If you leave this property set to
-    null, then the button will search the responder chain for a view that 
+    null, then the button will search the responder chain for a view that
     implements the action when the button is pressed instead.
-    
+
     @property {Object}
   */
   target: null,
-  
-  /** 
+
+  /**
     If true, use a focus ring.
-    
+
     @property {Boolean}
   */
   supportFocusRing: false,
-  
-  _labelMinWidthIE7: 0,
 
   /**
     Called when the user presses a shortcut key, such as return or cancel,
@@ -249,53 +247,53 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   },
 
   /**
-    This method is called anytime the button's action is triggered.  You can 
-    implement this method in your own subclass to perform any cleanup needed 
+    This method is called anytime the button's action is triggered.  You can
+    implement this method in your own subclass to perform any cleanup needed
     after an action is performed.
-    
+
     @property {function}
   */
   didTriggerAction: function() {},
 
   /**
     The minimum width the button title should consume.  This property is used
-    when generating the HTML styling for the title itself.  The default 
+    when generating the HTML styling for the title itself.  The default
     width of 80 usually provides a nice looking style, but you can set it to 0
     if you want to disable minimum title width.
-    
+
     Note that the title width does not exactly match the width of the button
     itself.  Extra padding added by the theme can impact the final total
     size.
-    
+
     @property {Number}
   */
   titleMinWidth: 80,
-  
+
   // ................................................................
   // INTERNAL SUPPORT
 
   /** @private - save keyEquivalent for later use */
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    
+
     //cache the key equivalent
-    if(this.get("keyEquivalent")) this._defaultKeyEquivalent = this.get("keyEquivalent"); 
+    if(this.get("keyEquivalent")) this._defaultKeyEquivalent = this.get("keyEquivalent");
   },
 
   _TEMPORARY_CLASS_HASH: {},
-  
+
   // display properties that should automatically cause a refresh.
-  // isCancel and isDefault also cause a refresh but this is implemented as 
+  // isCancel and isDefault also cause a refresh but this is implemented as
   // a separate observer (see below)
   displayProperties: ['href', 'icon', 'title', 'value', 'toolTip'],
-  
-  
+
+
   /**
     This property is used to call the right render style for the button.
     * This might be a future way to start implementing the render method
     as part of the theme
-  */ 
-  
+  */
+
   renderStyle: 'renderDefault', //SUPPORTED DEFAULT, IMAGE
 
   // render: function(context, firstTime) {
@@ -306,7 +304,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   //     if (!href || (href.length === 0)) href = "javascript:;";
   //     context.attr('href', href);
   //   }
-  // 
+  //
   //   // If there is a toolTip set, grab it and localize if necessary.
   //   toolTip = this.get('toolTip') ;
   //   if (SC.typeOf(toolTip) === SC.T_STRING) {
@@ -314,7 +312,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   //     context.attr('title', toolTip) ;
   //     context.attr('alt', toolTip) ;
   //   }
-  //   
+  //
   //   // add some standard attributes & classes.
   //   classes = this._TEMPORARY_CLASS_HASH;
   //   classes.def = this.get('isDefault');
@@ -323,12 +321,12 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   //   context.attr('role', 'button').setClass(classes);
   //   theme = this.get('theme');
   //   if (theme && !context.hasClass(theme)) context.addClass(theme);
-  //   
-  //   // render inner html 
+  //
+  //   // render inner html
   //   this[this.get('renderStyle')](context, firstTime);
   // },
-   
-   
+
+
   /**
     Render the button with the default render style.
   */
@@ -337,10 +335,10 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       context = context.push("<span class='sc-button-inner' style = 'min-width:"
         ,this.get('titleMinWidth'),
         "px'>");
-    
+
       this.renderTitle(context, firstTime) ; // from button mixin
       context.push("</span>") ;
-    
+
       if(this.get('supportFocusRing')) {
         context.push('<div class="focus-ring">',
                       '<div class="focus-left"></div>',
@@ -352,9 +350,9 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       this.renderTitle(context, firstTime) ;
     }
   },
-  
+
   /**
-    Render the button with the image render style. To set image 
+    Render the button with the image render style. To set image
     set the icon property with the classname that has the style with the image
   */
   renderImage: function(context, firstTime){
@@ -363,17 +361,17 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     if(icon) context.push("<div class='img "+icon+"'></div>");
     else context.push("<div class='img'></div>");
   },
-  
+
   /** @private {String} used to store a previously defined key equiv */
   _defaultKeyEquivalent: null,
-  
+
   /** @private
     Whenever the isDefault or isCancel property changes, update the display and change the keyEquivalent.
-  */  
+  */
   _isDefaultOrCancelDidChange: function() {
     var isDef = !!this.get('isDefault'),
         isCancel = !isDef && this.get('isCancel') ;
-    
+
     if(this.didChangeFor('defaultCancelChanged','isDefault','isCancel')) {
       this.displayDidChange() ; // make sure to update the UI
       if (isDef) {
@@ -385,14 +383,14 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
         this.set("keyEquivalent",this._defaultKeyEquivalent);
       }
     }
-      
-  }.observes('isDefault', 'isCancel'),
-    
-  isMouseDown: false, 
 
-  /** @private 
+  }.observes('isDefault', 'isCancel'),
+
+  isMouseDown: false,
+
+  /** @private
     On mouse down, set active only if enabled.
-  */    
+  */
   mouseDown: function(evt) {
     var buttonBehavior = this.get('buttonBehavior');
 
@@ -427,7 +425,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
 
   /** @private
     If mouse was down and we renter the button area, set the active state again.
-  */  
+  */
   mouseEntered: function(evt) {
     if (this._isMouseDown) {
       this.set('isActive', true);
@@ -437,32 +435,25 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
 
   /** @private
     ON mouse up, trigger the action only if we are enabled and the mouse was released inside of the view.
-  */  
+  */
   mouseUp: function(evt) {
     var inside;
     if (this._isMouseDown) this.set('isActive', false); // track independently in case isEnabled has changed
     this._isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (BLOSSOM) {
-        inside = true;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // BLOSSOM
-      if (! BLOSSOM) {
-        inside = this.$().within(evt.target) ;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // ! BLOSSOM
+      if (this.get('isEnabled')) this._action(evt);
     }
 
-    return true ;
+    return true;
   },
-  
+
   touchStart: function(touch){
     var buttonBehavior = this.get('buttonBehavior');
-  
+
     if (!this.get('isEnabled')) return true ; // handled event, but do nothing
     this.set('isActive', true);
-  
+
     if (buttonBehavior === SC.HOLD_BEHAVIOR) {
       this._action(touch);
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
@@ -474,13 +465,13 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
         }
       }
     }
-  
+
     // don't want to do whatever default is...
     touch.preventDefault();
-  
+
     return true;
   },
-  
+
   touchesDragged: function(evt, touches) {
     if (!this.touchIsInBoundary(evt)) {
       if (!this._touch_exited) this.set('isActive', false);
@@ -489,24 +480,24 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       if (this._touch_exited) this.set('isActive', true);
       this._touch_exited = false;
     }
-    
+
     evt.preventDefault();
     return true;
   },
-  
+
   touchEnd: function(touch){
     this._touch_exited = false;
     this.set('isActive', false); // track independently in case isEnabled has changed
-  
+
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
       if (this.touchIsInBoundary(touch)) this._action();
     }
-    
+
     touch.preventDefault();
     return true ;
   },
-  
-  
+
+
   /** @private */
   keyDown: function(evt) {
     // handle tab key
@@ -515,16 +506,16 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       if(view) view.becomeFirstResponder();
       else evt.allowDefault();
       return true ; // handled
-    }    
+    }
     if (evt.which === 13) {
       this.triggerAction(evt);
       return true ; // handled
     }
-    return false; 
+    return false;
   },
 
   /** @private  Perform an action based on the behavior of the button.
-  
+
    - toggle behavior: switch to on/off state
    - on behavior: turn on.
    - off behavior: turn off.
@@ -533,7 +524,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   _action: function(evt, skipHoldRepeat) {
     // console.log('_action');
     switch(this.get('buttonBehavior')) {
-      
+
     // When toggling, try to invert like values. i.e. 1 => 0, etc.
     case SC.TOGGLE_BEHAVIOR:
       var sel = this.get('isSelected') ;
@@ -543,12 +534,12 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
         this.set('value', this.get('toggleOnValue')) ;
       }
       break ;
-      
+
     // set value to on.  change 0 => 1.
     case SC.TOGGLE_ON_BEHAVIOR:
       this.set('value', this.get('toggleOnValue')) ;
       break ;
-      
+
     // set the value to false. change 1 => 0
     case SC.TOGGLE_OFF_BEHAVIOR:
       this.set('value', this.get('toggleOffValue')) ;
@@ -597,7 +588,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       }
     }
   },
-  
+
   /** @private */
   _hasLegacyActionHandler: function()
   {
@@ -611,7 +602,7 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
   _triggerLegacyActionHandler: function( evt )
   {
     if (!this._hasLegacyActionHandler()) return false;
-    
+
     var action = this.get('action');
     if (SC.typeOf(action) === SC.T_FUNCTION) this.action(evt);
     if (SC.typeOf(action) === SC.T_STRING) {
@@ -619,13 +610,13 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       this.action(evt);
     }
   },
-  
+
   /** tied to the isEnabled state */
   acceptsFirstResponder: function() {
     if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
     else return false;
   }.property('isEnabled'),
-  
+
   willBecomeKeyResponderFrom: function(keyView) {
     // focus the text field.
     if (!this._isFocused) {
@@ -637,9 +628,11 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
       }
     }
   },
-  
+
   willLoseKeyResponderTo: function(responder) {
     if (this._isFocused) this._isFocused = false ;
   }
-  
+
 });
+
+} // BLOSSOM
