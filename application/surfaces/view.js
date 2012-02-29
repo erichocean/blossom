@@ -264,7 +264,7 @@ SC.View = SC.LeafSurface.extend({
 
       // Try and find the behavior attached to this layer.
       var behavior = hitLayer.get('behavior');
-      if (!behavior && hitLayer) {
+      while (!behavior && hitLayer) {
         hitLayer = hitLayer.get('superlayer');
         if (hitLayer) behavior = hitLayer.get('behavior');
       }
