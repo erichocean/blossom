@@ -13,12 +13,23 @@ function main() {
   var surface = SC.View.create();
 
   var textLayer = SC.TextLayer.create({
-    layout: { top: 100, left: 100, width: 300, height: 50 },
+    layout: { top: 100, centerX: 0, width: 400, height: 10 },
     value: text,
-    lineHeight: 32
+    font: "12pt Calibri",
+    lineHeight: 24
+  });
+
+  var fpsLayer = SC.TextLayer.create({
+    layout: { bottom: 50, left: 50, width: 400, height: 10 },
+    value: function() {
+      return SC.Benchmark.fps();
+    }.property(),
+    font: "12pt Calibri",
+    lineHeight: 28
   });
 
   surface.get('layers').pushObject(textLayer);
+  surface.get('layers').pushObject(fpsLayer);
 
   SC.app.set('ui', surface);
 }

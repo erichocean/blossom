@@ -164,26 +164,26 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(copyKey);
 
     // Draw lines overlay.
-    ctx.beginPath();
-    var line = h/2;
-    if (h%2 === 0) line += 0.5;
-    ctx.moveTo(0, line);
-    ctx.lineTo(w, line);
-    var vline = w/2;
-    if (w%2 === 0) vline += 0.5;
-    ctx.moveTo(vline, 0);
-    ctx.lineTo(vline, h);
-    ctx.strokeStyle = orange;
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
-    ctx.fillStyle = orange;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
+    // ctx.beginPath();
+    // var line = h/2;
+    // if (h%2 === 0) line += 0.5;
+    // ctx.moveTo(0, line);
+    // ctx.lineTo(w, line);
+    // var vline = w/2;
+    // if (w%2 === 0) vline += 0.5;
+    // ctx.moveTo(vline, 0);
+    // ctx.lineTo(vline, h);
+    // ctx.strokeStyle = orange;
+    // ctx.lineWidth = 0.5;
+    // ctx.stroke();
+    // ctx.beginPath();
+    // ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
+    // ctx.fillStyle = orange;
+    // ctx.fill();
+    // ctx.beginPath();
+    // ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
+    // ctx.lineWidth = 0.5;
+    // ctx.stroke();
 
     SC.Benchmark.end(benchKey);
   },
