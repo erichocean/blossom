@@ -65,22 +65,40 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
 
-    ctx.globalAlpha = 1.0;
-    ctx.fillStyle = base3;
-    ctx.fill();
+    if (disabled || !active) {
+      ctx.globalAlpha = 1.0;
+      ctx.fillStyle = base3;
+      ctx.fill();
 
-    ctx.globalAlpha = disabled? 0.5 : 1.0;
-    ctx.strokeStyle = base03;
-    ctx.lineWidth = active? 3 : 1;
-    ctx.stroke();
+      ctx.globalAlpha = disabled? 0.5 : 1.0;
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
 
-    ctx.fillStyle = base03;
-    ctx.font = active? "bold 12pt Calibri" : "12pt Calibri";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+      ctx.fillStyle = base03;
+      ctx.font = "12pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+
+    // active
+    } else {
+      ctx.fillStyle = base03;
+      ctx.fill();
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = base3;
+      ctx.font = "12pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+    }
   },
 
   /**
