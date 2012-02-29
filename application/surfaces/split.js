@@ -137,8 +137,6 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     this.triggerLayoutAndRendering();
   }.observes('topLeftSurface'),
 
-  dividerLayer: SC.Layer,
-
   bottomRightSurface: SC.View,
 
   _sc_bottomRightSurfaceDidChange: function() {
@@ -228,7 +226,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     }
 
     if (this._sc_updateLayoutFirstTime) {
-      console.log('setting default layout first time');
+      // console.log('setting default layout first time');
       this._sc_updateLayoutFirstTime = false;
       // If default thickness is < 1, convert from percentage to absolute.
       if (SC.none(desiredThickness) || (desiredThickness > 0 && desiredThickness < 1)) {
@@ -294,63 +292,33 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     topLeftSurface.set('frame', layout);
 
     // FIXME: size divider layer correctly
-    // if (dividerView) {
-    //   layout = SC.clone(dividerView.get('layout'));
-    //   if (direction === SC.LAYOUT_HORIZONTAL) {
-    //     layout.width = dividerThickness;
-    //     delete layout.height ;
-    //     layout.top = 0 ;
-    //     layout.bottom = 0 ;
-    //     switch (autoresizeBehavior) {
-    //       case SC.RESIZE_BOTH:
-    //         throw "SC.RESIZE_BOTH is currently unsupported.";
-    //         // delete layout.left ;
-    //         // delete layout.right ;
-    //         // layout.centerX = topLeftThickness + (dividerThickness / 2) ;
-    //         // delete layout.centerY ;
-    //         //break ;
-    //       case SC.RESIZE_TOP_LEFT:
-    //         delete layout.left ;
-    //         layout.right = bottomRightThickness ;
-    //         delete layout.centerX ;
-    //         delete layout.centerY ;
-    //         break ;
-    //       case SC.RESIZE_BOTTOM_RIGHT:
-    //         layout.left = topLeftThickness ;
-    //         delete layout.right ;
-    //         delete layout.centerX ;
-    //         delete layout.centerY ;
-    //         break ;
-    //     }
-    //   } else {
-    //     delete layout.width ;
-    //     layout.height = dividerThickness ;
-    //     layout.left = 0 ;
-    //     layout.right = 0 ;
-    //     switch (autoresizeBehavior) {
-    //       case SC.RESIZE_BOTH:
-    //         throw "SC.RESIZE_BOTH is currently unsupported.";
-    //         // delete layout.top ;
-    //         // delete layout.bottom ;
-    //         // delete layout.centerX ;
-    //         // layout.centerY = topLeftThickness + (dividerThickness / 2) ;
-    //         //break ;
-    //       case SC.RESIZE_TOP_LEFT:
-    //         delete layout.top ;
-    //         layout.bottom = bottomRightThickness ;
-    //         delete layout.centerX ;
-    //         delete layout.centerY ;
-    //         break ;
-    //       case SC.RESIZE_BOTTOM_RIGHT:
-    //         layout.top = topLeftThickness ;
-    //         delete layout.bottom ;
-    //         delete layout.centerX ;
-    //         delete layout.centerY ;
-    //         break ;
-    //     }
-    //   }
-    //   dividerView.set('layout', layout);
-    // }
+    var dividerSurface = this._sc_dividerSurface;
+    layout.set(SC.ZERO_RECT);
+
+    if (direction === SC.LAYOUT_HORIZONTAL) {
+      layout[2]/*width*/ = dividerThickness;
+      layout[3]/*height*/ = frame[3]/*height*/;
+      switch (autoresizeBehavior) {
+        case SC.RESIZE_TOP_LEFT:
+          layout[0]/*x*/ = frame[2]/*width*/ - bottomRightThickness;
+          break;
+        case SC.RESIZE_BOTTOM_RIGHT:
+          layout[0]/*x*/ = topLeftThickness;
+          break;
+      }
+    } else {
+      layout[2]/*width*/ = frame[2]/*width*/;
+      layout[3]/*height*/ = dividerThickness;
+      switch (autoresizeBehavior) {
+        case SC.RESIZE_TOP_LEFT:
+          layout[1]/*y*/ = frame[3]/*height*/ - bottomRightThickness;
+          break;
+        case SC.RESIZE_BOTTOM_RIGHT:
+          layout[1]/*y*/ = topLeftThickness;
+          break;
+      }
+    }
+    dividerSurface.set('frame', layout);
 
     // bottom/right surface
     isCollapsed = bottomRightSurface.get('isCollapsed') || false;
@@ -395,12 +363,40 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   },
 
   updateDisplay: function() {
-    // console.log('SC.SplitSurface#updateDisplay()');
+    // console.log('SC.SplitSurface#updateDisplay()', SC.guidFor(this));
     var topLeftSurface = this.get('topLeftSurface');
     if (topLeftSurface) topLeftSurface.updateDisplay();
 
     var bottomRightSurface = this.get('bottomRightSurface');
     if (bottomRightSurface) bottomRightSurface.updateDisplay();
+
+    var psurface = SC.psurfaces[this._sc_dividerSurface.__id__],
+        el = psurface? psurface.__element__ : null;
+    sc_assert(el);
+    var ctx = el.getContext('2d');
+    ctx.__sc_canvas__ = el; // enables width and height getters on context
+    this.render(ctx);
+  },
+
+  render: function(ctx) {
+    // console.log('render', ctx.width, ctx.height);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+    ctx.strokeStyle = 'grey';
+    ctx.beginPath();
+    if (this.get('layoutDirection') === SC.LAYOUT_HORIZONTAL) {
+      ctx.moveTo(0.5, 0);
+      ctx.lineTo(0.5, ctx.height);
+      ctx.moveTo(ctx.width-0.5, 0);
+      ctx.lineTo(ctx.width-0.5, ctx.height);
+    } else {
+      ctx.moveTo(0, 0.5);
+      ctx.lineTo(ctx.width, 0.5);
+      ctx.moveTo(0, ctx.height - 0.5);
+      ctx.lineTo(ctx.width, ctx.height - 0.5);
+    }
+    ctx.stroke();
   },
 
   /**
@@ -723,9 +719,19 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   },
 
   init: function() {
+    var dividerSurface;
     arguments.callee.base.apply(this, arguments);
     this._sc_topLeftSurfaceDidChange();
     this._sc_bottomRightSurfaceDidChange();
+
+    dividerSurface = this._sc_dividerSurface = SC.LeafSurface.create({
+      __tagName__: 'canvas',
+      __useContentSize__: true, // we need our width and height attributes set,
+      mouseDown: function(evt) {
+        return this.get('supersurface').mouseDown(evt);
+      }
+    });
+    this.get('subsurfaces').pushObject(dividerSurface);
   }
 
 });
