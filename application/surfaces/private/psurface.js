@@ -94,7 +94,9 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
     element.height = height;
   }
 
-  if (surfaceId !== 'ui') {
+  // FIXME: This gives a drop shadow to all root surfaces other than the #ui
+  // div.  What we need is an API for drop shadows on SC.Surface itself.
+  if (surfaceId !== 'ui' && !SC.surfaces[surfaceId].get('supersurface')) {
     element.style.webkitBoxShadow = "0px 10px 15px rgba(1,1,1,0.5)";
   }
 
