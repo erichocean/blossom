@@ -49,6 +49,16 @@ SC.CompositeSurface = SC.Surface.extend(
   // SURFACE TREE SUPPORT
   //
 
+  _sc_compositeIsPresentInViewportDidChange: function() {
+    // console.log("SC.Surface#_sc_compositeIsPresentInViewportDidChange()");
+    var subsurfaces = this.get('subsurfaces'),
+        isPresentInViewport = this.get('isPresentInViewport');
+
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].set('isPresentInViewport', isPresentInViewport);
+    }
+  }.observes('isPresentInViewport'),
+
   // When the subsurfaces property changes, we need to observe it's members
   // for changes.
   _sc_subsurfaces: null,
@@ -78,10 +88,13 @@ SC.CompositeSurface = SC.Surface.extend(
 
   _sc_subsurfacesMembersDidChange: function() {
     // console.log("SC.Surface#_sc_subsurfacesMembersDidChange()");
-    var subsurfaces = this.get('subsurfaces');
+    var subsurfaces = this.get('subsurfaces'),
+        isPresentInViewport = this.get('isPresentInViewport');
 
     for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
-      subsurfaces[idx].set('supersurface', this);
+      var subsurface = subsurfaces[idx];
+      subsurface.set('supersurface', this);
+      subsurface.set('isPresentInViewport', isPresentInViewport);
     }
 
     SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache

@@ -202,7 +202,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
 
   _sc_updateLayoutFirstTime: true,
   updateLayout: function() {
-    // console.log('SC.SplitSurface#updateLayout()');
+    // console.log('SC.SplitSurface#updateLayout()', SC.guidFor(this));
     var layoutDirection = this.get('layoutDirection'),
         frame = this.get('frame'),
         splitViewThickness,
@@ -432,7 +432,7 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   },
 
   mouseDragged: function(evt) {
-    // console.log('SC.SplitSurface#mouseDragged()');
+    // console.log('SC.SplitSurface#mouseDragged()', SC.guidFor(this));
     var offset;
 
     if (this._sc_layoutDirection === SC.LAYOUT_HORIZONTAL) {

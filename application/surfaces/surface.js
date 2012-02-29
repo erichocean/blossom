@@ -446,7 +446,7 @@ SC.Surface = SC.Responder.extend({
   },
 
   performLayoutIfNeeded: function(timestamp) {
-    // console.log('SC.Surface#performLayoutIfNeeded()');
+    // console.log('SC.Surface#performLayoutIfNeeded()', SC.guidFor(this));
     var needsLayout = this.__needsLayout__,
         isVisible = this.get('isVisible');
 
@@ -464,6 +464,7 @@ SC.Surface = SC.Responder.extend({
         // visible in the viewport
       SC.Benchmark.end(layoutKey);
     }
+    // else console.log('skipping layout: not needed or visible');
 
     SC.Benchmark.end(benchKey);
 

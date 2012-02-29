@@ -78,7 +78,7 @@ function main() {
     color: blue
   }));
 
-  var pane = SC.View.create({
+  var Pane = SC.View.extend({
     updateDisplay: function() {
       // console.log('pane#updateDisplay()', SC.guidFor(this));
       var psurface = SC.psurfaces[this.__id__],
@@ -115,6 +115,14 @@ function main() {
       return true;
     }
   });
+
+  var pane = Pane.create(),
+      pane2 = Pane.create(),
+      split2 = SC.SplitSurface.create({
+        // layoutDirection: SC.LAYOUT_VERTICAL,
+        topLeftSurface: pane,
+        bottomRightSurface: pane2
+      });
   
   pane.set('backgroundColor', "white");
   pane.set('borderColor', "black");
@@ -123,7 +131,7 @@ function main() {
 
   var split = SC.SplitSurface.create({
     topLeftSurface: surface,
-    bottomRightSurface: pane
+    bottomRightSurface: split2
   });
 
   SC.app.set('ui', split);
