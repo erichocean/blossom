@@ -119,7 +119,7 @@ function main() {
   var pane = Pane.create(),
       pane2 = Pane.create(),
       split2 = SC.SplitSurface.create({
-        // layoutDirection: SC.LAYOUT_VERTICAL,
+        layoutDirection: SC.LAYOUT_VERTICAL,
         topLeftSurface: pane,
         bottomRightSurface: pane2
       });

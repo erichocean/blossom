@@ -11,6 +11,9 @@ sc_require('layers/layer');
 
 if (BLOSSOM) {
 
+SC.LAYOUT_HORIZONTAL = 'sc-layout-horizontal';
+SC.LAYOUT_VERTICAL = 'sc-layout-vertical';
+
 SC.RESIZE_TOP_LEFT = 'resize-top-left';
 SC.RESIZE_BOTTOM_RIGHT = 'resize-bottom-right';
 
