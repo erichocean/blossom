@@ -422,7 +422,7 @@ SC.Benchmark = {
     var stat2 = this._statFor('SC.RunLoop#animationLoop()') ;
     var avg2 = (stat2.runs > 0) ? (Math.floor(stat2.amt * 1000 / stat2.runs) / 1000) : 0 ;
     
-    return "Averaging %@ \u03BCsec/frame at %@x%@".fmt((avg + avg2)*1000|0, window.innerWidth, window.innerHeight);
+    return " %@ \u03BCsec/frame avg. at %@x%@".fmt((avg + avg2)*1000|0, window.innerWidth, window.innerHeight);
   }
   
 } ;
