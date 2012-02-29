@@ -122,11 +122,20 @@ SC.View = SC.LeafSurface.extend({
     var benchKey = 'SC.View#updateLayout()';
     SC.Benchmark.start(benchKey);
 
-    var layers = this.get('layers');
+    var layers = this.get('layers'), layer,
+        textLayersNeedingLayout = [];
     for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].updateLayout();
+      layer = layers[idx];
+      layer.updateLayout();
+      if (layer.updateTextLayout && layer.__needsTextLayout__) {
+        textLayersNeedingLayout.push(layer);
+      }
     }
     this._sc_hitTestLayer.updateLayout();
+
+    for (idx=0, len=textLayersNeedingLayout.length; idx<len; ++idx) {
+      textLayersNeedingLayout[idx].updateTextLayout();
+    }
 
     SC.Benchmark.end(benchKey);
   },

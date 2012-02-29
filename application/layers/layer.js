@@ -74,10 +74,13 @@ SC.Layer = SC.Object.extend({
   // RENDERING SUPPORT
   //
 
+  __needsTextLayout__: false,
+
   __needsLayout__: false,
   triggerLayout: function() {
     // console.log('SC.Layer#triggerLayout()');
     this.__needsLayout__ = true;
+    this.__needsTextLayout__ = true;
     if (this.get('surface')) SC.needsLayout = true;
   },
 
@@ -92,6 +95,7 @@ SC.Layer = SC.Object.extend({
     // console.log('SC.Layer#triggerLayoutAndRendering()');
     this.__needsLayout__ = true;
     this.__needsRendering__ = true;
+    this.__needsTextLayout__ = true;
     if (this.get('surface')) SC.needsLayout = SC.needsRendering = true;
   },
 
