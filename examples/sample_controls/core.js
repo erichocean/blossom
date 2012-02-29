@@ -118,10 +118,15 @@ function main() {
 
   var pane = Pane.create(),
       pane2 = Pane.create(),
+      pane3 = Pane.create(),
       split2 = SC.SplitSurface.create({
         layoutDirection: SC.LAYOUT_VERTICAL,
         topLeftSurface: pane,
         bottomRightSurface: pane2
+      }),
+      split3 = SC.SplitSurface.create({
+        topLeftSurface: split2,
+        bottomRightSurface: pane3
       });
   
   pane.set('backgroundColor', "white");
@@ -131,7 +136,7 @@ function main() {
 
   var split = SC.SplitSurface.create({
     topLeftSurface: surface,
-    bottomRightSurface: split2
+    bottomRightSurface: split3
   });
 
   SC.app.set('ui', split);
