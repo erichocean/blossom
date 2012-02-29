@@ -48,6 +48,13 @@ SC.View = SC.LeafSurface.extend({
     arguments.callee.base.apply(this, arguments);
     this.layers = [];
     this._sc_layersDidChange();
+
+    this._sc_hitTestLayer = SC.Layer.create({
+      // `layout` is whatever the default on SC.Layer is
+      isHitTestOnly: true,
+      surface: this,
+      delegate: this
+    });
   },
 
   layers: [],
@@ -119,6 +126,7 @@ SC.View = SC.LeafSurface.extend({
     for (var idx=0, len=layers.length; idx<len; ++idx) {
       layers[idx].updateLayout();
     }
+    this._sc_hitTestLayer.updateLayout();
 
     SC.Benchmark.end(benchKey);
   },
@@ -178,233 +186,107 @@ SC.View = SC.LeafSurface.extend({
     ctx.stroke();
 
     SC.Benchmark.end(benchKey);
-  }
+  },
+
+  mousePosition: null,
+
+  updateMousePositionWithEvent: function(evt) {
+    var containerPos = this.computeContainerPosition(),
+        mouseX = evt.clientX - containerPos.left + window.pageXOffset,
+        mouseY = evt.clientY - containerPos.top + window.pageYOffset,
+        ret = { x: mouseX, y: mouseY };
+
+    this.set('mousePosition', ret);
+    return ret;
+  },
+
+  computeContainerPosition: function() {
+    var el = SC.psurfaces[this.__id__].__element__,
+        top = 0, left = 0;
+
+    while (el && el.tagName != "BODY") {
+      top += el.offsetTop;
+      left += el.offsetLeft;
+      el = el.offsetParent;
+    }
+
+    return { top: top, left: left };
+  },
 
   /**
     Finds the layer that is hit by this event, and returns its view.
   */
-  // targetSurfaceForEvent: function(evt) {
-  //   // console.log('SC.ViewSurface#targetSurfaceForEvent(', evt, ')');
-  //   var context = this.getPath('hitTestLayer.context'),
-  //       contentView = this.get('contentView'),
-  //       hitLayer = null, zIndex = -1,
-  //       mousePosition, x, y;
-  // 
-  //   // debugger;
-  //   mousePosition = this.updateMousePositionWithEvent(evt);
-  //   x = mousePosition.x;
-  //   y = mousePosition.y;
-  // 
-  //   if (!contentView) return this;
-  // 
-  //   function hitTestSublayer(sublayer) {
-  //     // debugger;
-  //     if (sublayer.get('isHidden')) return;
-  //     context.save();
-  // 
-  //     // Prevent this layer and any sublayer from drawing paths outside our
-  //     // bounds.
-  //     sublayer.renderBoundsPath(context);
-  //     context.clip();
-  // 
-  //     // Make sure the layer's transform is current.
-  //     if (sublayer._sc_transformFromSuperlayerToLayerIsDirty) {
-  //       sublayer._sc_computeTransformFromSuperlayerToLayer();
-  //     }
-  // 
-  //     // Apply the sublayer's transform from our layer (it's superlayer).
-  //     var t = sublayer._sc_transformFromSuperlayerToLayer;
-  //     context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
-  // 
-  //     // First, test our sublayers.
-  //     sublayer.get('sublayers').forEach(hitTestSublayer);
-  // 
-  //     // Only test ourself if (a) no hit has been found, or (b) our zIndex is
-  //     // higher than whatever hit has been found so far.
-  //     var sublayerZ = sublayer.get('zIndex');
-  //     if (!hitLayer || zIndex < sublayerZ) {
-  //       // See if we actually hit something. Start by beginning a new path.
-  //       context.beginPath();
-  // 
-  //       // Next, draw the path(s) we'll test.
-  //       sublayer.renderHitTestPath(context);
-  // 
-  //       // Finally, test the point for intersection with the path(s).
-  //       if (context.isPointInPath(x, y)) {
-  //         hitLayer = sublayer;
-  //         zIndex = sublayerZ;
-  //       }
-  //     }
-  // 
-  //     context.restore();
-  //   }
-  // 
-  //   context.save();
-  // 
-  //   var layer = contentView.get('layer');
-  // 
-  //   // First, clip the context to the pane's layer's bounds.
-  //   context.beginPath();
-  //   layer.renderBoundsPath(context);
-  //   context.clip();
-  // 
-  //   // Next, begin the hit testing process. When this completes, hitLayer
-  //   // will contain the layer that was hit with the highest zIndex.
-  //   hitTestSublayer(layer);
-  // 
-  //   context.restore();
-  // 
-  //   // console.log(hitLayer, hitLayer? hitLayer.get('view') : undefined);
-  // 
-  //   // We don't need to test `layer`, because we already know it was hit when
-  //   // this method is called by SC.RootResponder.
-  //   return hitLayer? hitLayer.get('view') : this ;
-  // },
+  targetResponderForEvent: function(evt) {
+    // console.log('SC.ViewSurface#targetResponderForEvent(', evt, ')');
+    var context = this._sc_hitTestLayer.get('context'),
+        hitLayer = null, zIndex = -1,
+        mousePosition, x, y;
 
-  // initElement: function() {
-  //   arguments.callee.base.apply(this, arguments);
-  //   var element = this.__sc_element__;
-  //   this._sc_contentViewDidChange();
-  // },
+    // debugger;
+    mousePosition = this.updateMousePositionWithEvent(evt);
+    x = mousePosition.x;
+    y = mousePosition.y;
 
-  // ..........................................................
-  // VIEWPORT SUPPORT
-  //
+    function hitTestLayer(layer) {
+      // debugger;
+      if (layer.get('isHidden')) return;
+      context.save();
 
-  // /**
-  //   The SC.Layer subclass to instantiate to create this view's layer.
-  // 
-  //   @property {SC.Layer}
-  // */
-  // layerClass: SC.Layer,
-  // 
-  // layer: function(key, value) {
-  //   sc_assert(value === undefined); // We're read only.
-  //   return this._sc_layer;
-  // }.property(),
-  // 
-  // hitTestLayer: null,
-  // 
-  // hitTestLayer: function(key, value) {
-  //   sc_assert(value === undefined); // We're read only.
-  //   return this._sc_hitTestLayer;
-  // }.property(),
+      // Prevent this layer and any sublayer from drawing paths outside our
+      // bounds.
+      layer.renderBoundsPath(context);
+      context.clip();
 
-  // createSurface: function() {
-  //   // console.log('SC.View#createSurface()');
-  // 
-  //   // For now, just do this one time.
-  //   if (this._sc_didCreateSurface) return;
-  //   this._sc_didCreateSurface = true;
-  // 
-  //   arguments.callee.base.apply(this, arguments);
-  //   var container = this;
-  // 
-  //   // SC.ViewSurface only has two layers: `layer` and `hitTestLayer`.
-  //   var K = this.get('layerClass');
-  //   sc_assert(K && K.kindOf(SC.Layer));
-  // 
-  //   // We want to allow the developer to provide a layout hash on the view, 
-  //   // or to override the 'layout' computed property.
-  //   if (this.hasOwnProperty('layout')) {
-  //     // It's still possible that layout is a computed property. Don't use 
-  //     // `get()` to find out!
-  //     var layout = this.layout;
-  //     if (typeof layout === "object") {
-  //       // We assume `layout` is a layout hash. The layer will throw an 
-  //       // exception if `layout` is invalid -- don't test for that here.
-  //       this._sc_layer = K.create({
-  //         layout: layout,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //       this._sc_hitTestLayer = K.create({
-  //         layout: layout,
-  //         isHitTestOnly: true,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //     } else {
-  //       this._sc_layer = K.create({
-  //         // `layout` is whatever the default on SC.Layer is
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //       this._sc_hitTestLayer = K.create({
-  //         // `layout` is whatever the default on SC.Layer is
-  //         isHitTestOnly: true,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //     }
-  // 
-  //     // Only delete layout if it is not a computed property. This allows 
-  //     // the computed property on the prototype to shine through.
-  //     if (typeof layout !== "function" || !layout.isProperty) {
-  //       // console.log('deleting layout');
-  //       delete this.layout;
-  //     }
-  //   } else {
-  //     this._sc_layer = K.create({
-  //       // `layout` is whatever the default on SC.Layer is
-  //       owner: this, // TODO: Do we need owner here?
-  //       container: container,
-  //       delegate: this
-  //     });
-  //     this._sc_hitTestLayer = K.create({
-  //       // `layout` is whatever the default on SC.Layer is
-  //       isHitTestOnly: true,
-  //       owner: this, // TODO: Do we need owner here?
-  //       container: container,
-  //       delegate: this
-  //     });
-  //   }
-  // 
-  //   this.notifyPropertyChange('layer');
-  //   this.notifyPropertyChange('hitTestLayer');
-  // },
-  // 
-  // destroySurface: function() {
-  //   console.log('SC.ViewSurface#destroySurface()');
-  // },
+      // Make sure the layer's transform is current.
+      if (layer._sc_transformFromSuperlayerToLayerIsDirty) {
+        layer._sc_computeTransformFromSuperlayerToLayer();
+      }
 
-  // ..........................................................
-  // CONTENT VIEW SUPPORT
-  //
+      // Apply the sublayer's transform from our layer (it's superlayer).
+      var t = layer._sc_transformFromSuperlayerToLayer;
+      context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
 
-  // contentView: null,
-  // 
-  // _sc_contentView: null,
-  // _sc_contentViewDidChange: function() {
-  //   // console.log('SC.ViewSurface#_sc_contentViewDidChange()');
-  //   var old = this._sc_contentView,
-  //       cur = this.get('contentView'),
-  //       layer = this.get('layer');
-  // 
-  //   if (cur && cur.isViewClass) {
-  //     this.set('contentView', cur.create());
-  //     return;
-  //   }
-  // 
-  //   sc_assert(old === null || old.kindOf(SC.View), "Blossom internal error: SC.Application^_sc_contentView is invalid.");
-  //   sc_assert(cur === null || cur.kindOf(SC.View), "SC.Application@ui must either be null or an SC.View instance.");
-  // 
-  //   if (old === cur) return; // Nothing to do.
-  // 
-  //   if (old) old.set('surface', null);
-  //   if (cur) cur.set('surface', this);
-  // 
-  //   this.displayDidChange();
-  // }.observes('contentView')
+      // First, test our sublayers.
+      var sublayers = layer.get('sublayers'), idx, len;
+      for (idx=0, len=sublayers.length; idx<len; ++idx) {
+        hitTestLayer(sublayers[idx]);
+      }
+
+      // Only test ourself if (a) no hit has been found, or (b) our zIndex is
+      // higher than whatever hit has been found so far.
+      var layerZ = layer.get('zIndex');
+      if (!hitLayer || zIndex < layerZ) {
+        // See if we actually hit something. Start by beginning a new path.
+        context.beginPath();
+
+        // Next, draw the path(s) we'll test.
+        layer.renderHitTestPath(context);
+
+        // Finally, test the point for intersection with the path(s).
+        if (context.isPointInPath(x, y)) {
+          hitLayer = layer;
+          zIndex = layerZ;
+        }
+      }
+
+      context.restore();
+    }
+
+    // Next, begin the hit testing process. When this completes, hitLayer
+    // will contain the layer that was hit with the highest zIndex.
+    var layers = this.get('layers'), idx, len;
+    for (idx=0, len=layers.length; idx<len; ++idx) {
+      hitTestLayer(layers[idx]);
+    }
+
+    // If we hit a layer, remember it so our view knows.
+    evt.layer = hitLayer;
+
+    // We don't need to test `layer`, because we already know it was hit when
+    // this method is called by SC.RootResponder.
+    return hitLayer? (hitLayer.get('behavior') || this) : this ;
+  }
 
 });
-
-// HACK: FIXME
-// SC.LAYOUT_AUTO = 'auto';
-// SC._VIEW_DEFAULT_DIMS = 'marginTop marginLeft'.w();
 
 } // BLOSSOM

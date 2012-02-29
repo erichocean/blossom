@@ -158,6 +158,11 @@ SC.Layer = SC.Object.extend({
   // SURFACE SUPPORT
   //
 
+  nextResponder: function() {
+    var superlayer = this.get('superlayer');
+    return superlayer? superlayer : this.get('surface');
+  }.property('superlayer', 'surface'),
+
   /**
     The current surface this layer is a child of (may be null).
     @property {SC.Surface}
@@ -716,7 +721,7 @@ SC.Layer = SC.Object.extend({
     this.__needsLayout__ = true;
     this.__needsRendering__ = true;
 
-    this._sc_superlayerDidChange();
+    // this._sc_superlayerDidChange();
     // this._sc_needsLayoutDidChange();
     // this._sc_needsDisplayDidChange();
   },

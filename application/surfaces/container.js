@@ -81,7 +81,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     this._sc_contentSurface = cur;
 
     if (cur) {
-      cur.set('container', this);
+      // cur.set('container', this);
       cur.set('frame', frame);
       cur.setIfChanged('isPresentInViewport', this.get('isPresentInViewport'));
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));

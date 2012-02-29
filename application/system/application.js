@@ -619,7 +619,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   dragDidStart: function(drag) {
-    this._sc_mouseDownSurface = drag;
+    this._sc_mouseDownResponder = drag;
     this._sc_drag = drag;
   },
 
@@ -940,7 +940,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   //
 
   mousewheel: function(evt) {
-    var surface = this.targetSurfaceForEvent(evt) ,
+    var surface = this.targetResponderForEvent(evt) ,
         handler = this.sendEvent('mouseWheel', evt, surface) ;
   
     return (handler) ? evt.hasCustomEventHandling : true ;
@@ -956,7 +956,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_mouseCanDrag: true,
 
   selectstart: function(evt) {
-    var surface = this.targetSurfaceForEvent(evt),
+    var surface = this.targetResponderForEvent(evt),
         result = this.sendEvent('selectStart', evt, surface);
 
     // If the target surface implements mouseDragged, then we want to ignore 
@@ -972,7 +972,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   drag: function() { return false; },
 
   contextmenu: function(evt) {
-    var surface = this.targetSurfaceForEvent(evt) ;
+    var surface = this.targetResponderForEvent(evt) ;
     return this.sendEvent('contextMenu', evt, surface);
   },
 
@@ -982,7 +982,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   webkitAnimationStart: function(evt) {
     try {
-      var surface = this.targetSurfaceForEvent(evt) ;
+      var surface = this.targetResponderForEvent(evt) ;
       this.sendEvent('animationDidStart', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidStart: %@'.fmt(e)) ;
@@ -994,7 +994,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   webkitAnimationIteration: function(evt) {
     try {
-      var surface = this.targetSurfaceForEvent(evt) ;
+      var surface = this.targetResponderForEvent(evt) ;
       this.sendEvent('animationDidIterate', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidIterate: %@'.fmt(e)) ;
@@ -1006,7 +1006,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
   webkitAnimationEnd: function(evt) {
     try {
-      var surface = this.targetSurfaceForEvent(evt) ;
+      var surface = this.targetResponderForEvent(evt) ;
       this.sendEvent('animationDidEnd', evt, surface) ;
     } catch (e) {
       console.warn('Exception during animationDidEnd: %@'.fmt(e)) ;
@@ -1100,8 +1100,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @param {SC.Event} evt
     @returns {SC.Surface} surface instance or null
   */
-  targetSurfaceForEvent: function(evt) {
-    // console.log('SC.Application#targetSurfaceForEvent()');
+  targetResponderForEvent: function(evt) {
+    // console.log('SC.Application#targetResponderForEvent()');
     var parentNode = evt.target, id, ret, surfaces = SC.surfaces;
 
     if (surfaces === null) this.updateSurfacesHash();
@@ -1112,8 +1112,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       parentNode = parentNode.parentNode;
     }
 
-    ret = ret? ret.targetSurfaceForEvent(evt) : null;
-    sc_assert(ret === null || ret.kindOf(SC.Surface), "Error in SC.Application#targetSurfaceForEvent()");
+    ret = ret? ret.targetResponderForEvent(evt) : null;
+    // Duck type here, SC.Behavior is a responder and does not subclass SC.Responder.
+    sc_assert(ret === null || ret.isResponder, "Error in SC.Application#targetResponderForEvent()");
     return ret;
   },
 
@@ -1148,7 +1149,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     if (keyCode === 27 && this._sc_drag) {
       this._sc_drag.cancelDrag();
       this._sc_drag = null;
-      this._sc_mouseDownSurface = null;
+      this._sc_mouseDownResponder = null;
       return true;
     }
 
@@ -1249,7 +1250,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   /**
     `mouseUp` only gets delivered to the surface that handled the `mouseDown` 
     event.  We also handle `click` and `doubleClick` events here to ensure 
-    consistent delivery.  Note that if `_sc_mouseDownSurface` is `null`, no 
+    consistent delivery.  Note that if `_sc_mouseDownResponder` is `null`, no 
     `mouseUp` event will be sent, but a `click` or `doubleClick` event *will* 
     be sent as appropriate.
   */
@@ -1260,8 +1261,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // FIXME: Shouldn't we return at this point?
     }
 
-    var handler = null, mouseDownSurface = this._sc_mouseDownSurface,
-        surface = this.targetSurfaceForEvent(evt);
+    var handler = null, mouseDownSurface = this._sc_mouseDownResponder,
+        surface = this.targetResponderForEvent(evt);
 
     this._sc_lastMouseUpAt = Date.now(); // Why not evt.timeStamp?
 
@@ -1300,7 +1301,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // cleanup
     this._sc_mouseCanDrag = false;
-    this._sc_mouseDownSurface = null;
+    this._sc_mouseDownResponder = null;
 
     return (handler) ? evt.hasCustomEventHandling : true ;
   },
@@ -1329,7 +1330,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this._sc_lastMouseDownX = evt.clientX;
     this._sc_lastMouseDownY = evt.clientY;
 
-    var fr, surface = this.targetSurfaceForEvent(evt), handler;
+    var fr, surface = this.targetResponderForEvent(evt), handler;
 
     // HACK: InlineTextField needs to loose firstResponder whenever you click 
     // outside the view.  This is a special case as textfields are not 
@@ -1340,7 +1341,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     //   fr.resignFirstResponder();
     // }
 
-    handler = this._sc_mouseDownSurface = this.sendEvent('mouseDown', evt, surface);
+    handler = this._sc_mouseDownResponder = this.sendEvent('mouseDown', evt, surface);
     if (handler && handler.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
 
     return handler ? evt.hasCustomEventHandling : true ;
@@ -1352,7 +1353,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
    actions, you must implement the action method. If any subsurfaces 
    implement them and return true, then your action won't be called.
 
-   If there is an `_sc_mouseDownSurface` surface, then mouse moved events 
+   If there is an `_sc_mouseDownResponder` surface, then mouse moved events 
    will also trigger calls to the `mouseDragged` action on that surface.
   */
   mousemove: function(evt) {
@@ -1367,21 +1368,23 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         this._sc_drag.tryToPerform('mouseDragged', evt);
     } else {
       var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
-          surface = this.targetSurfaceForEvent(evt);
+          responder = this.targetResponderForEvent(evt);
+
+      console.log(SC.guidFor(responder));
 
       // First, collect all the responding surfaces starting with the target 
       // surface  from the given mouse move event.
-      while (surface && (surface !== this)) {
-        nh.push(surface);
-        surface = surface.get('nextResponder');
+      while (responder && (responder !== this)) {
+        nh.push(responder);
+        responder = responder.get('nextResponder');
       }
 
       // Next, exit surfaces that are no longer part of the responding chain.
       for (loc=0, len=lh.length; loc<len; ++loc) {
-        surface = lh[loc];
-        exited = surface.respondsTo('mouseExited');
-        if (exited && nh.indexOf(surface) === -1) {
-          surface.tryToPerform('mouseExited', evt);
+        responder = lh[loc];
+        exited = responder.respondsTo('mouseExited');
+        if (exited && nh.indexOf(responder) === -1) {
+          responder.tryToPerform('mouseExited', evt);
         }
       }
 
@@ -1389,21 +1392,21 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // whether a responding surface was or was not part of the last hovered 
       // surfaces.
       for (loc=0, len=nh.length; loc < len; loc++) {
-        surface = nh[loc];
-        if (lh.indexOf(surface) !== -1) {
-          surface.tryToPerform('mouseMoved', evt);
+        responder = nh[loc];
+        if (lh.indexOf(responder) !== -1) {
+          responder.tryToPerform('mouseMoved', evt);
         } else {
-          surface.tryToPerform('mouseEntered', evt);
+          responder.tryToPerform('mouseEntered', evt);
         }
       }
 
       // Keep track of the surfaces that were last hovered.
       this._sc_lastHovered = nh;
 
-      // Also, if _sc_mouseDownSurface exists, call the mouseDragged action, 
+      // Also, if _sc_mouseDownResponder exists, call the mouseDragged action, 
       // if it exists.
-      if (this._sc_mouseDownSurface) {
-        this._sc_mouseDownSurface.tryToPerform('mouseDragged', evt);
+      if (this._sc_mouseDownResponder) {
+        this._sc_mouseDownResponder.tryToPerform('mouseDragged', evt);
       }
     }
   }

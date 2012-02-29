@@ -107,7 +107,18 @@ var MyLayer = SC.Layer.extend({
 });
 
 function main() {
-  var surface = SC.View.create();
+  var surface = SC.View.create({
+
+    mouseMoved: function(evt) {
+      if (evt.layer) document.body.style.cursor = "pointer";
+      else document.body.style.cursor = "default";
+    // },
+    // 
+    // mouseDown: function(evt) {
+    //   if (evt.layer) alert('Clicked on the '+evt.layer.get('color')+' layer.');
+    }
+
+  });
 
   surface.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -40, centerY: -40, width: 600, height: 480 },
@@ -123,6 +134,8 @@ function main() {
     layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
     color: blue
   }));
+
+  console.log('surface is', SC.guidFor(surface));
 
   SC.Application.create();
   SC.app.set('ui', surface);

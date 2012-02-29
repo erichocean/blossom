@@ -621,6 +621,11 @@ SC.Surface = SC.Responder.extend({
   // MISC
   //
 
+  nextResponder: function() {
+    var supersurface = this.get('supersurface');
+    return supersurface? supersurface : this.get('container');
+  }.property('supersurface', 'container'),
+
   init: function() {
     // console.log('SC.Surface#init()');
     arguments.callee.base.apply(this, arguments);
@@ -697,7 +702,7 @@ SC.Surface = SC.Responder.extend({
   /**
     Finds the surface that is hit by this event, and returns its view.
   */
-  targetSurfaceForEvent: function(evt) {
+  targetResponderForEvent: function(evt) {
     return this;
   },
 
