@@ -129,11 +129,6 @@ function main() {
         bottomRightSurface: pane3
       });
   
-  pane.set('backgroundColor', "white");
-  pane.set('borderColor', "black");
-  pane.set('borderWidth', 1);
-  pane.set('cornerRadius', 5);
-
   var split = SC.SplitSurface.create({
     dividerThickness: 0,
     defaultThickness: 600,

@@ -1,6 +1,6 @@
 {
-  "name"          : "blossom-sample_controls",
-  "description"   : "Blossom Sample Controls Application",
+  "name"          : "blossom-splitsurface_demo",
+  "description"   : "Blossom SplitSurface Demo Application",
   "url"           : "http://fohr.com/blossom",
   "keywords"      : ["sproutcore", "blossom" , "sample code"],
   "author"        : "Erich Ocean <eocean@fohr.com>",
