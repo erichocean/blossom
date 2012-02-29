@@ -287,20 +287,12 @@ SC.Layer = SC.Object.extend({
       throw "No implementation for SC.Layer#set('bounds', value)";
     } else {
       if (this.__needsLayout__) {
-        var container = this.get('container'),
-            surface = this.get('surface'),
+        var surface = this.get('surface'),
             superlayer = this.get('superlayer'),
             anchorPoint = this.get('anchorPoint'),
             pbounds;
 
-        // debugger;
-        if (container) {
-          sc_assert(!surface);
-          sc_assert(!superlayer);
-          // Use the container's bounds as the parent's bounds.
-          // debugger;
-          pbounds = container.get('bounds');
-        } else if (superlayer) {
+        if (superlayer) {
           // Use our superlayer's bounds.
           pbounds = superlayer.get('bounds');
           // debugger;
@@ -587,13 +579,6 @@ SC.Layer = SC.Object.extend({
         fillRect: defineRect,
         strokeRect: defineRect
       });
-    }
-
-    var container = this.get('container');
-    if (container) {
-      // console.log('appending canvas element');
-      sc_assert(container.__sc_element__);
-      container.__sc_element__.appendChild(canvas); // a DOM call
     }
   },
 

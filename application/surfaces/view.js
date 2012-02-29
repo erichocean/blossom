@@ -180,11 +180,6 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(benchKey);
   }
 
-  // bounds: function() {
-  //   // FIXME!
-  //   return this.getPath('container.bounds');
-  // }.property(),
-
   /**
     Finds the layer that is hit by this event, and returns its view.
   */

@@ -389,7 +389,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       });
 
       var sz = this.computeViewportSize();
-      uiContainer.set('container', this);
+      // uiContainer.set('container', this);
       uiContainer.set('isPresentInViewport', true);
     }
     return uiContainer;
@@ -786,8 +786,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     var surface, ret;
 
     if (target) {
-      surface = target.get('surface') ;
-      if (!surface) surface = target.get('container') ; // FIXME: Why?
+      surface = target.get('surface');
+      sc_assert(surface);
+      // if (!surface) {
+      //   console.log("calling target.get('container') in SC.Application#sendEvent()");
+      //   surface = target.get('container') ; // FIXME: Why?
+      // }
     }
     else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 
