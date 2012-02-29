@@ -53,7 +53,6 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
   render: function(ctx) {
     // console.log('SC.ButtonWidget#render()', SC.guidFor(this));
-
     var title = this.get('displayTitle'),
         selected = this.get('isSelected'),
         disabled = !this.get('isEnabled'),
@@ -85,14 +84,14 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   },
 
   /**
-    optionally set this to the theme you want this button to have.
+    Optionally set this to the theme you want this button to have.
 
     This is used to determine the type of button this is.  You generally
     should set a class name on the HTML with the same value to allow CSS
     styling.
 
     The default SproutCore theme supports "regular", "capsule", "checkbox",
-    and "radio"
+    and "radio".
 
     @property {String}
   */
@@ -213,7 +212,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     // Invoke the actual action method after a small delay to give the user a
     // chance to see the highlight. This is especially important if the button
     // closes a pane, for example.
-    this.invokeLater('_triggerActionAfterDelay', 200, evt);
+    this.invokeLater('_sc_triggerActionAfterDelay', 200, evt);
     return true;
   },
 
@@ -223,8 +222,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     @param {Event} evt
   */
-  _triggerActionAfterDelay: function(evt) {
-    this._action(evt, true);
+  _sc_triggerActionAfterDelay: function(evt) {
+    this._sc_action(evt, true);
     this.didTriggerAction();
     this.set('isActive', false);
   },
@@ -261,32 +260,32 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     // Cache the key equivalent.
     if (this.get('keyEquivalent')) {
-      this._defaultKeyEquivalent = this.get('keyEquivalent');
+      this._sc_defaultKeyEquivalent = this.get('keyEquivalent');
     }
   },
 
   /** @private {String} used to store a previously defined key equiv */
-  _defaultKeyEquivalent: null,
+  _sc_defaultKeyEquivalent: null,
 
   /** @private
-    Whenever the isDefault or isCancel property changes, update the display and change the keyEquivalent.
+    Whenever the isDefault or isCancel property changes, update the display 
+    and change the keyEquivalent.
   */
-  _isDefaultOrCancelDidChange: function() {
+  _sc_isDefaultOrCancelDidChange: function() {
     var isDef = !!this.get('isDefault'),
         isCancel = !isDef && this.get('isCancel') ;
 
-    if(this.didChangeFor('defaultCancelChanged','isDefault','isCancel')) {
-      this.displayDidChange() ; // make sure to update the UI
+    if (this.didChangeFor('defaultCancelChanged','isDefault','isCancel')) {
+      this.triggerRendering(); // make sure to update the UI
       if (isDef) {
         this.set('keyEquivalent', 'return'); // change the key equivalent
       } else if (isCancel) {
         this.setIfChanged('keyEquivalent', 'escape') ;
       } else {
         //restore the default key equivalent
-        this.set("keyEquivalent",this._defaultKeyEquivalent);
+        this.set('keyEquivalent',this._sc_defaultKeyEquivalent);
       }
     }
-
   }.observes('isDefault', 'isCancel'),
 
   isMouseDown: false,
@@ -299,12 +298,12 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     if (!this.get('isEnabled')) return true ; // handled event, but do nothing
     this.set('isActive', true);
-    this._isMouseDown = true;
+    this.isMouseDown = true;
 
     if (buttonBehavior === SC.HOLD_BEHAVIOR) {
-      this._action(evt);
-    } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
-      this._isFocused = true ;
+      this._sc_action(evt);
+    } else if (!this._sc_isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
+      this._sc_isFocused = true ;
       this.becomeFirstResponder();
       // if (this.get('isVisibleInWindow')) {
       //   if (! BLOSSOM) {
@@ -321,7 +320,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   */
   mouseExited: function(evt) {
     document.body.style.cursor = "default";
-    if (this._isMouseDown) { this.set('isActive', false); }
+    if (this.isMouseDown) { this.set('isActive', false); }
     return true;
   },
 
@@ -330,7 +329,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   */
   mouseEntered: function(evt) {
     if (this.get('isEnabled')) document.body.style.cursor = "pointer";
-    if (this._isMouseDown) { this.set('isActive', true); }
+    if (this.isMouseDown) { this.set('isActive', true); }
     return true;
   },
 
@@ -339,65 +338,64 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   */
   mouseUp: function(evt) {
     var wasOver = this.get('isActive');
-    if (this._isMouseDown) this.set('isActive', false); // track independently in case isEnabled has changed
-    this._isMouseDown = false;
+    if (this.isMouseDown) this.set('isActive', false); // track independently in case isEnabled has changed
+    this.isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (wasOver && this.get('isEnabled')) this._action(evt);
+      if (wasOver && this.get('isEnabled')) this._sc_action(evt);
     }
 
     return true;
   },
 
-  touchStart: function(touch){
-    var buttonBehavior = this.get('buttonBehavior');
-
-    if (!this.get('isEnabled')) return true ; // handled event, but do nothing
-    this.set('isActive', true);
-
-    if (buttonBehavior === SC.HOLD_BEHAVIOR) {
-      this._action(touch);
-    } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
-      this._isFocused = true ;
-      this.becomeFirstResponder();
-      if (! BLOSSOM) {
-        if (this.get('isVisibleInWindow')) {
-          this.$()[0].focus();
-        }
-      }
-    }
-
-    // don't want to do whatever default is...
-    touch.preventDefault();
-
-    return true;
-  },
-
-  touchesDragged: function(evt, touches) {
-    if (!this.touchIsInBoundary(evt)) {
-      if (!this._touch_exited) this.set('isActive', false);
-      this._touch_exited = true;
-    } else {
-      if (this._touch_exited) this.set('isActive', true);
-      this._touch_exited = false;
-    }
-
-    evt.preventDefault();
-    return true;
-  },
-
-  touchEnd: function(touch){
-    this._touch_exited = false;
-    this.set('isActive', false); // track independently in case isEnabled has changed
-
-    if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (this.touchIsInBoundary(touch)) this._action();
-    }
-
-    touch.preventDefault();
-    return true ;
-  },
-
+  // touchStart: function(touch){
+  //   var buttonBehavior = this.get('buttonBehavior');
+  // 
+  //   if (!this.get('isEnabled')) return true ; // handled event, but do nothing
+  //   this.set('isActive', true);
+  // 
+  //   if (buttonBehavior === SC.HOLD_BEHAVIOR) {
+  //     this._sc_action(touch);
+  //   } else if (!this._sc_isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
+  //     this._sc_isFocused = true ;
+  //     this.becomeFirstResponder();
+  //     if (! BLOSSOM) {
+  //       if (this.get('isVisibleInWindow')) {
+  //         this.$()[0].focus();
+  //       }
+  //     }
+  //   }
+  // 
+  //   // don't want to do whatever default is...
+  //   touch.preventDefault();
+  // 
+  //   return true;
+  // },
+  // 
+  // touchesDragged: function(evt, touches) {
+  //   if (!this.touchIsInBoundary(evt)) {
+  //     if (!this._touch_exited) this.set('isActive', false);
+  //     this._touch_exited = true;
+  //   } else {
+  //     if (this._touch_exited) this.set('isActive', true);
+  //     this._touch_exited = false;
+  //   }
+  // 
+  //   evt.preventDefault();
+  //   return true;
+  // },
+  // 
+  // touchEnd: function(touch){
+  //   this._touch_exited = false;
+  //   this.set('isActive', false); // track independently in case isEnabled has changed
+  // 
+  //   if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
+  //     if (this.touchIsInBoundary(touch)) this._sc_action();
+  //   }
+  // 
+  //   touch.preventDefault();
+  //   return true ;
+  // },
 
   /** @private */
   keyDown: function(evt) {
@@ -406,13 +404,13 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       var view = evt.shiftKey ? this.get('previousValidKeyView') : this.get('nextValidKeyView');
       if(view) view.becomeFirstResponder();
       else evt.allowDefault();
-      return true ; // handled
-    }
-    if (evt.which === 13) {
+      return true; // handled
+    } else if (evt.which === 13) {
       this.triggerAction(evt);
-      return true ; // handled
+      return true; // handled
+    } else {
+      return false;
     }
-    return false;
   },
 
   /** @private  Perform an action based on the behavior of the button.
@@ -422,8 +420,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
    - off behavior: turn off.
    - otherwise: invoke target/action
   */
-  _action: function(evt, skipHoldRepeat) {
-    // console.log('_action');
+  _sc_action: function(evt, skipHoldRepeat) {
+    // console.log('_sc_action');
     switch(this.get('buttonBehavior')) {
 
     // When toggling, try to invert like values. i.e. 1 => 0, etc.
@@ -447,51 +445,47 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       break ;
 
     case SC.HOLD_BEHAVIOR:
-      this._runHoldAction(evt, skipHoldRepeat);
+      this._sc_runHoldAction(evt, skipHoldRepeat);
       break ;
 
     // otherwise, just trigger an action if there is one.
     default:
       //if (this.action) this.action(evt);
-      this._runAction(evt);
+      this._sc_runAction(evt);
     }
   },
 
   /** @private */
-  _runAction: function(evt) {
+  _sc_runAction: function(evt) {
     var action = this.get('action'),
-        target = this.get('target') || null,
-        rootResponder = this.getPath('pane.rootResponder');
+        target = this.get('target') || null;
 
     if (action) {
-      if (this._hasLegacyActionHandler()) {
+      if (this._sc_hasLegacyActionHandler()) {
         // old school... V
-        this._triggerLegacyActionHandler(evt);
+        this._sc_triggerLegacyActionHandler(evt);
       } else {
-        if (rootResponder) {
-          // newer action method + optional target syntax...
-          rootResponder.sendAction(action, target, this, this.get('pane'));
-        }
+        SC.app.sendAction(action, target, this, this.get('surface'));
       }
     }
   },
 
   /** @private */
-  _runHoldAction: function(evt, skipRepeat) {
+  _sc_runHoldAction: function(evt, skipRepeat) {
     if (this.get('isActive')) {
-      this._runAction();
+      this._sc_runAction();
 
       if (!skipRepeat) {
         // This run loop appears to only be necessary for testing
         SC.RunLoop.begin();
-        this.invokeLater('_runHoldAction', this.get('holdInterval'), evt);
+        this.invokeLater('_sc_runHoldAction', this.get('holdInterval'), evt);
         SC.RunLoop.end();
       }
     }
   },
 
   /** @private */
-  _hasLegacyActionHandler: function()
+  _sc_hasLegacyActionHandler: function()
   {
     var action = this.get('action');
     if (action && (SC.typeOf(action) === SC.T_FUNCTION)) return true;
@@ -500,38 +494,37 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   },
 
   /** @private */
-  _triggerLegacyActionHandler: function( evt )
+  _sc_triggerLegacyActionHandler: function( evt )
   {
-    if (!this._hasLegacyActionHandler()) return false;
+    if (!this._sc_hasLegacyActionHandler()) return false;
 
     var action = this.get('action');
     if (SC.typeOf(action) === SC.T_FUNCTION) this.action(evt);
     if (SC.typeOf(action) === SC.T_STRING) {
       console.log("this.action = function(e) { return "+ action +"(this, e); };");
-      this.action(evt);
+      // this.action(evt);
     }
   },
 
   /** tied to the isEnabled state */
   acceptsFirstResponder: function() {
-    if(!SC.SAFARI_FOCUS_BEHAVIOR) return this.get('isEnabled');
-    else return false;
+    return this.get('isEnabled');
   }.property('isEnabled'),
 
   willBecomeKeyResponderFrom: function(keyView) {
     // focus the text field.
-    if (!this._isFocused) {
-      this._isFocused = true ;
+    if (!this._sc_isFocused) {
+      this._sc_isFocused = true ;
       this.becomeFirstResponder();
       if (this.get('isVisibleInWindow')) {
-        var elem=this.$()[0];
-        if (elem) elem.focus();
+        // var elem=this.$()[0];
+        // if (elem) elem.focus();
       }
     }
   },
 
   willLoseKeyResponderTo: function(responder) {
-    if (this._isFocused) this._isFocused = false ;
+    if (this._sc_isFocused) this._sc_isFocused = false ;
   }
 
 });
