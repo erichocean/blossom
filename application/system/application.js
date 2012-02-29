@@ -159,9 +159,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     }
 
     if (SC.needsLayout) {
-      // FIXME: Need to do all four stages of layout!
       uiContainer.performLayoutIfNeeded(timestamp);
       this.get('surfaces').invoke('performLayoutIfNeeded', timestamp);
+      // TODO: Run the global constraint solver now.
     }
 
     this.updatePsurfaces(surfaces);
