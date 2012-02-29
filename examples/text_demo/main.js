@@ -19,11 +19,14 @@ function main() {
 
     updateDisplay: function() {
       // console.log('updateDisplay');
-      var context = this.getPath('layer.context');
+      var psurface = SC.psurfaces[this.__id__],
+          canvas = psurface? psurface.__element__ : null,
+          context = canvas? canvas.getContext('2d') : null,
+          w = canvas.width, h = canvas.height;
 
       // Draw background.
       context.fillStyle = base3;
-      context.fillRect(0, 0, context.width, context.height);
+      context.fillRect(0, 0, w, h);
 
       function draw(nodes, breaks, lineLengths, drawRatio, center) {
         var i = 0, lines = [], point, j, r, lineStart = 0, y = 40, tmp, maxLength = Math.max.apply(null, lineLengths);
