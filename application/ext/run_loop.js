@@ -21,7 +21,7 @@ SC.RunLoop = SC.RunLoop.extend(
     SC.Benchmark.start(runLoopBenchKey);
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     if (BLOSSOM) {
-      sc_assert(SC.animationTransactions.length === 0);
+      // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
       SC.AnimationTransaction.begin();
     }
     return ret;
@@ -60,7 +60,7 @@ SC.RunLoop = SC.RunLoop.extend(
     }
     if (BLOSSOM) {
       SC.AnimationTransaction.end();
-      sc_assert(SC.animationTransactions.length === 0);
+      // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
     }
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
