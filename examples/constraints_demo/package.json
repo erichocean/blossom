@@ -1,6 +1,6 @@
 {
-  "name"          : "blossom-quaddemo",
-  "description"   : "Blossom QuadDemo Application",
+  "name"          : "blossom-constraints_demo",
+  "description"   : "Blossom Constraint Solver Demo Application",
   "url"           : "http://fohr.com/blossom",
   "keywords"      : ["sproutcore", "blossom" , "sample code"],
   "author"        : "Erich Ocean <eocean@fohr.com>",
