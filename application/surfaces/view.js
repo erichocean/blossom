@@ -279,12 +279,21 @@ SC.View = SC.LeafSurface.extend({
       hitTestLayer(layers[idx]);
     }
 
-    // If we hit a layer, remember it so our view knows.
-    evt.layer = hitLayer;
-
     // We don't need to test `layer`, because we already know it was hit when
     // this method is called by SC.RootResponder.
-    return hitLayer? (hitLayer.get('behavior') || this) : this ;
+    if (!hitLayer) return this;
+    else {
+      // If we hit a layer, remember it so our view knows.
+      evt.layer = hitLayer;
+
+      // Try and find the behavior attached to this layer.
+      var behavior = hitLayer.get('behavior');
+      if (!behavior && hitLayer) {
+        hitLayer = hitLayer.get('superlayer');
+        if (hitLayer) behavior = hitLayer.get('behavior');
+      }
+      return behavior || this;
+    }
   }
 
 });
