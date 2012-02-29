@@ -188,44 +188,20 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(benchKey);
   },
 
-  mousePosition: null,
-
-  updateMousePositionWithEvent: function(evt) {
-    var containerPos = this.computeContainerPosition(),
-        mouseX = evt.clientX - containerPos.left + window.pageXOffset,
-        mouseY = evt.clientY - containerPos.top + window.pageYOffset,
-        ret = { x: mouseX, y: mouseY };
-
-    this.set('mousePosition', ret);
-    return ret;
-  },
-
-  computeContainerPosition: function() {
-    var el = SC.psurfaces[this.__id__].__element__,
-        top = 0, left = 0;
-
-    while (el && el.tagName != "BODY") {
-      top += el.offsetTop;
-      left += el.offsetLeft;
-      el = el.offsetParent;
-    }
-
-    return { top: top, left: left };
-  },
-
   /**
-    Finds the layer that is hit by this event, and returns its view.
+    Finds the layer that is hit by this event, and returns its behavior if it 
+    exists.  Otherwise, returns the receiver.
   */
   targetResponderForEvent: function(evt) {
     // console.log('SC.ViewSurface#targetResponderForEvent(', evt, ')');
     var context = this._sc_hitTestLayer.get('context'),
         hitLayer = null, zIndex = -1,
-        mousePosition, x, y;
+        boundingRect, x, y;
 
     // debugger;
-    mousePosition = this.updateMousePositionWithEvent(evt);
-    x = mousePosition.x;
-    y = mousePosition.y;
+    boundingRect = evt.target.getBoundingClientRect();
+    x = evt.clientX - boundingRect.left + window.pageXOffset;
+    y = evt.clientY - boundingRect.top + window.pageYOffset;
 
     function hitTestLayer(layer) {
       // debugger;
