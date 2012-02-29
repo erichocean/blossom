@@ -115,14 +115,12 @@ SC.Layer = SC.Object.extend({
   },
 
   updateDisplay: function() {
-    // console.log('SC.Layer#updateDisplay()');
+    // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.Layer#updateDisplay()';
     SC.Benchmark.start(benchKey);
 
-    // console.log('SC.Layer#updateDisplay()', SC.guidFor(this));
     var ctx = this.get('context');
 
-    // debugger;
     if (this.__needsRendering__) {
       ctx.save();
       this.display(ctx);

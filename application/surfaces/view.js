@@ -106,6 +106,37 @@ SC.View = SC.LeafSurface.extend({
   // RENDERING SUPPORT
   //
 
+  performRenderingIfNeeded: function(timestamp) {
+    // console.log('SC.Surface#performRenderingIfNeeded()');
+    var needsLayout = this.__needsLayout__,
+        needsDisplay = this.__needsRendering__,
+        isVisible = this.get('isVisible');
+
+    var benchKey = 'SC.Surface#performRenderingIfNeeded()',
+        displayKey = 'SC.Surface#performRenderingIfNeeded(): needsDisplay';
+
+    SC.Benchmark.start(benchKey);
+
+    SC.Benchmark.start(displayKey);
+    if (this.get('isPresentInViewport')) {
+      if (this.updateDisplay) this.updateDisplay();
+      this.__needsRendering__ = false;
+    } // else leave it set to true, we'll update it when it again becomes
+      // visible in the viewport
+    SC.Benchmark.end(displayKey);
+
+    SC.Benchmark.end(benchKey);
+
+    // This code is technically only needed for composite surfaces, but for
+    // performance and code reuse, we fold the implementation into here
+    // instead of calling `arguments.callee.base.apply(this, arguments)` in
+    // `SC.CompositeSurface`.
+    var subsurfaces = this.get('subsurfaces');
+    if (subsurfaces === null) return;
+    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+      subsurfaces[idx].performRenderingIfNeeded(timestamp);
+    }
+  },
   triggerLayoutAndRendering: function() {
     // console.log('SC.View#triggerLayoutAndRendering()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);

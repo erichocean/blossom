@@ -30,75 +30,58 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
+var roundRect = function(ctx, x, y, width, height, radius) {
+  if (typeof radius === "undefined") {
+    radius = 5;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+};
+
 SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
-  firstTime: true,
-  render: function(ctx) {
-    console.log('SC.ButtonWidget#render()', SC.guidFor(this));
-    ctx.fillStyle = base03;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
+  displayProperties: 'href icon title value toolTip'.w(),
 
-    // if (this.firstTime) {
-    //   var that = this;
-    //   SC.spriteLayer.registerDependentSprite({
-    //     spriteLayerDidLoad: function() {
-    //       // console.log('spriteLayerDidLoad');
-    //       // SC.LOG_OBSERVERS = true;
-    //       that.triggerRendering();
-    //       // that.render(that.getPath('layer.context'), that.get('layer')); // that.displayDidChange(); is slow!
-    //     }
-    //   });
-    //   this.firstTime = false;
-    //   return;
-    // }
-    // 
-    // var layout = layer.get('bounds');
-    // var title = this.get('displayTitle');
-    // var selected = this.get('isSelected'),
-    //     disabled = !this.get('isEnabled'),
-    //     mixed = (selected === SC.MIXED_STATE),
-    //     active = this.get('isActive');
-    // 
-    // selected = (selected && (selected !== SC.MIXED_STATE));
-    // 
-    // context.clearRect(0, 0, layout.width, layout.height);
-    // switch (this.get('theme')) {
-    //   case 'regular':
-    //     SC.regularButtonRenderer.render(context,
-    //         selected, disabled, mixed, active,
-    //         title,
-    //         0, 0, layout.width, layout.height
-    //       );
-    //     break;
-    //   case 'square':
-    //     SC.rectangleButtonRenderer.render(context,
-    //         selected, disabled, mixed, active,
-    //         title,
-    //         0, 0, layout.width, layout.height
-    //       );
-    //     break;
-    //   case 'capsule':
-    //     SC.capsuleButtonRenderer.render(context,
-    //         selected, disabled, mixed, active,
-    //         title,
-    //         0, 0, layout.width, layout.height
-    //       );
-    //     break;
-    //   case 'checkbox':
-    //     SC.checkboxButtonRenderer.render(context,
-    //         selected, disabled, mixed, active,
-    //         title,
-    //         0, 0, layout.width, layout.height
-    //       );
-    //     break;
-    //   case 'radio':
-    //     SC.radioButtonRenderer.render(context,
-    //         selected, disabled, mixed, active,
-    //         title,
-    //         0, 0, layout.width, layout.height
-    //       );
-    //     break;
-    // }
+  render: function(ctx) {
+    // console.log('SC.ButtonWidget#render()', SC.guidFor(this));
+
+    var title = this.get('displayTitle'),
+        selected = this.get('isSelected'),
+        disabled = !this.get('isEnabled'),
+        mixed = (selected === SC.MIXED_STATE),
+        active = this.get('isActive');
+
+    selected = (selected && (selected !== SC.MIXED_STATE));
+
+    ctx.clearRect(0, 0, ctx.width, ctx.height);
+
+    roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+
+    ctx.globalAlpha = 1.0;
+    ctx.fillStyle = base3;
+    ctx.fill();
+
+    ctx.globalAlpha = disabled? 0.5 : 1.0;
+    ctx.strokeStyle = base03;
+    ctx.lineWidth = active? 3 : 1;
+    ctx.stroke();
+
+    ctx.fillStyle = base03;
+    ctx.font = active? "bold 12pt Calibri" : "12pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "rgba(0,0,0,0)";
+    ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
   },
 
   /**
@@ -276,90 +259,10 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
   init: function() {
     arguments.callee.base.apply(this, arguments);
 
-    //cache the key equivalent
-    if(this.get("keyEquivalent")) this._defaultKeyEquivalent = this.get("keyEquivalent");
-  },
-
-  _TEMPORARY_CLASS_HASH: {},
-
-  // display properties that should automatically cause a refresh.
-  // isCancel and isDefault also cause a refresh but this is implemented as
-  // a separate observer (see below)
-  displayProperties: ['href', 'icon', 'title', 'value', 'toolTip'],
-
-
-  /**
-    This property is used to call the right render style for the button.
-    * This might be a future way to start implementing the render method
-    as part of the theme
-  */
-
-  renderStyle: 'renderDefault', //SUPPORTED DEFAULT, IMAGE
-
-  // render: function(context, firstTime) {
-  //   // add href attr if tagName is anchor...
-  //   var href, toolTip, classes, theme;
-  //   if (this.get('tagName') === 'a') {
-  //     href = this.get('href');
-  //     if (!href || (href.length === 0)) href = "javascript:;";
-  //     context.attr('href', href);
-  //   }
-  //
-  //   // If there is a toolTip set, grab it and localize if necessary.
-  //   toolTip = this.get('toolTip') ;
-  //   if (SC.typeOf(toolTip) === SC.T_STRING) {
-  //     if (this.get('localize')) toolTip = toolTip.loc() ;
-  //     context.attr('title', toolTip) ;
-  //     context.attr('alt', toolTip) ;
-  //   }
-  //
-  //   // add some standard attributes & classes.
-  //   classes = this._TEMPORARY_CLASS_HASH;
-  //   classes.def = this.get('isDefault');
-  //   classes.cancel = this.get('isCancel');
-  //   classes.icon = !!this.get('icon');
-  //   context.attr('role', 'button').setClass(classes);
-  //   theme = this.get('theme');
-  //   if (theme && !context.hasClass(theme)) context.addClass(theme);
-  //
-  //   // render inner html
-  //   this[this.get('renderStyle')](context, firstTime);
-  // },
-
-
-  /**
-    Render the button with the default render style.
-  */
-  renderDefault: function(context, firstTime){
-    if(firstTime) {
-      context = context.push("<span class='sc-button-inner' style = 'min-width:"
-        ,this.get('titleMinWidth'),
-        "px'>");
-
-      this.renderTitle(context, firstTime) ; // from button mixin
-      context.push("</span>") ;
-
-      if(this.get('supportFocusRing')) {
-        context.push('<div class="focus-ring">',
-                      '<div class="focus-left"></div>',
-                      '<div class="focus-middle"></div>',
-                      '<div class="focus-right"></div></div>');
-      }
+    // Cache the key equivalent.
+    if (this.get('keyEquivalent')) {
+      this._defaultKeyEquivalent = this.get('keyEquivalent');
     }
-    else {
-      this.renderTitle(context, firstTime) ;
-    }
-  },
-
-  /**
-    Render the button with the image render style. To set image
-    set the icon property with the classname that has the style with the image
-  */
-  renderImage: function(context, firstTime){
-    var icon = this.get('icon');
-    context.addClass('no-min-width');
-    if(icon) context.push("<div class='img "+icon+"'></div>");
-    else context.push("<div class='img'></div>");
   },
 
   /** @private {String} used to store a previously defined key equiv */
@@ -417,9 +320,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     Remove the active class on mouseExited if mouse is down.
   */
   mouseExited: function(evt) {
-    if (this._isMouseDown) {
-      this.set('isActive', false);
-    }
+    document.body.style.cursor = "default";
+    if (this._isMouseDown) { this.set('isActive', false); }
     return true;
   },
 
@@ -427,9 +329,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     If mouse was down and we renter the button area, set the active state again.
   */
   mouseEntered: function(evt) {
-    if (this._isMouseDown) {
-      this.set('isActive', true);
-    }
+    if (this.get('isEnabled')) document.body.style.cursor = "pointer";
+    if (this._isMouseDown) { this.set('isActive', true); }
     return true;
   },
 
@@ -437,12 +338,12 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     ON mouse up, trigger the action only if we are enabled and the mouse was released inside of the view.
   */
   mouseUp: function(evt) {
-    var inside;
+    var wasOver = this.get('isActive');
     if (this._isMouseDown) this.set('isActive', false); // track independently in case isEnabled has changed
     this._isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (this.get('isEnabled')) this._action(evt);
+      if (wasOver && this.get('isEnabled')) this._action(evt);
     }
 
     return true;
@@ -606,7 +507,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     var action = this.get('action');
     if (SC.typeOf(action) === SC.T_FUNCTION) this.action(evt);
     if (SC.typeOf(action) === SC.T_STRING) {
-      eval("this.action = function(e) { return "+ action +"(this, e); };");
+      console.log("this.action = function(e) { return "+ action +"(this, e); };");
       this.action(evt);
     }
   },

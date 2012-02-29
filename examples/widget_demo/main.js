@@ -11,19 +11,11 @@ function main() {
   surface.get('layers').pushObject(SC.ButtonWidget.create({
     layout: { centerX: 0, centerY: 0, width: 100, height: 24 },
 
-    mouseEntered: function(evt) {
-      document.body.style.cursor = "pointer";
-      return arguments.callee.base.apply(this, arguments);
-    },
+    title: "click me",
+    // isEnabled: false,
 
-    mouseExited: function(evt) {
-      document.body.style.cursor = "default";
-      return arguments.callee.base.apply(this, arguments);
-    },
+    action: function() { alert('clicked'); }
 
-    action: function() {
-      alert('clicked');
-    }
   }));
 
   SC.Application.create();
