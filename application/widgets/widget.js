@@ -11,7 +11,7 @@ sc_require('layers/layer');
 if (BLOSSOM) {
 
 // NOTE: Keep this in sync with SC.Responder's implementation.
-SC.Widget = SC.Layer.extend({
+SC.Widget = SC.Layer.extend(SC.DelegateSupport, {
 
   isWidget: true, // Walk like a duck.
 

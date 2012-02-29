@@ -831,8 +831,8 @@ SC.Surface = SC.Responder.extend({
         isInputSurface = SC.app.get('inputSurface') === this,
         isMenuSurface = SC.app.get('menuSurface') === this;
 
-    sc_assert(old === null || old.kindOf(SC.Responder), "Blossom internal error: SC.Application^_sc_firstResponder is invalid.");
-    sc_assert(cur === null || cur.kindOf(SC.Responder), "SC.Surface@firstResponder must either be null or an SC.Responder instance.");
+    sc_assert(old === null || old.isResponder, "Blossom internal error: SC.Application^_sc_firstResponder is invalid.");
+    sc_assert(cur === null || cur.isResponder, "SC.Surface@firstResponder must either be null or an SC.Responder instance.");
 
     if (old === cur) return; // Nothing to do.
 

@@ -248,7 +248,7 @@ SC.Button = {
 
   /** @private - when title changes, dirty display. */
   _button_displayObserver: function() {
-    this.displayDidChange();
+    this.triggerRendering();
   }.observes('title', 'icon', 'value'),
 
   /**

@@ -30,6 +30,8 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
+var buttonWidth = 100;
+
 var roundRect = function(ctx, x, y, width, height, radius) {
   if (typeof radius === "undefined") {
     radius = 5;
@@ -45,6 +47,41 @@ var roundRect = function(ctx, x, y, width, height, radius) {
   ctx.lineTo(x, y + radius);
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
+};
+
+var drawButton = function(ctx, pressed) {
+  ctx.save();
+  ctx.translate(20, 165);
+  var gradient = ctx.createLinearGradient(0,0,0,24); // vertical
+  gradient.addColorStop(0, base3);
+  gradient.addColorStop(0.5, base2);
+  gradient.addColorStop(1, base3);
+  ctx.fillStyle = gradient;
+  // ctx.fillRect(0, 0, 140, 24);
+  roundRect(ctx, 0,0,buttonWidth,24);
+  ctx.fill();
+  ctx.strokeStyle = pressed? base2 : white;
+  ctx.lineWidth = 1;
+  // ctx.strokeRect(0.5, 0.5, 139, 23);
+  roundRect(ctx, 0.5, 0.5, buttonWidth-1, 23);
+  ctx.stroke();
+  ctx.strokeStyle = pressed? white : base2;
+  // ctx.beginPath();
+  // ctx.moveTo(0.5, 24.5);
+  // ctx.lineTo(139.5, 24.5);
+  // ctx.stroke();
+  // ctx.strokeRect(-0.5, -0.5, 141, 25);
+  roundRect(ctx, -0.5, -0.5, buttonWidth+1, 25);
+  if (!pressed) ctx.stroke();
+  ctx.font ="12pt Calibri";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = white;
+  var text = "OK";
+  if (!pressed) ctx.fillText(text, buttonWidth/2, 13);
+  ctx.fillStyle = pressed? base01 : green;
+  ctx.fillText(text, buttonWidth/2, 12);
+  ctx.restore();
 };
 
 SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
