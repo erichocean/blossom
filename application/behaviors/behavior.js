@@ -40,7 +40,13 @@ if (BLOSSOM) {
 */
 SC.Behavior = SC.Responder.extend({
 
-  isBehavior: true // Walk like a duck.
+  isBehavior: true, // Walk like a duck.
+
+  dispatch: function(evt) {
+    
+  },
+
+  state: null // a String, maps to a hash
 
 });
 

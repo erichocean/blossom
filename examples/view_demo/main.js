@@ -138,8 +138,6 @@ function main() {
     tag: 3
   }));
 
-  console.log('surface is', SC.guidFor(surface));
-
   SC.Application.create();
   SC.app.set('ui', surface);
 }

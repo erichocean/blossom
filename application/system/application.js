@@ -1370,8 +1370,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
           responder = this.targetResponderForEvent(evt);
 
-      console.log(SC.guidFor(responder));
-
       // First, collect all the responding surfaces starting with the target 
       // surface  from the given mouse move event.
       while (responder && (responder !== this)) {

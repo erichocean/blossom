@@ -87,8 +87,6 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
       cur.setIfChanged('applicationHasFocus', this.get('applicationHasFocus'));
     }
 
-    // FIXME: This logic needs to be applied to surfaces, not the DOM!
-
     if (!old && cur)      transition = this.get('orderInTransition');
     else if (old && cur)  transition = this.get('replaceTransition');
     else if (old && !cur) transition = this.get('orderOutTransition');
