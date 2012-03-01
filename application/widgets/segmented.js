@@ -534,6 +534,14 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
 
   font: "11pt Calibri",
 
+  measuredWidth: function() {
+    var width = 0;
+    this.get('sublayers').forEach(function(layer) {
+      width += layer.get('bounds').width;
+    });
+    return width;
+  }.property(),
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
     this._sc_itemsDidChange() ;

@@ -208,7 +208,7 @@ var segmentedWidget = SC.SegmentedWidget.create({
             value: "blue",
             enabled: true,
             icon: 'button_blue' }],
-  value: 'red',
+  valueBinding: 'WidgetDemo.value',
   itemTitleKey: 'title',
   itemValueKey: 'value',
   itemIconKey: 'icon',
