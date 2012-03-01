@@ -199,6 +199,27 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
     ctx.clearRect(0, 0, ctx.width, ctx.height);
   },
 
+  /** @private
+    Remove the active class on mouseExited if mouse is down.
+  */
+  mouseExited: function(evt) {
+    document.body.style.cursor = "default";
+    if (this.isMouseDown) { this.set('isActive', false); }
+    return true;
+  },
+
+  /** @private
+    If mouse was down and we renter the button area, set the active state again.
+  */
+  mouseEntered: function(evt) {
+    var button = evt.layer;
+    if (button !== this && button.get('isEnabled') && this.get('isEnabled')) {
+      document.body.style.cursor = "pointer";
+    }
+    if (this.isMouseDown) { this.set('isActive', true); }
+    return true;
+  },
+
   /**
     If the user clicks on of the items mark it as active on mouseDown unless
     is disabled.
