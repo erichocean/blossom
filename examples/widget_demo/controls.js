@@ -104,84 +104,86 @@ controlBehaviors.forEach(function(behavior, idx) {
   });
   layers.push(buttonDS);
 
-  var radio = SC.RadioWidget.create({
-    layout: { top: anchor+30, left: 210, width: 140, height: 48 },
-    items: [{ title: "Red",
-              value: "red",
-              enabled: true,
-              icon: "button_red" },
-            { title: "Green",
-              value: "green",
-              enabled: true,
-              icon: 'button_green' }],
-    value: null,
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled',
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(radio);
+  if (idx === 0) {
+    var radio = SC.RadioWidget.create({
+      layout: { top: anchor+30, left: 210, width: 140, height: 48 },
+      items: [{ title: "Red",
+                value: "red",
+                enabled: true,
+                icon: "button_red" },
+              { title: "Green",
+                value: "green",
+                enabled: true,
+                icon: 'button_green' }],
+      value: null,
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled',
+      buttonBehavior: buttonBehavior
+    });
+    layers.push(radio);
 
-  var radioD = SC.RadioWidget.create({
-    layout: { top: anchor+30, left: 360, width: 140, height: 48 },
-    items: [{ title: "Red",
-              value: "red",
-              enabled: true,
-              icon: "button_red" },
-            { title: "Green",
-              value: "green",
-              enabled: true,
-              icon: 'button_green' }],
-    value: null,
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled',
-    isEnabled: false,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(radioD);
+    var radioD = SC.RadioWidget.create({
+      layout: { top: anchor+30, left: 360, width: 140, height: 48 },
+      items: [{ title: "Red",
+                value: "red",
+                enabled: true,
+                icon: "button_red" },
+              { title: "Green",
+                value: "green",
+                enabled: true,
+                icon: 'button_green' }],
+      value: null,
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled',
+      isEnabled: false,
+      buttonBehavior: buttonBehavior
+    });
+    layers.push(radioD);
 
-  var radioS = SC.RadioWidget.create({
-    layout: { top: anchor+30, left: 510, width: 140, height: 48 },
-    items: [{ title: "Red",
-              value: "red",
-              enabled: true,
-              icon: "button_red" },
-            { title: "Green",
-              value: "green",
-              enabled: true,
-              icon: 'button_green' }],
-    value: 'red',
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled',
-    isSelected: true,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(radioS);
+    var radioS = SC.RadioWidget.create({
+      layout: { top: anchor+30, left: 510, width: 140, height: 48 },
+      items: [{ title: "Red",
+                value: "red",
+                enabled: true,
+                icon: "button_red" },
+              { title: "Green",
+                value: "green",
+                enabled: true,
+                icon: 'button_green' }],
+      value: 'red',
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled',
+      isSelected: true,
+      buttonBehavior: buttonBehavior
+    });
+    layers.push(radioS);
 
-  var radioDS = SC.RadioWidget.create({
-    layout: { top: anchor+30, left: 660, width: 140, height: 48 },
-    items: [{ title: "Red",
-              value: "red",
-              enabled: true,
-              icon: "button_red" },
-            { title: "Green",
-              value: "green",
-              enabled: true,
-              icon: 'button_green' }],
-    value: 'red',
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled',
-    isEnabled: false,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(radioDS);
+    var radioDS = SC.RadioWidget.create({
+      layout: { top: anchor+30, left: 660, width: 140, height: 48 },
+      items: [{ title: "Red",
+                value: "red",
+                enabled: true,
+                icon: "button_red" },
+              { title: "Green",
+                value: "green",
+                enabled: true,
+                icon: 'button_green' }],
+      value: 'red',
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled',
+      isEnabled: false,
+      buttonBehavior: buttonBehavior
+    });
+    layers.push(radioDS);
+  }
 
 });
 
