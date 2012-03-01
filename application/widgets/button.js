@@ -80,7 +80,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         break;
     }
 
-    if ((disabled && !selected) || (!active && !selected)) {
+    if ((disabled && !selected) || (disabled && !active && !selected)) {
       ctx.globalAlpha = 1.0;
       ctx.fillStyle = base3;
       ctx.fill();
@@ -129,6 +129,24 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
       ctx.fillText(title, ctx.width/2, ctx.height/2);
+
+    } else {
+      console.log('rendering normally');
+      ctx.globalAlpha = 1.0;
+      ctx.fillStyle = base3;
+      ctx.fill();
+
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = base03;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
     }
 
     // Alternate button styling:
