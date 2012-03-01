@@ -42,11 +42,11 @@ var rootLayer = SC.Layer.create({
     ctx.fillStyle = base00;
     ctx.font = "14pt Calibri";
     ctx.textBaseline = "top";
-    ctx.fillText("SC.ButtonWidget Sampler", 15, 10);
+    ctx.fillText("Buttons", 15, 10);
 
     ctx.fillStyle = green;
     ctx.font = "10pt Calibri";
-    ctx.fillText("Rendered with Blossom\u2122", 40, 33);
+    ctx.fillText("Rendered with Blossom\u2122", 15, 33);
 
     ctx.font = "10pt Calibri";
     ctx.textAlign = "center";
