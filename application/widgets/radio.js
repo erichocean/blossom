@@ -377,7 +377,7 @@ sc_require('widgets/button');
 /** @private */
 SC.RadioButtonWidget = SC.ButtonWidget.extend({
 
-  behavior: null, // Allows SC.RadioWidget to have the behavior.
+  behavior: null, // Allows SC.RadioWidget to define our behavior.
 
   buttonBehavior: SC.TOGGLE_BEHAVIOR,
 
