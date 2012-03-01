@@ -42,7 +42,7 @@ var rootLayer = SC.Layer.create({
     ctx.fillStyle = base00;
     ctx.font = "14pt Calibri";
     ctx.textBaseline = "top";
-    ctx.fillText("SC.CheckboxWidget Sampler", 15, 10);
+    ctx.fillText("SC.CheckboxWidget & SC.RadioWidget Sampler", 15, 10);
 
     ctx.fillStyle = green;
     ctx.font = "10pt Calibri";
