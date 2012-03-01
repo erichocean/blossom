@@ -16,6 +16,7 @@ function main() {
     layout: { top: 100, centerX: 0, width: 400, height: 10 },
     value: text,
     font: "12pt Calibri",
+    textAlign: 'justify',
     lineHeight: 24
   });
 
