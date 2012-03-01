@@ -40,7 +40,7 @@ function main() {
       ctx.fillStyle = base00;
       ctx.font = "14pt Calibri";
       ctx.textBaseline = "top";
-      ctx.fillText("SC.ButtonView Sampler", 15, 10);
+      ctx.fillText("SC.ButtonWidget Sampler", 15, 10);
 
       ctx.fillStyle = green;
       ctx.font = "10pt Calibri";
@@ -51,13 +51,12 @@ function main() {
       ctx.textBaseline = "middle";
       ctx.fillStyle = base1;
       'Enabled Disabled Selected Selected&Disabled'.w().forEach(function(title, idx) {
-        ctx.fillText(title.split('&').join(' & '), 270+idx*150, 46);
+        ctx.fillText(title.split('&').join(' & '), 280+idx*150, 46);
       });
 
       ctx.textAlign = "right";
-
       behaviors.forEach(function(behavior, idx) {
-        ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 180, 103+idx*120);
+        ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 184, 112+idx*120);
       });
     }
   });
