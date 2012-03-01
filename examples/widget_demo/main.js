@@ -10,5 +10,6 @@ sc_require('controls');
 
 function main() {
   SC.Application.create();
-  SC.app.set('ui', WidgetDemo.buttonsSurface);
+  // SC.app.set('ui', WidgetDemo.buttonsSurface);
+  SC.app.set('ui', WidgetDemo.controlsSurface);
 }

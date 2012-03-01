@@ -3,8 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM CanvasRenderingContext2D HTMLCanvasElement
-  ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
+/*globals BLOSSOM sc_assert */
 
 sc_require('widgets/widget');
 sc_require('mixins/control');
@@ -450,55 +449,6 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     return true;
   },
-
-  // touchStart: function(touch){
-  //   var buttonBehavior = this.get('buttonBehavior');
-  // 
-  //   if (!this.get('isEnabled')) return true ; // handled event, but do nothing
-  //   this.set('isActive', true);
-  // 
-  //   if (buttonBehavior === SC.HOLD_BEHAVIOR) {
-  //     this._sc_action(touch);
-  //   } else if (!this._sc_isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
-  //     this._sc_isFocused = true ;
-  //     this.becomeFirstResponder();
-  //     if (! BLOSSOM) {
-  //       if (this.get('isVisibleInWindow')) {
-  //         this.$()[0].focus();
-  //       }
-  //     }
-  //   }
-  // 
-  //   // don't want to do whatever default is...
-  //   touch.preventDefault();
-  // 
-  //   return true;
-  // },
-  // 
-  // touchesDragged: function(evt, touches) {
-  //   if (!this.touchIsInBoundary(evt)) {
-  //     if (!this._touch_exited) this.set('isActive', false);
-  //     this._touch_exited = true;
-  //   } else {
-  //     if (this._touch_exited) this.set('isActive', true);
-  //     this._touch_exited = false;
-  //   }
-  // 
-  //   evt.preventDefault();
-  //   return true;
-  // },
-  // 
-  // touchEnd: function(touch){
-  //   this._touch_exited = false;
-  //   this.set('isActive', false); // track independently in case isEnabled has changed
-  // 
-  //   if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-  //     if (this.touchIsInBoundary(touch)) this._sc_action();
-  //   }
-  // 
-  //   touch.preventDefault();
-  //   return true ;
-  // },
 
   /** @private */
   keyDown: function(evt) {

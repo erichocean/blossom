@@ -1,0 +1,458 @@
+// ==========================================================================
+// Project:   Blossom - Modern, Cross-Platform Application Framework
+// Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
+// License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
+// ==========================================================================
+/*globals BLOSSOM sc_assert */
+
+sc_require('widgets/widget');
+sc_require('mixins/control');
+
+if (BLOSSOM) {
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
+/** @class
+
+  A RadioWidget is used to create a group of radio buttons.  The user can use
+  these buttons to pick from a choice of options.
+
+  This view renders simulated radio buttons that can display a mixed state and
+  has other features not found in platform-native controls.
+
+  RadioWidget accepts a number of properties, for example:
+
+      items: [{ title: "Red",
+                value: "red",
+                enabled: true,
+                icon: "button_red" },
+              { title: "Green",
+                value: "green",
+                enabled: true,
+                icon: 'button_green' }],
+      value: 'red',
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled',
+      isEnabled: true,
+      layoutDirection: SC.LAYOUT_HORIZONTAL
+
+  Default layoutDirection is vertical.
+  Default isEnabled is true.
+
+  The value property can be either a string, as above, or an array of strings
+  for pre-checking multiple values.
+
+  The items array can contain either strings, or as in the example above a
+  hash. When using a hash, make sure to also specify the itemTitleKey
+  and itemValueKey you are using. Similarly, you will have to provide
+  itemIconKey if you are using icons radio buttons. The individual items
+  enabled property is true by default, and the icon is optional.
+
+  @extends SC.Widget
+  @since Blossom 1.0
+*/
+SC.RadioWidget = SC.Widget.extend(SC.Control, {
+
+  /**
+    The value of the currently selected item, and which will be checked in the
+    UI. This can be either a string or an array with strings for checking
+    multiple values.
+  */
+  value: null,
+
+  /**
+    This property indicates how the radio buttons are arranged.
+  */
+  layoutDirection: SC.LAYOUT_VERTICAL,
+
+  /**
+    The items property can be either an array with strings, or a
+    hash. When using a hash, make sure to also specify the appropriate
+    itemTitleKey, itemValueKey, itemIsEnabledKey and itemIconKey.
+  */
+  items: [],
+
+  /**
+    If items property is a hash, specify which property will function as
+    the title with this itemTitleKey property.
+  */
+  itemTitleKey: null,
+
+  /**
+    If items property is a hash, specify which property will function as
+    the item width with this itemWidthKey property. This is only used when
+    layoutDirection is set to SC.LAYOUT_HORIONZTAL and can be used to override
+    the default value provided by the framework or theme CSS.
+
+    @property {String}
+    @default null
+  */
+  itemWidthKey: null,
+
+  /**
+    If items property is a hash, specify which property will function as
+    the value with this itemValueKey property.
+  */
+  itemValueKey: null,
+
+  /**
+    If items property is a hash, specify which property will function as
+    the value with this itemIsEnabledKey property.
+  */
+  itemIsEnabledKey: null,
+
+  /**
+    If items property is a hash, specify which property will function as
+    the value with this itemIconKey property.
+  */
+  itemIconKey: null,
+
+  // ..........................................................
+  // PRIVATE SUPPORT
+  //
+
+  /** @private
+    Will iterate the items property to return an array with items that is
+    indexed in the following structure:
+      [0] => Title (or label)
+      [1] => Value
+      [2] => Enabled (true default)
+      [3] => Icon (image URL)
+  */
+  displayItems: function() {
+    var items = this.get('items'),
+        loc = this.get('localize'),
+        titleKey = this.get('itemTitleKey'),
+        valueKey = this.get('itemValueKey'),
+        widthKey = this.get('itemWidthKey'),
+        isHorizontal = this.get('layoutDirection') === SC.LAYOUT_HORIZONTAL,
+        isEnabledKey = this.get('itemIsEnabledKey'),
+        iconKey = this.get('itemIconKey'),
+        ret = [], max = (items)? items.get('length') : 0,
+        item, title, width, value, idx, isArray, isEnabled, icon;
+
+    for (idx=0;idx<max;idx++) {
+      item = items.objectAt(idx);
+
+      // if item is an array, just use the items...
+      if (SC.typeOf(item) === SC.T_ARRAY) {
+        title = item[0];
+        value = item[1];
+
+        // otherwise, possibly use titleKey,etc.
+      } else if (item) {
+        // get title.  either use titleKey or try to convert the value to a
+        // string.
+        if (titleKey) {
+          title = item.get ? item.get(titleKey) : item[titleKey];
+        } else title = (item.toString) ? item.toString() : null;
+
+        if (widthKey && isHorizontal) {
+          width = item.get ? item.get(widthKey) : item[widthKey];
+        }
+
+        if (valueKey) {
+          value = item.get ? item.get(valueKey) : item[valueKey];
+        } else value = item;
+
+        if (isEnabledKey) {
+          isEnabled = item.get ? item.get(isEnabledKey) : item[isEnabledKey];
+        } else isEnabled = true;
+
+        if (iconKey) {
+          icon = item.get ? item.get(iconKey) : item[iconKey];
+        } else icon = null;
+
+        // if item is nil, use somedefaults...
+      } else {
+        title = value = icon = null;
+        isEnabled = false;
+      }
+
+      // localize title if needed
+      if (loc) title = title.loc();
+      ret.push([title, value, isEnabled, icon, width]);
+    }
+
+    return ret; // done!
+  }.property('items', 'itemTitleKey', 'itemWidthKey', 'itemValueKey', 'itemIsEnabledKey', 'localize', 'itemIconKey'),
+
+  render: function(ctx) {
+    ctx.clearRect(0, 0, ctx.width, ctx.height);
+  },
+
+  /**
+    If the user clicks on of the items mark it as active on mouseDown unless
+    is disabled.
+
+    Save the element that was clicked on so we can remove the active state on
+    mouseUp.
+  */
+  mouseDown: function(evt) {
+    var button = evt.layer;
+
+    // Nothing to do if we're not enabled.
+    if (!this.get('isEnabled')) {
+      return true;
+
+    // Nothing to do if a radio button wasn't actually clicked on.
+    } else if (button === this) {
+      return false;
+
+    // Nothing to do if the radio buttion isn't enabled.
+    } else if (!button.get('isEnabled')) {
+      return true;
+
+    // Mark the radio button as active.
+    } else {
+      this._sc_activeRadioButton = button;
+      button.set('isActive', true);
+
+      // Even if radiobuttons are not set to get firstResponder, allow 
+      // default action, that way textfields loose focus as expected.
+      evt.allowDefault();
+      return true;
+    }
+  },
+
+  /**
+    If we have a radio element that was clicked on previously, make sure we
+    remove the active state. Then update the value if the item clicked is
+    enabled.
+  */
+  mouseUp: function(evt) {
+    var active = this._sc_activeRadioButton;
+
+    if (active) active.set('isActive', false);
+    this._sc_activeRadioButton = null;
+
+    // Nothing to do if we're not enabled.
+    if (!this.get('isEnabled')) {
+      return true;
+
+    // Nothing to do if there's no active radio button.
+    } else if (!active) {
+      return true;
+
+    // Okay, we need to deal with the mouseUp event.
+    } else {
+      sc_assert(active);
+      var button = evt.layer;
+
+      // Nothing to do if the mouse did not go up over a radio button.
+      if (button === this) {
+        return true;
+
+      // Nothing to do if the mouse did not go up over the active radio button.
+      } else if (button !== active) {
+        return true;
+
+      // Okay, the mouse went up over the active radio button.  We need to 
+      // update our value with it's value, select it, and unselected the 
+      // currently selected radio button.
+      } else {
+        var index = this.get('sublayers').indexOf(active),
+            item = this.get('displayItems').objectAt(index);
+
+        sc_assert(index >= 0);
+        sc_assert(item);
+
+        // Update our value property.
+        this.set('value', item[1]);
+
+        // Select the active radio button.
+        active.set('isSelected', true);
+
+        // Deselect the previously selected radio button.
+        this.get('sublayers')
+          .without(active)
+          .invoke('setIfChanged', 'isSelected', false);
+
+        return true;
+      }
+    }
+  },
+
+  /** @private
+    If the items array itself changes, add/remove observer on item...
+  */
+  _sc_itemsDidChange: function() {
+    var func = this._sc_itemContentDidChange,
+        old = this._sc_items,
+        cur = this.get('items');
+
+    if (old === cur) return;
+
+    if (old) old.removeObserver('[]', this, func);
+    this._sc_items = cur;
+    if (cur) cur.addObserver('[]', this, func);
+
+    this._sc_itemContentDidChange();
+  }.observes('items'),
+
+  /**
+    Invoked whenever the item array or an item in the array is changed.
+    This method will regenerate the layer's subsurfaces.
+  */
+  _sc_itemContentDidChange: function() {
+    var displayItems = this.get('displayItems'),
+        value = this.get('value'),
+        isEnabled = this.get('isEnabled');
+
+    console.log(displayItems);
+
+    var buttons = [];
+    displayItems.forEach(function(item, idx) {
+      var button = SC.RadioButtonWidget.create({
+        layout: { left: 0, right: 0, top: idx*24, height: 24 },
+        title: item[0],
+        isEnabled: isEnabled? item[2] : false,
+        isSelected: item[1] === value? true : false
+      });
+      buttons.push(button);
+    });
+
+    this.set('sublayers', buttons);
+  },
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this._sc_itemsDidChange();
+  }
+
+});
+
+sc_require('widgets/button');
+
+/** @private */
+SC.RadioButtonWidget = SC.ButtonWidget.extend({
+
+  behavior: null, // Allows SC.RadioWidget to have the behavior.
+
+  buttonBehavior: SC.TOGGLE_BEHAVIOR,
+
+  theme: 'radio',
+
+  render: function(ctx) {
+    // console.log('SC.RadioButtonWidget#render()', SC.guidFor(this));
+    var title = this.get('displayTitle') || "(no title)",
+        selected = this.get('isSelected'),
+        disabled = !this.get('isEnabled'),
+        mixed = (selected === SC.MIXED_STATE),
+        active = this.get('isActive');
+
+    selected = (selected && (selected !== SC.MIXED_STATE));
+
+    ctx.clearRect(0, 0, ctx.width, ctx.height);
+
+    sc_assert(this.get('theme') === 'radio');
+
+    SC.CreateRoundRectPath(ctx, 1.5, 4.5, 15, 15, 5);
+    ctx.beginPath();
+    ctx.arc(8.75, 12, 6, 0, Math.PI*2);
+    ctx.closePath();
+
+    if ((disabled && !selected) || (disabled && !active && !selected)) {
+      ctx.globalAlpha = 1.0;
+      ctx.fillStyle = base3;
+      ctx.fill();
+
+      ctx.globalAlpha = 0.5;
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = base03;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title, 22, ctx.height/2);
+
+    } else if (disabled) {
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = base03;
+      ctx.fill();
+
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    
+      ctx.fillStyle = base03;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title, 22, ctx.height/2);
+
+    } else if (active) {
+      ctx.fillStyle = base03;
+      ctx.fill();
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    
+      ctx.fillStyle = base03;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title, 22, ctx.height/2);
+
+    } else {
+      // console.log('rendering normally');
+      ctx.globalAlpha = 1.0;
+      ctx.fillStyle = base3;
+      ctx.fill();
+
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = base03;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title, 22, ctx.height/2);
+    }
+
+    if ((selected && !active) || (!selected && active)) {
+      // Draw the check mark.
+      ctx.beginPath();
+      ctx.arc(8.75, 12, 3.5, 0, Math.PI*2);
+      ctx.closePath();
+      ctx.fillStyle = (active || disabled)? base3 : base03;
+      ctx.fill();
+      ctx.strokeStyle = (active || disabled)? base3 : base03;
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  }
+
+});
+
+} // BLOSSOM

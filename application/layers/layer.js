@@ -478,11 +478,15 @@ SC.Layer = SC.Object.extend({
     if (last === cur) return this; // nothing to do
 
     // teardown old observer
-    if (last && last.isEnumerable) last.removeObserver('[]', this, func);
-    
+    if (last && last.isEnumerable) {
+      last.invoke('set', 'superlayer', null);
+      last.removeObserver('[]', this, func);
+    }
+
     // save new cached values 
+    sc_assert(SC.typeOf(cur) === SC.T_ARRAY);
     this._sc_sublayers = cur ;
-    
+
     // setup new observers
     if (cur && cur.isEnumerable) cur.addObserver('[]', this, func);
 
@@ -492,6 +496,7 @@ SC.Layer = SC.Object.extend({
 
   _sc_sublayersMembersDidChange: function() {
     // console.log("SC.Layer#_sc_sublayersMembersDidChange()");
+    this.get('sublayers').invoke('setIfChanged', 'superlayer', this);
   },
 
   /**
