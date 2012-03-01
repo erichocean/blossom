@@ -55,7 +55,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         selected = this.get('isSelected'),
         disabled = !this.get('isEnabled'),
         mixed = (selected === SC.MIXED_STATE),
-        active = this.get('isActive');
+        active = this.get('isActive'),
+        isDefault = this.get('isDefault');
 
     selected = (selected && (selected !== SC.MIXED_STATE));
 
@@ -89,7 +90,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
       ctx.globalAlpha = 0.5;
       ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = isDefault? 2 : 1;
       ctx.stroke();
 
       ctx.fillStyle = base03;
@@ -106,7 +107,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.fill();
 
       ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = isDefault? 2 : 1;
       ctx.stroke();
     
       ctx.fillStyle = base3;
@@ -121,7 +122,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.fillStyle = base03;
       ctx.fill();
       ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = isDefault? 2 : 1;
       ctx.stroke();
     
       ctx.fillStyle = base3;
@@ -139,7 +140,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.fill();
 
       ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = isDefault? 2 : 1;
       ctx.stroke();
 
       ctx.fillStyle = base03;

@@ -11,20 +11,20 @@ sc_require('text/formatter');
 
 if (BLOSSOM) {
 
-var base3 = "#fdf6e3";
-var green = "#859900";
+var base3 =  "#fdf6e3";
+var base03 = "#002b36";
 
 SC.TextLayer = SC.Layer.extend({
 
   isTextLayer: true,
 
   // FIXME: Add more text properties.
-  font: "14px 'times new roman', 'FreeSerif', serif",
-  color: green,
+  font: "11pt Calibri, serif",
+  color: base03,
   backgroundColor: base3,
   textBaseline: 'top',
-  textAlign: 'justify',
-  tolerance: 3,
+  textAlign: 'left',
+  tolerance: 10,
   lineHeight: 18,
 
   value: null, // should be a String or null
