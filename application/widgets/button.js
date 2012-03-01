@@ -73,10 +73,10 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
         break;
       case 'regular':
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 7);
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
         break;
       default:
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 7);
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
         break;
     }
 
@@ -131,7 +131,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.fillText(title, ctx.width/2, ctx.height/2);
 
     } else {
-      console.log('rendering normally');
+      // console.log('rendering normally');
       ctx.globalAlpha = 1.0;
       ctx.fillStyle = base3;
       ctx.fill();

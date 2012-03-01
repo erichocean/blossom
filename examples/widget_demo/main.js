@@ -27,6 +27,18 @@ var anchors = [70, 190, 310, 430],
     behaviors = 'PUSH TOGGLE TOGGLE_ON TOGGLE_OFF'.w();
 
 function main() {
+  var surface = SC.View.create();
+  var surface2 = SC.View.create();
+  surface2.get('layers').pushObject(SC.ButtonWidget.create({
+    layout: { centerX: 0, centerY: 0, width: 100, height: 24 },
+
+    title: "click me",
+    // isEnabled: false,
+
+    action: function() { SC.app.set('ui', surface); }
+
+  }));
+
   var rootLayer = SC.Layer.create({
     layout: { centerX: 0, centerY: 0, width: 850, height: 550 },
 
@@ -71,9 +83,9 @@ function main() {
       layout: { top: anchor, left: 210, width: 140, height: 24 },
       title: "Regular Button",
       theme: 'regular',
-      // action: function() {
-      //   alert("Hi from Blossom");
-      // },
+      action: function() {
+        SC.app.set('ui', surface2);
+      },
       buttonBehavior: buttonBehavior
     });
     layers.push(button);
@@ -180,8 +192,6 @@ function main() {
   });
 
   rootLayer.get('sublayers').pushObjects(layers);
-
-  var surface = SC.View.create();
   surface.get('layers').pushObject(rootLayer);
 
   SC.Application.create();
