@@ -3,12 +3,16 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*global WidgetDemo */
+/*globals global WidgetDemo */
 
-sc_require('buttons');
-sc_require('controls');
+WidgetDemo.controlsSurface = SC.View.create();
 
-function main() {
-  SC.Application.create();
-  SC.app.set('ui', WidgetDemo.buttonsSurface);
-}
+WidgetDemo.controlsSurface.get('layers').pushObject(SC.ButtonWidget.create({
+  layout: { centerX: 0, centerY: 0, width: 100, height: 24 },
+
+  title: "click me",
+
+  action: function() { SC.app.set('ui', WidgetDemo.buttonsSurface); }
+
+}));
+
