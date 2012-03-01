@@ -296,21 +296,32 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
         sc_assert(index >= 0);
         sc_assert(item);
 
-        // Update our value property.
+        // Update our 'value' property.  _sc_valueDidChange() will handle 
+        // updating the radio button's isSelected values.
         this.set('value', item[1]);
-
-        // Select the active radio button.
-        active.set('isSelected', true);
-
-        // Deselect the previously selected radio button.
-        this.get('sublayers')
-          .without(active)
-          .invoke('setIfChanged', 'isSelected', false);
-
         return true;
       }
     }
   },
+
+  _sc_valueDidChange: function() {
+    var value = this.get('value'),
+        displayItems = this.get('displayItems'),
+        buttons = this.get('sublayers'),
+        selected;
+
+    displayItems.forEach(function(item, idx) {
+      if (item[1] === value) selected = buttons[idx];
+    });
+
+    if (selected) {
+      selected.set('isSelected', true);
+      buttons.without(selected).invoke('setIfChanged', 'isSelected', false);
+    } else {
+      buttons.invoke('setIfChanged', 'isSelected', false);
+    }
+
+  }.observes('value'),
 
   /** @private
     If the items array itself changes, add/remove observer on item...
