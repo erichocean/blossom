@@ -490,37 +490,49 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
   _sc_itemContentDidChange: function() {
     var displayItems = this.get('displayItems'),
         value = this.get('value'),
-        isEnabled = this.get('isEnabled');
+        isEnabled = this.get('isEnabled'),
+        font = this.get('font');
 
     // console.log(displayItems);
 
     var segments = [], len = displayItems.length, last = len-1,
-        theme = this.get('theme');
+        theme = this.get('theme'),
+        x = 0, padding = 30;
 
-    // FIXME: This should take the title length into account.
     displayItems.forEach(function(item, idx) {
-      var segmentType;
+      var segmentType, width;
       if (idx === 0) {
+        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding + 9); // Magic!
         segmentType = (len === 1)? 'full' : 'left';
       } else if (idx === last) {
+        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding + 9);
         segmentType = 'right';
       } else {
+        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding);
         segmentType = 'center';
       }
 
+      width = Math.ceil(SC.MeasureText(font, item[0]).width + padding);
+      if (width % 2 !== 0) width++;
+
       var segment = SC.SegmentWidget.create({
-        layout: { left: idx*120, width: 120, top: 0, height: 24 },
+        layout: { left: x, width: width, top: 0, height: 24 },
         title: item[0],
         isEnabled: item[2],
         isSelected: item[1] === value? true : false,
         segmentType: segmentType,
-        theme: theme
+        theme: theme,
+        font: font
       });
       segments.push(segment);
+
+      x += width;
     });
 
     this.set('sublayers', segments);
   },
+
+  font: "11pt Calibri",
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
@@ -583,7 +595,8 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
         disabled = !this.get('isEnabled'),
         mixed = (selected === SC.MIXED_STATE),
         active = this.get('isActive'),
-        segmentType = this.get('segmentType');
+        segmentType = this.get('segmentType'),
+        font = this.get('font');
 
     selected = (selected && (selected !== SC.MIXED_STATE));
 
@@ -659,12 +672,12 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = font;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+      ctx.fillText(title, ctx.width/2, ctx.height/2);
 
     } else if (disabled && selected) {
       ctx.globalAlpha = 0.5;
@@ -676,7 +689,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.stroke();
     
       ctx.fillStyle = base3;
-      ctx.font = "11pt Calibri";
+      ctx.font = font;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -691,7 +704,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.stroke();
     
       ctx.fillStyle = base3;
-      ctx.font = "11pt Calibri";
+      ctx.font = font;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -709,12 +722,12 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = font;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+      ctx.fillText(title, ctx.width/2, ctx.height/2);
     }
   }
 
