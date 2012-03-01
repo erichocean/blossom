@@ -116,7 +116,7 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
       ctx.fillText(title, 22, ctx.height/2);
     }
 
-    if (selected) {
+    if ((selected && !active) || (!selected && active)) {
       // Draw the "check".
       ctx.beginPath();
       ctx.moveTo(8.5, 17);
