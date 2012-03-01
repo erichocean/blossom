@@ -631,13 +631,13 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
     } else if (segmentType === 'right') {
       switch (this.get('theme')) {
         case 'square':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 0);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 12);
           break;
         case 'regular':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 5);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 5);
           break;
         default:
           sc_assert(false, "Unknown theme:"+this.get('theme'));
