@@ -132,7 +132,7 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   /** 
     Call this method on your responder to make it become the first responder 
     in its surface.  If the surface is also the app's keyboard surface, the 
-    responder will have its `isKeyboardResponder` property set to true.
+    responder will have its `isInputResponder` property set to true.
   */
   becomeFirstResponder: function() {  
     var surface = this.get('surface');
@@ -156,6 +156,19 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   },
 
   lineHeight: 22,
+
+  _sc_didBecomeInputResponder: function() {
+    console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
+    if (this.get('isInputResponder')) {
+      
+    }
+  }.observes('isInputResponder'),
+
+  mouseDown: function(evt) {
+    SC.app.set('inputSurface', this.get('surface'));
+    this.becomeFirstResponder();
+    return false;
+  },
 
   render: function(ctx) {
     var h = ctx.height,

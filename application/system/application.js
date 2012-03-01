@@ -450,20 +450,22 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   _sc_inputSurface : null, // Note: Required, we're strict about null checking.
   _sc_inputSurfaceDidChange: function() {
     var old = this._sc_inputSurface,
-        cur = this.get('menuSurface');
+        cur = this.get('inputSurface');
 
     sc_assert(old === null || old.kindOf(SC.Surface), "Blossom internal error: SC.Application^_sc_inputSurface is invalid.");
     sc_assert(cur === null || cur.kindOf(SC.Surface), "SC.Application@inputSurface must either be null or an SC.Surface instance.");
 
     if (old === cur) return; // Nothing to do.
 
-    if (old) old.willLoseInputSurfaceTo(cur);
-    if (cur) cur.willBecomeInputSurfaceFrom(old);
+    if (old && old.willLoseInputSurfaceTo) old.willLoseInputSurfaceTo(cur);
+    if (cur && cur.willBecomeInputSurfaceFrom) cur.willBecomeInputSurfaceFrom(old);
 
+    if (old) old.set('isInputSurface', false);
     this._sc_inputSurface = cur;
+    if (cur) cur.set('isInputSurface', true);
 
-    if (old) old.didLoseInputTo(cur);
-    if (cur) cur.didBecomeInputFrom(old);
+    if (old && old.didLoseInputTo) old.didLoseInputTo(cur);
+    if (cur && cur.didBecomeInputFrom) cur.didBecomeInputFrom(old);
   }.observes('inputSurface'),
 
   // ..........................................................
@@ -489,13 +491,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     if (old === cur) return; // Nothing to do.
 
-    if (old) old.willLoseMenuSurfaceTo(cur);
-    if (cur) cur.willBecomeMenuSurfaceFrom(old);
+    if (old && old.willLoseMenuSurfaceTo) old.willLoseMenuSurfaceTo(cur);
+    if (cur && cur.willBecomeMenuSurfaceFrom) cur.willBecomeMenuSurfaceFrom(old);
 
+    if (old) old.set('isMenuSurface', false);
     this._sc_menuSurface = cur;
+    if (cur) cur.set('isMenuSurface', true);
 
-    if (old) old.didLoseMenuSurfaceTo(cur);
-    if (cur) cur.didBecomeMenuSurfaceFrom(old);
+    if (old && old.didLoseMenuSurfaceTo) old.didLoseMenuSurfaceTo(cur);
+    if (cur && cur.didBecomeMenuSurfaceFrom) cur.didBecomeMenuSurfaceFrom(old);
   }.observes('menuSurface'),
 
   // ..........................................................

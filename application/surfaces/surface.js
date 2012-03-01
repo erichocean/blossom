@@ -825,7 +825,7 @@ SC.Surface = SC.Responder.extend({
     @param {SC.Responder} responder
   */
   _sc_firstResponder: null, // Note: Required, we're strict about null checking.
-  _sc_firstResponderDidChange: function(responder) {
+  _sc_firstResponderDidChange: function() {
     var old = this._sc_firstResponder,
         cur = this.get('firstResponder'),
         isInputSurface = SC.app.get('inputSurface') === this,
@@ -837,7 +837,7 @@ SC.Surface = SC.Responder.extend({
     if (old === cur) return; // Nothing to do.
 
     if (old && old.willLoseFirstResponderTo) {
-      old.willLoseFirstResponderTo(responder);
+      old.willLoseFirstResponderTo(old);
     }
 
     if (isInputSurface) {

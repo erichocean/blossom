@@ -50,5 +50,5 @@ function main() {
 
   form.get('subsurfaces').pushObjects([titleBar, upper, lower]);
 
-  SC.app.addSurface(FormDemo.form);
+  SC.app.addSurface(form);
 }
