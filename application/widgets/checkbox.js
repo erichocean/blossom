@@ -122,15 +122,16 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
       ctx.moveTo(8.5, 17);
       ctx.lineTo(3.5, 13.5);
       ctx.lineTo(5.5, 12.5);
-      ctx.lineTo(8.5, 17);
-      ctx.lineTo(13, 7.5);
-      ctx.lineTo(14, 9.5);
+      ctx.lineTo(8.5, 16);
+      ctx.lineTo(12.5, 7);
+      ctx.lineTo(14, 9);
       ctx.lineTo(8.5, 17);
       ctx.closePath();
       ctx.fillStyle = (active || disabled)? base3 : base03;
       ctx.fill();
       ctx.strokeStyle = (active || disabled)? base3 : base03;
       ctx.lineCap = 'round';
+      ctx.lineWidth = 0.5;
       ctx.stroke();
     }
 
