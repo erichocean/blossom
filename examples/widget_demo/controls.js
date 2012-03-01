@@ -187,5 +187,31 @@ controlBehaviors.forEach(function(behavior, idx) {
 
 });
 
+var segmentedWidget = SC.SegmentedWidget.create({
+  layout: { top: 430, left: 210, width: 400, height: 24 },
+  items: [{ title: "Red",
+            value: "red",
+            enabled: true,
+            icon: "button_red" },
+          { title: "Green",
+            value: "green",
+            enabled: true,
+            icon: 'button_green' },
+          { title: "Purple",
+            value: "purple",
+            enabled: true,
+            icon: 'button_purple' },
+          { title: "Blue",
+            value: "blue",
+            enabled: true,
+            icon: 'button_blue' }],
+  value: 'red',
+  itemTitleKey: 'title',
+  itemValueKey: 'value',
+  itemIconKey: 'icon',
+  itemIsEnabledKey: 'enabled'
+});
+
 rootLayer.get('sublayers').pushObjects(layers);
+rootLayer.get('sublayers').pushObject(segmentedWidget);
 WidgetDemo.controlsSurface.get('layers').pushObject(rootLayer);

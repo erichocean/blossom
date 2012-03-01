@@ -30,9 +30,8 @@ var green =    "#859900";
 var white =    "white";
 
 SC.CreateRoundRectPath = function(ctx, x, y, width, height, radius) {
-  if (typeof radius === "undefined") {
-    radius = 5;
-  }
+  if (radius === undefined) radius = 5;
+
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
   ctx.lineTo(x + width - radius, y);

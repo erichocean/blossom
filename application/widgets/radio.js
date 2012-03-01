@@ -193,11 +193,17 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
     }
 
     return ret; // done!
-  }.property('items', 'itemTitleKey', 'itemWidthKey', 'itemValueKey', 'itemIsEnabledKey', 'localize', 'itemIconKey'),
+  }.property('items', 'itemTitleKey', 'itemWidthKey', 'itemValueKey',
+             'itemIsEnabledKey', 'localize', 'itemIconKey'),
 
   render: function(ctx) {
     ctx.clearRect(0, 0, ctx.width, ctx.height);
   },
+
+
+  // ..........................................................
+  // EVENT HANDLING
+  //
 
   /** @private
     Remove the active class on mouseExited if mouse is down.
@@ -209,7 +215,8 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
   },
 
   /** @private
-    If mouse was down and we renter the button area, set the active state again.
+    If mouse was down and we renter the button area, set the active state 
+    again.
   */
   mouseEntered: function(evt) {
     var button = evt.layer;
@@ -320,7 +327,6 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
     } else {
       buttons.invoke('setIfChanged', 'isSelected', false);
     }
-
   }.observes('value'),
 
   /** @private
