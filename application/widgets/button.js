@@ -30,7 +30,7 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-var roundRect = function(ctx, x, y, width, height, radius) {
+SC.CreateRoundRectPath = function(ctx, x, y, width, height, radius) {
   if (typeof radius === "undefined") {
     radius = 5;
   }
@@ -65,18 +65,22 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     switch (this.get('theme')) {
       case 'checkbox':
+        sc_assert(false, "Please use SC.CheckboxWidget instead.");
+        break;
       case 'radio':
+        sc_assert(false, "Please use SC.RadioWidget instead.");
+        break;
       case 'square':
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
         break;
       case 'capsule':
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
         break;
       case 'regular':
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
         break;
       default:
-        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
         break;
     }
 
