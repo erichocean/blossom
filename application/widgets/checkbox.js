@@ -32,7 +32,7 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
   theme: 'checkbox',
 
   render: function(ctx) {
-    // console.log('SC.ButtonWidget#render()', SC.guidFor(this));
+    // console.log('SC.CheckboxWidget#render()', SC.guidFor(this));
     var title = this.get('displayTitle') || "(no title)",
         selected = this.get('isSelected'),
         disabled = !this.get('isEnabled'),
@@ -117,7 +117,7 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
     }
 
     if ((selected && !active) || (!selected && active)) {
-      // Draw the "check".
+      // Draw the check mark.
       ctx.beginPath();
       ctx.moveTo(8.5, 17);
       ctx.lineTo(3.5, 13.5);
@@ -134,38 +134,6 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
-
-    // Alternate button styling:
-    // var buttonWidth = ctx.width;
-    // var gradient = ctx.createLinearGradient(0,0,0,24); // vertical
-    // 
-    // gradient.addColorStop(0, base3);
-    // gradient.addColorStop(0.5, base2);
-    // gradient.addColorStop(1, base3);
-    // ctx.fillStyle = gradient;
-    // // ctx.fillRect(0, 0, 140, 24);
-    // roundRect(ctx, 0,0,buttonWidth,24);
-    // ctx.fill();
-    // ctx.strokeStyle = active? base2 : white;
-    // ctx.lineWidth = 1;
-    // // ctx.strokeRect(0.5, 0.5, 139, 23);
-    // roundRect(ctx, 0.5, 0.5, buttonWidth-1, 23);
-    // ctx.stroke();
-    // ctx.strokeStyle = active? white : base2;
-    // // ctx.beginPath();
-    // // ctx.moveTo(0.5, 24.5);
-    // // ctx.lineTo(139.5, 24.5);
-    // // ctx.stroke();
-    // // ctx.strokeRect(-0.5, -0.5, 141, 25);
-    // roundRect(ctx, -0.5, -0.5, buttonWidth+1, 25);
-    // if (!active) ctx.stroke();
-    // ctx.font ="12pt Calibri";
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillStyle = white;
-    // if (!active) ctx.fillText(title, buttonWidth/2, 13);
-    // ctx.fillStyle = active? base01 : green;
-    // ctx.fillText(title, buttonWidth/2, 12);
   }
 
 });
