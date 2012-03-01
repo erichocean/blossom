@@ -71,9 +71,9 @@ function main() {
       layout: { top: anchor, left: 210, width: 140, height: 24 },
       title: "Regular Button",
       theme: 'regular',
-      action: function() {
-        alert("Hi from Blossom");
-      },
+      // action: function() {
+      //   alert("Hi from Blossom");
+      // },
       buttonBehavior: buttonBehavior
     });
     layers.push(button);
