@@ -345,7 +345,7 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
       var button = SC.RadioButtonWidget.create({
         layout: { left: 0, right: 0, top: idx*24, height: 24 },
         title: item[0],
-        isEnabled: isEnabled? item[2] : false,
+        isEnabled: item[2],
         isSelected: item[1] === value? true : false
       });
       buttons.push(button);
@@ -381,6 +381,7 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
         active = this.get('isActive');
 
     selected = (selected && (selected !== SC.MIXED_STATE));
+    disabled = disabled || !this.getPath('superlayer.isEnabled');
 
     ctx.clearRect(0, 0, ctx.width, ctx.height);
 
