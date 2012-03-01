@@ -73,9 +73,6 @@ behaviors.forEach(function(behavior, idx) {
     layout: { top: anchor, left: 210, width: 140, height: 24 },
     title: "Regular Button",
     theme: 'regular',
-    action: function() {
-      SC.app.set('ui', WidgetDemo.controlsSurface);
-    },
     buttonBehavior: buttonBehavior
   });
   layers.push(button);

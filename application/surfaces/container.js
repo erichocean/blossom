@@ -33,9 +33,13 @@ SC.EXIT_RIGHT      = 'exit-right';
 */
 SC.ContainerSurface = SC.CompositeSurface.extend({
 
-  orderInTransition:  null,
-  replaceTransition:  null,
-  orderOutTransition: null,
+  // orderInTransition:  null,
+  // replaceTransition:  null,
+  // orderOutTransition: null,
+
+  orderInTransition:  SC.ENTER_LEFT,
+  replaceTransition:  SC.SLIDE_FLIP_LEFT,
+  orderOutTransition: SC.EXIT_RIGHT,
 
   /** @property
     The surface displayed by this container.
@@ -155,6 +159,9 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         this.get('subsurfaces').removeObject(old);
       }
     }
+
+    this.triggerLayoutAndRendering();
+    this._sc_containerFrameDidChange();
   }.observes('contentSurface'),
 
   computeContentSurfaceFrame: function() {

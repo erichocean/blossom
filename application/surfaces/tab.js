@@ -158,6 +158,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
   itemKeyEquivalentKey: null,
 
   computeContentSurfaceFrame: function() {
+    // console.log('SC.TabSurface#computeContentSurfaceFrame()');
     var frame = SC.MakeRect(this.get('frame'));
 
     frame.x = 12;
@@ -169,6 +170,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
   },
 
   updateLayout: function() {
+    // console.log('SC.TabSurface#updateLayout()');
     var segmentedWidget = this._sc_segmentedWidget,
         segmentedWidth = segmentedWidget.get('measuredWidth'),
         viewSurface = this._sc_viewSurface,
@@ -197,6 +199,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
   _sc_segmentedWidget: null,
 
   _sc_tabContentSurfaceDidChange: function() {
+    // console.log('SC.TabSurface#_sc_tabContentSurfaceDidChange()');
     var contentSurface = this.get('contentSurface');
     if (contentSurface) contentSurface.set('cornerRadius', 15);
   }.observes('contentSurface'),
@@ -205,11 +208,22 @@ SC.TabSurface = SC.ContainerSurface.extend({
     arguments.callee.base.apply(this, arguments);
     var viewSurface, segmentedWidget;
 
-    viewSurface = this._sc_viewSurface = SC.View.create();
+    viewSurface = this._sc_viewSurface = SC.View.create({
+      clearBackground: true
+    });
 
+    var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({
+      action: function() {
+        // console.log('tab changed to: '+ this.get('value'));
+        // console.log(that.get(this.get('value')));
+        // that.set('contentSurface', that.get(this.get('value')));
+        var surface = that.get(this.get('value'));
+        if (surface) that.set('contentSurface', surface);
+        else alert('could not find surface with key: '+this.get('value'));
+      },
       themeBinding:                             SC.Binding.from('theme',                             this).oneWay().noDelay(),
-      valueBinding:                             SC.Binding.from('value',                             this).oneWay().noDelay(),
+      // valueBinding:                             SC.Binding.from('value',                             this).oneWay().noDelay(),
       isEnabledBinding:                         SC.Binding.from('isEnabled',                         this).oneWay().noDelay(),
       allowsEmptySelectionBinding:              SC.Binding.from('allowsEmptySelection',              this).oneWay().noDelay(),
       allowsMultipleSelectionBinding:           SC.Binding.from('allowsMultipleSelection',           this).oneWay().noDelay(),
@@ -227,6 +241,8 @@ SC.TabSurface = SC.ContainerSurface.extend({
       itemTargetKeyBinding:                     SC.Binding.from('itemTargetKey',                     this).oneWay().noDelay(),
       itemKeyEquivalentKeyBinding:              SC.Binding.from('itemKeyEquivalentKey',              this).oneWay().noDelay()
     });
+
+    segmentedWidget.set('value', this.get('value'));
 
     viewSurface.get('layers').pushObject(segmentedWidget);
     this.get('subsurfaces').pushObject(viewSurface);

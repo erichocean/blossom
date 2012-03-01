@@ -171,6 +171,8 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(benchKey);
   },
 
+  clearBackground: false,
+
   updateDisplay: function() {
     // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
@@ -193,8 +195,12 @@ SC.View = SC.LeafSurface.extend({
     sc_assert(ctx);
 
     // Draw background.
-    ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, w, h);
+    if (this.get('clearBackground')) {
+      ctx.clearRect(0, 0, w, h);
+    } else {
+      ctx.fillStyle = base3;
+      ctx.fillRect(0, 0, w, h);
+    }
 
     // Draw layers.
     SC.Benchmark.start(copyKey);

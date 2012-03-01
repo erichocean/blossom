@@ -366,6 +366,28 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
         // Update our 'value' property.  _sc_valueDidChange() will handle 
         // updating the radio button's isSelected values.
         this.set('value', item[1]);
+
+        // Trigger item target/action if needed.
+        var actionKey = this.get('itemActionKey'),
+            targetKey = this.get('itemTargetKey'),
+            action, target = null;
+
+        if (actionKey && (item = this.get('items').objectAt(item[6]))) {
+          // get the source item from the item array.  use the index stored...
+          action = item.get ? item.get(actionKey) : item[actionKey];
+          if (targetKey) {
+            target = item.get ? item.get(targetKey) : item[targetKey];
+          }
+          SC.app.sendAction(action, target, this, this.get('surface'));
+        }
+
+        // If a target/action is defined on self, do that too.
+        action = this.get('action');
+        if (action) {
+          if (typeof action === 'function') action.call(this);
+          else SC.app.sendAction(action, this.get('target'), this, this.get('surface'));
+        }
+
         return true;
       }
     }
