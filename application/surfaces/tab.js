@@ -10,6 +10,24 @@ sc_require('surfaces/view');
 
 if (BLOSSOM) {
 
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
 SC.TabSurface = SC.ContainerSurface.extend({
 
   theme: 'square',
@@ -139,6 +157,17 @@ SC.TabSurface = SC.ContainerSurface.extend({
   */
   itemKeyEquivalentKey: null,
 
+  computeContentSurfaceFrame: function() {
+    var frame = SC.MakeRect(this.get('frame'));
+
+    frame.x = 12;
+    frame.y = 12;
+    frame.width = frame.width - 24;
+    frame.height = frame.height - 24;
+
+    return frame;
+  },
+
   updateLayout: function() {
     var segmentedWidget = this._sc_segmentedWidget,
         segmentedWidth = segmentedWidget.get('measuredWidth'),
@@ -166,6 +195,11 @@ SC.TabSurface = SC.ContainerSurface.extend({
   _sc_viewSurface: null,
 
   _sc_segmentedWidget: null,
+
+  _sc_tabContentSurfaceDidChange: function() {
+    var contentSurface = this.get('contentSurface');
+    if (contentSurface) contentSurface.set('cornerRadius', 15);
+  }.observes('contentSurface'),
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
@@ -196,6 +230,8 @@ SC.TabSurface = SC.ContainerSurface.extend({
 
     viewSurface.get('layers').pushObject(segmentedWidget);
     this.get('subsurfaces').pushObject(viewSurface);
+
+    this.set('backgroundColor', base2);
   }
 
 });

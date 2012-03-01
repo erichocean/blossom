@@ -157,6 +157,10 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     }
   }.observes('contentSurface'),
 
+  computeContentSurfaceFrame: function() {
+    return this.get('frame');
+  },
+
   _sc_containerFrameDidChange: function() {
     // console.log('SC.ContainerSurface#_sc_containerFrameDidChange()');
     var frame = this.get('frame'),
@@ -170,6 +174,7 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     }
 
     if (contentSurface) {
+      frame = this.computeContentSurfaceFrame();
       contentSurface.set('frame', frame);
       if (contentSurface.__useContentSize__) {
         contentSurface.__contentWidth__ = frame.width;
