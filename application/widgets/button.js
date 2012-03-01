@@ -63,7 +63,22 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     ctx.clearRect(0, 0, ctx.width, ctx.height);
 
-    roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+    switch (this.get('theme')) {
+      case 'checkbox':
+      case 'radio':
+      case 'square':
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
+        break;
+      case 'capsule':
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+        break;
+      case 'regular':
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 7);
+        break;
+      default:
+        roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 7);
+        break;
+    }
 
     if ((disabled && !selected) || (!active && !selected)) {
       ctx.globalAlpha = 1.0;
