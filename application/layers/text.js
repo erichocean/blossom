@@ -19,7 +19,7 @@ SC.TextLayer = SC.Layer.extend({
   isTextLayer: true,
 
   // FIXME: Add more text properties.
-  font: "11pt Calibri, serif",
+  font: "11pt Calibri, sans",
   color: base03,
   backgroundColor: base3,
   textBaseline: 'top',

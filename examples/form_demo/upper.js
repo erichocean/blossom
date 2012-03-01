@@ -24,7 +24,49 @@ var green =    "#859900";
 var white =    "white";
 
 FormDemo.upper = SC.View.create({
-  clearBackground: true
+  clearBackground: true,
+
+  updateDisplay: function() {
+    // console.log('FormDemo.form#updateDisplay()', SC.guidFor(this));
+    var psurface = SC.psurfaces[this.__id__],
+        canvas = psurface? psurface.__element__ : null,
+        ctx = canvas? canvas.getContext('2d') : null,
+        w = canvas.width, h = canvas.height;
+
+    var layers = this.get('layers');
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].updateDisplay();
+    }
+
+    ctx.save();
+
+    // Draw background.
+    if (this.get('clearBackground')) {
+      ctx.clearRect(0, 0, w, h);
+    } else {
+      ctx.fillStyle = base3;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    // Draw wells.
+    ctx.fillStyle = base2;
+    SC.CreateRoundRectPath(ctx, 8, 76, w-98, 110, 7);
+    ctx.fill();
+
+    SC.CreateRoundRectPath(ctx, 8, h-94, Math.floor((w-98)/2)-4, 86, 7);
+    ctx.fill();
+
+    SC.CreateRoundRectPath(ctx, 12 + Math.ceil((w-98)/2), h-94, w - 102 - Math.ceil((w-98)/2), 86, 7);
+    ctx.fill();
+
+    ctx.restore();
+
+    // Draw layers.
+    for (idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].copyIntoContext(ctx);
+    }
+  }
+
 });
 
 (function(view) {
@@ -38,7 +80,7 @@ var saveButton = SC.ButtonWidget.create({
 });
 
 var cancelButton = SC.ButtonWidget.create({
-  layout: { width: 70, top: 42, right: 8, height: 24 },
+  layout: { width: 70, top: 39, right: 8, height: 24 },
   title: "Cancel",
   theme: 'capsule',
   action: function() { alert('cancel'); }
@@ -52,12 +94,12 @@ var printButton = SC.ButtonWidget.create({
 });
 
 var incidentNumberLabel = SC.TextLayer.create({
-  layout: { top: 8, left: 18, height: 24, width: 72 },
+  layout: { top: 8, left: 20, height: 24, width: 72 },
   value: "Incident #:"
 });
 
 var incidentNumberField = SC.TextFieldWidget.create({
-  layout: { top: 8, left: 90, right: 270, height: 24 },
+  layout: { top: 6, left: 90, right: 270, height: 24 },
   value: "15000",
   isEnabled: false
 });
@@ -67,13 +109,43 @@ var categoryLabel = SC.TextLayer.create({
   value: "Category:"
 });
 
+var descriptionLabel = SC.TextLayer.create({
+  layout: { top: 42, left: 11, height: 24, width: 72 },
+  value: "Description:"
+});
+
+var descriptionField = SC.TextFieldWidget.create({
+  layout: { top: 40, left: 90, right: 90, height: 24 },
+  value: "Review Product For Potential Custom Adaptation",
+  backgroundColor: 'rgba(255,255,255,0.3)'
+});
+
+var contactLabel = SC.TextLayer.create({
+  layout: { bottom: 94, left: 13, height: 14, width: 72 },
+  font: "9pt Calibri, sans",
+  value: "Contact:",
+  lineHeight: 14
+});
+
+var projectLabel = SC.TextLayer.create({
+  layout: { bottom: 94, centerX: 2, height: 14, width: 72 },
+  font: "9pt Calibri, sans",
+  value: "Project:",
+  lineHeight: 14
+});
+
+
 view.get('layers').pushObjects([
   saveButton,
   cancelButton,
   printButton,
   incidentNumberLabel,
   incidentNumberField,
-  categoryLabel
+  categoryLabel,
+  descriptionLabel,
+  descriptionField,
+  contactLabel,
+  projectLabel
 ]);
 
 })(FormDemo.upper);

@@ -6,9 +6,9 @@
 /*global FormDemo */
 
 sc_require('form');
-sc_require('title_bar')
-sc_require('upper')
-sc_require('lower')
+sc_require('title_bar');
+sc_require('upper');
+sc_require('lower');
 
 SC.ENABLE_CSS_TRANSITIONS = false;
 
@@ -43,10 +43,10 @@ function main() {
   titleBar.set('frame', SC.MakeRect(0, 0, 800, 20));
 
   var upper = FormDemo.upper;
-  upper.set('frame', SC.MakeRect(0, 20, 800, 280));
+  upper.set('frame', SC.MakeRect(0, 20, 800, 300));
 
   var lower = FormDemo.lower;
-  lower.set('frame', SC.MakeRect(0, 300, 800, 300));
+  lower.set('frame', SC.MakeRect(0, 320, 800, 280));
 
   form.get('subsurfaces').pushObjects([titleBar, upper, lower]);
 

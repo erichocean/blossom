@@ -155,13 +155,18 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
     }
   },
 
+  lineHeight: 22,
+
   render: function(ctx) {
     var h = ctx.height,
         w = ctx.width,
         isEnabled = this.get('isEnabled');
 
+    ctx.fillStyle = this.get('backgroundColor');
+    ctx.fillRect(0, 0, w, h);
+
     ctx.save();
-    ctx.translate(4, 0);
+    ctx.translate(4, 2);
     arguments.callee.base.apply(this, arguments);
     ctx.restore();
 
