@@ -486,11 +486,12 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
         value = this.get('value'),
         isEnabled = this.get('isEnabled');
 
-    console.log(displayItems);
+    // console.log(displayItems);
 
     // FIXME: This is totally wrong, neeed to measure the text and do the 
     // layout horizontally.
-    var segments = [], len = displayItems.length, last = len-1;
+    var segments = [], len = displayItems.length, last = len-1,
+        theme = this.get('theme');
     displayItems.forEach(function(item, idx) {
       var segmentType;
       if (idx === 0) {
@@ -506,7 +507,8 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
         title: item[0],
         isEnabled: item[2],
         isSelected: item[1] === value? true : false,
-        segmentType: segmentType
+        segmentType: segmentType,
+        theme: theme
       });
       segments.push(segment);
     });
@@ -531,6 +533,7 @@ SC._sc_segmented_fetchItem = function(k) {
 sc_require('widgets/button');
 
 SC.CreateRoundRectPathLeft = function(ctx, x, y, width, height, radius) {
+  // console.log('SC.CreateRoundRectPathLeft');
   if (radius === undefined) radius = 5;
 
   ctx.beginPath();
@@ -544,6 +547,7 @@ SC.CreateRoundRectPathLeft = function(ctx, x, y, width, height, radius) {
 };
 
 SC.CreateRoundRectPathRight = function(ctx, x, y, width, height, radius) {
+  // console.log('SC.CreateRoundRectPathRight');
   if (radius === undefined) radius = 5;
 
   ctx.beginPath();
@@ -564,7 +568,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
 
   buttonBehavior: SC.TOGGLE_BEHAVIOR,
 
-  theme: 'square',
+  theme: 'regular',
 
   render: function(ctx) {
     // console.log('SC.SegmentWidget#render()', SC.guidFor(this));
@@ -579,10 +583,41 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
 
     ctx.clearRect(0, 0, ctx.width, ctx.height);
 
+    sc_assert(this.get('theme') !== 'checkbox', "Please use SC.CheckboxWidget instead.");
+    sc_assert(this.get('theme') !== 'radio', "Please use SC.RadioWidget instead.");
+
     if (segmentType === 'left') {
-      SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 5);
+      switch (this.get('theme')) {
+        case 'square':
+          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 0);
+          break;
+        case 'capsule':
+          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 12);
+          break;
+        case 'regular':
+          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 5);
+          break;
+        default:
+          sc_assert(false, "Unknown theme:"+this.get('theme'));
+          break;
+      }
+
     } else if (segmentType === 'right') {
-      SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 5);
+      switch (this.get('theme')) {
+        case 'square':
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 0);
+          break;
+        case 'capsule':
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
+          break;
+        case 'regular':
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 5);
+          break;
+        default:
+          sc_assert(false, "Unknown theme:"+this.get('theme'));
+          break;
+      }
+
     } else if (segmentType === 'center') {
       ctx.beginPath();
       ctx.moveTo(0.5 + ctx.width-1, 1.5); // Top-right
@@ -590,14 +625,9 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.lineTo(0.5, 1.5 + ctx.height-3);
       ctx.lineTo(0.5 + ctx.width-1, 1.5 + ctx.height-3);
       // Don't close the path, segments draw the line on the right (only).
-    } else {
+
+    } else { // 'full'
       switch (this.get('theme')) {
-        case 'checkbox':
-          sc_assert(false, "Please use SC.CheckboxWidget instead.");
-          break;
-        case 'radio':
-          sc_assert(false, "Please use SC.RadioWidget instead.");
-          break;
         case 'square':
           SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
           break;
@@ -608,7 +638,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
           SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
           break;
         default:
-          SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+          sc_assert(false, "Unknown theme:"+this.get('theme'));
           break;
       }
     }
