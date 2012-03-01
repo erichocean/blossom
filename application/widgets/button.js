@@ -65,26 +65,42 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
 
     roundRect(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
 
-    if (disabled || !active) {
+    if ((disabled && !selected) || (!active && !selected)) {
       ctx.globalAlpha = 1.0;
       ctx.fillStyle = base3;
       ctx.fill();
-    
-      ctx.globalAlpha = disabled? 0.5 : 1.0;
+
+      ctx.globalAlpha = 0.5;
       ctx.strokeStyle = base03;
       ctx.lineWidth = 1;
       ctx.stroke();
-    
+
       ctx.fillStyle = base03;
-      ctx.font = "12pt Calibri";
+      ctx.font = "11pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
       ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+
+    } else if (disabled && selected) {
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = base03;
+      ctx.fill();
+
+      ctx.strokeStyle = base03;
+      ctx.lineWidth = 1;
+      ctx.stroke();
     
-    // active
-    } else {
+      ctx.fillStyle = base3;
+      ctx.font = "11pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(title, ctx.width/2, ctx.height/2);
+
+    } else if (active || selected) {
       ctx.fillStyle = base03;
       ctx.fill();
       ctx.strokeStyle = base03;
@@ -92,7 +108,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.stroke();
     
       ctx.fillStyle = base3;
-      ctx.font = "12pt Calibri";
+      ctx.font = "11pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
