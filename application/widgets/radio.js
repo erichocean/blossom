@@ -349,7 +349,7 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
         value = this.get('value'),
         isEnabled = this.get('isEnabled');
 
-    console.log(displayItems);
+    // console.log(displayItems);
 
     var buttons = [];
     displayItems.forEach(function(item, idx) {
