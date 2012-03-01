@@ -209,8 +209,11 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
     Remove the active class on mouseExited if mouse is down.
   */
   mouseExited: function(evt) {
+    var active = this._sc_activeRadioButton;
+
     document.body.style.cursor = "default";
     if (this.isMouseDown) { this.set('isActive', false); }
+    if (active) active.set('isActive', false);
     return true;
   },
 
@@ -219,11 +222,14 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
     again.
   */
   mouseEntered: function(evt) {
-    var button = evt.layer;
+    var active = this._sc_activeRadioButton,
+        button = evt.layer;
+
     if (button !== this && button.get('isEnabled') && this.get('isEnabled')) {
       document.body.style.cursor = "pointer";
     }
     if (this.isMouseDown) { this.set('isActive', true); }
+    if (active) active.set('isActive', true);
     return true;
   },
 

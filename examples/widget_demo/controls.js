@@ -190,7 +190,7 @@ controlBehaviors.forEach(function(behavior, idx) {
 rootLayer.get('sublayers').pushObjects(layers);
 
 var segmentedWidget = SC.SegmentedWidget.create({
-  layout: { top: 430, left: 210, width: 400, height: 24 },
+  layout: { top: 430, left: 210, width: 500, height: 24 },
   theme: 'regular',
   items: [{ title: "Red",
             value: "red",
@@ -216,7 +216,7 @@ var segmentedWidget = SC.SegmentedWidget.create({
 });
 
 var segmentedWidget2 = SC.SegmentedWidget.create({
-  layout: { top: 430+30, left: 210, width: 400, height: 24 },
+  layout: { top: 430+30, left: 210, width: 500, height: 24 },
   theme: 'capsule',
   items: [{ title: "Red",
             value: "red",
@@ -242,7 +242,7 @@ var segmentedWidget2 = SC.SegmentedWidget.create({
 });
 
 var segmentedWidget3 = SC.SegmentedWidget.create({
-  layout: { top: 430+60, left: 210, width: 400, height: 24 },
+  layout: { top: 430+60, left: 210, width: 500, height: 24 },
   theme: 'square',
   items: [{ title: "Red",
             value: "red",

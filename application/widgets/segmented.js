@@ -275,8 +275,11 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     Remove the active class on mouseExited if mouse is down.
   */
   mouseExited: function(evt) {
+    var active = this._sc_activeSegment;
+
     document.body.style.cursor = "default";
     if (this.isMouseDown) { this.set('isActive', false); }
+    if (active) active.set('isActive', false);
     return true;
   },
 
@@ -285,11 +288,14 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     again.
   */
   mouseEntered: function(evt) {
-    var segment = evt.layer;
+    var active = this._sc_activeSegment,
+        segment = evt.layer;
+
     if (segment !== this && segment.get('isEnabled') && this.get('isEnabled')) {
       document.body.style.cursor = "pointer";
     }
     if (this.isMouseDown) { this.set('isActive', true); }
+    if (active) active.set('isActive', true);
     return true;
   },
 
@@ -488,10 +494,10 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
 
     // console.log(displayItems);
 
-    // FIXME: This is totally wrong, neeed to measure the text and do the 
-    // layout horizontally.
     var segments = [], len = displayItems.length, last = len-1,
         theme = this.get('theme');
+
+    // FIXME: This should take the title length into account.
     displayItems.forEach(function(item, idx) {
       var segmentType;
       if (idx === 0) {
@@ -503,7 +509,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
       }
 
       var segment = SC.SegmentWidget.create({
-        layout: { left: idx*100, width: 100, top: 0, height: 24 },
+        layout: { left: idx*120, width: 120, top: 0, height: 24 },
         title: item[0],
         isEnabled: item[2],
         isSelected: item[1] === value? true : false,
@@ -583,8 +589,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
 
     ctx.clearRect(0, 0, ctx.width, ctx.height);
 
-    sc_assert(this.get('theme') !== 'checkbox', "Please use SC.CheckboxWidget instead.");
-    sc_assert(this.get('theme') !== 'radio', "Please use SC.RadioWidget instead.");
+    sc_assert(this.get('theme') !== 'checkbox' || this.get('theme') !== 'radio', "SC.SegmentedWidget only supports these themes: 'square', 'capsule', and 'regular'.");
 
     if (segmentType === 'left') {
       switch (this.get('theme')) {
