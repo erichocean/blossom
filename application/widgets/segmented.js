@@ -502,10 +502,10 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     displayItems.forEach(function(item, idx) {
       var segmentType, width;
       if (idx === 0) {
-        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding + 9); // Magic!
+        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding*2); // Magic!
         segmentType = (len === 1)? 'full' : 'left';
       } else if (idx === last) {
-        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding + 9);
+        width = Math.ceil(SC.MeasureText(font, item[0]).width + padding*2);
         segmentType = 'right';
       } else {
         width = Math.ceil(SC.MeasureText(font, item[0]).width + padding);
