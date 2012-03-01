@@ -195,7 +195,6 @@ SC.TabSurface = SC.ContainerSurface.extend({
   },
 
   _sc_viewSurface: null,
-
   _sc_segmentedWidget: null,
 
   _sc_tabContentSurfaceDidChange: function() {
@@ -215,12 +214,14 @@ SC.TabSurface = SC.ContainerSurface.extend({
     var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({
       action: function() {
-        // console.log('tab changed to: '+ this.get('value'));
-        // console.log(that.get(this.get('value')));
-        // that.set('contentSurface', that.get(this.get('value')));
-        var surface = that.get(this.get('value'));
+        var value = this.get('value'),
+            surface = value? that.get(value) : null;
+
         if (surface) that.set('contentSurface', surface);
-        else alert('could not find surface with key: '+this.get('value'));
+        else console.log('could not find surface with key: '+value);
+
+        // FIXME: Need to keep the two 'value' properties in sync.
+        // that.set('value', value);
       },
       themeBinding:                             SC.Binding.from('theme',                             this).oneWay().noDelay(),
       // valueBinding:                             SC.Binding.from('value',                             this).oneWay().noDelay(),
