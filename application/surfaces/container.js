@@ -134,6 +134,12 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
     // Update the UI without any 3D transition.
     } else {
 
+      // Force a sane transform.
+      SC.AnimationTransaction.begin({ duration: 0 });
+      this.set('transform', SC.MakeIdentityTransform3D());
+      if (cur) cur.set('transform', SC.MakeIdentityTransform3D());
+      SC.AnimationTransaction.end();
+
       // order in
       if (!old && cur) {
         this.get('subsurfaces').pushObject(cur);
