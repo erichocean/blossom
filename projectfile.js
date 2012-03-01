@@ -11,6 +11,7 @@ var path = require('path');
 
 var project = BT.Project.create({
   "static": BT.Directory.create({
+    "form_demo": require('./examples/form_demo'),
     "widget_demo": require('./examples/widget_demo'),
     "view_demo": require('./examples/view_demo'),
     "splitsurface_demo": require('./examples/splitsurface_demo'),
