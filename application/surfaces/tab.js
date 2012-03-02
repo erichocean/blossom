@@ -52,6 +52,8 @@ SC.TabSurface = SC.ContainerSurface.extend({
         seg = this._sc_segmentedWidget,
         val = seg.get('value');
 
+    sc_assert(cur === null? true : typeof cur === 'string', 'SC.TabSurface@value must be a string or null.');
+
     // cur === old === val on init(), so nothing to do.
     if (cur === old) return;
 
