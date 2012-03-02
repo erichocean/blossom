@@ -69,7 +69,10 @@ SC.TabSurface = SC.ContainerSurface.extend({
 
     // Update our container surface whenever old !== cur.
     var surface = cur? this.get(cur) : null;
-    if (surface) this.set('contentSurface', surface);
+    if (surface) {
+      sc_assert(surface.kindOf(SC.Surface), "SC.TabSurface: object for key '%@' has the wrong type; should be an SC.Surface.".fmt(cur));
+      this.set('contentSurface', surface);
+    }
     else console.log('SC.TabSurface: Could not find surface with key:', cur);
   }.observes('value'),
 
