@@ -10,17 +10,17 @@ Next you'll need to get a copy of Blossom itself. The easiest way is to use
     cd /directory/where/you/want/your/blossom/install/
     git clone https://github.com/fohr/blossom.git
 
-Next, install the following Node packages:
+Next, install any required Node packages:
 
     cd blossom
     npm install
 
-To view Blossom's current testing app, do:
+Then start up Blossom's development server:
 
     node projectfile.js
 
-and then open up [http://localhost:4020/](http://localhost:4020/). You'll see 
-a list of demo apps you can run.
+Go to [http://localhost:4020/](http://localhost:4020/). You'll see 
+a list of demo apps you can run. Click on the one you want to try.
 
 To run the foundation framework tests, do:
 
@@ -38,7 +38,10 @@ To run a specific test, just do:
 
     node testrunner.js tests/path/to/test.js
 
-The infrastructure for testing the application framework and apps you build 
+Some tests currently fail because they have not been updated for our 
+Vows-based test runner. Patches welcome!
+
+Note: The infrastructure for testing the application framework and apps you build 
 with Blossom is coming soon.
 
 Questions? Ask on the #blossom channel at irc.freenode.net.
