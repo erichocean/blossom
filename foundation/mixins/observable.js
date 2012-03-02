@@ -470,7 +470,7 @@ SC.Observable = {
       }
       
     // otherwise notify property observers immediately
-    } else this._sc_notifyPropertyObservers(key) ;
+    } else if (this.isObservable) this._sc_notifyPropertyObservers(key);
     
     return this ;
   },
