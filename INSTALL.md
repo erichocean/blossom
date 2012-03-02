@@ -19,7 +19,8 @@ To view Blossom's current testing app, do:
 
     node projectfile.js
 
-and then open up [http://localhost:4020/blossom_test](http://localhost:4020/blossom_test).
+and then open up [http://localhost:4020/](http://localhost:4020/). You'll see 
+a list of demo apps you can run.
 
 To run the foundation framework tests, do:
 

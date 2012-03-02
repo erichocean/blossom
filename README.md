@@ -1,3 +1,8 @@
+**If you want just want to give Blossom a spin, please visit the 
+[INSTALL](https://github.com/fohr/blossom/blob/master/INSTALL.md) file.**
+
+----
+
 Blossom - Modern, Cross-Platform Application Framework
 ======================================================
 
