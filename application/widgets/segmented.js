@@ -552,6 +552,16 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     });
 
     this.set('sublayers', segments);
+    this._sc_triggerSublayerLayout = true;
+  },
+
+  updateLayout: function() {
+    // console.log('SC.SegmentWidget#updateLayout()', SC.guidFor(this));
+    if (this._sc_triggerSublayerLayout) {
+      this._sc_triggerSublayerLayout = false;
+      this.get('sublayers').invoke('triggerLayout');
+    }
+    arguments.callee.base.apply(this, arguments);
   },
 
   font: "11pt Calibri",
