@@ -3,8 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM CanvasRenderingContext2D HTMLCanvasElement
-  ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
+/*globals BLOSSOM sc_assert */
 
 sc_require('layers/text');
 
@@ -160,6 +159,17 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   _sc_didBecomeInputResponder: function() {
     console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
     if (this.get('isInputResponder')) {
+      // Need to begin editing.  That involves retrieving the field editor 
+      // for the application, configuring it correctly styling-wise and with 
+      // the correct textual contents, and then placing it over ourself.  The
+      // field editor is platform-native, although you interact with it 
+      // within Blossom the same way on all platforms.
+      var surface = this.get('surface');
+      sc_assert(surface);
+      sc_assert(surface.isLeafSurface);
+
+      var fieldEditor = SC.app.get('fieldEditor');
+      sc_assert(fieldEditor);
       
     }
   }.observes('isInputResponder'),

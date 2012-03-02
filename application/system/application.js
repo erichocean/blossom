@@ -619,6 +619,19 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   // .......................................................
+  // THE FIELD EDITOR
+  //
+
+  fieldEditor: function(key, value) {
+    sc_assert(value === undefined, "This property is read-only.");
+    var fieldEditor = this._sc_fieldEditor;
+    if (!fieldEditor) {
+      fieldEditor = this._sc_fieldEditor = SC.FieldEditor.create();
+    }
+    return fieldEditor;
+  }.property(),
+
+  // .......................................................
   // ACTION HANDLING
   //
 
