@@ -40,9 +40,38 @@ SC.TabSurface = SC.ContainerSurface.extend({
     If you set this value to something that has no matching button, then
     no buttons will be selected.
 
-    @field {Object}
+    @field {String}
   */
   value: null,
+
+  _sc_value: null,
+  _sc_valueDidChange: function() {
+    // console.log('SC.TabSurface#_sc_valueDidChange()');
+    var cur = this.get('value'),
+        old = this._sc_value,
+        seg = this._sc_segmentedWidget,
+        val = seg.get('value');
+
+    // cur === old === val on init(), so nothing to do.
+    if (cur === old) return;
+
+    // This happens when our 'value' was updated by our segment widget. Avoid 
+    // a loop by not setting 'value' on segment widget again.
+    if (cur === val) {
+      this._sc_value = cur;
+
+    // This happens when our 'value' has been updated by anyone but segment 
+    // widget.  Let our segment widget know we've changed.
+    } else {
+      this._sc_value = cur;
+      seg.set('value', cur);
+    }
+
+    // Update our container surface whenever old !== cur.
+    var surface = cur? this.get(cur) : null;
+    if (surface) this.set('contentSurface', surface);
+    else console.log('SC.TabSurface: Could not find surface with key:', cur);
+  }.observes('value'),
 
   /**
     Set to true to enabled the segmented view, false to disabled it.
@@ -213,18 +242,11 @@ SC.TabSurface = SC.ContainerSurface.extend({
 
     var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({
+      value: this.get('value'),
       action: function() {
-        var value = this.get('value'),
-            surface = value? that.get(value) : null;
-
-        if (surface) that.set('contentSurface', surface);
-        else console.log('could not find surface with key: '+value);
-
-        // FIXME: Need to keep the two 'value' properties in sync.
-        // that.set('value', value);
+        that.set('value', this.get('value'));
       },
       themeBinding:                             SC.Binding.from('theme',                             this).oneWay().noDelay(),
-      // valueBinding:                             SC.Binding.from('value',                             this).oneWay().noDelay(),
       isEnabledBinding:                         SC.Binding.from('isEnabled',                         this).oneWay().noDelay(),
       allowsEmptySelectionBinding:              SC.Binding.from('allowsEmptySelection',              this).oneWay().noDelay(),
       allowsMultipleSelectionBinding:           SC.Binding.from('allowsMultipleSelection',           this).oneWay().noDelay(),
@@ -243,8 +265,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
       itemKeyEquivalentKeyBinding:              SC.Binding.from('itemKeyEquivalentKey',              this).oneWay().noDelay()
     });
 
-    segmentedWidget.set('value', this.get('value'));
-
+    this._sc_valueDidChange();
     viewSurface.get('layers').pushObject(segmentedWidget);
     this.get('subsurfaces').pushObject(viewSurface);
 

@@ -34,15 +34,9 @@ WidgetDemo.tabsSurface = SC.TabSurface.create({
             enabled: true },
           { title: "Controls",
             value: "controlsSurface",
-            enabled: true },
-          // { title: "Purple",
-          //   value: "purpleSurface",
-          //   enabled: true },
-          // { title: "Blue",
-          //   value: "blueSurface",
-          //   enabled: true }
+            enabled: true }
         ],
-  valueBinding: 'WidgetDemo.activeSurface',
+  value: 'buttonsSurface',
   itemTitleKey: 'title',
   itemValueKey: 'value',
   itemIconKey: 'icon',
