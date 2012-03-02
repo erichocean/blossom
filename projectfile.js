@@ -20,9 +20,10 @@ var project = BT.Project.create({
     "bindings_demo": require('./examples/bindings_demo'),
     "psurfaces_test": require('./examples/psurfaces_test'),
     "text_demo": require('./examples/text_demo'),
-    "stage_test": require('./examples/stage_test'),
-    "bullet_test": require('./examples/bullet_test'),
-    "box2d_test": require('./examples/box2d_test'),
+    // "stage_test": require('./examples/stage_test'),
+    // "bullet_test": require('./examples/bullet_test'),
+    // "box2d_test": require('./examples/box2d_test'),
+
     "sproutcore": require('./node/buildfile'),
 
     // no sc_static() support yet, so give our image a nice and easy path
