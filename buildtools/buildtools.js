@@ -8,8 +8,8 @@
 var http = require('http'),
     fs = require('fs'),
     path = require('path'),
-    Graph = require('./utils/graph'), // needed for topological sorting
-    coffee = null;
+    coffee = require('coffee-script'),
+    Graph = require('./utils/graph'); // needed for topological sorting
 
 // Bootstrap the BT namespace with blossom/foundation.
 require('./bootstrap');
@@ -120,7 +120,6 @@ BT.File = BT.BuildNode.extend({
       ret = fs.readFileSync(this.get('sourcePath'), "utf-8");
     }
     else if (this.get('isCoffeeScript')) {
-      if (coffee === null) { coffee = require('coffee-script'); }
       ret = fs.readFileSync(this.get('sourcePath'), "utf-8");
       ret = coffee.compile(ret, { bare: true });
     }
