@@ -114,7 +114,16 @@ BT.File = BT.BuildNode.extend({
   }.property().cacheable(),
 
   contents: function() {
-    return fs.readFileSync(this.get('sourcePath'), "utf-8");
+    var ret = null, coffee = null;
+    if (this.get('isJavaScript')) {
+      ret = fs.readFileSync(this.get('sourcePath'), "utf-8");
+    }
+    else if (this.get('isCoffeeScript')) {
+      coffee = require('coffee-script');
+      ret = fs.readFileSync(this.get('sourcePath'), "utf-8");
+      ret = coffee.compile(ret, { bare: true });
+    }
+    return ret;
   }.property(),
 
   scRequireDependencies: function() {
@@ -146,6 +155,10 @@ BT.File = BT.BuildNode.extend({
 
   isJavaScript: function() {
     return path.extname(this.get('sourcePath')) === ".js";
+  }.property().cacheable(),
+
+  isCoffeeScript: function() {
+    return path.extname(this.get('sourcePath')) === ".coffee";
   }.property().cacheable(),
 
   accept: acceptBuilder('visitFile')
@@ -198,7 +211,7 @@ BT.Target = BT.BuildNode.extend({
       if (relativePath.slice(0,4) === "test") return false;
       else if (relativePath.slice(0,4) === "node") return false;
       else if (relativePath.match(/test_suite/)) return false;
-      else return file.get('isJavaScript');
+      else return file.get('isJavaScript') || file.get('isCoffeeScript');
     });
 
     // need to sort the ary by require dependencies...
@@ -210,7 +223,12 @@ BT.Target = BT.BuildNode.extend({
           dependencies = file.get('scRequireDependencies') || [],
           dependencyPath;
 
-      dependencyPath = relativePath.slice(0, -3); // drop the '.js'
+      if (file.get('isJavaScript')) {
+        dependencyPath = relativePath.slice(0, -3); // drop the '.js'
+      }
+      else if (file.get('isCoffeeScript')) {
+        dependencyPath = relativePath.slice(0, -7); // drop the '.coffee'
+      }
       map[dependencyPath] = file;
       g.addVertex(dependencyPath);
       dependencies.forEach(function(name) {

@@ -124,6 +124,10 @@ BT.Server = BT.Object.extend({
                 } else {
                   res.writeHead(200, {'Content-Type': 'application/javascript'});
                   var superCalls = new Date().getTime();
+                  if (path.extname(sourcePath) === ".coffee") {
+                    coffee = require('coffee-script');
+                    content= coffee.compile(content, { bare: true });
+                  }
                   content = replaceScSuperCalls(content);
                   var end = new Date().getTime();
                   if (BT.LOG_SERVING) console.log(sourcePath, (end-start)+'ms read', '('+(end-superCalls)+'ms process)');
