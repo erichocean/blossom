@@ -7,7 +7,8 @@
 
 var fs = require('fs'),
     path = require('path'),
-    http = require('http');
+    http = require('http'),
+    coffee = null;
 
 function gsub(source, pattern, replacement) {
   var match, result;
@@ -125,8 +126,8 @@ BT.Server = BT.Object.extend({
                   res.writeHead(200, {'Content-Type': 'application/javascript'});
                   var superCalls = new Date().getTime();
                   if (path.extname(sourcePath) === ".coffee") {
-                    coffee = require('coffee-script');
-                    content= coffee.compile(content, { bare: true });
+                    if (coffee === null) { coffee = require('coffee-script'); }
+                    content = coffee.compile(content, { bare: true });
                   }
                   content = replaceScSuperCalls(content);
                   var end = new Date().getTime();
