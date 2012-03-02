@@ -1,11 +1,27 @@
 Blossom - Modern, Cross-Platform Application Framework
 ======================================================
 
-**The Blossom 1.0.0-beta.1 was released March 1, 2012.**
+**NEW!** Blossom 1.0.0-beta.1 was released on March 1, 2012.  Here's the 
+release notes:
 
-_This is an early beta for experienced SproutCore developers targeting the 
+> Blossom's API and feature set are now stable enough to begin developing 
+production applications with, and Blossom includes the latest Statechart and 
+Datastore code from SproutCore 1.8.
+
+> This is an early beta for experienced SproutCore developers targeting the 
 latest releases of the Google Chrome and Apple Safari desktop web browsers. 
-The API is 99.9% stable (the only changes will be to accommodate bug fixes)._
+The public API is 99.9% stable (the only breaking changes going forward will 
+be to accommodate bug fixes).
+
+> Only Blossom's application framework differs from SproutCore in terms of 
+the public API (the foundation and datastore frameworks remain unchanged), so 
+the vast majority of your existing knowledge re: how to write SproutCore apps 
+still applies.
+
+> Note: Print-to-PDF support is missing, although Blossom's drawing model 
+does support it correctly, so any SC.View and/or SC.Layer drawing code you 
+write today will be supported when Print-to-PDF is enabled in a future 
+release.
 
 Blossom extends the reach of traditional SproutCore applications beyond the
 web browser by re-architecting the view layer to be HTML and CSS-independent.
