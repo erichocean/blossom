@@ -113,8 +113,7 @@ SC.Psurface = function(surface) {
     // IMPORTANT: Don't invoke callback until after the DOM node has been 
     // added to the document.  It's safe to do this in SC.Psurface.end().
     SC.surfaceCallbacks.push({
-      surfaceId: surfaceId,
-      callback: 'didAppendElement',
+      surface: surface,
       element: element
     });
   }
@@ -930,7 +929,7 @@ SC.Psurface.end = function(surface) {
 
   // Invoke any surface callbacks.
   var ary = SC.surfaceCallbacks, idx, len, hash,
-      callback, element;
+      element;
 
   for (idx=0, len=ary.length; idx<len; ++idx) {
     hash = ary[idx];
@@ -938,14 +937,12 @@ SC.Psurface.end = function(surface) {
     if (DEBUG_PSURFACES) {
       sc_assert(hash);
       sc_assert(typeof hash === 'object');
-      sc_assert(typeof hash.surfaceId === 'string');
-      sc_assert(typeof hash.callback === 'string');
+      sc_assert(hash.surface.kindOf(SC.Surface));
       sc_assert(document.getElementById(hash.element.id));
     }
 
-    surface = SC.surfaces[hash.surfaceId];
-    callback = hash.callback;
-    if (surface[callback]) surface[callback](hash.element);
+    surface = hash.surface;
+    if (surface.didAppendElement) surface.didAppendElement(hash.element);
   }
   SC.surfaceCallbacks = []; // Reset
 
