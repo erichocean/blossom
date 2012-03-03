@@ -114,7 +114,7 @@ SC.Psurface = function(surface) {
     // added to the document.  It's safe to do this in SC.Psurface.end().
     SC.surfaceCallbacks.push({
       surfaceId: surfaceId,
-      callback: 'didAppendTextAreaElement',
+      callback: 'didAppendElement',
       element: element
     });
   }
@@ -130,6 +130,8 @@ SC.Psurface = function(surface) {
   if (surfaceId !== 'ui' && !SC.surfaces[surfaceId].get('supersurface')) {
     element.style.webkitBoxShadow = "0px 10px 15px rgba(1,1,1,0.5)";
   }
+
+  surface.didCreateElement(element);
 
   this.parent = null;
   this.firstChild = null;
