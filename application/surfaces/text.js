@@ -69,7 +69,7 @@ SC.TextSurface = SC.LeafSurface.extend({
 
   /** @private */
   didAppendElement: function(textarea) {
-    console.log('SC.TextSurface#didAppendElement()', SC.guidFor(this));
+    // console.log('SC.TextSurface#didAppendElement()', SC.guidFor(this));
     sc_assert(textarea);
     sc_assert(textarea.id === this.__id__);
     sc_assert(textarea.nodeName === this.__tagName__.toUpperCase());
