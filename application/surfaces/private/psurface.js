@@ -13,6 +13,7 @@ SC.ENABLE_CSS_TRANSITIONS = true;
 
 SC.psurfaces = {};
 SC.psurfaceTransitions = {};
+SC.surfaceCallbacks = [];
 
 /** @private
   A presentation surface (Psurface) is a lightweight representation of the 
@@ -85,11 +86,29 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
   // browsers like Google Chrome.
   this.id = surfaceId;
 
-  var element = document.createElement(tagName || 'div');
+  var element = document.createElement(tagName || 'div'),
+      style = element.style;
+
   element.id = surfaceId;
   if (DEBUG_PSURFACES) sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
   this.__element__ = element;
-  element.style.position = 'absolute';
+  style.position = 'absolute';
+
+  // Prevent user-resizing of text areas.
+  if (tagName === 'textarea') {
+    style.resize = 'none';
+
+    // HACK: Let the surface know our textarea was created so it can set up 
+    // event handlers.
+    // 
+    // IMPORTANT: Don't invoke callback until after the DOM node has been 
+    // added to the document.  It's safe to do this in SC.Psurface.end().
+    SC.surfaceCallbacks.push({
+      surfaceId: surfaceId,
+      callback: 'didAppendTextAreaElement',
+      element: element
+    });
+  }
 
   if (useContentSize) {
     element.width = width;
@@ -179,6 +198,9 @@ SC.Psurface.begin = function(surface) {
     sc_assert(surface.kindOf(SC.Surface));
     sc_assert(surface.get('supersurface') === null);
     sc_assert(surface === SC.surfaces[surface.__id__]);
+
+    sc_assert(SC.surfaceCallbacks);
+    sc_assert(SC.surfaceCallbacks.length === 0);
   }
 
   SC._sc_psurfaceColor = {};
@@ -904,6 +926,27 @@ SC.Psurface.end = function(surface) {
   SC._sc_psurfaceColor[id] = 2; // black
 
   // console.log(SC._sc_psurfaceColor);
+
+  // Invoke any surface callbacks.
+  var ary = SC.surfaceCallbacks, idx, len, hash,
+      callback, element;
+
+  for (idx=0, len=ary.length; idx<len; ++idx) {
+    hash = ary[idx];
+
+    if (DEBUG_PSURFACES) {
+      sc_assert(hash);
+      sc_assert(typeof hash === 'object');
+      sc_assert(typeof hash.surfaceId === 'string');
+      sc_assert(typeof hash.callback === 'string');
+      sc_assert(document.getElementById(hash.element.id));
+    }
+
+    surface = SC.surfaces[hash.surfaceId];
+    callback = hash.callback;
+    if (surface[callback]) surface[callback](hash.element);
+  }
+  SC.surfaceCallbacks = []; // Reset
 
   SC._sc_currentPsurface     = null;
   SC._sc_psurfaceColor       = null;
