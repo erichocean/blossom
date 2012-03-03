@@ -116,8 +116,7 @@ var descriptionLabel = SC.TextLayer.create({
 
 var descriptionField = SC.TextFieldWidget.create({
   layout: { top: 40, left: 90, right: 90, height: 24 },
-  value: "Review Product For Potential Custom Adaptation",
-  backgroundColor: 'rgba(255,255,255,0.3)'
+  value: "Review Product For Potential Custom Adaptation"
 });
 
 var contactLabel = SC.TextLayer.create({

@@ -155,6 +155,7 @@ SC.View = SC.LeafSurface.extend({
 
     var layers = this.get('layers'), layer,
         textLayersNeedingLayout = [];
+
     for (var idx=0, len=layers.length; idx<len; ++idx) {
       layer = layers[idx];
       layer.updateLayout();

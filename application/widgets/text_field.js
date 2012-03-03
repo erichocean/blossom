@@ -26,6 +26,7 @@ var blue =     "#268bd2";
 var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
+var black =    "black";
 
 // NOTE: Keep this in sync with SC.Responder's implementation.
 SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
@@ -157,28 +158,34 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   lineHeight: 22,
 
   _sc_didBecomeInputResponder: function() {
-    console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
+    // console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
     if (this.get('isInputResponder')) {
-      // Need to begin editing.  That involves retrieving the field editor 
-      // for the application, configuring it correctly styling-wise and with 
-      // the correct textual contents, and then placing it over ourself.  The
-      // field editor is platform-native, although you interact with it 
-      // within Blossom the same way on all platforms.
-      var surface = this.get('surface');
-      sc_assert(surface);
-      sc_assert(surface.isLeafSurface);
-
-      var fieldEditor = SC.app.get('fieldEditor');
-      sc_assert(fieldEditor);
-      
+      SC.BeginEditingTextLayer(this);
     }
   }.observes('isInputResponder'),
 
   mouseDown: function(evt) {
     SC.app.set('inputSurface', this.get('surface'));
-    this.becomeFirstResponder();
+    if (!this.get('isFirstResponder')) this.becomeFirstResponder();
+    else if (this.get('isInputResponder')) {
+      SC.BeginEditingTextLayer(this);
+    }
     return false;
   },
+
+  color: function() {
+    return this.get('isEnabled')? black : 'rgba(0,43,54,0.5)';
+  }.property('isEnabled'),
+
+  backgroundColor: function() {
+    return this.get('isEnabled')? white : base3;
+  }.property('isEnabled'),
+
+  borderColor: function() {
+    return this.get('isEnabled')? black : 'rgba(0,43,54,0.5)';
+  }.property('isEnabled'),
+
+  borderWidth: 1,
 
   render: function(ctx) {
     var h = ctx.height,
@@ -193,17 +200,15 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
     arguments.callee.base.apply(this, arguments);
     ctx.restore();
 
-    ctx.globalAlpha = isEnabled? 1 : 0.5;
-
     // Draw the box.
-    ctx.strokeStyle = base03;
+    ctx.strokeStyle = this.get('borderColor');
     ctx.beginPath();
     ctx.moveTo(0.5, 0.5);
     ctx.lineTo(0.5, h-0.5);
     ctx.lineTo(w-0.5, h-0.5);
     ctx.lineTo(w-0.5, 0.5);
     ctx.closePath();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = this.get('borderWidth');
     ctx.stroke();
   }
 
