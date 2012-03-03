@@ -54,6 +54,15 @@ FormDemo.TmpView = SC.View.extend({
 
 });
 
+FormDemo.notesTab = SC.LayoutSurface.create();
+FormDemo.notesField = SC.TextSurface.create({
+  layout: { top: 20, left: 10, right: 10, bottom: 10 },
+  value: "Some notes."
+});
+
+FormDemo.notesTab.set('backgroundColor', base3);
+FormDemo.notesTab.get('subsurfaces').pushObject(FormDemo.notesField);
+
 FormDemo.lower = SC.TabSurface.create({
   theme: 'regular',
   items: [
@@ -89,7 +98,7 @@ FormDemo.lower = SC.TabSurface.create({
   itemIconKey: 'icon',
   itemIsEnabledKey: 'enabled',
 
-  notes:           FormDemo.TmpView.create({ name: 'Notes Tab'}),
+  notes:           FormDemo.notesTab,
   characteristics: FormDemo.TmpView.create({ name: 'Characteristics Tab'}),
   relationships:   FormDemo.TmpView.create({ name: 'Relationships Tab'}),
   todoListItems:   FormDemo.TmpView.create({ name: 'To-Do List Items Tab'}),
