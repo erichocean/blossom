@@ -365,6 +365,74 @@ SC.Surface = SC.Responder.extend({
   },
 
   // ..........................................................
+  // LAYOUT SUPPORT
+  //
+
+  /**
+    The `layout` property describes how you want the surface to be sized and 
+    positioned on the screen, relative to its supersurface, **when that 
+    supersurface is an `SC.LayoutSurface` only**; otherwise, this property 
+    is ignored. Set this property to `null` to disable frame layout entirely
+    (`null` is the default).
+
+    You can define the following layout properties:
+
+    Horizontal axis (pick exactly two):
+     - left: an offset from the left edge
+     - right: an offset from the right edge
+     - centerX: an offset from center X
+     - width: a width
+
+    Vertical axis (pick exactly two):
+     - top: an offset from the top edge
+     - bottom: an offset from the bottom edge
+     - centerY: an offset from center Y
+     - height: a height
+
+    Layout rectangle constraints (all are optional):
+     - minLayoutWidth: the minimum width at which to do layout on the x-axis
+     - maxLayoutWidth: the maximum width at which to do layout on the x-axis
+     - minLayoutHeight: the minimum height at which to do layout on the y-axis
+     - maxLayoutHeight: the maximum height at which to do layout on the y-axis
+
+    You can also specify where to position the layout rectangle relative to 
+    the parent's layout rectangle when it is smaller or larger on a 
+    particular axis due to layout rectangle min/max clamping:
+     - position: valid strings are: "center", "top", "bottom", "left"
+       "top left", "bottom left", "right", "top right", and "bottom right".
+
+    Each of these layout properties can take either an absolute value, or a 
+    percentage (with the exception of `position`, which only takes the 
+    strings listed above). Percentages can be defined in one of two ways:
+      - a number between -1 and 1, e.g. 0.5 or -0.2. Note that -1 and 1 are 
+        not considered to be percentages; they are absolute values.
+      - a string containing a number followed by the '%' character
+      - for width and height only: negative numbers are not allowed
+
+    When a negative number or percentage is given, it will specify a negative 
+    offset. For example, `top: -10` offsets the layer -10 units in the y axis 
+    relative to its superlayer.
+
+    An exception is thrown when `layout` is set to an invalid value.
+
+    Note: `centerX` may only be combined with `width`, and `centerY` may only 
+    be combined with `height`.
+  */
+  layout: null,
+
+  _sc_layoutDidChange: function() {
+    var layout = this.get('layout');
+
+    if (layout === null) this._sc_layoutFunction = null;
+    else this.updateLayoutRules(); // updates this._sc_layoutFunction
+
+    this.triggerLayout();
+  }.observes('layout'),
+
+  /** @private Re-use SC.Layer's implementation. */
+  updateLayoutRules: SC.Layer.prototype.updateLayoutRules,
+
+  // ..........................................................
   // ANIMATION SUPPORT
   //
 
@@ -648,7 +716,7 @@ SC.Surface = SC.Responder.extend({
     // improves memory locality, and since these structures are frequently
     // accessed together, overall performance improves too, especially during
     // critical animation loops.
-    var buf = SC.MakeFloat32ArrayBuffer(25); // indicates num of floats needed
+    var buf = SC.MakeFloat32ArrayBuffer(35); // indicates num of floats needed
 
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
@@ -697,6 +765,10 @@ SC.Surface = SC.Responder.extend({
       structure.owner = that;
       structure.keyName = key;
     });
+
+    this._sc_position = SC.MakePointFromBuffer(buf, 25);
+    this._sc_layoutValues = SC.MakeLayoutValuesFromBuffer(buf, 27);
+    this._sc_layoutDidChange();
   },
 
   /**
