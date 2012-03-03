@@ -9,7 +9,7 @@
 sc_require('system/browser');
 sc_require('system/event');
 sc_require('views/field') ;
-sc_require('system/text_selection') ;
+sc_require('text/text_selection') ;
 sc_require('mixins/static_layout') ;
 sc_require('mixins/editable');
 
@@ -600,10 +600,10 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
     arguments.callee.base.apply(this, arguments);
 
     var input = this.$input();
-    SC.Event.remove(input, 'focus',  this, this._textField_fieldDidFocus);
-    SC.Event.remove(input, 'blur',   this, this._textField_fieldDidBlur);
-    SC.Event.remove(input, 'select', this, this._textField_selectionDidChange);
-    SC.Event.remove(input, 'focus',  this, this._firefox_dispatch_keypress);
+    SC.Event.remove(input, 'focus',    this, this._textField_fieldDidFocus);
+    SC.Event.remove(input, 'blur',     this, this._textField_fieldDidBlur);
+    SC.Event.remove(input, 'select',   this, this._textField_selectionDidChange);
+    SC.Event.remove(input, 'keypress', this, this._firefox_dispatch_keypress);
   },
   
   /**
