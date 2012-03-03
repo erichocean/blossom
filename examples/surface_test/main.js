@@ -53,25 +53,36 @@ var MyLayer = SC.Layer.extend({
 });
 
 function main() {
-  var surface = SC.View.create();
+  var layout = SC.LayoutSurface.create();
 
-  surface.get('layers').pushObject(MyLayer.create({
+  var view = SC.View.create({
+    layout: { bottom: 10, right: 10, width: 0.5, height: 0.5 }
+  });
+
+  view.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -40, centerY: -40, width: 600, height: 480 },
     color: magenta
   }));
 
-  surface.get('layers').pushObject(MyLayer.create({
+  view.get('layers').pushObject(MyLayer.create({
     layout: { centerX: -20, centerY: -20, width: 600, height: 480 },
     color: violet
   }));
 
-  surface.get('layers').pushObject(MyLayer.create({
+  view.get('layers').pushObject(MyLayer.create({
     layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
     color: blue
   }));
 
+  var view2 = SC.View.create({
+    layout: { top: 10, right: 10, width: 0.4, height: 0.4 }
+  });
+  view2.set('backgroundColor', base3);
+
+  layout.get('subsurfaces').pushObjects([view, view2]);
+
   SC.Application.create();
-  SC.app.set('ui', surface);
+  SC.app.set('ui', layout);
   // debugger;
 
   var pane = SC.View.create({
