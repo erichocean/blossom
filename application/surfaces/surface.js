@@ -237,19 +237,6 @@ SC.Surface = SC.Responder.extend({
     this._sc_triggerStructureChange('perspectiveOrigin');
   },
 
-  triggerContentSizeUpdate: function() {
-    this.__needsRendering__ = true;
-    this.__contentSizeNeedsUpdate__ = true;
-    SC.needsLayout = true;
-  },
-
-  // These only apply to leaf surfaces, but I'm putting them here because the 
-  // frame method is what updates them.
-  __contentWidth__: 0,
-  __contentHeight__: 0,
-
-  __contentSizeNeedsUpdate__: false,
-
   /**
     Specifies receiver's frame rectangle in the supersurface's coordinate
     space.  The value of this property is specified in points.  Animatable.
@@ -660,6 +647,19 @@ SC.Surface = SC.Responder.extend({
 
   __useContentSize__: false,
 
+  // These only apply to leaf surfaces, but I'm putting them here because the 
+  // frame method is what updates them.
+  __contentWidth__: 0,
+  __contentHeight__: 0,
+
+  __contentSizeNeedsUpdate__: false,
+
+  triggerContentSizeUpdate: function() {
+    this.__needsRendering__ = true;
+    this.__contentSizeNeedsUpdate__ = true;
+    SC.needsLayout = true;
+  },
+
   // Note: this only ever called on roots.
   updatePsurfaceTree: function(surfaces) {
     // console.log('SC.Surface#updatePsurfaceTree()');
@@ -680,6 +680,57 @@ SC.Surface = SC.Responder.extend({
     if (this.updatePsurface) this.updatePsurface(rootPsurface, surfaces);
 
     SC.Psurface.end(this); // Required.
+  },
+
+  /** @private */
+  didCreateElement: function(el) {
+    // console.log('SC.Surface#didCreateElement()', SC.guidFor(this), this.__tagName__);
+    sc_assert(el);
+    sc_assert(el.nodeName === this.__tagName__.toUpperCase());
+    sc_assert(!document.getElementById(el.id));
+
+    // We need to apply our initial CSS properties to the element's style, 
+    // without any CSS transition logic.
+    var style = el.style,
+        styleProperties = SC.Surface.styleProperties,
+        cssProperties = SC.Surface.cssProperties,
+        idx, len, key, value, cssKey;
+
+    for (idx=0, len=styleProperties.length; idx<len; ++idx) {
+      key = styleProperties[idx];
+      value = this[key];
+      cssKey = cssProperties[idx];
+
+      if (key === '_sc_frame') {
+        style.left   = value[0]/*x*/      + 'px';
+        style.top    = value[1]/*y*/      + 'px';
+        style.width  = value[2]/*width*/  + 'px';
+        style.height = value[3]/*height*/ + 'px';
+
+      } else if (key === '_sc_perspectiveOrigin') {
+        style[cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+        style[cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+    
+      } else if (key === '_sc_transformOrigin') {
+        style[cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+        style[cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+        style[cssKey+'-z'] = Math.floor(value[2]/*z*/)+'px';
+    
+      } else if (key === '_sc_transform') {
+        style[cssKey] = 'matrix3d('+[
+          value[0] .toFixed(10) , value[1] .toFixed(10) , value[2] .toFixed(10) , value[3] .toFixed(10) ,
+          value[4] .toFixed(10) , value[5] .toFixed(10) , value[6] .toFixed(10) , value[7] .toFixed(10) ,
+          value[8] .toFixed(10) , value[9] .toFixed(10) , value[10].toFixed(10) , value[11].toFixed(10) ,
+          value[12].toFixed(10) , value[13].toFixed(10) , value[14].toFixed(10) , value[15].toFixed(10)
+        ].join(', ')+')';
+
+      } else if (key === '_sc_isVisible') {
+        style[cssKey] = value? 'visible': 'hidden';
+
+      } else { // The remaining properties are set directly.
+        style[cssKey] = value;
+      }
+    }
   },
 
   // ..........................................................
@@ -1132,5 +1183,31 @@ SC.Surface.transitions = {
   perspective:       SC.TransitionAnimation.create(),
   perspectiveOrigin: SC.TransitionAnimation.create()
 };
+
+// These two must line up exactly.
+SC.Surface.styleProperties = ('backgroundColor borderColor borderWidth '+
+  'opacity cornerRadius zIndex isVisible frame transform transformOrigin '+
+  'perspective perspectiveOrigin').w().map(function(key) {
+    // We add the _sc_ prefix because our _sc_didCreateElement method
+    // uses these keys to directly index the private properties.
+    return '_sc_'+key;
+  });
+
+SC.Surface.cssProperties = [];
+SC.Surface.styleProperties.forEach(function(key) {
+  if (key === '_sc_cornerRadius') {
+    SC.Surface.cssProperties.push('border-radius');
+
+  } else if (key === '_sc_isVisible') {
+    SC.Surface.cssProperties.push('visibility');
+
+  } else if ('_sc_'+key in SC.webkitProperties) {
+    SC.Surface.cssProperties.push('-webkit-'+key.dasherize());
+
+  } else {
+    // Need to drop the '_sc_' in front.
+    SC.Surface.cssProperties.push(key.slice(4).dasherize());
+  }
+});
 
 } // BLOSSOM
