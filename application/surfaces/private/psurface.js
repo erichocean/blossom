@@ -75,7 +75,16 @@ SC.surfaceCallbacks = [];
   The DOM tree itself needs to be built immediatly during the sync algorithm, 
   because child DOM nodes need to be able to append to their parent DOM nodes.
 */
-SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
+SC.Psurface = function(surface) {
+  if (DEBUG_PSURFACES) {
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+  }
+
+  var surfaceId = surface.__id__,
+      tagName = surface.__tagName__,
+      useContentSize = surface.__useContentSize__;
+
   if (DEBUG_PSURFACES) {
     sc_assert(surfaceId);
     sc_assert(typeof surfaceId === 'string', "new SC.Psurface(): you must provide a `surfaceId`, and it must be a string.");
@@ -111,8 +120,9 @@ SC.Psurface = function(surfaceId, tagName, useContentSize, width, height) {
   }
 
   if (useContentSize) {
-    element.width = width;
-    element.height = height;
+    element.width = surface.__contentWidth__;
+    element.height = surface.__contentHeight__;
+    surface.__contentSizeNeedsUpdate__ = false;
   }
 
   // FIXME: This gives a drop shadow to all root surfaces other than the #ui
@@ -184,8 +194,6 @@ SC._sc_psurfacesBeingMoved = null;
 SC.Psurface.begin = function(surface) {
   // console.log('SC.Psurface#begin()');
   var id = surface.__id__,
-      tagName = surface.__tagName__,
-      useContentSize = surface.__useContentSize__,
       psurface = SC.psurfaces[id];
 
   if (DEBUG_PSURFACES) {
@@ -213,8 +221,7 @@ SC.Psurface.begin = function(surface) {
     // We need to create a Psurface for this surface.
     if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
-    psurface = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
-    surface.__contentSizeNeedsUpdate__ = false;
+    psurface = new SC.Psurface(surface);
     document.body.appendChild(psurface.__element__, null);
 
     // The psurface is now current and present in the rendering tree (DOM).
@@ -393,8 +400,6 @@ SC.Psurface.prototype = {
     var el = this.__element__,
         firstChild = this.firstChild,
         id = surface.__id__,
-        tagName = surface.__tagName__,
-        useContentSize = surface.__useContentSize__,
         myId = this.id,
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
@@ -458,8 +463,7 @@ SC.Psurface.prototype = {
           if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
           nextChild = firstChild;
-          firstChild = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
-          surface.__contentSizeNeedsUpdate__ = false;
+          firstChild = SC.psurfaces[id] = new SC.Psurface(surface);
           childElement = firstChild.__element__;
         }
 
@@ -520,8 +524,7 @@ SC.Psurface.prototype = {
         // Need to create a new Psurface.
         if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
-        firstChild = this.firstChild = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
-        surface.__contentSizeNeedsUpdate__ = false;
+        firstChild = this.firstChild = new SC.Psurface(surface);
         firstChild.parent = this;
         SC.psurfaces[id] = firstChild;
 
@@ -556,8 +559,6 @@ SC.Psurface.prototype = {
     var el = this.__element__,
         nextSibling = this.nextSibling,
         id = surface.__id__,
-        tagName = surface.__tagName__,
-        useContentSize = surface.__useContentSize__,
         myId = this.id,
         myColor = SC._sc_psurfaceColor[myId],
         psurfaces = SC.psurfaces,
@@ -669,8 +670,7 @@ SC.Psurface.prototype = {
           if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
           nextChild = nextSibling;
-          nextSibling = SC.psurfaces[id] =  new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
-          surface.__contentSizeNeedsUpdate__ = false;
+          nextSibling = SC.psurfaces[id] =  new SC.Psurface(surface);
           childElement = nextSibling.__element__;
         }
 
@@ -731,8 +731,7 @@ SC.Psurface.prototype = {
         // Need to create a new Psurface.
         if (DEBUG_PSURFACES) sc_assert(!document.getElementById(id));
 
-        nextSibling = this.nextSibling = new SC.Psurface(id, tagName, useContentSize, surface.__contentWidth__, surface.__contentHeight__);
-        surface.__contentSizeNeedsUpdate__ = false;
+        nextSibling = this.nextSibling = new SC.Psurface(surface);
         nextSibling.parent = this.parent;
         nextSibling.prevSibling = this;
         psurfaces[id] = nextSibling;
