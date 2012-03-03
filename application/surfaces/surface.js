@@ -380,13 +380,13 @@ SC.Surface = SC.Responder.extend({
     Horizontal axis (pick exactly two):
      - left: an offset from the left edge
      - right: an offset from the right edge
-     - centerX: an offset from center X
+     - centerX: an offset from center X (may only be combined with `width`)
      - width: a width
 
     Vertical axis (pick exactly two):
      - top: an offset from the top edge
      - bottom: an offset from the bottom edge
-     - centerY: an offset from center Y
+     - centerY: an offset from center Y (may only be combined with `height`)
      - height: a height
 
     Layout rectangle constraints (all are optional):
@@ -414,9 +414,6 @@ SC.Surface = SC.Responder.extend({
     relative to its superlayer.
 
     An exception is thrown when `layout` is set to an invalid value.
-
-    Note: `centerX` may only be combined with `width`, and `centerY` may only 
-    be combined with `height`.
   */
   layout: null,
 
