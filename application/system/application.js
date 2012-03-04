@@ -622,12 +622,11 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // THE FIELD EDITOR
   //
 
-  /**
-    The current text input surface. This surface receives text input events, 
-    shortcuts, and actions first, unless `menuSurface` is set, in which case 
-    it only receives those events if the `menuSurface` does not handle them.  
-    This surface is usually the highest ordered surface, or if not defined, 
-    the `ui` surface will assume the input surface role automatically.
+  /** @private
+    The current field editor. This object receives text input events first.
+    You don't set this directly, it is set internally when you click on an 
+    SC.TextFieldWidget instance. (This API will be further improved in the 
+    future to accommodate more use cases.)
 
     @type SC.FieldEditor or null
   */
