@@ -1,4 +1,3 @@
-
 /*!
  * JavaScript Core Array v0.39
  *
@@ -6,6 +5,9 @@
  * Copyright 2008-2009, Bram Stein
  * All rights reserved.
  */
+
+sc_require('text/object');
+
 (function () {
   Object.extend(Array.prototype, {
     isEmpty: function () {
