@@ -622,14 +622,27 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // THE FIELD EDITOR
   //
 
-  fieldEditor: function(key, value) {
-    sc_assert(value === undefined, "This property is read-only.");
-    var fieldEditor = this._sc_fieldEditor;
-    if (!fieldEditor) {
-      fieldEditor = this._sc_fieldEditor = SC.FieldEditor.create();
-    }
-    return fieldEditor;
-  }.property(),
+  /** @private
+    The current field editor. This object receives text input events first.
+    You don't set this directly, it is set internally when you click on an 
+    SC.TextFieldWidget instance. (This API will be further improved in the 
+    future to accommodate more use cases.)
+
+    @type SC.FieldEditor or null
+  */
+  fieldEditor: null,
+
+  _sc_fieldEditor : null, // Note: Required, we're strict about null checking.
+  _sc_fieldEditorDidChange: function() {
+    var old = this._sc_fieldEditor,
+        cur = this.get('fieldEditor');
+
+    sc_assert(old === null || old.kindOf(SC.FieldEditor), "Blossom internal error: SC.Application^_sc_fieldEditor is invalid.");
+    sc_assert(cur === null || cur.kindOf(SC.FieldEditor), "SC.Application@fieldEditor must either be null or an SC.FieldEditor instance.");
+
+    if (old === cur) return; // Nothing to do.
+    this._sc_fieldEditor = cur;
+  }.observes('fieldEditor'),
 
   // .......................................................
   // ACTION HANDLING
@@ -751,12 +764,16 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // 4. no target or surface passed... try to find target in the active 
     // surfaces and the defaultResponder
-    var menuSurface = this.get('menuSurface'),
+    var fieldEditor = this.get('fieldEditor'),
+        menuSurface = this.get('menuSurface'),
         inputSurface = this.get('inputSurface'),
         ui = this.get('ui') ;
 
-    // ...check menu, input and ui surfaces first
-    if (menuSurface) {
+    // Check the field editor first, then check menu, input and ui surfaces.
+    if (fieldEditor) {
+      target = this._sc_responderFor(fieldEditor, methodName);
+    }
+    if (!target && menuSurface) {
       target = this._sc_responderFor(menuSurface, methodName);
     }
     if (!target && inputSurface && inputSurface !== menuSurface) {
@@ -800,22 +817,27 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   sendEvent: function(action, evt, target) {
     // console.log('SC.Application#sendEvent(', action, evt, target, ')');
-    var surface, ret;
+    var surface, ret, fieldEditor = this.get('fieldEditor');
 
-    if (target) {
-      surface = target.get('surface');
-      sc_assert(surface);
-      // if (!surface) {
-      //   console.log("calling target.get('container') in SC.Application#sendEvent()");
-      //   surface = target.get('container') ; // FIXME: Why?
-      // }
+    if (fieldEditor && !target) {
+      if (evt.keyCode === 13) SC.EndEditingTextLayer();
+      else ret = fieldEditor.tryToPerform(action, evt) ? target : null ;
+    } else {
+      if (target) {
+        surface = target.get('surface');
+        sc_assert(surface);
+        // if (!surface) {
+        //   console.log("calling target.get('container') in SC.Application#sendEvent()");
+        //   surface = target.get('container') ; // FIXME: Why?
+        // }
+      }
+      else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
+
+      if (surface === this) surface = null;
+
+      // If we found a valid surface, send the event to it.
+      ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
     }
-    else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
-
-    if (surface === this) surface = null;
-
-    // If we found a valid surface, send the event to it.
-    ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
 
     return ret;
   },
@@ -1148,6 +1170,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     the keypress event.
   */
   keydown: function(evt) {
+    // console.log('SC.Application#keydown()');
     if (SC.none(evt)) return true;
 
     var keyCode = evt.keyCode,
@@ -1194,7 +1217,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       // Arrow keys are handled in keypress for firefox
       if (keyCode>=37 && keyCode<=40 && isFirefox) return true;
 
-
       ret = this.sendEvent('keyDown', evt) ;
 
       // attempt key equivalent if key not handled
@@ -1218,6 +1240,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     trigger a keyDown.
   */
   keypress: function(evt) {
+    // console.log('SC.Application#keypress()');
     var ret,
         keyCode   = evt.keyCode,
         isFirefox = SC.isMozilla();

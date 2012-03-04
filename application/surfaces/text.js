@@ -10,6 +10,9 @@ sc_require('text/text_selection');
 
 if (BLOSSOM) {
 
+var base3 =  "#fdf6e3";
+var base03 = "#002b36";
+
 SC.TextSurface = SC.LeafSurface.extend({
 
   isTextSurface: true, // Walk like a duck.
@@ -18,7 +21,7 @@ SC.TextSurface = SC.LeafSurface.extend({
 
   _sc_value: null,
   _sc_valueDidChange: function() {
-    console.log('SC.TextSurface#_sc_valueDidChange()', SC.guidFor(this));
+    // console.log('SC.TextSurface#_sc_valueDidChange()', SC.guidFor(this));
     var cur = this.get('value'),
         old = this._sc_value,
         txt = this._sc_textarea,
@@ -58,7 +61,7 @@ SC.TextSurface = SC.LeafSurface.extend({
   }.property('value'),
 
   _sc_backgroundColor: 'white',
-  _sc_borderColor: 'black',
+  _sc_borderColor: base03,
   _sc_borderWidth: 1,
 
   // ..........................................................

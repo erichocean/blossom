@@ -18,6 +18,8 @@ SC.TextLayer = SC.Layer.extend({
 
   isTextLayer: true,
 
+  displayProperties: 'value'.w(),
+
   // FIXME: Add more text properties.
   font: "11pt Calibri, sans",
   color: base03,
@@ -27,6 +29,13 @@ SC.TextLayer = SC.Layer.extend({
   tolerance: 10,
   lineHeight: 18,
 
+  _sc_textPropertiesDidChange: function() {
+    this.__needsTextLayout__ = true;
+    var surface = this.get('surface');
+    if (surface) surface.triggerLayoutAndRendering();
+  }.observes('font', 'color', 'backgroundColor', 'textBaseline',
+             'textBaseline', 'tolerance', 'lineHeight'),
+
   value: null, // should be a String or null
 
   _sc_value: null,
@@ -34,7 +43,11 @@ SC.TextLayer = SC.Layer.extend({
     var value = this.get('value');
     if (value !== this._sc_value) {
       this._sc_value = value;
-      if (value) this.__needsTextLayout__ = true;
+      if (value) {
+        this.__needsTextLayout__ = true;
+        var surface = this.get('surface');
+        if (surface) surface.triggerLayoutAndRendering();
+      }
     }
   }.observes('value'),
 
