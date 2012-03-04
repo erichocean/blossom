@@ -509,8 +509,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   updatePsurfaces: function(surfaces) {
     // console.log('SC.Application#updatePsurfaces()');
 
+    SC.Psurface.start();
     this.get('uiContainer').updatePsurfaceTree(surfaces);
     this.get('surfaces').invoke('updatePsurfaceTree', surfaces);
+    SC.Psurface.finish();
   },
 
 
@@ -1347,7 +1349,6 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   },
 
   mousedown: function(evt) {
-    // console.log('SC.Application#mousedown()');
     // if(!SC.browser.msie) window.focus();
     window.focus();
     
@@ -1380,6 +1381,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // if (fr && fr.kindOf(SC.InlineTextFieldView) && fr !== view) {
     //   fr.resignFirstResponder();
     // }
+
+    // When a menu surface is active, we remove the menu surface 
+    // automatically if a mousedown occurs on anything but the menu surface.
+    var menuSurface = this.get('menuSurface');
+    if (menuSurface && surface !== menuSurface) {
+      this.set('menuSurface', null);
+      this.removeSurface(menuSurface);
+      return true;
+    }
 
     handler = this._sc_mouseDownResponder = this.sendEvent('mouseDown', evt, surface);
     if (handler && handler.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;

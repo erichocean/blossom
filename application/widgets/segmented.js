@@ -306,11 +306,11 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     if (!this.get('isEnabled')) {
       return true;
 
-    // Nothing to do if a radio button wasn't actually clicked on.
+    // Nothing to do if a segment wasn't actually clicked on.
     } else if (segment === this) {
       return false;
 
-    // Nothing to do if the radio buttion isn't enabled.
+    // Nothing to do if the segment isn't enabled.
     } else if (!segment.get('isEnabled')) {
       return true;
 
@@ -319,7 +319,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
       this._sc_activeSegment = segment;
       segment.set('isActive', true);
 
-      // Even if radiobuttons are not set to get firstResponder, allow 
+      // Even if segments are not set to get firstResponder, allow 
       // default action, that way textfields loose focus as expected.
       evt.allowDefault();
       return true;
@@ -650,7 +650,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
           SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 12);
+          SC.CreateRoundRectPathLeft(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 12);
           break;
         case 'regular':
           SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 5);
@@ -666,7 +666,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
           SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 12);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
           break;
         case 'regular':
           SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 5);

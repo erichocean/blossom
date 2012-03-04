@@ -9,7 +9,7 @@ WidgetDemo = global.WidgetDemo = SC.Object.create({
 
   value: 'red',
   valueDidChange: function() {
-    alert("value is now "+this.get('value'));
+    console.log("value is now "+this.get('value'));
   }.observes('value')
 
 });
