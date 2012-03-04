@@ -286,6 +286,8 @@ SC.View = SC.LeafSurface.extend({
 
         // Finally, test the point for intersection with the path(s).
         if (context.isPointInPath(x, y)) {
+          evt.layerX = x;
+          evt.layerY = y;
           hitLayer = layer;
           zIndex = layerZ;
         }
