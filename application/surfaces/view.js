@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals BLOSSOM sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
 
 sc_require('surfaces/leaf');
 
@@ -174,6 +174,19 @@ SC.View = SC.LeafSurface.extend({
 
   clearBackground: false,
 
+  _sc_backgroundColor: base3,
+
+  didCreateElement: function(canvas) {
+    arguments.callee.base.apply(this, arguments);
+    var ctx = canvas.getContext('2d');
+
+    // Enables ctx.width and ctx.height to work.
+    ctx.__sc_canvas__ = canvas;
+
+    if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
+    this._sc_context = ctx;
+  },
+
   updateDisplay: function() {
     // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
@@ -188,19 +201,17 @@ SC.View = SC.LeafSurface.extend({
     }
     SC.Benchmark.end(updateKey);
 
-    var psurface = SC.psurfaces[this.__id__],
-        canvas = psurface? psurface.__element__ : null,
-        ctx = canvas? canvas.getContext('2d') : null,
-        w = canvas.width, h = canvas.height;
-
+    var ctx = this._sc_context;
     sc_assert(ctx);
+    sc_assert(document.getElementById(ctx.__sc_canvas__.id));
 
-    // Draw background.
-    if (this.get('clearBackground')) {
-      ctx.clearRect(0, 0, w, h);
-    } else {
-      ctx.fillStyle = base3;
-      ctx.fillRect(0, 0, w, h);
+    // Clear the background if requested.
+    if (this.get('clearBackground')) ctx.clearRect(0, 0, ctx.w, ctx.h);
+
+    if (this.willRenderLayers) {
+      ctx.save();
+      this.willRenderLayers(ctx);
+      ctx.restore();
     }
 
     // Draw layers.
@@ -210,27 +221,11 @@ SC.View = SC.LeafSurface.extend({
     }
     SC.Benchmark.end(copyKey);
 
-    // Draw lines overlay.
-    // ctx.beginPath();
-    // var line = h/2;
-    // if (h%2 === 0) line += 0.5;
-    // ctx.moveTo(0, line);
-    // ctx.lineTo(w, line);
-    // var vline = w/2;
-    // if (w%2 === 0) vline += 0.5;
-    // ctx.moveTo(vline, 0);
-    // ctx.lineTo(vline, h);
-    // ctx.strokeStyle = orange;
-    // ctx.lineWidth = 0.5;
-    // ctx.stroke();
-    // ctx.beginPath();
-    // ctx.arc(w/2, h/2, 3, 0, 2*Math.PI, false);
-    // ctx.fillStyle = orange;
-    // ctx.fill();
-    // ctx.beginPath();
-    // ctx.arc(w/2, h/2, 15, 0, 2*Math.PI, false);
-    // ctx.lineWidth = 0.5;
-    // ctx.stroke();
+    if (this.didRenderLayers) {
+      ctx.save();
+      this.didRenderLayers(ctx);
+      ctx.restore();
+    }
 
     SC.Benchmark.end(benchKey);
   },

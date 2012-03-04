@@ -14,16 +14,9 @@ var tests = 0;
 
 var surface = SC.View.create({
 
-  updateDisplay: function() {
-    console.log('updateDisplay');
-    // var ctx = this.getPath('layer.context');
-
-    var psurface = SC.psurfaces[this.__id__],
-        canvas = psurface? psurface.__element__ : null,
-        ctx = canvas? canvas.getContext('2d') : null,
-        w = canvas.width, h = canvas.height;
-
-    if (!ctx) return;
+  willRenderLayers: function(ctx) {
+    // console.log('willRenderLayers');
+    var w = ctx.width, h = ctx.height;
 
     // Draw background.
     ctx.fillStyle = base3;
