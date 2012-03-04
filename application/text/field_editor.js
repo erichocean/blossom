@@ -184,8 +184,8 @@ SC.BeginEditingTextLayer = function(textLayer, password) {
 
   // `textFrame` must be expressed in the coordinate space of `surfaceFrame`
   // (its currently expressed in terms of its superlayer OR its surface). 
-  // Walk up the layer tree until, taking into account the frames on the way
-  // up.
+  // Walk up the layer tree until we no longer have a superlayer, taking into 
+  // account the frames on the way up.
   while (superlayer) {
     frame = superlayer.get('frame');
     x += frame.x;
