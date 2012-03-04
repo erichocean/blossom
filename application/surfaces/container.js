@@ -119,7 +119,13 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
         this.isWaitingToTransition = true;
 
         var that = this;
-        setTimeout(function() {
+        setTimeout(function animate() {
+          // Wait for SC.app to come online.
+          if (!SC.app) {
+            setTimeout(animate, 0);
+            return;
+          }
+
           that.isWaitingToTransition = false;
           SC.RunLoop.begin();
           var transform = SC.MakeIdentityTransform3D();
