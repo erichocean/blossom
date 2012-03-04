@@ -2,8 +2,13 @@
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
-// License:   Licensed under MIT license (see license.js)
+//            Code within if (BLOSSOM) {} sections is ©2012 Fohr Motion 
+//            Picture Studios. All rights reserved.
+// License:   Most code licensed under MIT license (see SPROUTCORE-LICENSE).
+//            Code within if (BLOSSOM) {} sections is under GPLv3 license
+//            (see BLOSSOM-LICENSE).
 // ==========================================================================
+/*globals BLOSSOM */
 
 /**
   @namespace
@@ -47,7 +52,7 @@ SC.ContentDisplay = {
     Setup observers on the content object when initializing the mixin.
   */
   initMixin: function() {
-    this._display_contentDidChange();
+    this._sc_displayContentDidChange();
   },
 
   /**
@@ -55,14 +60,14 @@ SC.ContentDisplay = {
    * @private
    */
   destroyMixin: function () {
-    if (!this._display_content) return;
-    this._display_stopObservingContent(this._display_content);
-    this._display_content = null;
+    if (!this._sc_displayContent) return;
+    this._sc_displayStopObservingContent(this._sc_displayContent);
+    this._sc_displayContent = null;
   },
 
   /** @private */
-  _display_beginObservingContent: function(content) {
-    var f = this._display_contentPropertyDidChange;
+  _sc_displayBeginObservingContent: function(content) {
+    var f = this._sc_displayContentPropertyDidChange;
 
     if (SC.isArray(content)) {
       content.invoke('addObserver', '*', this, f);
@@ -73,8 +78,8 @@ SC.ContentDisplay = {
   },
 
   /** @private */
-  _display_stopObservingContent: function(content) {
-    var f = this._display_contentPropertyDidChange;
+  _sc_displayStopObservingContent: function(content) {
+    var f = this._sc_displayContentPropertyDidChange;
 
     if (SC.isArray(content)) {
       content.invoke('removeObserver', '*', this, f);
@@ -85,30 +90,47 @@ SC.ContentDisplay = {
   },
 
   /** @private */
-  _display_contentDidChange: function(target, key, value) {
+  _sc_displayContentDidChange: function(target, key, value) {
     // handle changes to the content...
-    if ((value = this.get('content')) === this._display_content) return;
+    if ((value = this.get('content')) === this._sc_displayContent) return;
 
     // stop listening to old content.
-    var content = this._display_content;
-    if (content) this._display_stopObservingContent(content);
+    var content = this._sc_displayContent;
+    if (content) this._sc_displayStopObservingContent(content);
 
     // start listening for changes on the new content object.
-    content = this._display_content = value;
-    if (content) this._display_beginObservingContent(content);
+    content = this._sc_displayContent = value;
+    if (content) this._sc_displayBeginObservingContent(content);
 
-    this.displayDidChange();
+    if (BLOSSOM) {
+      this.triggerRendering();
+    }
+    if (! BLOSSOM) {
+      this.displayDidChange();
+    }
   }.observes('content', 'contentDisplayProperties'),
-  
+
   /** @private Invoked when properties on the content object change. */
-  _display_contentPropertyDidChange: function(target, key, value, propertyRevision) {
+  _sc_displayContentPropertyDidChange: function(target, key, value, propertyRevision) {
     if (key === '*') {
-      this.displayDidChange() ;
+      if (BLOSSOM) {
+        this.triggerRendering();
+      }
+      if (! BLOSSOM) {
+        this.displayDidChange();
+      }
     } else {
       // only update if a displayProperty actually changed...s
       var ary = this.get('contentDisplayProperties') ;
-      if (ary && ary.indexOf(key)>=0) this.displayDidChange();
+      if (ary && ary.indexOf(key)>=0) {
+        if (BLOSSOM) {
+          this.triggerRendering();
+        }
+        if (! BLOSSOM) {
+          this.displayDidChange();
+        }
+      }
     }
   }
-  
-} ;
+
+};
