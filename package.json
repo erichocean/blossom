@@ -15,7 +15,7 @@
     "vows": "0.6.x"
   },
   "main"          : "./node/buildfile",
-  "version"       : "1.0.0-beta.1.1",
+  "version"       : "1.0.0-beta-49-g29469ce",
   "scripts"       : {},
   "engines"       : {"node": "0.6.x"}
 }
