@@ -1,5 +1,5 @@
-**If you want just want to give Blossom a spin, please visit the 
-[INSTALL](https://github.com/fohr/blossom/blob/master/INSTALL.md) file.**
+**If you want just want to give Blossom a spin, please 
+[try the demo](http://fohr.github.com/blossom).**
 
 ----
 
@@ -7,7 +7,8 @@ Blossom - Modern, Cross-Platform Application Framework
 ======================================================
 
 **NEW!** Blossom 1.0.0-beta.1 was released on March 1, 2012.  Here's the 
-release notes:
+[announcement](https://gist.github.com/83ac249f80f3fbc12855) and the release 
+notes:
 
 > Blossom's API and feature set are now stable enough to begin developing 
 production applications with, and Blossom includes the latest Statechart and 
@@ -81,6 +82,7 @@ Getting Involved
 * Why Blossom exists: http://bit.ly/future-of-sproutcore
 * IRC Channel: #blossom on irc.freenode.net
 * Want to give Blossom a spin? https://github.com/fohr/blossom-testproject
+* Demo: http://fohr.github.com/blossom
 * Questions? Use [stackoverflow.com](http://stackoverflow.com/) and the *blossom* tag.
 
 Watch this repository on GitHub to follow development, or fork it and submit 
