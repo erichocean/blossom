@@ -244,9 +244,18 @@ SC.View = SC.LeafSurface.extend({
     boundingRect = evt.target.getBoundingClientRect();
     x = evt.clientX - boundingRect.left + window.pageXOffset;
     y = evt.clientY - boundingRect.top + window.pageYOffset;
+    // console.log('*****', evt.type, x, y, '*****');
 
-    function hitTestLayer(layer) {
+    function spaces(depth) {
+      console.log(depth);
+      var ret = "", idx, len;
+      for (idx = 0, len = depth; idx<len; ++idx) ret += "--";
+      return ret;
+    }
+
+    function hitTestLayer(layer, point, depth) {
       // debugger;
+      // console.log(spaces(depth), "on entry:", point.x, point.y);
       if (layer.get('isHidden')) return;
       context.save();
 
@@ -263,11 +272,16 @@ SC.View = SC.LeafSurface.extend({
       // Apply the sublayer's transform from our layer (it's superlayer).
       var t = layer._sc_transformFromSuperlayerToLayer;
       context.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+      SC.PointApplyAffineTransformTo(point, t, point);
+      var frame = layer.get('frame');
+      // console.log(spaces(depth), 'frame:', frame.x, frame.y, frame.width, frame.height);
+      // console.log(spaces(depth), 'transformed:', point.x, point.y);
 
       // First, test our sublayers.
       var sublayers = layer.get('sublayers'), idx = sublayers.length;
+      depth++;
       while (idx--) {
-        hitTestLayer(sublayers[idx]);
+        hitTestLayer(sublayers[idx], SC.MakePoint(point), depth);
       }
 
       // Only test ourself if (a) no hit has been found, or (b) our zIndex is
@@ -282,8 +296,10 @@ SC.View = SC.LeafSurface.extend({
 
         // Finally, test the point for intersection with the path(s).
         if (context.isPointInPath(x, y)) {
-          evt.layerX = x;
-          evt.layerY = y;
+          evt.hitPoint = SC.MakePoint(x - point[0]/*x*/, y - point[1]/*y*/);
+          if (evt.hitPoint.x < 0 || evt.hitPoint.y < 0) debugger;
+          evt.layerX = evt.hitPoint.x;
+          evt.layerY = evt.hitPoint.y;
           hitLayer = layer;
           zIndex = layerZ;
         }
@@ -295,8 +311,9 @@ SC.View = SC.LeafSurface.extend({
     // Next, begin the hit testing process. When this completes, hitLayer
     // will contain the layer that was hit with the highest zIndex.
     var layers = this.get('layers'), idx = layers.length;
+
     while (idx--) {
-      hitTestLayer(layers[idx]);
+      hitTestLayer(layers[idx], SC.MakePoint(), 0);
     }
 
     // We don't need to test `layer`, because we already know it was hit when

@@ -54,8 +54,8 @@ SC.RunLoop = SC.RunLoop.extend(
     // if (BLOSSOM) SC.ScheduleLayoutAndRendering();
     if (BLOSSOM) {
       // Test SC.viewportSizeDidChange last since it's true less often.
-      if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange) {
-        SC.app.performLayoutAndRendering(this.get('startTime'));
+      if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange || SC.surfacesHashNeedsUpdate) {
+        if (SC.app) SC.app.performLayoutAndRendering(this.get('startTime'));
       }
     }
     if (BLOSSOM) {

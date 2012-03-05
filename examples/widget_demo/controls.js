@@ -268,4 +268,85 @@ var segmentedWidget3 = SC.SegmentedWidget.create({
 });
 
 rootLayer.get('sublayers').pushObjects([segmentedWidget, segmentedWidget2, segmentedWidget3]);
+
+var selectWidget = SC.SelectWidget.create({
+  layout: { top: 430, left: 510, width: 140, height: 24 },
+  theme: 'regular',
+  items: [{ title: "Red",
+            value: "red",
+            enabled: true,
+            icon: "button_red" },
+          { title: "Green",
+            value: "green",
+            enabled: true,
+            icon: 'button_green' },
+          { title: "Purple",
+            value: "purple",
+            enabled: true,
+            icon: 'button_purple' },
+          { title: "Blue",
+            value: "blue",
+            enabled: true,
+            icon: 'button_blue' }],
+  valueBinding: 'WidgetDemo.value',
+  itemTitleKey: 'title',
+  itemValueKey: 'value',
+  itemIconKey: 'icon',
+  itemIsEnabledKey: 'enabled'
+});
+
+var selectWidget2 = SC.SelectWidget.create({
+  layout: { top: 430+30, left: 510, width: 140, height: 24 },
+  theme: 'capsule',
+  items: [{ title: "Red",
+            value: "red",
+            enabled: true,
+            icon: "button_red" },
+          { title: "Green",
+            value: "green",
+            enabled: true,
+            icon: 'button_green' },
+          { title: "Purple",
+            value: "purple",
+            enabled: true,
+            icon: 'button_purple' },
+          { title: "Blue",
+            value: "blue",
+            enabled: true,
+            icon: 'button_blue' }],
+  value: 'red',
+  itemTitleKey: 'title',
+  itemValueKey: 'value',
+  itemIconKey: 'icon',
+  itemIsEnabledKey: 'enabled'
+});
+
+var selectWidget3 = SC.SelectWidget.create({
+  layout: { top: 430+60, left: 510, width: 140, height: 24 },
+  theme: 'square',
+  items: [{ title: "Red",
+            value: "red",
+            enabled: true,
+            icon: "button_red" },
+          { title: "Green",
+            value: "green",
+            enabled: true,
+            icon: 'button_green' },
+          { title: "Purple",
+            value: "purple",
+            enabled: true,
+            icon: 'button_purple' },
+          { title: "Blue",
+            value: "blue",
+            enabled: true,
+            icon: 'button_blue' }],
+  value: 'red',
+  itemTitleKey: 'title',
+  itemValueKey: 'value',
+  itemIconKey: 'icon',
+  itemIsEnabledKey: 'enabled'
+});
+
+rootLayer.get('sublayers').pushObjects([selectWidget, selectWidget2, selectWidget3]);
+
 WidgetDemo.controlsSurface.get('layers').pushObject(rootLayer);
