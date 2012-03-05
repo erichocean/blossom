@@ -38,7 +38,7 @@ var white =    "white";
   # Defining Your Menu Item
 
   You define your menu items by providing a items array, much like you 
-  provide to an SC.SelectWidget.  Your items array can be as simple as an 
+  provide to an SC.SegmentedWidget.  Your items array can be as simple as an 
   array of strings or as complex as full model objects.  Based on how you 
   configure your `itemKey` properties, the select widget will read the 
   properties it needs from the array and construct the button.
