@@ -423,7 +423,8 @@ BT.Project = BT.BuildNode.extend({
   },
 
   indexHTML: function() {
-    var ret = "", project = this.get('project');
+    var ret = "", project = this.get('project'),
+        isBuilding = this.get('isBuilding');
 
     ret += '<html>\n';
     ret += '  <head>\n';
@@ -439,7 +440,7 @@ BT.Project = BT.BuildNode.extend({
     ret += "    <p>Here's a list of apps in this project:\n";
     ret += '      <ul>\n';
     this.get('apps').forEach(function outputAppListItem(app) {
-      ret += '        <li><a href="' + app.get('nodeName') + '">'+app.get('nodeName')+'</a></li>\n';
+      ret += '        <li><a href="' + app.get('nodeName')+(isBuilding? '/index.html' : '') + '">'+app.get('nodeName')+'</a></li>\n';
     });
     ret += '      </ul>\n';
     ret += '     </p>\n';
@@ -473,6 +474,117 @@ BT.Project = BT.BuildNode.extend({
       visitFramework:    setProject()
     }));
     
+  },
+
+  serve: function(host, port) {
+    host = host === undefined? 'localhost': host;
+    port = port === undefined? 4020 : port;
+
+    BT.Server.create({
+      project: this,
+      host: host,
+      port: port
+    });
+  },
+
+  build: function() {
+    var that = this, visitor,
+        assert = require('assert');
+
+    console.log("Building apps in ./build");
+    this.set('isBuilding', true);
+
+    visitor = BT.Visitor.create({
+      visitApp: function(node, name, depth) {
+        console.log(name, '...');
+        that.buildApp(name);
+        arguments.callee.base.apply(this, arguments);
+      }
+    });
+
+    this.accept(visitor);
+
+    var buildPath = path.join(__dirname, '../build');
+    if (!path.existsSync(buildPath)) {
+      try {
+        fs.mkdirSync(buildPath);
+      } catch (e) {
+        console.log('failed to create build directory at '+buildPath);
+        console.log(e);
+        console.log('aborting build');
+        return;
+      }
+    }
+    assert(path.existsSync(buildPath));
+
+    console.log('Writing index.html ...');
+    fs.writeFileSync(path.join(buildPath, 'index.html'), this.get('indexHTML'), 'utf-8');
+
+    this.set('isBuilding', false);
+    console.log('Done.');
+  },
+
+  buildApp: function(name) {
+    var fs = require('fs'),
+        assert = require('assert');
+
+    var app = this.findApp(name),
+        indexHTML = app? app.get('productionIndexHTML') : null,
+        javascriptFiles = app? app.get('javascriptSourceFiles'): null, // an array
+        buildPath = path.join(__dirname, '../build'), appPath;
+
+    if (!app) {
+      console.log("Build error: "+name+" could not be found.");
+      return;
+    }
+
+    if (!path.existsSync(buildPath)) {
+      try {
+        fs.mkdirSync(buildPath);
+      } catch (e) {
+        console.log('failed to create build directory at '+buildPath);
+        console.log(e);
+        console.log('aborting build');
+        return;
+      }
+    }
+    assert(path.existsSync(buildPath));
+
+    appPath = path.join(buildPath, app.get('nodeName'));
+    if (!path.existsSync(appPath)) {
+      try {
+        fs.mkdirSync(appPath);
+      } catch (e2) {
+        console.log('failed to create app directory at '+appPath);
+        console.log(e2);
+        console.log('aborting build');
+        return;
+      }
+    }
+    assert(path.existsSync(appPath));
+
+    fs.writeFileSync(path.join(appPath, 'index.html'), indexHTML, 'utf-8');
+
+    var javascript = [];
+    javascriptFiles.forEach(function(p) {
+      if (path.existsSync(p)) {
+        javascript.push(fs.readFileSync(p, 'utf-8'));
+      }
+    });
+    javascript = javascript.join(';\n');
+
+    // var jsp = require("uglify-js").parser;
+    // var pro = require("uglify-js").uglify;
+    // var ast = jsp.parse(javascript); // parse code and get the initial AST
+    // 
+    // ast = pro.ast_mangle(ast); // get a new AST with mangled names
+
+    // These isn't working yet.
+    // ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+
+    // javascript = pro.gen_code(ast); // compressed code here
+
+    fs.writeFileSync(path.join(appPath, 'application.js'), javascript, 'utf-8');
   }
 
 });
@@ -480,6 +592,15 @@ BT.Project = BT.BuildNode.extend({
 BT.App = BT.Target.extend({
 
   isApp: true,
+
+  // Configuration options.
+  title: 'Blossom',
+
+  BLOSSOM: true,
+  FAST_LAYOUT_FUNCTION: false,
+  BENCHMARK_LAYOUT_FUNCTION: true,
+  ENFORCE_BLOSSOM_2DCONTEXT_API: true,
+  DEBUG_PSURFACES: false,
 
   accept: acceptBuilder('visitApp'),
 
@@ -507,14 +628,14 @@ BT.App = BT.Target.extend({
 
     ret += '<html>\n';
     ret += '  <head>\n';
-    ret += '    <title>Blossom</title>\n';
+    ret += '    <title>%@</title>\n'.fmt(this.get('title'));
 
     ret += '    <script>\n';
-    ret += '      var BLOSSOM = true;\n';
-    ret += '      var FAST_LAYOUT_FUNCTION = false;\n';
-    ret += '      var BENCHMARK_LAYOUT_FUNCTION = true;\n';
-    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = true;\n';
-    ret += '      var DEBUG_PSURFACES = false;\n';
+    ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.BLOSSOM);
     ret += '    </script>\n';
 
     function outputScriptTag(file) {
@@ -528,6 +649,51 @@ BT.App = BT.Target.extend({
 
     var files = this.get('orderedJavaScriptFiles');
     files.forEach(outputScriptTag);
+
+    ret += '    <style>\n';
+    ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';
+    ret += '      div, canvas { border-style: solid; border-width: 0; }\n';
+    ret += '      #ui { border-style: none }\n';
+    ret += '    </style>\n';
+    ret += '  </head>\n';
+    
+    ret += '  <body style="background: black; margin: 0; overflow: hidden;">\n';
+    ret += '  </body>\n';
+    ret += '</html>';
+
+    return ret;
+  }.property(),
+
+  javascriptSourceFiles: function() {
+    var ary = [], project = this.get('project');
+
+    this.get('orderedFrameworks').forEach(function(framework) {
+      var files = framework.get('orderedJavaScriptFiles');
+      files.forEach(function(file) { ary.push(file.get('sourcePath')); });
+    });
+
+    var files = this.get('orderedJavaScriptFiles');
+    files.forEach(function(file) { ary.push(file.get('sourcePath')); });
+
+    return ary;
+  }.property(),
+
+  productionIndexHTML: function() {
+    var ret = "", project = this.get('project');
+
+    ret += '<html>\n';
+    ret += '  <head>\n';
+    ret += '    <title>%@</title>\n'.fmt(this.get('title'));
+
+    ret += '    <script>\n';
+    ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.BLOSSOM);
+    ret += '    </script>\n';
+
+    ret += '    <script src="application.js"></script>\n';
 
     ret += '    <style>\n';
     ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';

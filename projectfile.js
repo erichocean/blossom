@@ -36,6 +36,5 @@ var project = BT.Project.create({
 
 // project.accept(BT.LoggingVisitor.create());
 
-BT.Server.create({
-  project: project
-});
+project.serve();
+// project.build();
