@@ -29,14 +29,9 @@ FormDemo.TmpView = SC.View.extend({
 
   name: '(unnamed)',
 
-  updateDisplay: function() {
-    // console.log('FormDemo.TmpView#updateDisplay()', SC.guidFor(this));
-    var psurface = SC.psurfaces[this.__id__],
-        canvas = psurface? psurface.__element__ : null,
-        ctx = canvas? canvas.getContext('2d') : null,
-        w = canvas.width, h = canvas.height;
-
-    ctx.save();
+  willRenderLayers: function(ctx) {
+    // console.log('FormDemo.TmpView#willRenderLayers()', SC.guidFor(this));
+    var w = ctx.width, h = ctx.height;
 
     // Clear background.
     ctx.fillStyle = base3;
@@ -48,8 +43,6 @@ FormDemo.TmpView = SC.View.extend({
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.fillText(this.get('name'), w/2, h/2);
-
-    ctx.restore();
   }
 
 });

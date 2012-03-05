@@ -86,20 +86,14 @@ function main() {
   // debugger;
 
   var pane = SC.View.create({
-    updateDisplay: function() {
-      // console.log('pane#updateDisplay()', SC.guidFor(this));
-      var psurface = SC.psurfaces[this.__id__],
-          canvas = psurface? psurface.__element__ : null,
-          ctx = canvas? canvas.getContext('2d') : null,
-          w = canvas.width, h = canvas.height;
-  
-      // console.log('w',w,'h',h);
-  
-      ctx.save();
-  
+
+    willRenderLayers: function(ctx) {
+      // console.log('pane#willRenderLayers()', SC.guidFor(this));
+      var w = ctx.width, h = ctx.height;
+
       // Clear background.
       ctx.clearRect(0, 0, w, h);
-  
+
       // Draw fps meter.
       ctx.fillStyle = green;
       ctx.font = "16pt Calibri";
@@ -112,8 +106,6 @@ function main() {
       if (timingFunction) {
         ctx.fillText(timingFunction, w/2, h-50);
       }
-
-      ctx.restore();
     },
 
     mouseDown: function(evt) {
