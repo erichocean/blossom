@@ -73,7 +73,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
         break;
       case 'capsule':
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+        SC.CreateRoundRectPath(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
         break;
       case 'regular':
         SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);

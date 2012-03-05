@@ -127,7 +127,7 @@ SC.Psurface = function(surface) {
   // FIXME: This gives a drop shadow to all root surfaces other than the #ui
   // div.  What we need is an API for drop shadows on SC.Surface itself.
   if (surfaceId !== 'ui' && !SC.surfaces[surfaceId].get('supersurface')) {
-    element.style.webkitBoxShadow = "0px 10px 15px rgba(1,1,1,0.5)";
+    element.style.webkitBoxShadow = "0px 5px 15px rgba(1,1,1,0.5)";
   }
 
   surface.didCreateElement(element);
@@ -192,6 +192,23 @@ SC._sc_psurfacesBeingMoved = null;
   previous `push()` call), and it also means the current psurface has no more 
   siblings.
 */
+SC._sc_psurfaceColor = null;
+
+SC.Psurface.start = function() {
+  if (DEBUG_PSURFACES) sc_assert(SC._sc_psurfaceColor === null);
+  if (DEBUG_PSURFACES) sc_assert(SC._sc_psurfacesBeingMoved === null);
+
+  SC._sc_psurfaceColor = {};
+
+  var key, psurfaces = SC.psurfaces;
+  for (key in psurfaces) {
+    if (!psurfaces.hasOwnProperty(key)) continue;
+    SC._sc_psurfaceColor[key] = 0; // white
+  }
+
+  SC._sc_psurfacesBeingMoved = {};
+};
+
 SC.Psurface.begin = function(surface) {
   // console.log('SC.Psurface#begin()');
   var id = surface.__id__,
@@ -199,8 +216,6 @@ SC.Psurface.begin = function(surface) {
 
   if (DEBUG_PSURFACES) {
     sc_assert(SC._sc_currentPsurface === null);
-    sc_assert(SC._sc_psurfaceColor === null);
-    sc_assert(SC._sc_psurfacesBeingMoved === null);
 
     // Sanity check the surface.
     sc_assert(surface);
@@ -211,9 +226,6 @@ SC.Psurface.begin = function(surface) {
     sc_assert(SC.surfaceCallbacks);
     sc_assert(SC.surfaceCallbacks.length === 0);
   }
-
-  SC._sc_psurfaceColor = {};
-  SC._sc_psurfacesBeingMoved = {};
 
   // If the psurface already exists, it is in the DOM, and should not have a 
   // parent (we verify this below).
@@ -947,8 +959,39 @@ SC.Psurface.end = function(surface) {
   SC.surfaceCallbacks = []; // Reset
 
   SC._sc_currentPsurface     = null;
-  SC._sc_psurfaceColor       = null;
-  SC._sc_psurfacesBeingMoved = null;
+};
+
+SC.Psurface.finish = function() {
+  // console.log('SC.Psurface.finish()');
+  SC._sc_psurfacesBeingMoved = null; // GC these
+
+  // Any psurfaces that are white need to be removed.
+  var key, psurfaces = SC.psurfaces,
+      colors = SC._sc_psurfaceColor,
+      psurface, el, body = document.body;
+
+  for (key in colors) {
+    if (!colors.hasOwnProperty(key)) continue;
+    if (colors[key] !== 0) continue;
+
+    // The color is white –– HOWEVER –– that doesn't mean we haven't dealt 
+    // with the Psurface already, it could have been a child of some other 
+    // Psurface, and thus dealt with during the traverasal.
+    psurface = psurfaces[key];
+    if (psurface) {
+      delete psurfaces[key]; // GC
+
+      // We only remove DOM nodes on "root" surfaces -- those added directly to 
+      // the body.  Any child DOM nodes will be GCd along with it.
+      el = psurface.__element__;
+      if (body === el.parentNode) {
+        // console.log('removing an element');
+        body.removeChild(el);
+      }
+    }
+  }
+
+  SC._sc_psurfaceColor = null;
 };
 
 /** @private */

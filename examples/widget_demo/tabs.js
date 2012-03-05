@@ -36,7 +36,7 @@ WidgetDemo.tabsSurface = SC.TabSurface.create({
             value: "controlsSurface",
             enabled: true }
         ],
-  value: 'buttonsSurface',
+  value: 'controlsSurface',
   itemTitleKey: 'title',
   itemValueKey: 'value',
   itemIconKey: 'icon',

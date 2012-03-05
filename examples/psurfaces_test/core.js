@@ -391,8 +391,10 @@ function test() {
     }
 
     // Update the Psurfaces tree manually (this is the code we are fuzz testing).
+    SC.Psurface.start();
     uiContainer.updatePsurfaceTree(surfaces);
     tree.updatePsurfaceTree(surfaces);
+    SC.Psurface.finish();
   } catch (e) {
     console.log(e);
     console.log(log.join('\n'));
