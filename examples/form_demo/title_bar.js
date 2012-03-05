@@ -25,14 +25,9 @@ var white =    "white";
 
 FormDemo.titleBar = SC.View.create({
 
-  updateDisplay: function() {
-    // console.log('FormDemo.form#updateDisplay()', SC.guidFor(this));
-    var psurface = SC.psurfaces[this.__id__],
-        canvas = psurface? psurface.__element__ : null,
-        ctx = canvas? canvas.getContext('2d') : null,
-        w = canvas.width, h = canvas.height;
-
-    ctx.save();
+  willRenderLayers: function(ctx) {
+    // console.log('FormDemo.form#willRenderLayers()', SC.guidFor(this));
+    var w = ctx.width, h = ctx.height;
 
     // Draw background.
     ctx.fillStyle = base2;
@@ -44,8 +39,6 @@ FormDemo.titleBar = SC.View.create({
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.fillText("Incident", w/2, 10);
-
-    ctx.restore();
   },
 
   mouseDown: function(evt) {

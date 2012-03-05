@@ -20,14 +20,12 @@ function main() {
 
   var surface = SC.View.create({
 
-    updateDisplay: function() {
-      // console.log('updateDisplay');
-      var psurface = SC.psurfaces[this.__id__],
-          canvas = psurface? psurface.__element__ : null,
-          ctx = canvas? canvas.getContext('2d') : null,
-          w = canvas.width, h = canvas.height;
+    willRenderLayers: function(ctx) {
+      // console.log('willRenderLayers');
+      var w = ctx.width, h = ctx.height;
 
-      qd.canvas = canvas; // HACK
+      if (!ctx.__sc_canvas__) debugger;
+      qd.canvas = ctx.__sc_canvas__; // HACK
 
       // Draw background.
       ctx.fillStyle = base3;

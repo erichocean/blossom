@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals BLOSSOM sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
 
 sc_require('surfaces/composite');
 sc_require('surfaces/view');
@@ -370,15 +370,16 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     var bottomRightSurface = this.get('bottomRightSurface');
     if (bottomRightSurface) bottomRightSurface.updateDisplay();
 
-    var psurface = SC.psurfaces[this._sc_dividerSurface.__id__],
-        el = psurface? psurface.__element__ : null;
-    sc_assert(el);
-    var ctx = el.getContext('2d');
-    ctx.__sc_canvas__ = el; // enables width and height getters on context
-    this.render(ctx);
+    var ctx = this._sc_dividerContext;
+    sc_assert(ctx);
+    sc_assert(document.getElementById(ctx.__sc_canvas__.id));
+
+    ctx.save();
+    this.renderDivider(ctx);
+    ctx.restore();
   },
 
-  render: function(ctx) {
+  renderDivider: function(ctx) {
     // console.log('render', ctx.width, ctx.height);
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, ctx.width, ctx.height);
@@ -724,9 +725,22 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     this._sc_topLeftSurfaceDidChange();
     this._sc_bottomRightSurfaceDidChange();
 
+    var that = this;
     dividerSurface = this._sc_dividerSurface = SC.LeafSurface.create({
       __tagName__: 'canvas',
       __useContentSize__: true, // we need our width and height attributes set,
+
+      didCreateElement: function(canvas) {
+        arguments.callee.base.apply(this, arguments);
+        var ctx = canvas.getContext('2d');
+
+        // Enables ctx.width and ctx.height to work.
+        ctx.__sc_canvas__ = canvas;
+
+        if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
+        that._sc_dividerContext = ctx;
+      },
+
       mouseDown: function(evt) {
         return this.get('supersurface').mouseDown(evt);
       }

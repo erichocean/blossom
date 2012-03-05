@@ -26,27 +26,9 @@ var white =    "white";
 FormDemo.upper = SC.View.create({
   clearBackground: true,
 
-  updateDisplay: function() {
-    // console.log('FormDemo.form#updateDisplay()', SC.guidFor(this));
-    var psurface = SC.psurfaces[this.__id__],
-        canvas = psurface? psurface.__element__ : null,
-        ctx = canvas? canvas.getContext('2d') : null,
-        w = canvas.width, h = canvas.height;
-
-    var layers = this.get('layers');
-    for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].updateDisplay();
-    }
-
-    ctx.save();
-
-    // Draw background.
-    if (this.get('clearBackground')) {
-      ctx.clearRect(0, 0, w, h);
-    } else {
-      ctx.fillStyle = base3;
-      ctx.fillRect(0, 0, w, h);
-    }
+  willRenderLayers: function(ctx) {
+    // console.log('FormDemo.form#willRenderLayers()', SC.guidFor(this));
+    var w = ctx.width, h = ctx.height;
 
     // Draw wells.
     ctx.fillStyle = base2;
@@ -58,13 +40,6 @@ FormDemo.upper = SC.View.create({
 
     SC.CreateRoundRectPath(ctx, 12 + Math.ceil((w-98)/2), h-94, w - 102 - Math.ceil((w-98)/2), 86, 7);
     ctx.fill();
-
-    ctx.restore();
-
-    // Draw layers.
-    for (idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].copyIntoContext(ctx);
-    }
   }
 
 });

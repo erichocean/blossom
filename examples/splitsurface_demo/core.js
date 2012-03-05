@@ -79,16 +79,12 @@ function main() {
   }));
 
   var Pane = SC.View.extend({
-    updateDisplay: function() {
-      // console.log('pane#updateDisplay()', SC.guidFor(this));
-      var psurface = SC.psurfaces[this.__id__],
-          canvas = psurface? psurface.__element__ : null,
-          ctx = canvas? canvas.getContext('2d') : null,
-          w = canvas.width, h = canvas.height;
 
-      ctx.save();
+    willRenderLayers: function(ctx) {
+      // console.log('pane#willRenderLayers()', SC.guidFor(this));
+      var w = ctx.width, h = ctx.height;
 
-      // console.log('w', w, 'h', h);
+      // debugger;
 
       // Clear background.
       ctx.clearRect(0, 0, w, h);
@@ -100,8 +96,6 @@ function main() {
       ctx.textAlign = "center";
       ctx.fillText("(click me)", w/2, 50);
       ctx.fillText(SC.Benchmark.fps(), w/2, h/2);
-
-      ctx.restore();
     },
 
     click: function(evt) {

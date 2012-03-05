@@ -71,13 +71,8 @@ function main() {
 
   var surface = SC.View.create({
 
-    updateDisplay: function() {
-      var psurface = SC.psurfaces[this.__id__],
-          canvas = psurface? psurface.__element__ : null,
-          ctx = canvas? canvas.getContext('2d') : null,
-          w = canvas.width, h = canvas.height;
-
-      ctx.save();
+    willRenderLayers: function(ctx) {
+      var w = ctx.width, h = ctx.height;
 
       // Draw background.
       ctx.fillStyle = 'white';
@@ -105,8 +100,6 @@ function main() {
         boxes[idx].render(ctx);
         ctx.restore();
       }
-
-      ctx.restore();
     }
 
   });
