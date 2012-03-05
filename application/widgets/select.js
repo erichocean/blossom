@@ -40,7 +40,7 @@ var white =    "white";
   You define your menu items by providing a items array, much like you 
   provide to an SC.SegmentedWidget.  Your items array can be as simple as an 
   array of strings or as complex as full model objects.  Based on how you 
-  configure your `itemKey` properties, the segmented widget will read the 
+  configure your `itemKey` properties, the select widget will read the 
   properties it needs from the array and construct the button.
 
   You can define the following properties on objects you pass in:
@@ -54,7 +54,7 @@ var white =    "white";
 SC.SelectWidget = SC.ButtonWidget.extend({
 
   /**
-    The value of the segmented view.
+    The value of the selected menu item.
 
     The SelectWidget's value will always be the value of the currently
     selected menu item.  Setting this value will change the selected item.
@@ -76,13 +76,13 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     // cur === old === val on init(), so nothing to do.
     if (cur === old) return;
 
-    // This happens when our 'value' was updated by our segment widget. Avoid 
-    // a loop by not setting 'value' on segment widget again.
+    // This happens when our 'value' was updated by our select widget. Avoid 
+    // a loop by not setting 'value' on select widget again.
     if (cur === val) {
       this._sc_value = cur;
 
-    // This happens when our 'value' has been updated by anyone but segment 
-    // widget.  Let our segment widget know we've changed.
+    // This happens when our 'value' has been updated by anyone but select 
+    // widget.  Let our select widget know we've changed.
     } else {
       this._sc_value = cur;
       menu.set('value', cur);
@@ -399,7 +399,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
   _sc_cornerRadius: 9,
 
   /**
-    The value of the segmented view.
+    The value of the selected menu item.
 
     The SegmentedView's value will always be the value of the currently
     selected button.  Setting this value will change the selected button.
@@ -411,19 +411,19 @@ SC.SelectWidgetMenuView = SC.View.extend({
   value: null,
 
   /**
-    Set to true to enabled the segmented view, false to disabled it.
+    Set to true to enabled the select widget menu view, false to disabled it.
   */
   isEnabled: true,
 
   /**
     If true, clicking a selected button again will deselect it, setting the
-    segmented views value to null.  Defaults to false.
+    select widget menu's value to null.  Defaults to false.
   */
   allowsEmptySelection: false,
 
   /**
-    If true, then clicking on a tab will not deselect the other segments, it
-    will simply add or remove it from the selection.
+    If true, then clicking on a menu item will not deselect the other menu 
+    items, it will simply add or remove it from the selection.
   */
   allowsMultipleSelection: false,
 
@@ -439,8 +439,8 @@ SC.SelectWidgetMenuView = SC.View.extend({
   /**
     The array of items to display.  This can be a simple array of strings,
     objects or hashes.  If you pass objects or hashes, you must also set the
-    various itemKey properties to tell the SegmentedView how to extract the
-    information it needs.
+    various itemKey properties to tell the SelectWidgetMenuView how to 
+    extract the information it needs.
 
     @property {Array}
   */
