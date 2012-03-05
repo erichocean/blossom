@@ -27,6 +27,8 @@ var MyLayer = SC.Layer.extend({
 
   cornerRadius: 15,
 
+  dragPoint: null,
+
   render: function(ctx) {
     // console.log('MyLayer.render()', SC.guidFor(this));
     var benchKey = 'MyLayer#render()';
@@ -45,6 +47,10 @@ var MyLayer = SC.Layer.extend({
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
     ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
+    var dragPoint = this.dragPoint;
+    if (dragPoint) {
+      ctx.fillText("<%@, %@>".fmt(dragPoint.x.toFixed(), dragPoint.y.toFixed()),ctx.width/2, ctx.height/2);
+    }
     ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
 
     SC.Benchmark.end(benchKey);
@@ -53,6 +59,7 @@ var MyLayer = SC.Layer.extend({
 });
 
 function main() {
+  var blueLayer;
   var surface = SC.View.create({
 
     mouseMoved: function(evt) {
@@ -61,7 +68,25 @@ function main() {
     },
 
     mouseDown: function(evt) {
-      if (evt.layer) alert('Clicked on the '+evt.layer.get('color')+' layer.');
+      if (evt.layer) {
+        if (evt.layer !== blueLayer) alert('Clicked on the '+evt.layer.get('color')+' layer.');
+        else {
+          SC.app.dragDidStart(this, evt);
+          blueLayer.dragPoint = evt.hitPoint;
+          blueLayer.triggerRendering();
+        }
+        return true;
+      }
+    },
+
+    mouseDragged: function(evt) {
+      blueLayer.dragPoint = evt.hitPoint;
+      blueLayer.triggerRendering();
+    },
+
+    mouseUp: function(evt) {
+      blueLayer.dragPoint = null;
+      blueLayer.triggerRendering();
     }
 
   });
@@ -78,11 +103,12 @@ function main() {
     tag: 2
   }));
 
-  surface.get('layers').pushObject(MyLayer.create({
+  blueLayer = MyLayer.create({
     layout: { centerX: 0, centerY: 0, width: 600, height: 480 },
     color: blue,
     tag: 3
-  }));
+  });
+  surface.get('layers').pushObject(blueLayer);
 
   SC.Application.create();
   SC.app.set('ui', surface);
