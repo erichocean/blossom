@@ -38,7 +38,7 @@ var white =    "white";
   # Defining Your Menu Item
 
   You define your menu items by providing a items array, much like you 
-  provide to an SC.SegmentedWidget.  Your items array can be as simple as an 
+  provide to an SC.SelectWidget.  Your items array can be as simple as an 
   array of strings or as complex as full model objects.  Based on how you 
   configure your `itemKey` properties, the select widget will read the 
   properties it needs from the array and construct the button.
@@ -95,13 +95,13 @@ SC.SelectWidget = SC.ButtonWidget.extend({
   localize: true,
 
   // ..........................................................
-  // SEGMENT DEFINITION
+  // MENU ITEMS DEFINITION
   //
 
   /**
     The array of items to display.  This can be a simple array of strings,
     objects or hashes.  If you pass objects or hashes, you must also set the
-    various itemKey properties to tell the SegmentedView how to extract the
+    various itemKey properties to tell the SelectWidget how to extract the
     information it needs.
 
     @property {Array}
@@ -143,7 +143,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
   /**
     This computed property is generated from the items array based on the
     itemKey properties that you set.  The return value is an array of arrays
-    that contain private information used by the SegmentedView to render.
+    that contain private information used by the SelectWidget to render.
 
     You will not generally need to access or edit this property.
 
@@ -401,10 +401,10 @@ SC.SelectWidgetMenuView = SC.View.extend({
   /**
     The value of the selected menu item.
 
-    The SegmentedView's value will always be the value of the currently
-    selected button.  Setting this value will change the selected button.
-    If you set this value to something that has no matching button, then
-    no buttons will be selected.
+    The SelectWidgetMenuView's value will always be the value of the 
+    currently selected button.  Setting this value will change the selected 
+    button. If you set this value to something that has no matching button, 
+    then no buttons will be selected.
 
     @field {Object}
   */
@@ -433,7 +433,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
   localize: true,
 
   // ..........................................................
-  // SEGMENT DEFINITION
+  // MENU ITEMS DEFINITION
   //
 
   /**
@@ -522,7 +522,8 @@ SC.SelectWidgetMenuView = SC.View.extend({
   /**
     This computed property is generated from the items array based on the
     itemKey properties that you set.  The return value is an array of arrays
-    that contain private information used by the SegmentedView to render.
+    that contain private information used by the SelectWidgetMenuView to 
+    render.
 
     You will not generally need to access or edit this property.
 
