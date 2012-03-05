@@ -314,6 +314,70 @@ SC.View = SC.LeafSurface.extend({
       }
       return behavior || this;
     }
+  },
+
+  /**
+    This updates the `layer`, `hitPoint`, `layerX` and `layerY` properties 
+    on evt as if the layer was clicked by the mouse.
+
+    The layer must be part of a layer tree in this surface, the event must be 
+    a mouse event, and the surface must have been active (part of SC.app's 
+    `surfaces` or the `ui` surface) *before* the event occurred. 
+  */
+  updateEventForLayer: function(evt, layer) {
+    sc_assert(layer);
+    sc_assert(layer.kindOf(SC.Layer));
+    sc_assert(evt);
+    sc_assert(evt instanceof SC.Event);
+    var psurface, boundingRect, x, y, parents, superlayer, type = evt.type;
+
+    if (layer.get('surface') !== this) return;
+
+    // If we're not currently an active surface, there's nothing to do.
+    psurface = SC.psurfaces[this.__id__];
+    if (!psurface) return;
+
+    // Must be a mouse event.
+    if (type !== 'mousedown' && type !== 'mousemove' && type !== 'mouseup') return;
+
+    evt.layer = layer;
+
+    boundingRect = psurface.__element__.getBoundingClientRect();
+    x = evt.clientX - boundingRect.left + window.pageXOffset;
+    y = evt.clientY - boundingRect.top + window.pageYOffset;
+
+    // Gather the superlayers (with the layer first).
+    parents = [layer];
+    superlayer = layer.get('superlayer');
+    while (superlayer) {
+      parents.push(superlayer);
+      superlayer = superlayer.get('superlayer');
+    }
+
+    var len = parents.length,
+        point = SC.MakePoint();
+
+    // Transform point from top-most superlayer on down to the layer.
+    while (len--) {
+      layer = parents[len];
+
+      // Make sure the layer's transform is current.
+      if (layer._sc_transformFromSuperlayerToLayerIsDirty) {
+        layer._sc_computeTransformFromSuperlayerToLayer();
+      }
+
+      var t = layer._sc_transformFromSuperlayerToLayer;
+      SC.PointApplyAffineTransformTo(point, t, point);
+    }
+
+    // Adjust for the surface.
+    point[0]/*x*/ = x-point[0]/*x*/;
+    point[1]/*y*/ = y-point[1]/*y*/;
+
+    // point has now been transformed to layer's coordinate system
+    evt.hitPoint = point;
+    evt.layerX = point[0]/*x*/;
+    evt.layerY = point[1]/*y*/;
   }
 
 });

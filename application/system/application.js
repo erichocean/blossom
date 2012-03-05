@@ -648,9 +648,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   // ACTION HANDLING
   //
 
-  dragDidStart: function(drag) {
+  dragDidStart: function(drag, evt) {
     this._sc_mouseDownResponder = drag;
     this._sc_drag = drag;
+    this._sc_dragEvent = evt;
   },
 
   /**
@@ -1405,7 +1406,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
     // drags send their own events, e.g. drag[Moved|Entered|Exited]
     if (this._sc_drag) {
-        this._sc_drag.tryToPerform('mouseDragged', evt);
+      var dragEvt = this._sc_dragEvent;
+      if (dragEvt) {
+        // Update evt with the layer and the correct layer hitPoint.
+        var layer = dragEvt.layer,
+            surface = layer? layer.get('surface') : null;
+
+        if (surface) surface.updateEventForLayer(evt, layer);
+      }
+      this._sc_drag.tryToPerform('mouseDragged', evt);
     } else {
       var lh = this._sc_lastHovered || [] , nh = [] , exited, loc, len,
           responder = this.targetResponderForEvent(evt);
