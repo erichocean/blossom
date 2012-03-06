@@ -632,10 +632,10 @@ BT.App = BT.Target.extend({
 
     ret += '    <script>\n';
     ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.FAST_LAYOUT_FUNCTION);
+    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BENCHMARK_LAYOUT_FUNCTION);
+    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.ENFORCE_BLOSSOM_2DCONTEXT_API);
+    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.DEBUG_PSURFACES);
     ret += '    </script>\n';
 
     function outputScriptTag(file) {
@@ -687,10 +687,10 @@ BT.App = BT.Target.extend({
 
     ret += '    <script>\n';
     ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.BLOSSOM);
-    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.BLOSSOM);
+    ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.FAST_LAYOUT_FUNCTION);
+    ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BENCHMARK_LAYOUT_FUNCTION);
+    ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.ENFORCE_BLOSSOM_2DCONTEXT_API);
+    ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.DEBUG_PSURFACES);
     ret += '    </script>\n';
 
     ret += '    <script src="application.js"></script>\n';
