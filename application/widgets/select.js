@@ -603,8 +603,10 @@ SC.SelectWidgetMenuView = SC.View.extend({
     again.
   */
   mouseEntered: function(evt) {
-    var menuItem = evt.layer;
+    var menuItem = evt.layer,
+        old = this._sc_activeMenuItem;
 
+    if (old) old.set('isActive', false);
     if (menuItem && menuItem.get('isEnabled') && this.get('isEnabled')) {
       document.body.style.cursor = "pointer";
       this._sc_activeMenuItem = menuItem;
