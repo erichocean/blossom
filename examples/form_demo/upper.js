@@ -24,7 +24,6 @@ var green =    "#859900";
 var white =    "white";
 
 FormDemo.upper = SC.View.create({
-  clearBackground: true,
 
   willRenderLayers: function(ctx) {
     // console.log('FormDemo.form#willRenderLayers()', SC.guidFor(this));

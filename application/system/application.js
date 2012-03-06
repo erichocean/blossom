@@ -1552,13 +1552,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       outerElement = _outer;
       outerElement.appendChild(ul);
 
+      var base3 =  "#fdf6e3";
+
       outerElement.id = 'showing-view-trees';
       outerElement.style.overflow = 'scroll';
       outerElement.style.top = 0;
       outerElement.style.left = 0;
       outerElement.style.bottom = 0;
       outerElement.style.right = 0;
-      outerElement.style.backgroundColor = 'white';
+      outerElement.style.backgroundColor = base3;
       outerElement.style.padding = 20;
       outerElement.style.paddingTop = 0;
       outerElement.style.position = 'absolute';

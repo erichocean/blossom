@@ -20,6 +20,16 @@ CanvasRenderingContext2D.prototype.__defineGetter__('height', function() {
   return canvas? canvas.height : 0;
 });
 
+CanvasRenderingContext2D.prototype.__defineGetter__('w', function() {
+  var canvas = this.__sc_canvas__;
+  return canvas? canvas.width : 0;
+});
+
+CanvasRenderingContext2D.prototype.__defineGetter__('h', function() {
+  var canvas = this.__sc_canvas__;
+  return canvas? canvas.height : 0;
+});
+
 CanvasRenderingContext2D.prototype._sc_drawImage = CanvasRenderingContext2D.prototype.drawImage;
 CanvasRenderingContext2D.prototype._sc_createPattern = CanvasRenderingContext2D.prototype.createPattern;
 

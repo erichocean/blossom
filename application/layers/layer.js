@@ -147,8 +147,9 @@ SC.Layer = SC.Object.extend({
   render: function(ctx) {},
 
   copyIntoContext: function(ctx) {
+    // console.log('SC.Layer#copyIntoContext()', SC.guidFor(this));
     var t = this._sc_transformFromSuperlayerToLayer;
-    // debugger;
+
     ctx.save();
     ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.drawLayer(this, 0, 0);
