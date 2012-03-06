@@ -20,6 +20,8 @@ global.SC = global.SproutCore; // Already loaded by the buildtools
 // global.SproutCore = SC;
 // global.BLOSSOM = true;
 // global.FAST_LAYOUT_FUNCTION = false;
+global.YES = true;
+global.NO = false;
 
 // Load the code we want to test.
 // console.log(jsFiles);
