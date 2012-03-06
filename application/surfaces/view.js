@@ -297,9 +297,6 @@ SC.View = SC.LeafSurface.extend({
         // Finally, test the point for intersection with the path(s).
         if (context.isPointInPath(x, y)) {
           evt.hitPoint = SC.MakePoint(x - point[0]/*x*/, y - point[1]/*y*/);
-          if (evt.hitPoint.x < 0 || evt.hitPoint.y < 0) debugger;
-          evt.layerX = evt.hitPoint.x;
-          evt.layerY = evt.hitPoint.y;
           hitLayer = layer;
           zIndex = layerZ;
         }
@@ -334,8 +331,8 @@ SC.View = SC.LeafSurface.extend({
   },
 
   /**
-    This updates the `layer`, `hitPoint`, `layerX` and `layerY` properties 
-    on evt as if the layer was clicked by the mouse.
+    This updates the `layer` and `hitPoint` properties on evt as if the layer 
+    was clicked by the mouse.
 
     The layer must be part of a layer tree in this surface, the event must be 
     a mouse event, and the surface must have been active (part of SC.app's 
@@ -393,8 +390,6 @@ SC.View = SC.LeafSurface.extend({
 
     // point has now been transformed to layer's coordinate system
     evt.hitPoint = point;
-    evt.layerX = point[0]/*x*/;
-    evt.layerY = point[1]/*y*/;
   }
 
 });
