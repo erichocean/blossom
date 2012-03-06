@@ -214,9 +214,10 @@ test("should find records based on SC.Query without recordType", function() {
   var q = SC.Query.local(SC.Record, "lastName = 'Doe'");
   
   var records = MyApp.store.find(q);
-  equals(records.get('length'), 4, 'record length should be 2');
+  equals(records.get('length'), 4, 'record length should be 4');
 
-  same(records.getEach('firstName'), 'John John Jane Jane'.w(), 'firstNames should match');
+  console.log(records.getEach('firstName'));
+  same(records.getEach('firstName'), 'John Jane John Jane'.w(), 'firstNames should match');
 });
 
 test("should find records within a passed record array", function() {
