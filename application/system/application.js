@@ -905,6 +905,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Object} Object that handled evet or null
   */
   attemptKeyEquivalent: function(evt) {
+    // console.log('SC.Application#attemptKeyEquivalent()', evt.commandCodes()[0]);
     var ret = null ;
 
     // `keystring` is a method name representing the keys pressed (i.e
@@ -913,6 +914,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // Couldn't build a keystring for this key event, nothing to do.
     if (!keystring) return false;
+
+    // HACK: Show SC.View trees.
+    if (keystring === 'ctrl_alt_meta_s') {
+      this.toggleShowViewTrees();
+      return true;
+    }
 
     var menuPane = this.get('menuPane'),
         keyPane  = this.get('keyPane'),
@@ -1465,6 +1472,107 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       if (this._sc_mouseDownResponder) {
         this._sc_mouseDownResponder.tryToPerform('mouseDragged', evt);
       }
+    }
+  },
+
+  _sc_showingViewTrees: false,
+  toggleShowViewTrees: function() {
+    var outerElement;
+
+    function processLayer(layer, div) {
+      var li, p, _outer;
+      li = document.createElement('li');
+      p = document.createElement('p');
+      p.innerText = 'SC.Layer: ' + (layer.get('displayName') || SC.guidFor(layer)) + ' ('+ layer.context.width + ' x '+ layer.context.height + ')';
+      li.appendChild(p);
+      li.appendChild(layer.__sc_element__);
+
+      var ul = document.createElement('ul');
+      li.appendChild(ul);
+      _outer = outerElement;
+      outerElement = ul;
+      layer.get('sublayers').forEach(processLayer);
+      _outer.appendChild(li);
+      outerElement = _outer;
+
+    }
+
+    function processSurface(surface) {
+      var div, p, ul, li, canvas, frame = surface.get('frame');
+
+      SC.psurfaces[surface.__id__].__element__.style.display = 'none';
+
+      if (surface.kindOf(SC.View)) {
+        li = document.createElement('li');
+        p = document.createElement('p');
+        p.innerText = 'SC.View: ' + (surface.get('displayName') || surface.__id__) + ' ('+ frame.width + ' x '+ frame.height + ')';
+        li.appendChild(p);
+
+        ul = document.createElement('ul');
+        li.appendChild(ul);
+        var _outer = outerElement;
+        outerElement = ul;
+        surface.get('layers').forEach(processLayer);
+        outerElement = _outer;
+
+        outerElement.appendChild(li);
+
+      } else if (surface.isCompositeSurface) {
+        _outer = outerElement;
+        surface.get('subsurfaces').forEach(processSurface);
+        outerElement = _outer;
+      }
+    }
+
+    function displaySurface(surface) {
+      SC.psurfaces[surface.__id__].__element__.style.display = 'block';
+      if (surface.isCompositeSurface) {
+        surface.get('subsurfaces').forEach(displaySurface);
+      }
+    }
+
+    if (!this._sc_showingViewTrees) {
+      this._sc_showingViewTrees = true;
+      outerElement = document.createElement('div');
+      var h3 = document.createElement('h3');
+      h3.innerText = "This displays all of the currently active SC.View instances with their layer trees.";
+      outerElement.appendChild(h3);
+      var p = document.createElement('p');
+      p.innerText = "Press ctrl-alt-command-s to again remove this display.";
+      outerElement.appendChild(p);
+
+      var ul = document.createElement('ul');
+      var _outer = outerElement;
+      outerElement = ul;
+
+      this.get('surfaces').forEach(processSurface);
+      var ui = this.get('ui');
+      if (ui) processSurface(ui);
+
+      outerElement = _outer;
+      outerElement.appendChild(ul);
+
+      outerElement.id = 'showing-view-trees';
+      outerElement.style.overflow = 'scroll';
+      outerElement.style.top = 0;
+      outerElement.style.left = 0;
+      outerElement.style.bottom = 0;
+      outerElement.style.right = 0;
+      outerElement.style.backgroundColor = 'white';
+      outerElement.style.padding = 20;
+      outerElement.style.paddingTop = 0;
+      outerElement.style.position = 'absolute';
+
+      document.body.appendChild(outerElement);
+
+    } else {
+      this._sc_showingViewTrees = false;
+      var el = document.getElementById('showing-view-trees');
+      if (el) document.body.removeChild(el);
+
+      this.get('surfaces').forEach(displaySurface);
+      ui = this.get('ui');
+      if (ui) displaySurface(ui);
     }
   }
 

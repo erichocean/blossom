@@ -568,7 +568,6 @@ SC.Layer = SC.Object.extend({
     if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete context.canvas;
 
     canvas.id = this.get('id');
-    canvas.style.position = 'absolute';
     canvas.width = bounds[2]/*width*/;
     canvas.height = bounds[3]/*height*/;
 
