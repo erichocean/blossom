@@ -687,8 +687,9 @@ SC.Event.prototype = {
       }
 
       if (ret) {
+        if (this.ctrlKey) modifiers += 'ctrl_' ;
         if (this.altKey) modifiers += 'alt_' ;
-        if (this.ctrlKey || this.metaKey) modifiers += 'ctrl_' ;
+        if (this.metaKey) modifiers += 'meta_' ;
         if (this.shiftKey) modifiers += 'shift_' ;
       }
     }
