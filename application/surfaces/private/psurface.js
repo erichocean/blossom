@@ -864,7 +864,9 @@ SC.Psurface.prototype = {
     if (DEBUG_PSURFACES) {
       // Sanity check this for all code paths.
       sc_assert(this.nextSibling === null);
-      sc_assert(this.__element__.nextElementSibling === null);
+
+      // Normally, there shouldn't be a next element, but the field editor *could* be inserted. Allow that.
+      sc_assert(this.__element__.nextElementSibling === null || this.__element__.nextElementSibling.nodeName === 'INPUT');
     }
 
     SC._sc_currentPsurface = this.parent;
