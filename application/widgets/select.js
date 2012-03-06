@@ -342,13 +342,13 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     }
 
     if (idx < 0) idx = 0;
-    if (evt.layerX < menuView.measuredWidth) {
+    if (evt.hitPoint.x < menuView.measuredWidth) {
       menuView._sc_activeMenuItem = menuView.get('layers')[idx];
       menuView._sc_activeMenuItem.set('isActive', true);
     }
 
-    frame.x = evt.clientX - evt.layerX;
-    frame.y = evt.clientY - evt.layerY - idx*24 - 6;
+    frame.x = evt.clientX - evt.hitPoint.x;
+    frame.y = evt.clientY - evt.hitPoint.y - idx*24 - 6;
     frame.width = menuView.measuredWidth;
     frame.height = menuView.measuredHeight;
 
