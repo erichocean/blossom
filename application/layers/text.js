@@ -131,6 +131,9 @@ SC.TextLayer = SC.Layer.extend({
     sc_assert(!this.__needsTextLayout__);
     sc_assert(lines);
 
+    // Always clear the rect in case someone wants transparency.
+    context.clearRect(0, 0, context.width, context.height);
+
     context.fillStyle = this.get('backgroundColor');
     context.fillRect(0, 0, context.width, context.height);
 
