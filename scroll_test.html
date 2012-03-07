@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <head>
+    <title>Blossom Scroll Test</title>
+    <script>
+    window.requestAnimFrame = function(callback) {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) { window.setTimeout(callback, 1000 / 60); };
+    }();
+
+    var scrollview, scrollsurface, canvas, ctx, prev = 0, delay = 0;
+
+    function render() {
+      // console.log('render()');
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.strokeStyle = 'grey';
+      ctx.lineWidth = 1;
+
+      ctx.font = "12pt Calibri";
+      ctx.fillStyle = 'black';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      var height = 30;
+      var times=50; while (times--) {
+        ctx.beginPath();
+        ctx.moveTo(0, times*height+0.5);
+        ctx.lineTo(1000, times*height+0.5);
+        ctx.stroke();
+        ctx.fillText(String(Math.floor((prev/height))*height + (times*height) - 500), 500, (times*height)-height/2);
+      }
+    }
+
+    var hasEventListener = false;
+
+    function didscroll() {
+      var now = new Date().getTime(),
+          rect = scrollsurface.getBoundingClientRect(),
+          top = -rect.top,
+          didNotDraw = true;
+
+      if (hasEventListener) {
+        scrollview.removeEventListener('scroll', didscroll, false);
+        hasEventListener = false;
+      }
+
+      if (Math.abs(top - prev) < rect.height*0.10) {
+        if (now - delay > 150) {
+          didNotDraw = false;
+          canvas.style.top = Math.min(Math.floor((top/100))*100 , 300000)-481 + 'px';
+          render();
+        }
+      } else {
+        delay = new Date().getTime();
+      }
+
+      if (didNotDraw || top !== prev) {
+        // console.log('requesting animation frame');
+        window.requestAnimFrame(didscroll);
+        prev = top;
+      } else {
+        scrollview.addEventListener('scroll', didscroll, false);
+        hasEventListener = true;
+      }
+    }
+
+    function load() {
+      console.log('load()');
+      scrollview = document.getElementById('scrollview');
+      scrollsurface = document.getElementById('scrollsurface');
+      canvas = document.getElementById('canvas');
+
+      scrollview.addEventListener('scroll', didscroll, false);
+      hasEventListener = true;
+
+      ctx = canvas.getContext('2d');
+      render();
+      prev = -scrollsurface.getBoundingClientRect().top;
+    }
+    </script>
+    <style>
+      /* from Blossom */
+      * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      div, canvas {
+        border-style: solid;
+        border-width: 0;
+      }
+
+      #scrollview {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 1000px;
+        height: 509px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+      }
+
+      #scrollsurface {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: 300000px;
+        overflow: hidden;
+        background-color: white;
+        background-image: url("data:image/png;base64,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");
+        background-position: left top;
+        background-repeat: repeat-y;
+      }
+
+      #canvas {
+        position: absolute;
+        top: -481px;
+        left: 0px;
+        width: 985px;
+        height: 1500px;
+      }
+    </style>
+  </head>
+  <body style="background: black; margin: 0; overflow: hidden;" onload="load();">
+    <div id="scrollview">
+      <div id="scrollsurface">
+        <canvas id="canvas" width="985" height="1500"></canvas>
+      </div>
+    </div>
+  </body>
+</html>
