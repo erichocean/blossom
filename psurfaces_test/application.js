@@ -32586,8 +32586,9 @@ SC.Event.prototype = {
       }
 
       if (ret) {
+        if (this.ctrlKey) modifiers += 'ctrl_' ;
         if (this.altKey) modifiers += 'alt_' ;
-        if (this.ctrlKey || this.metaKey) modifiers += 'ctrl_' ;
+        if (this.metaKey) modifiers += 'meta_' ;
         if (this.shiftKey) modifiers += 'shift_' ;
       }
     }
@@ -36957,6 +36958,10 @@ SC.Psurface = function(surface) {
   }
 
   if (useContentSize) {
+    sc_assert(!isNaN(surface.__contentWidth__), "A surface has a __contentWidth__ that is NaN, which is not allowed. Please update its 'frame' property.");
+    sc_assert(!isNaN(surface.__contentHeight__), "A surface has a __contentHeight__ that is NaN, which is not allowed. Please update its 'frame' property.");
+    sc_assert(surface.__contentWidth__ !== 0, "A surface has a __contentWidth__ of zero, which is not allowed. Please update its 'frame' property.");
+    sc_assert(surface.__contentHeight__ !== 0, "A surface has a __contentHeight__ of zero, which is not allowed. Please update its 'frame' property.");
     element.width = surface.__contentWidth__;
     element.height = surface.__contentHeight__;
     surface.__contentSizeNeedsUpdate__ = false;
@@ -37702,7 +37707,9 @@ SC.Psurface.prototype = {
     if (DEBUG_PSURFACES) {
       // Sanity check this for all code paths.
       sc_assert(this.nextSibling === null);
-      sc_assert(this.__element__.nextElementSibling === null);
+
+      // Normally, there shouldn't be a next element, but the field editor *could* be inserted. Allow that.
+      sc_assert(this.__element__.nextElementSibling === null || this.__element__.nextElementSibling.nodeName === 'INPUT');
     }
 
     SC._sc_currentPsurface = this.parent;
@@ -49783,7 +49790,6 @@ SC.Layer = SC.Object.extend({
     if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete context.canvas;
 
     canvas.id = this.get('id');
-    canvas.style.position = 'absolute';
     canvas.width = bounds[2]/*width*/;
     canvas.height = bounds[3]/*height*/;
 
@@ -84579,9 +84585,6 @@ SC.View = SC.LeafSurface.extend({
         // Finally, test the point for intersection with the path(s).
         if (context.isPointInPath(x, y)) {
           evt.hitPoint = SC.MakePoint(x - point[0]/*x*/, y - point[1]/*y*/);
-          if (evt.hitPoint.x < 0 || evt.hitPoint.y < 0) debugger;
-          evt.layerX = evt.hitPoint.x;
-          evt.layerY = evt.hitPoint.y;
           hitLayer = layer;
           zIndex = layerZ;
         }
@@ -84616,8 +84619,8 @@ SC.View = SC.LeafSurface.extend({
   },
 
   /**
-    This updates the `layer`, `hitPoint`, `layerX` and `layerY` properties 
-    on evt as if the layer was clicked by the mouse.
+    This updates the `layer` and `hitPoint` properties on evt as if the layer 
+    was clicked by the mouse.
 
     The layer must be part of a layer tree in this surface, the event must be 
     a mouse event, and the surface must have been active (part of SC.app's 
@@ -84675,8 +84678,6 @@ SC.View = SC.LeafSurface.extend({
 
     // point has now been transformed to layer's coordinate system
     evt.hitPoint = point;
-    evt.layerX = point[0]/*x*/;
-    evt.layerY = point[1]/*y*/;
   }
 
 });
@@ -85027,13 +85028,13 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     }
 
     if (idx < 0) idx = 0;
-    if (evt.layerX < menuView.measuredWidth) {
+    if (evt.hitPoint.x < menuView.measuredWidth) {
       menuView._sc_activeMenuItem = menuView.get('layers')[idx];
       menuView._sc_activeMenuItem.set('isActive', true);
     }
 
-    frame.x = evt.clientX - evt.layerX;
-    frame.y = evt.clientY - evt.layerY - idx*24 - 6;
+    frame.x = evt.clientX - evt.hitPoint.x;
+    frame.y = evt.clientY - evt.hitPoint.y - idx*24 - 6;
     frame.width = menuView.measuredWidth;
     frame.height = menuView.measuredHeight;
 
@@ -85288,8 +85289,10 @@ SC.SelectWidgetMenuView = SC.View.extend({
     again.
   */
   mouseEntered: function(evt) {
-    var menuItem = evt.layer;
+    var menuItem = evt.layer,
+        old = this._sc_activeMenuItem;
 
+    if (old) old.set('isActive', false);
     if (menuItem && menuItem.get('isEnabled') && this.get('isEnabled')) {
       document.body.style.cursor = "pointer";
       this._sc_activeMenuItem = menuItem;
@@ -85564,6 +85567,83 @@ SC.SelectMenuItemLayer = SC.Layer.extend(SC.Control, {
     //   ctx.lineWidth = 0.5;
     //   ctx.stroke();
     // }
+  }
+
+});
+
+} // BLOSSOM;
+// ==========================================================================
+// Project:   Blossom - Modern, Cross-Platform Application Framework
+// Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
+// License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
+// ==========================================================================
+/*globals BLOSSOM sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
+
+sc_require('surfaces/view');
+
+if (BLOSSOM) {
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
+/** @class
+  `SC.ScrollView` implements a scrollable view. You can use it 
+  interchangeably with `SC.View`, the only difference is the scrolling.
+
+  Setting the bounds of the scroll is important.
+
+  @extends SC.CompositeSurface
+  @since Blossom 1.0
+*/
+SC.ScrollView = SC.View.extend({
+
+
+  __tagName__: 'div',
+
+  __useContentSize__: false,
+
+  _sc_scrollingSurface: null,
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var scrollingSurface, scrollingCanvas;
+
+    scrollingSurface = this._sc_scrollingSurface = SC.InternalViewScrollSurface();
+    this.get('subsurfaces').pushObject(scrollingSurface);
+  }
+
+});
+
+SC.InternalViewScrollSurface = SC.LeafSurface.extend({
+
+  __tagName__: 'canvas',
+
+  __useContentSize__: true, // we need our width and height attributes set
+
+  didCreateElement: function(canvas) {
+    arguments.callee.base.apply(this, arguments);
+    var ctx = canvas.getContext('2d');
+
+    // Enables ctx.width and ctx.height to work.
+    ctx.__sc_canvas__ = canvas;
+
+    if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
+    this._sc_context = ctx;
   }
 
 });
@@ -87727,6 +87807,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     @returns {Object} Object that handled evet or null
   */
   attemptKeyEquivalent: function(evt) {
+    // console.log('SC.Application#attemptKeyEquivalent()', evt.commandCodes()[0]);
     var ret = null ;
 
     // `keystring` is a method name representing the keys pressed (i.e
@@ -87735,6 +87816,12 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     // Couldn't build a keystring for this key event, nothing to do.
     if (!keystring) return false;
+
+    // HACK: Show SC.View trees.
+    if (keystring === 'ctrl_alt_meta_s') {
+      this.toggleShowViewTrees();
+      return true;
+    }
 
     var menuPane = this.get('menuPane'),
         keyPane  = this.get('keyPane'),
@@ -88287,6 +88374,107 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       if (this._sc_mouseDownResponder) {
         this._sc_mouseDownResponder.tryToPerform('mouseDragged', evt);
       }
+    }
+  },
+
+  _sc_showingViewTrees: false,
+  toggleShowViewTrees: function() {
+    var outerElement;
+
+    function processLayer(layer, div) {
+      var li, p, _outer;
+      li = document.createElement('li');
+      p = document.createElement('p');
+      p.innerText = 'SC.Layer: ' + (layer.get('displayName') || SC.guidFor(layer)) + ' ('+ layer.context.width + ' x '+ layer.context.height + ')';
+      li.appendChild(p);
+      li.appendChild(layer.__sc_element__);
+
+      var ul = document.createElement('ul');
+      li.appendChild(ul);
+      _outer = outerElement;
+      outerElement = ul;
+      layer.get('sublayers').forEach(processLayer);
+      _outer.appendChild(li);
+      outerElement = _outer;
+
+    }
+
+    function processSurface(surface) {
+      var div, p, ul, li, canvas, frame = surface.get('frame');
+
+      SC.psurfaces[surface.__id__].__element__.style.display = 'none';
+
+      if (surface.kindOf(SC.View)) {
+        li = document.createElement('li');
+        p = document.createElement('p');
+        p.innerText = 'SC.View: ' + (surface.get('displayName') || surface.__id__) + ' ('+ frame.width + ' x '+ frame.height + ')';
+        li.appendChild(p);
+
+        ul = document.createElement('ul');
+        li.appendChild(ul);
+        var _outer = outerElement;
+        outerElement = ul;
+        surface.get('layers').forEach(processLayer);
+        outerElement = _outer;
+
+        outerElement.appendChild(li);
+
+      } else if (surface.isCompositeSurface) {
+        _outer = outerElement;
+        surface.get('subsurfaces').forEach(processSurface);
+        outerElement = _outer;
+      }
+    }
+
+    function displaySurface(surface) {
+      SC.psurfaces[surface.__id__].__element__.style.display = 'block';
+      if (surface.isCompositeSurface) {
+        surface.get('subsurfaces').forEach(displaySurface);
+      }
+    }
+
+    if (!this._sc_showingViewTrees) {
+      this._sc_showingViewTrees = true;
+      outerElement = document.createElement('div');
+      var h3 = document.createElement('h3');
+      h3.innerText = "This displays all of the currently active SC.View instances with their layer trees.";
+      outerElement.appendChild(h3);
+      var p = document.createElement('p');
+      p.innerText = "Press ctrl-alt-command-s to again remove this display.";
+      outerElement.appendChild(p);
+
+      var ul = document.createElement('ul');
+      var _outer = outerElement;
+      outerElement = ul;
+
+      this.get('surfaces').forEach(processSurface);
+      var ui = this.get('ui');
+      if (ui) processSurface(ui);
+
+      outerElement = _outer;
+      outerElement.appendChild(ul);
+
+      outerElement.id = 'showing-view-trees';
+      outerElement.style.overflow = 'scroll';
+      outerElement.style.top = 0;
+      outerElement.style.left = 0;
+      outerElement.style.bottom = 0;
+      outerElement.style.right = 0;
+      outerElement.style.backgroundColor = 'white';
+      outerElement.style.padding = 20;
+      outerElement.style.paddingTop = 0;
+      outerElement.style.position = 'absolute';
+
+      document.body.appendChild(outerElement);
+
+    } else {
+      this._sc_showingViewTrees = false;
+      var el = document.getElementById('showing-view-trees');
+      if (el) document.body.removeChild(el);
+
+      this.get('surfaces').forEach(displaySurface);
+      ui = this.get('ui');
+      if (ui) displaySurface(ui);
     }
   }
 
@@ -95108,7 +95296,7 @@ sc_require('models/record');
   The default order direction is ascending. You can change it to descending
   by writing `'DESC'` behind the property name like in the example above.
   If no order is given, or records are equal in respect to a given order,
-  records will be ordered by guid.
+  records will be ordered by their storeKey.
 
   SproutCore Query Language
   =====
@@ -95451,8 +95639,8 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
 
     // if called for the first time we have to build the order array
     if (!this._isReady) this.parse();
-    if (!this._isReady) { // can't parse. guid is wrong but consistent
-      return SC.compare(record1.get('id'),record2.get('id'));
+    if (!this._isReady) { // can't parse, so use storeKey.  Not proper, but consistent.
+      return SC.compare(record1.get('storeKey'),record2.get('storeKey'));
     }
 
     // For every property specified in orderBy until non-eql result is found.
@@ -95481,9 +95669,9 @@ SC.Query = SC.Object.extend(SC.Copyable, SC.Freezable,
       }
     }
 
-    // return result or compare by guid
+    // return result or compare by storeKey
     if (result !== 0) return result ;
-    else return SC.compare(record1.get('id'),record2.get('id'));
+    else return SC.compare(record1.get('storeKey'),record2.get('storeKey'));
   },
 
   /** @private
