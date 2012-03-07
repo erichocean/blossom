@@ -25,6 +25,12 @@ var project = BT.Project.create({
     // "bullet_test": require('./examples/bullet_test'),
     // "box2d_test": require('./examples/box2d_test'),
 
+    // A one-off app target that results in just the code for blossom.
+    "blossom-latest": BT.App.create({
+      frameworks: 'sproutcore'.w(),
+      sourceTree: path.join(__dirname, "examples/blossom-latest")
+    }),
+
     "sproutcore": require('./node/buildfile'),
 
     // no sc_static() support yet, so give our image a nice and easy path
