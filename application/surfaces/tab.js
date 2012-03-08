@@ -223,7 +223,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
 
   updateDisplay: function() {
     // console.log('SC.TabSurface#updateDisplay()');
-    this._sc_viewSurface.updateDisplay();
+    // this._sc_viewSurface.updateDisplay();
 
     arguments.callee.base.apply(this, arguments);
   },
@@ -241,9 +241,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
     arguments.callee.base.apply(this, arguments);
     var viewSurface, segmentedWidget;
 
-    viewSurface = this._sc_viewSurface = SC.View.create({
-      clearBackground: true
-    });
+    viewSurface = this._sc_viewSurface = SC.View.create();
 
     var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({

@@ -172,7 +172,7 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(benchKey);
   },
 
-  clearBackground: false,
+  clearBackground: true,
 
   _sc_backgroundColor: base3,
 
