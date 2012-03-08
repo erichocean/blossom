@@ -6,6 +6,13 @@
 // ==========================================================================
 /*globals global */
 
+// These are automatically added by Blossom. DO NOT MODIFY.
+var BLOSSOM = true;
+var FAST_LAYOUT_FUNCTION = false;
+var BENCHMARK_LAYOUT_FUNCTION = false;
+var ENFORCE_BLOSSOM_2DCONTEXT_API = true;
+var DEBUG_PSURFACES = true;
+
 // Makes us compatible with Node.js
 if (window.global === undefined) window.global = window;
 

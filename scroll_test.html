@@ -33,7 +33,8 @@
         ctx.moveTo(0, times*height+0.5);
         ctx.lineTo(1000, times*height+0.5);
         ctx.stroke();
-        ctx.fillText(String(Math.floor((prev/height))*height + (times*height) - 500), 500, (times*height)-height/2);
+        var offset = Number(canvas.style.top.slice(0,-2))+481;
+        ctx.fillText(String(Math.floor(((offset/height))*height + (times*height) - 500)/10), 500, (times*height)-height/2);
       }
     }
 
@@ -55,9 +56,7 @@
       if (Math.abs(top - prev) < rect.height*0.10) {
         if (now - delay > 150) {
           didNotDraw = false;
-          console.log('canvas.style.top (before):', canvas.style.top);
-          canvas.style.top = Math.min(Math.floor((top/100))*100 , 300000)-481 + 'px';
-          console.log('canvas.style.top (after):', Math.min(Math.floor((top/100))*100 , 300000)-481);
+          canvas.style.top = Math.min(Math.floor((top/100))*100, 300000)-481 + 'px';
           render();
         }
       } else {
