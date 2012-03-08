@@ -119,6 +119,10 @@ SC.Psurface = function(surface) {
   }
 
   if (useContentSize) {
+    sc_assert(!isNaN(surface.__contentWidth__), "A surface has a __contentWidth__ that is NaN, which is not allowed. Please update its 'frame' property.");
+    sc_assert(!isNaN(surface.__contentHeight__), "A surface has a __contentHeight__ that is NaN, which is not allowed. Please update its 'frame' property.");
+    sc_assert(surface.__contentWidth__ !== 0, "A surface has a __contentWidth__ of zero, which is not allowed. Please update its 'frame' property.");
+    sc_assert(surface.__contentHeight__ !== 0, "A surface has a __contentHeight__ of zero, which is not allowed. Please update its 'frame' property.");
     element.width = surface.__contentWidth__;
     element.height = surface.__contentHeight__;
     surface.__contentSizeNeedsUpdate__ = false;
