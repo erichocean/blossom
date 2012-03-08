@@ -54,7 +54,7 @@ SC.TextLayer = SC.Layer.extend({
   updateTextLayout: function() {
     // console.log('SC.TextLayer#updateTextLayout()');
     var context = this.get('context'),
-        text = this.get('value') || '',
+        text = String(this.get('value') || ''),
         line, that = this;
 
     this.__needsTextLayout__ = false;
@@ -130,6 +130,9 @@ SC.TextLayer = SC.Layer.extend({
 
     sc_assert(!this.__needsTextLayout__);
     sc_assert(lines);
+
+    // Always clear the rect in case someone wants transparency.
+    context.clearRect(0, 0, context.width, context.height);
 
     context.fillStyle = this.get('backgroundColor');
     context.fillRect(0, 0, context.width, context.height);
