@@ -49196,6 +49196,16 @@ CanvasRenderingContext2D.prototype.__defineGetter__('height', function() {
   return canvas? canvas.height : 0;
 });
 
+CanvasRenderingContext2D.prototype.__defineGetter__('w', function() {
+  var canvas = this.__sc_canvas__;
+  return canvas? canvas.width : 0;
+});
+
+CanvasRenderingContext2D.prototype.__defineGetter__('h', function() {
+  var canvas = this.__sc_canvas__;
+  return canvas? canvas.height : 0;
+});
+
 CanvasRenderingContext2D.prototype._sc_drawImage = CanvasRenderingContext2D.prototype.drawImage;
 CanvasRenderingContext2D.prototype._sc_createPattern = CanvasRenderingContext2D.prototype.createPattern;
 
@@ -49369,8 +49379,9 @@ SC.Layer = SC.Object.extend({
   render: function(ctx) {},
 
   copyIntoContext: function(ctx) {
+    // console.log('SC.Layer#copyIntoContext()', SC.guidFor(this));
     var t = this._sc_transformFromSuperlayerToLayer;
-    // debugger;
+
     ctx.save();
     ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.drawLayer(this, 0, 0);
@@ -78930,7 +78941,7 @@ SC.TextLayer = SC.Layer.extend({
   updateTextLayout: function() {
     // console.log('SC.TextLayer#updateTextLayout()');
     var context = this.get('context'),
-        text = this.get('value') || '',
+        text = String(this.get('value') || ''),
         line, that = this;
 
     this.__needsTextLayout__ = false;
@@ -79006,6 +79017,9 @@ SC.TextLayer = SC.Layer.extend({
 
     sc_assert(!this.__needsTextLayout__);
     sc_assert(lines);
+
+    // Always clear the rect in case someone wants transparency.
+    context.clearRect(0, 0, context.width, context.height);
 
     context.fillStyle = this.get('backgroundColor');
     context.fillRect(0, 0, context.width, context.height);
@@ -84460,7 +84474,7 @@ SC.View = SC.LeafSurface.extend({
     SC.Benchmark.end(benchKey);
   },
 
-  clearBackground: false,
+  clearBackground: true,
 
   _sc_backgroundColor: base3,
 
@@ -88454,13 +88468,15 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
       outerElement = _outer;
       outerElement.appendChild(ul);
 
+      var base3 =  "#fdf6e3";
+
       outerElement.id = 'showing-view-trees';
       outerElement.style.overflow = 'scroll';
       outerElement.style.top = 0;
       outerElement.style.left = 0;
       outerElement.style.bottom = 0;
       outerElement.style.right = 0;
-      outerElement.style.backgroundColor = 'white';
+      outerElement.style.backgroundColor = base3;
       outerElement.style.padding = 20;
       outerElement.style.paddingTop = 0;
       outerElement.style.position = 'absolute';
@@ -88745,7 +88761,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
 
   updateDisplay: function() {
     // console.log('SC.TabSurface#updateDisplay()');
-    this._sc_viewSurface.updateDisplay();
+    // this._sc_viewSurface.updateDisplay();
 
     arguments.callee.base.apply(this, arguments);
   },
@@ -88763,9 +88779,7 @@ SC.TabSurface = SC.ContainerSurface.extend({
     arguments.callee.base.apply(this, arguments);
     var viewSurface, segmentedWidget;
 
-    viewSurface = this._sc_viewSurface = SC.View.create({
-      clearBackground: true
-    });
+    viewSurface = this._sc_viewSurface = SC.View.create();
 
     var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({
@@ -102242,7 +102256,6 @@ var green =    "#859900";
 var white =    "white";
 
 FormDemo.upper = SC.View.create({
-  clearBackground: true,
 
   willRenderLayers: function(ctx) {
     // console.log('FormDemo.form#willRenderLayers()', SC.guidFor(this));

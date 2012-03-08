@@ -45,6 +45,8 @@
           top = -rect.top,
           didNotDraw = true;
 
+      if (top !== prev) console.log("top:", top);
+
       if (hasEventListener) {
         scrollview.removeEventListener('scroll', didscroll, false);
         hasEventListener = false;
@@ -53,7 +55,9 @@
       if (Math.abs(top - prev) < rect.height*0.10) {
         if (now - delay > 150) {
           didNotDraw = false;
+          console.log('canvas.style.top (before):', canvas.style.top);
           canvas.style.top = Math.min(Math.floor((top/100))*100 , 300000)-481 + 'px';
+          console.log('canvas.style.top (after):', Math.min(Math.floor((top/100))*100 , 300000)-481);
           render();
         }
       } else {
