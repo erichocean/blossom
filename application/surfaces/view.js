@@ -187,6 +187,8 @@ SC.View = SC.LeafSurface.extend({
     this._sc_context = ctx;
   },
 
+  _sc_scrollTranslation: null,
+
   updateDisplay: function() {
     // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
@@ -215,11 +217,17 @@ SC.View = SC.LeafSurface.extend({
     }
 
     // Draw layers.
+    var scrollTranslation = this._sc_scrollTranslation;
+    if (scrollTranslation) {
+      ctx.save();
+      ctx.translate(scrollTranslation[0]/*x*/, scrollTranslation[1]/*y*/);
+    }
     SC.Benchmark.start(copyKey);
     for (idx=0, len=layers.length; idx<len; ++idx) {
       layers[idx].copyIntoContext(ctx);
     }
     SC.Benchmark.end(copyKey);
+    if (scrollTranslation) ctx.restore();
 
     if (this.didRenderLayers) {
       ctx.save();
