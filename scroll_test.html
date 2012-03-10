@@ -14,8 +14,10 @@
 
     var scrollview, scrollsurface, canvas, ctx, prev = 0, delay = 0;
 
-    function render() {
-      // console.log('render()');
+    var firstTime = true;
+    var height = 30;
+
+    function render(canvasTop) {
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
@@ -27,15 +29,22 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      var height = 30;
       var times=50; while (times--) {
+        
         ctx.beginPath();
         ctx.moveTo(0, times*height+0.5);
         ctx.lineTo(1000, times*height+0.5);
         ctx.stroke();
-        var offset = Number(canvas.style.top.slice(0,-2))+481;
-        ctx.fillText(String(Math.floor(((offset/height))*height + (times*height) - 500)/10), 500, (times*height)-height/2);
+
+        // var pixelsFromTop = firstTime? -481 : Number(canvas.style.top.slice(0,-2));
+        var pixelsFromTop = firstTime? -481 : canvasTop;
+        var internalOffset = (times*height)-height/2;
+        var offsetInScroll = pixelsFromTop + internalOffset;
+        var index = Math.floor(offsetInScroll/height);
+
+        ctx.fillText(String(index), 500, internalOffset);
       }
+      firstTime = false;
     }
 
     var hasEventListener = false;
@@ -46,8 +55,6 @@
           top = -rect.top,
           didNotDraw = true;
 
-      if (top !== prev) console.log("top:", top);
-
       if (hasEventListener) {
         scrollview.removeEventListener('scroll', didscroll, false);
         hasEventListener = false;
@@ -56,15 +63,15 @@
       if (Math.abs(top - prev) < rect.height*0.10) {
         if (now - delay > 150) {
           didNotDraw = false;
-          canvas.style.top = Math.min(Math.floor((top/100))*100, 300000)-481 + 'px';
-          render();
+          var canvasTop = Math.min(Math.floor((top/(height*3)))*(height*3), 300000)-481;
+          canvas.style.top = canvasTop + 'px';
+          render(canvasTop);
         }
       } else {
         delay = new Date().getTime();
       }
 
       if (didNotDraw || top !== prev) {
-        // console.log('requesting animation frame');
         window.requestAnimFrame(didscroll);
         prev = top;
       } else {
