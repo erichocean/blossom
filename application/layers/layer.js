@@ -901,6 +901,25 @@ SC.Layer = SC.Object.extend({
     this.renderBoundsPath(context);
   },
 
+  /**
+    This method is called to determine if a given point should be considered 
+    to 'hit' the layer.
+
+    @param x {Number} x-coordinate
+    @param y {Number} y-coordinate
+    @param context {CanvasRenderingContext2D} the context to perform any hit-testing in
+  */
+  hitsPointInContext: function(x, y, context) {
+    // See if we actually hit something. Start by beginning a new path.
+    context.beginPath();
+
+    // Next, draw the path(s) we'll test.
+    this.renderHitTestPath(context);
+
+    // Finally, test the point for intersection with the path(s).
+    return context.isPointInPath(x, y);
+  },
+
   isHidden: function(key, value) {
     if (value !== undefined) {
       throw "No implementation for SC.Layer#set('isHidden', value)";

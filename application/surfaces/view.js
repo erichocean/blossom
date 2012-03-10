@@ -311,14 +311,7 @@ SC.View = SC.LeafSurface.extend({
       // higher than whatever hit has been found so far.
       var layerZ = layer.get('zIndex');
       if (!hitLayer || zIndex < layerZ) {
-        // See if we actually hit something. Start by beginning a new path.
-        context.beginPath();
-
-        // Next, draw the path(s) we'll test.
-        layer.renderHitTestPath(context);
-
-        // Finally, test the point for intersection with the path(s).
-        if (context.isPointInPath(x, y)) {
+        if (layer.hitsPointInContext(x, y, context)) {
           evt.hitPoint = SC.MakePoint(x - point[0]/*x*/, y - point[1]/*y*/);
           hitLayer = layer;
           zIndex = layerZ;
