@@ -13,12 +13,7 @@ sc_require('stress');
 sc_require('drag');
 
 function main() {
-  var stage = SC.StageSurface.create({
-    layout: { top: 20, left: 20, width: 600, height: 600 },
-    containerId: 'container'
-  });
-
-  stage.attach(); // Must currently attach *before* adding shapes.
+  var stage = SC.StageSurface.create();
 
   // BlossomTest.clipDragExample(stage);
   // BlossomTest.tooltipExample(stage);
@@ -27,4 +22,7 @@ function main() {
   // BlossomTest.colorExample(stage);
   // BlossomTest.stressExample(stage);
   // BlossomTest.dragExample(stage);
+
+  SC.Application.create();
+  SC.app.set('ui', stage);
 }

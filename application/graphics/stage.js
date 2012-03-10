@@ -33,8 +33,8 @@
  * THE SOFTWARE.
  */
 
-sc_require('surfaces/surface');
-sc_require('layers/shape_layer');
+sc_require('surfaces/view');
+sc_require('graphics/shape_layer');
 
 /** @class
 
@@ -44,7 +44,7 @@ sc_require('layers/shape_layer');
   @extends SC.Surface
   @since Blossom 1.0
 */
-SC.StageSurface = SC.Surface.extend({
+SC.StageSurface = SC.View.extend({
 
   scale: { x: 1, y: 1 },
 
@@ -149,7 +149,7 @@ SC.StageSurface = SC.Surface.extend({
     if (!pos) return; // not a mouse event...
     var pos_x = pos.x, pos_y = pos.y;
     
-    var backstageLayer = this.get('backstage');
+    var backstageLayer = this._sc_hitTestLayer;
     var backstageLayerContext = backstageLayer.get('context');
 
     backstageLayer.clear();
@@ -183,6 +183,16 @@ SC.StageSurface = SC.Surface.extend({
   //   return this.sendEvent('click', evt);
   // },
 
+  mousePosition: null,
+
+  updateMousePositionWithEvent: function(evt) {
+    var boundingRect = evt.target.getBoundingClientRect(),
+        mousePosition = this.get('mousePosition');
+
+    mousePosition.x = evt.clientX - boundingRect.left + window.pageXOffset;
+    mousePosition.y = evt.clientY - boundingRect.top + window.pageYOffset;
+  },
+
   mouseDragged: function(evt) {
     // console.log('SC.Stage#mouseDragged');
     SC.Benchmark.start("SC.Stage#mouseDragged");
@@ -213,7 +223,7 @@ SC.StageSurface = SC.Surface.extend({
     var stage = this;
     var targetShape = this.targetShape;
 
-    var backstageLayer = this.get('backstage');
+    var backstageLayer = this._sc_hitTestLayer;
     var backstageLayerContext = backstageLayer.get('context');
     
     backstageLayer.clear();
@@ -269,45 +279,37 @@ SC.StageSurface = SC.Surface.extend({
     }
   },
 
-  createLayersForContainer: function(container, width, height) {
-    this._width = width;
-    this._height = height;
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
 
     // Create a custom SC.Layer subclass with shared properties.
     var K = SC.ShapeLayer.extend({
-      container: container,
-      owner: this,
-      width: width,
-      height: height
+      layout: { top: 0, left: 0, bottom: 0, right: 0 },
+      surface: this,
+      delage: this
     });
 
     // Create the layers for this pane. The order of creation is important!
-    var buffer = K.create(),
-        backstage = K.create({ isHitTestOnly: true }),
-        layer = SC.Layer.create({ // This layer does not host shapes.
-          container: container,
-          owner: this,
-          width: width,
-          height: height
+    var layer = SC.Layer.create({ // This layer does not host shapes.
+          layout: { top: 0, left: 0, bottom: 0, right: 0 },
+          surface: this,
+          delage: this
         }),
         background = K.create(),
         props = K.create(),
         extras = K.create(),
         actors = K.create();
 
-    // The back two layers should not be shown (and backstage inhibits
-    // drawing, too).
-    buffer.__sc_element__.style.display = 'none';
-    backstage.__sc_element__.style.display = 'none';
-
     // Remember what we've done!
-    this.set('buffer', buffer);
-    this.set('backstage', backstage);
     this.set('layer', layer);
     this.set('background', background);
     this.set('props', props);
     this.set('extras', extras);
     this.set('actors', actors);
+
+    this.set('layers', [layer, background, props, extras, actors]);
+
+    this.set('mousePosition', SC.MakePoint());
   }
 
 });

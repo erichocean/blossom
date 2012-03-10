@@ -33,8 +33,8 @@
  * THE SOFTWARE.
  */
 
-sc_require('surfaces/stage');
-sc_require('layers/shape_layer');
+sc_require('graphics/stage');
+sc_require('graphics/shape_layer');
 
 SC.ACTOR = 'actors';
 SC.PROP = 'props';
