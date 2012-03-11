@@ -196,13 +196,6 @@ SC.View = SC.LeafSurface.extend({
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
-    SC.Benchmark.start(updateKey);
-    var layers = this.get('layers');
-    for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].updateDisplay();
-    }
-    SC.Benchmark.end(updateKey);
-
     var ctx = this._sc_context;
     sc_assert(ctx);
     sc_assert(document.getElementById(ctx.__sc_canvas__.id));
@@ -216,17 +209,27 @@ SC.View = SC.LeafSurface.extend({
       ctx.restore();
     }
 
-    // Draw layers.
+    // Re-cache layers that need updating.
+    SC.Benchmark.start(updateKey);
+    var layers = this.get('layers');
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].updateDisplay();
+    }
+    SC.Benchmark.end(updateKey);
+
     var scrollTranslation = this._sc_scrollTranslation;
     if (scrollTranslation) {
       ctx.save();
       ctx.translate(scrollTranslation[0]/*x*/, scrollTranslation[1]/*y*/);
     }
+
+    // Composite layers into view's canvas.
     SC.Benchmark.start(copyKey);
     for (idx=0, len=layers.length; idx<len; ++idx) {
       layers[idx].copyIntoContext(ctx);
     }
     SC.Benchmark.end(copyKey);
+
     if (scrollTranslation) ctx.restore();
 
     if (this.didRenderLayers) {
