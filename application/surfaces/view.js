@@ -117,26 +117,40 @@ SC.View = SC.LeafSurface.extend({
 
     SC.Benchmark.start(benchKey);
 
+    var hasDirtyLayer = false, idx, len,
+        layers = this.get('layers');
+
+    function checkLayer(layer) {
+      if (layer.__needsRendering__) {
+        hasDirtyLayer = true;
+        return;
+      } else {
+        var idx, len, layers = layer.get('sublayers');
+        for (idx=0, len=layers.length; idx<len; ++idx) {
+          checkLayer(layers[idx]);
+          if (hasDirtyLayer) break;
+        }
+      }
+    }
+
+    for (idx=0, len=layers.length; idx<len; ++idx) {
+      checkLayer(layers[idx]);
+      if (hasDirtyLayer) break;
+    }
+
     SC.Benchmark.start(displayKey);
     if (this.get('isPresentInViewport')) {
-      if (this.updateDisplay) this.updateDisplay();
-      this.__needsRendering__ = false;
+      if (hasDirtyLayer || this.__needsRendering__) {
+        if (this.updateDisplay) this.updateDisplay();
+        this.__needsRendering__ = false;
+      }
     } // else leave it set to true, we'll update it when it again becomes
       // visible in the viewport
     SC.Benchmark.end(displayKey);
 
     SC.Benchmark.end(benchKey);
-
-    // This code is technically only needed for composite surfaces, but for
-    // performance and code reuse, we fold the implementation into here
-    // instead of calling `arguments.callee.base.apply(this, arguments)` in
-    // `SC.CompositeSurface`.
-    var subsurfaces = this.get('subsurfaces');
-    if (subsurfaces === null) return;
-    for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
-      subsurfaces[idx].performRenderingIfNeeded(timestamp);
-    }
   },
+
   triggerLayoutAndRendering: function() {
     // console.log('SC.View#triggerLayoutAndRendering()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
