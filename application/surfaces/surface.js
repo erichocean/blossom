@@ -481,7 +481,8 @@ SC.Surface = SC.Responder.extend({
     SC.needsLayout = true;
   },
 
-  __needsRendering__: false,
+  // __needsRendering__: false,
+  __sc_needsRendering__: false,
   triggerRendering: function() {
     // console.log('SC.Surface#triggerRendering()');
     this.__needsRendering__ = true;
@@ -1208,6 +1209,15 @@ SC.Surface.styleProperties.forEach(function(key) {
     // Need to drop the '_sc_' in front.
     SC.Surface.cssProperties.push(key.slice(4).dasherize());
   }
+});
+
+SC.Surface.prototype.__defineGetter__('__needsRendering__', function() {
+  return this.__sc_needsRendering__;
+});
+
+SC.Surface.prototype.__defineSetter__('__needsRendering__', function(value) {
+  this.__sc_needsRendering__ = value;
+  // console.log('SC.Surface@__needsRendering__ did change to', value, SC.guidFor(this));
 });
 
 } // BLOSSOM
