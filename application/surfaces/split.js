@@ -291,34 +291,41 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     }
     topLeftSurface.set('frame', layout);
 
-    // FIXME: size divider layer correctly
-    var dividerSurface = this._sc_dividerSurface;
-    layout.set(SC.ZERO_RECT);
+    if (dividerThickness > 0) {
+      var dividerSurface = this._sc_dividerSurface;
+      if (!dividerSurface) {
+        dividerSurface = this.addDividerSurface();
+      }
+      layout.set(SC.ZERO_RECT);
 
-    if (direction === SC.LAYOUT_HORIZONTAL) {
-      layout[2]/*width*/ = dividerThickness;
-      layout[3]/*height*/ = frame[3]/*height*/;
-      switch (autoresizeBehavior) {
-        case SC.RESIZE_TOP_LEFT:
-          layout[0]/*x*/ = frame[2]/*width*/ - bottomRightThickness;
-          break;
-        case SC.RESIZE_BOTTOM_RIGHT:
-          layout[0]/*x*/ = topLeftThickness;
-          break;
+      if (direction === SC.LAYOUT_HORIZONTAL) {
+        layout[2]/*width*/ = dividerThickness;
+        layout[3]/*height*/ = frame[3]/*height*/;
+        switch (autoresizeBehavior) {
+          case SC.RESIZE_TOP_LEFT:
+            layout[0]/*x*/ = frame[2]/*width*/ - bottomRightThickness;
+            break;
+          case SC.RESIZE_BOTTOM_RIGHT:
+            layout[0]/*x*/ = topLeftThickness;
+            break;
+        }
+      } else {
+        layout[2]/*width*/ = frame[2]/*width*/;
+        layout[3]/*height*/ = dividerThickness;
+        switch (autoresizeBehavior) {
+          case SC.RESIZE_TOP_LEFT:
+            layout[1]/*y*/ = frame[3]/*height*/ - bottomRightThickness;
+            break;
+          case SC.RESIZE_BOTTOM_RIGHT:
+            layout[1]/*y*/ = topLeftThickness;
+            break;
+        }
       }
-    } else {
-      layout[2]/*width*/ = frame[2]/*width*/;
-      layout[3]/*height*/ = dividerThickness;
-      switch (autoresizeBehavior) {
-        case SC.RESIZE_TOP_LEFT:
-          layout[1]/*y*/ = frame[3]/*height*/ - bottomRightThickness;
-          break;
-        case SC.RESIZE_BOTTOM_RIGHT:
-          layout[1]/*y*/ = topLeftThickness;
-          break;
-      }
+      dividerSurface.set('frame', layout);
+
+    } else if (this._sc_dividerSurface) {
+      this.removeDividerSurface();
     }
-    dividerSurface.set('frame', layout);
 
     // bottom/right surface
     isCollapsed = bottomRightSurface.get('isCollapsed') || false;
@@ -371,12 +378,14 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     if (bottomRightSurface) bottomRightSurface.updateDisplay();
 
     var ctx = this._sc_dividerContext;
-    sc_assert(ctx);
-    sc_assert(document.getElementById(ctx.__sc_canvas__.id));
+    // Can be null when our dividerSurface has zero thickness.
+    if (ctx) {
+      sc_assert(document.getElementById(ctx.__sc_canvas__.id));
 
-    ctx.save();
-    this.renderDivider(ctx);
-    ctx.restore();
+      ctx.save();
+      this.renderDivider(ctx);
+      ctx.restore();
+    }
   },
 
   renderDivider: function(ctx) {
@@ -719,13 +728,9 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
     return proposedThickness;
   },
 
-  init: function() {
-    var dividerSurface;
-    arguments.callee.base.apply(this, arguments);
-    this._sc_topLeftSurfaceDidChange();
-    this._sc_bottomRightSurfaceDidChange();
+  addDividerSurface: function() {
+    var that = this, dividerSurface;
 
-    var that = this;
     dividerSurface = this._sc_dividerSurface = SC.LeafSurface.create({
       __tagName__: 'canvas',
       __useContentSize__: true, // we need our width and height attributes set,
@@ -745,7 +750,25 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
         return this.get('supersurface').mouseDown(evt);
       }
     });
+
     this.get('subsurfaces').pushObject(dividerSurface);
+    return dividerSurface;
+  },
+
+  removeDividerSurface: function() {
+    var dividerSurface = this._sc_dividerSurface;
+    if (dividerSurface) {
+      this.get('subsurfaces').removeObject(dividerSurface);
+      this._sc_dividerSurface = null;
+      this._sc_dividerContext = null;
+    }
+  },
+
+  init: function() {
+    var dividerSurface;
+    arguments.callee.base.apply(this, arguments);
+    this._sc_topLeftSurfaceDidChange();
+    this._sc_bottomRightSurfaceDidChange();
   }
 
 });
