@@ -93,8 +93,8 @@ SC.ScrollView = SC.View.extend({
 
     arguments.callee.base.apply(this, arguments);
 
-    // Our layers have been been update.  Calculate the union of the the AABB 
-    // of all their frames in our own coordinate system.
+    // Our layers have been been updated.  Calculate the union of the the 
+    // AABB of all their frames in our own coordinate system.
     var frame = SC.MakeRect(this.get('frame')),
         extent = SC.MakeRect(frame);
 
