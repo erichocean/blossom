@@ -16,6 +16,7 @@ var project = BT.Project.create({
     "view_demo": require('./examples/view_demo'),
     "splitsurface_demo": require('./examples/splitsurface_demo'),
     "surface_test": require('./examples/surface_test'),
+    "scroll_demo": require('./examples/scroll_demo'),
     "constraints_demo": require('./examples/constraints_demo'),
     "bindings_demo": require('./examples/bindings_demo'),
     "psurfaces_test": require('./examples/psurfaces_test'),
