@@ -5,8 +5,6 @@
 // ==========================================================================
 /*globals BLOSSOM DEBUG_PSURFACES sc_assert */
 
-if (BLOSSOM) {
-
 SC.ptransitionAnimations = {};
 
 SC.webkitProperties = {
@@ -40,5 +38,3 @@ SC.PTransitionAnimation = function(key, value, duration, delay, timingFunction) 
 
   return this;
 };
-
-} // BLOSSOM

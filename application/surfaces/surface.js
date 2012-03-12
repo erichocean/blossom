@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('system/responder');
 sc_require('layers/layer');
@@ -11,8 +11,6 @@ sc_require('layers/layout');
 sc_require('surfaces/private/psurface');
 sc_require('surfaces/private/ptransition_animation');
 sc_require('animations/transition');
-
-if (BLOSSOM) {
 
 SC.surfaceTransitions = {};
 // SC.surfaceAnimations  = {};
@@ -1219,5 +1217,3 @@ SC.Surface.prototype.__defineSetter__('__needsRendering__', function(value) {
   this.__sc_needsRendering__ = value;
   // console.log('SC.Surface@__needsRendering__ did change to', value, SC.guidFor(this));
 });
-
-} // BLOSSOM

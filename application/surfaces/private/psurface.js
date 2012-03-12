@@ -7,8 +7,6 @@
 
 sc_require('surfaces/private/ptransition_animation');
 
-if (BLOSSOM) {
-
 SC.ENABLE_CSS_TRANSITIONS = true;
 
 SC.psurfaces = {};
@@ -1017,5 +1015,3 @@ SC.Psurface.sharedStyleSheet = function() {
   ss = this.prototype.sharedStyleSheet = document.styleSheets[document.styleSheets.length-1];
   return ss;
 };
-
-} // BLOSSOM

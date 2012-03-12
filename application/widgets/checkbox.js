@@ -3,7 +3,7 @@
 // Copyleft: ©2012 Fohr Motion Picture Studios. All lefts reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('widgets/button');
 

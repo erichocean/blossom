@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 // Create anonymous subclass of SC.RunLoop to add support for processing 
 // view queues and Timers.
@@ -20,10 +20,8 @@ SC.RunLoop = SC.RunLoop.extend(
   beginRunLoop: function() {
     SC.Benchmark.start(runLoopBenchKey);
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
-    if (BLOSSOM) {
-      // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
-      SC.AnimationTransaction.begin();
-    }
+    // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
+    SC.AnimationTransaction.begin();
     return ret;
   },
   
@@ -51,17 +49,17 @@ SC.RunLoop = SC.RunLoop.extend(
     this.fireExpiredTimers(); // fire them timers!
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     this.scheduleNextTimeout(); // schedule a timout if timers remain
-    // if (BLOSSOM) SC.ScheduleLayoutAndRendering();
-    if (BLOSSOM) {
-      // Test SC.viewportSizeDidChange last since it's true less often.
-      if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange || SC.surfacesHashNeedsUpdate) {
-        if (SC.app) SC.app.performLayoutAndRendering(this.get('startTime'));
-      }
+
+    // SC.ScheduleLayoutAndRendering();
+
+    // Test SC.viewportSizeDidChange last since it's true less often.
+    if (SC.needsLayout || SC.needsRendering || SC.viewportSizeDidChange || SC.surfacesHashNeedsUpdate) {
+      if (SC.app) SC.app.performLayoutAndRendering(this.get('startTime'));
     }
-    if (BLOSSOM) {
-      SC.AnimationTransaction.end();
-      // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
-    }
+
+    SC.AnimationTransaction.end();
+    // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
+
     SC.Benchmark.end(runLoopBenchKey);
     return ret; 
   },
@@ -189,8 +187,6 @@ SC.RunLoop = SC.RunLoop.extend(
 
 SC.RunLoop.currentRunLoop = SC.RunLoop.create();
 
-if (BLOSSOM) {
-
 /** @private
   Based on global flags, determines if a layout and rendering loop should 
   be called. This is substantially faster than repeatedly requesting a 
@@ -221,5 +217,3 @@ SC.ScheduleLayoutAndRendering = function closure() {
     }
   };
 }();
-
-} // BLOSSOM

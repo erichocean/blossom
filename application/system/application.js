@@ -8,14 +8,14 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
-sc_require('mixins/responder_context');
 sc_require('ext/float32');
 sc_require('surfaces/surface');
 sc_require('surfaces/container');
 
-if (BLOSSOM) {
+/** Set to false to leave the backspace key under the control of the browser.*/
+SC.CAPTURE_BACKSPACE_KEY = false ;
 
 SC.needsLayout = false;
 SC.needsRendering = false;
@@ -1584,38 +1584,3 @@ SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
 
 SC.surfacesHashNeedsUpdate = true;
 SC.surfaces = null;
-
-} // BLOSSOM
-
-if (! BLOSSOM) {
-
-/** @class
-
-  The root object for a SproutCore application.  Usually you will create a 
-  single SC.Application instance as your root namespace.  SC.Application is
-  required if you intend to use SC.Responder to route events.
-  
-  h2. Example
-  
-  {{{
-    Contacts = SC.Application.create({
-      store: SC.Store.create(SC.Record.fixtures),
-      
-      // add other useful properties here
-    });
-  }}}
-
-  h2. Sending Events
-  
-  You can send actions and events down an application-level responder chain
-  by 
-  
-  @extends SC.ResponderContext
-  @since SproutCore 1.0
-*/
-SC.Application = SC.Responder.extend(SC.ResponderContext,
-/** SC.Application.prototype */ {
-
-});
-
-} // ! BLOSSOM

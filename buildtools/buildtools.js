@@ -596,7 +596,6 @@ BT.App = BT.Target.extend({
   // Configuration options.
   title: 'Blossom',
 
-  BLOSSOM: true,
   FAST_LAYOUT_FUNCTION: false,
   BENCHMARK_LAYOUT_FUNCTION: true,
   ENFORCE_BLOSSOM_2DCONTEXT_API: true,
@@ -631,7 +630,6 @@ BT.App = BT.Target.extend({
     ret += '    <title>%@</title>\n'.fmt(this.get('title'));
 
     ret += '    <script>\n';
-    ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
     ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.FAST_LAYOUT_FUNCTION);
     ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BENCHMARK_LAYOUT_FUNCTION);
     ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.ENFORCE_BLOSSOM_2DCONTEXT_API);
@@ -686,7 +684,6 @@ BT.App = BT.Target.extend({
     ret += '    <title>%@</title>\n'.fmt(this.get('title'));
 
     ret += '    <script>\n';
-    ret += '      var BLOSSOM = %@;\n'.fmt(this.BLOSSOM);
     ret += '      var FAST_LAYOUT_FUNCTION = %@;\n'.fmt(this.FAST_LAYOUT_FUNCTION);
     ret += '      var BENCHMARK_LAYOUT_FUNCTION = %@;\n'.fmt(this.BENCHMARK_LAYOUT_FUNCTION);
     ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.ENFORCE_BLOSSOM_2DCONTEXT_API);

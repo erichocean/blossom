@@ -6,7 +6,7 @@
 // Most of this code was taken from SproutCore's SC.ButtonView class, which
 // has an MIT license.
 // ==========================================================================
-/*globals ViewDemo BLOSSOM */
+/*globals ViewDemo */
 
 /*jslint evil:true */
 
@@ -405,11 +405,6 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._isFocused = true ;
       this.becomeFirstResponder();
-      // if (this.get('isVisibleInWindow')) {
-      //   if (! BLOSSOM) {
-      //     this.$()[0].focus();
-      //   }
-      // }
     }
 
     return true ;
@@ -444,14 +439,8 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     this._isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (BLOSSOM) {
-        inside = true;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // BLOSSOM
-      if (! BLOSSOM) {
-        inside = this.$().within(evt.target) ;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // ! BLOSSOM
+      inside = true;
+      if (inside && this.get('isEnabled')) this._action(evt) ;
     }
 
     return true ;
@@ -468,11 +457,6 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._isFocused = true ;
       this.becomeFirstResponder();
-      if (! BLOSSOM) {
-        if (this.get('isVisibleInWindow')) {
-          this.$()[0].focus();
-        }
-      }
     }
   
     // don't want to do whatever default is...
