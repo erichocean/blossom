@@ -6,7 +6,7 @@
 // Most of this code was taken from SproutCore's SC.ButtonView class, which
 // has an MIT license.
 // ==========================================================================
-/*globals ViewDemo BLOSSOM */
+/*globals ViewDemo */
 
 /*jslint evil:true */
 
@@ -439,10 +439,8 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     this._isMouseDown = false;
 
     if (this.get('buttonBehavior') !== SC.HOLD_BEHAVIOR) {
-      if (BLOSSOM) {
-        inside = true;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // BLOSSOM
+      inside = true;
+      if (inside && this.get('isEnabled')) this._action(evt) ;
     }
 
     return true ;

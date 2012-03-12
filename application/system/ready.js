@@ -8,12 +8,10 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*global BLOSSOM main sc_assert */
+/*global main sc_assert */
 
 sc_require('system/browser');
 sc_require('system/event');
-
-if (BLOSSOM) {
 
 SC.mixin({
   _sc_isReadyBound: false,
@@ -92,8 +90,6 @@ SC.mixin({
   }
 
 });
-
-} // BLOSSOM
 
 SC._sc_bindReady();
 SC.removeLoading = true;

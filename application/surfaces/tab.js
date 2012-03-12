@@ -3,12 +3,10 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('surfaces/container');
 sc_require('surfaces/view');
-
-if (BLOSSOM) {
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -276,5 +274,3 @@ SC.TabSurface = SC.ContainerSurface.extend({
   }
 
 });
-
-} // BLOSSOM

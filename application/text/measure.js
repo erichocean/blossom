@@ -3,9 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
-
-if (BLOSSOM) {
+/*globals sc_assert */
 
 SC.MeasureText = function(font, str) {
   var ctx = this._sc_measureTextContext;
@@ -24,5 +22,3 @@ SC.MeasureText = function(font, str) {
   ctx.font = font;
   return ctx.measureText(str);
 };
-
-} // BLOSSOM

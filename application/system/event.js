@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('system/browser');
 
@@ -33,8 +33,6 @@ SC.PRINTABLE_KEYS = {
   88:"x", 89:"y", 90:"z", 107:"+", 109:"-", 110:".", 188:",", 190:".",
   191:"/", 192:"`", 219:"[", 220:"\\", 221:"]", 222:"\""
 } ;
-
-if (BLOSSOM) {
 
 /**
   The event class provides a simple cross-platform event class that is the 
@@ -710,5 +708,3 @@ SC.Event.prototype = {
   }
 
 } ;
-
-} // BLOSSOM

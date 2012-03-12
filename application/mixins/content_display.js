@@ -102,24 +102,18 @@ SC.ContentDisplay = {
     content = this._sc_displayContent = value;
     if (content) this._sc_displayBeginObservingContent(content);
 
-    if (BLOSSOM) {
-      this.triggerRendering();
-    }
+    this.triggerRendering();
   }.observes('content', 'contentDisplayProperties'),
 
   /** @private Invoked when properties on the content object change. */
   _sc_displayContentPropertyDidChange: function(target, key, value, propertyRevision) {
     if (key === '*') {
-      if (BLOSSOM) {
-        this.triggerRendering();
-      }
+      this.triggerRendering();
     } else {
       // only update if a displayProperty actually changed...s
       var ary = this.get('contentDisplayProperties') ;
       if (ary && ary.indexOf(key)>=0) {
-        if (BLOSSOM) {
-          this.triggerRendering();
-        }
+        this.triggerRendering();
       }
     }
   }

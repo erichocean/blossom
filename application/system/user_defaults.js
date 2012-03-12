@@ -8,11 +8,9 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM ie7userdata openDatabase*/
+/*globals ie7userdata openDatabase*/
 
 sc_require('system/browser');
-
-if (BLOSSOM) {
 
 /**
   @class
@@ -263,8 +261,6 @@ SC.UserDefaults = SC.Object.extend(
   }.observes('ready')
 
 });
-
-} // BLOSSOM
 
 /** global user defaults. */
 SC.userDefaults = SC.UserDefaults.create();

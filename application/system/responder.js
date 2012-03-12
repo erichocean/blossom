@@ -8,7 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 /** @class
 
@@ -31,8 +31,6 @@ SC.Responder = SC.Object.extend( /** SC.Responder.prototype */ {
   acceptsFirstResponder: true
 
 });
-
-if (BLOSSOM) {
 
 SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
 
@@ -103,5 +101,3 @@ SC.Responder = SC.Responder.extend( /** SC.Responder.prototype */ {
   }
 
 });
-
-} // BLOSSOM

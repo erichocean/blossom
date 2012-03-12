@@ -8,9 +8,7 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
-
-if (BLOSSOM) {
+/*globals sc_assert */
 
 SC.TextSelection = function(start, end) {
   this.start = start;
@@ -36,5 +34,3 @@ SC.TextSelection.prototype.__defineGetter__('isValid', function() {
     return true;
   } else return false;
 });
-
-} // BLOSSOM

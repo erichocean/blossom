@@ -6,15 +6,11 @@
 // ==========================================================================
 /*globals BLOSSOM */
 
-if (BLOSSOM) {
-
 SC.TOGGLE_BEHAVIOR = 'toggle';
 SC.PUSH_BEHAVIOR =   'push';
 SC.TOGGLE_ON_BEHAVIOR = 'on';
 SC.TOGGLE_OFF_BEHAVIOR = 'off';
 SC.HOLD_BEHAVIOR = 'hold';
-
-} // BLOSSOM
 
 /** @namespace
 

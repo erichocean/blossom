@@ -8,13 +8,11 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('ext/float32');
 sc_require('surfaces/surface');
 sc_require('surfaces/container');
-
-if (BLOSSOM) {
 
 /** Set to false to leave the backspace key under the control of the browser.*/
 SC.CAPTURE_BACKSPACE_KEY = false ;
@@ -1586,5 +1584,3 @@ SC.Application.TRANSIENT_SURFACES = 'menuSurface inputSurface'.w();
 
 SC.surfacesHashNeedsUpdate = true;
 SC.surfaces = null;
-
-} // BLOSSOM

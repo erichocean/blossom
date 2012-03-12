@@ -3,13 +3,11 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert BLOSSOM formatter linebreak */
+/*globals sc_assert formatter linebreak */
 
 sc_require('layers/layer');
 sc_require('text/linebreak');
 sc_require('text/formatter');
-
-if (BLOSSOM) {
 
 var base3 =  "#fdf6e3";
 var base03 = "#002b36";
@@ -167,6 +165,3 @@ SC.TextLayer = SC.Layer.extend({
   }
 
 });
-
-} // BLOSSOM
-

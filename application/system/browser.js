@@ -8,9 +8,6 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM */
-
-if (BLOSSOM) {
 
 SC.isMozilla = function() {
   var isMozilla = this._sc_isMozilla, userAgent;
@@ -20,5 +17,3 @@ SC.isMozilla = function() {
   }
   return isMozilla;
 };
-
-} // BLOSSOM
