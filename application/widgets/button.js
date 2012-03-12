@@ -407,11 +407,6 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     } else if (!this._sc_isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._sc_isFocused = true ;
       this.becomeFirstResponder();
-      // if (this.get('isVisibleInWindow')) {
-      //   if (! BLOSSOM) {
-      //     this.$()[0].focus();
-      //   }
-      // }
     }
 
     return true ;

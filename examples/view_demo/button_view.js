@@ -405,11 +405,6 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._isFocused = true ;
       this.becomeFirstResponder();
-      // if (this.get('isVisibleInWindow')) {
-      //   if (! BLOSSOM) {
-      //     this.$()[0].focus();
-      //   }
-      // }
     }
 
     return true ;
@@ -448,10 +443,6 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
         inside = true;
         if (inside && this.get('isEnabled')) this._action(evt) ;
       } // BLOSSOM
-      if (! BLOSSOM) {
-        inside = this.$().within(evt.target) ;
-        if (inside && this.get('isEnabled')) this._action(evt) ;
-      } // ! BLOSSOM
     }
 
     return true ;
@@ -468,11 +459,6 @@ ViewDemo.ButtonView = SC.View.extend(SC.Control, SC.Button, {
     } else if (!this._isFocused && (buttonBehavior!==SC.PUSH_BEHAVIOR)) {
       this._isFocused = true ;
       this.becomeFirstResponder();
-      if (! BLOSSOM) {
-        if (this.get('isVisibleInWindow')) {
-          this.$()[0].focus();
-        }
-      }
     }
   
     // don't want to do whatever default is...

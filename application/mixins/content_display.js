@@ -105,9 +105,6 @@ SC.ContentDisplay = {
     if (BLOSSOM) {
       this.triggerRendering();
     }
-    if (! BLOSSOM) {
-      this.displayDidChange();
-    }
   }.observes('content', 'contentDisplayProperties'),
 
   /** @private Invoked when properties on the content object change. */
@@ -116,18 +113,12 @@ SC.ContentDisplay = {
       if (BLOSSOM) {
         this.triggerRendering();
       }
-      if (! BLOSSOM) {
-        this.displayDidChange();
-      }
     } else {
       // only update if a displayProperty actually changed...s
       var ary = this.get('contentDisplayProperties') ;
       if (ary && ary.indexOf(key)>=0) {
         if (BLOSSOM) {
           this.triggerRendering();
-        }
-        if (! BLOSSOM) {
-          this.displayDidChange();
         }
       }
     }
