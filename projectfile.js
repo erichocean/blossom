@@ -27,13 +27,7 @@ var project = BT.Project.create({
       sourceTree: path.join(__dirname, "examples/blossom-latest")
     }),
 
-    "sproutcore": require('./node/buildfile'),
-
-    // no sc_static() support yet, so give our image a nice and easy path
-    "sc-theme-repeat-x.png": BT.File.create({
-      sourcePath: path.join(__dirname, "application/resources/classic/images/sc-theme-repeat-x.png"),
-      mimeType: 'image/png'
-    })
+    "sproutcore": require('./node/buildfile')
   })
 });
 
