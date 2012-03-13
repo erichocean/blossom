@@ -8,6 +8,6 @@
 var path = require('path');
 
 module.exports = BT.App.create({
-  frameworks: 'sproutcore'.w(),
+  frameworks: 'blossom'.w(),
   sourceTree: path.join(__dirname, "..")
 });
