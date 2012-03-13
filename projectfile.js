@@ -23,11 +23,11 @@ var project = BT.Project.create({
 
     // A one-off app target that results in just the code for blossom.
     "blossom-latest": BT.App.create({
-      frameworks: 'sproutcore'.w(),
+      frameworks: 'blossom'.w(),
       sourceTree: path.join(__dirname, "examples/blossom-latest")
     }),
 
-    "sproutcore": require('./node/buildfile')
+    "blossom": require('./node/buildfile')
   })
 });
 
