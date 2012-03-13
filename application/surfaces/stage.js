@@ -3,7 +3,6 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM */
 
 // Blossom's SC.StageSurface class was heavily inspired by KineticJS.
 /**
@@ -36,8 +35,6 @@
 
 sc_require('surfaces/surface');
 sc_require('layers/shape_layer');
-
-if (BLOSSOM) {
 
 /** @class
 
@@ -314,5 +311,3 @@ SC.StageSurface = SC.Surface.extend({
   }
 
 });
-
-} // BLOSSOM

@@ -3,11 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('animations/animation');
-
-if (BLOSSOM) {
 
 SC.TransitionAnimation = SC.Animation.extend({
 
@@ -71,5 +69,3 @@ SC.TimingFunction = {
   }
 
 };
-
-} // BLOSSOM

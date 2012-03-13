@@ -3,9 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
-
-if (BLOSSOM) {
+/*globals sc_assert */
 
 SC.Animation = SC.Object.extend({
 
@@ -25,5 +23,3 @@ SC.Animation = SC.Object.extend({
   }
 
 });
-
-} // BLOSSOM

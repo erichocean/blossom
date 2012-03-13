@@ -4,7 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-/*global BLOSSOM sc_assert */
+/*global sc_assert */
 
 /**
   If set to false, then pressing backspace will NOT navigate to the previous 
@@ -45,8 +45,6 @@ SC.mixin(SC,
 // 
 
 SC.DEFAULT_TREE = 'default';
-
-if (BLOSSOM) {
 
 SC.RequestAnimationFrame = function(callback) {
   // console.log('SC.RequestAnimationFrame()');
@@ -153,5 +151,3 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
     return ret ; 
   };
 };
-
-} // BLOSSOM

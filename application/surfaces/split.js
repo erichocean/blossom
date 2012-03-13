@@ -3,13 +3,11 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
+/*globals sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
 
 sc_require('surfaces/composite');
 sc_require('surfaces/view');
 sc_require('layers/layer');
-
-if (BLOSSOM) {
 
 SC.LAYOUT_HORIZONTAL = 'sc-layout-horizontal';
 SC.LAYOUT_VERTICAL = 'sc-layout-vertical';
@@ -772,6 +770,3 @@ SC.SplitSurface = SC.CompositeSurface.extend(SC.DelegateSupport,
   }
 
 });
-
-} // BLOSSOM
-

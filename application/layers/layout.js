@@ -3,11 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert BLOSSOM */
+/*globals sc_assert */
 
 sc_require('layers/layer');
-
-if (BLOSSOM) {
 
 SC.Layer.LAYOUT_X_PROPERTIES = 'left right centerX width'.w();
 SC.Layer.LAYOUT_Y_PROPERTIES = 'top bottom centerY height'.w();
@@ -546,5 +544,3 @@ SC.Layer.prototype.updateLayoutRules = function() {
   this._sc_layoutFunction = SC.GetLayoutFunction(hmode, vmode, hmax, vmax, layoutMode);
   SC.Benchmark.end("SC.Layer#updateLayoutRules");
 };
-
-} // BLOSSOM

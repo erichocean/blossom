@@ -3,11 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('surfaces/surface');
-
-if (BLOSSOM) {
 
 SC.LeafSurface = SC.Surface.extend(
   /** @scope SC.LeafSurface.prototype */ {
@@ -23,5 +21,3 @@ SC.LeafSurface = SC.Surface.extend(
   }.observes('subsurfaces')
 
 });
-
-} // BLOSSOM

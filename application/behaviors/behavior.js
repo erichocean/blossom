@@ -3,11 +3,8 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM */
 
 sc_require('system/responder') ;
-
-if (BLOSSOM) {
 
 /** @class
   Base class for layer behavior.  Behaviors provide two functions:
@@ -49,5 +46,3 @@ SC.Behavior = SC.Responder.extend({
   state: null // a String, maps to a hash
 
 });
-
-} // BLOSSOM

@@ -3,9 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM ArrayBuffer Float32Array sc_assert */
-
-if (BLOSSOM) {
+/*globals ArrayBuffer Float32Array sc_assert */
 
 // offset is in floats, numElements is in floats
 var sc_assert_valid_float32_buffer = function(buffer, offset, numElements) {
@@ -1012,5 +1010,3 @@ Float32Array.prototype.__defineSetter__('ty', function(val) {
   var owner = this.owner;
   if (owner) owner.structureDidChange(this, this.keyName, 'ty', old, val);
 });
-
-} // BLOSSOM

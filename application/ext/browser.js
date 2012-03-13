@@ -3,10 +3,8 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert CanvasRenderingContext2D HTMLCanvasElement 
+/*globals sc_assert CanvasRenderingContext2D HTMLCanvasElement 
   ENFORCE_BLOSSOM_2DCONTEXT_API */
-
-if (BLOSSOM) {
 
 var ENFORCE_BLOSSOM_2DCONTEXT_API = true; // removes context.canvas and context.drawImage()
 
@@ -52,5 +50,3 @@ CanvasRenderingContext2D.prototype.drawLayer = function(layer, sx, sy, sw, sh, d
     default: return this._sc_drawImage(el, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 };
-
-} // BLOSSOM

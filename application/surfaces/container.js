@@ -3,11 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('surfaces/composite');
-
-if (BLOSSOM) {
 
 SC.ENTER_LEFT      = 'enter-left';
 SC.SLIDE_FLIP_LEFT = 'slide-flip-left';
@@ -204,5 +202,3 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
   }
 
 });
-
-} // BLOSSOM

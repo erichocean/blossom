@@ -36,8 +36,6 @@
 
 sc_require('layers/layer');
 
-if (BLOSSOM) {
-
 SC.ShapeLayer = SC.Layer.extend({
 
   shapes: [],
@@ -95,5 +93,3 @@ SC.ShapeLayer = SC.Layer.extend({
   }
 
 });
-
-} // BLOSSOM

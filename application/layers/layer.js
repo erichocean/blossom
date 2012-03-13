@@ -3,14 +3,12 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM CanvasRenderingContext2D HTMLCanvasElement
+/*globals CanvasRenderingContext2D HTMLCanvasElement
   ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
 
 sc_require('system/matrix');
 sc_require('ext/browser');
 sc_require('ext/float32');
-
-if (BLOSSOM) {
 
 SC.Layer = SC.Object.extend({
 
@@ -984,5 +982,3 @@ SC.Layer.computeLayerTransformTo = function(fromLayer, toLayer, dest) {
     SC.AffineTransformConcatTo(dest, layer._sc_transformFromSuperlayerToLayer, dest);
   }
 };
-
-} // BLOSSOM

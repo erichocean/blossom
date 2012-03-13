@@ -3,11 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM sc_assert */
+/*globals sc_assert */
 
 sc_require('surfaces/leaf');
-
-if (BLOSSOM) {
 
 SC.FieldEditor = SC.Responder.extend({
 
@@ -240,5 +238,3 @@ SC.ready(function() {
   SC.passwordEditor = SC.FieldEditor.create({ isPassword: true });
   SC.disablePasswordEditor = SC.FieldEditor.create({ isEnabled: false, isPassword: true });
 });
-
-} // BLOSSOM
