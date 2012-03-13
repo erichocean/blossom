@@ -20,9 +20,6 @@ var project = BT.Project.create({
     "bindings_demo": require('./examples/bindings_demo'),
     "psurfaces_test": require('./examples/psurfaces_test'),
     "text_demo": require('./examples/text_demo'),
-    // "stage_test": require('./examples/stage_test'),
-    // "bullet_test": require('./examples/bullet_test'),
-    // "box2d_test": require('./examples/box2d_test'),
 
     // A one-off app target that results in just the code for blossom.
     "blossom-latest": BT.App.create({
