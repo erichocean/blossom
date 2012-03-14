@@ -25,17 +25,10 @@ SC.Layer = SC.Object.extend({
     invalidate the display.  The display will be automatically invalidated
     when one of these properties change.
 
-    Implementation note:  `isVisible` is also effectively a display property,
-    but it is not declared as such because the same effect is implemented
-    inside `_sc_isVisibleDidChange()`.  This avoids having two observers on
-    `isVisible`, which is:
-      a.  More efficient
-      b.  More correct, because we can guarantee the order of operations
-
     @property {Array}
     @readOnly
   */
-  displayProperties: ['foo', 'bar', 'baz'],
+  displayProperties: ['isVisible'],
 
   view: function() {
     var view = this.get('view'),
@@ -145,6 +138,7 @@ SC.Layer = SC.Object.extend({
   render: function(ctx) {},
 
   copyIntoContext: function(ctx) {
+    if (!this.get('isVisible')) return;
     // console.log('SC.Layer#copyIntoContext()', SC.guidFor(this));
     var t = this._sc_transformFromSuperlayerToLayer;
 

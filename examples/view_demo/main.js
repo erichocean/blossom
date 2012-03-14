@@ -110,6 +110,13 @@ function main() {
   });
   surface.get('layers').pushObject(blueLayer);
 
+  surface.get('layers').pushObject(MyLayer.create({
+    layout: { centerX: 20, centerY: 20, width: 600, height: 480 },
+    color: green,
+    isVisible: false,
+    tag: 2
+  }));
+
   SC.Application.create();
   SC.app.set('ui', surface);
 }
