@@ -145,6 +145,7 @@ SC.Layer = SC.Object.extend({
   render: function(ctx) {},
 
   copyIntoContext: function(ctx) {
+    if (!this.get('isVisible')) return;
     // console.log('SC.Layer#copyIntoContext()', SC.guidFor(this));
     var t = this._sc_transformFromSuperlayerToLayer;
 
