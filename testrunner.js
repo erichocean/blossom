@@ -18,7 +18,6 @@ var jsFiles = datastore.get('orderedJavaScriptFiles').map(function(file) {
 
 global.SC = global.SproutCore; // Already loaded by the buildtools
 // global.SproutCore = SC;
-// global.BLOSSOM = true;
 // global.FAST_LAYOUT_FUNCTION = false;
 global.YES = true;
 global.NO = false;

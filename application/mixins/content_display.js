@@ -8,7 +8,6 @@
 //            Code within if (BLOSSOM) {} sections is under GPLv3 license
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals BLOSSOM */
 
 /**
   @namespace
