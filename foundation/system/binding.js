@@ -370,13 +370,16 @@ SC.Binding = {
     @returns {SC.Binding} this
   */
   connect: function() {
-    // If the binding is already connected, do nothing.
-    if (this.isConnected) return this ;
-    this.isConnected = true ;
-    this._connectionPending = true ; // its connected but not really...    
-    this._syncOnConnect = true ;
-    SC.Binding._connectQueue.add(this) ;
-    return this; 
+    if (this.isConnected) return this;
+
+    this.isConnected = true;
+    this._connectionPending = true; // It's connected, but not really...
+    this._syncOnConnect = true;
+
+    if (this.noDelay) this._connect();
+    else SC.Binding._connectQueue.add(this) ;
+
+    return this;
   },
   
   /** @private
