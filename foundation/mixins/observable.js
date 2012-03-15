@@ -815,12 +815,14 @@ SC.Observable = {
     @returns {Object} this
   */
   initObservable: function() {
-    if (this._observableInited) return ;
-    this._observableInited = true ;
-    
+    if (this._observableInited) return;
+    this._observableInited = true;
+
+    this._kvo_cache = {};
+
     var loc, keys, key, value, observer, propertyPaths, propertyPathsLength,
         len, ploc, path, dotIndex, root, propertyKey, keysLen;
-    
+
     // Loop through observer functions and register them
     if (keys = this._observers) {
       len = keys.length ;
@@ -887,8 +889,6 @@ SC.Observable = {
         }
       }
     }
-
-    this._kvo_cache = {};
   },
   
   // ..........................................
