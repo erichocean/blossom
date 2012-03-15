@@ -165,22 +165,6 @@ test("calling storeDidChangeStoreKeys() with a matching recordType should not un
   equals(fooRecsController.get('bigCost'), false, 'fooRecsController should not have spent big cost');
 });
 
-// test("adding an array observer to a SC.RecordArray should cause the array to flush", function() {
-//   var callCount = 0;
-// 
-//   recs.addArrayObservers({
-//     didChange: function() {
-//       callCount++;
-//     },
-// 
-//     willChange: function() { }
-//   });
-// 
-//   recs.get('length');
-// 
-//   equals(callCount, 0, "does not cause array observers to be fired when getting length");
-// });
-
 
 // ..........................................................
 // SPECIAL CASES
