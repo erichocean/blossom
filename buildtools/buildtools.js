@@ -473,7 +473,8 @@ BT.Project = BT.BuildNode.extend({
       visitLocalization: setProject(),
       visitFramework:    setProject()
     }));
-    
+
+    this.projectPath = path.dirname(module.parent.filename);
   },
 
   serve: function(host, port) {
@@ -491,7 +492,6 @@ BT.Project = BT.BuildNode.extend({
     var that = this, visitor,
         assert = require('assert');
 
-    console.log("Building apps in ./build");
     this.set('isBuilding', true);
 
     visitor = BT.Visitor.create({
@@ -504,7 +504,8 @@ BT.Project = BT.BuildNode.extend({
 
     this.accept(visitor);
 
-    var buildPath = path.join(__dirname, '../build');
+    var buildPath = path.join(this.get('projectPath'), 'build');
+    console.log("Building apps in ", buildPath);
     if (!path.existsSync(buildPath)) {
       try {
         fs.mkdirSync(buildPath);
