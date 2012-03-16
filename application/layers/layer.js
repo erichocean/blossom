@@ -473,7 +473,7 @@ SC.Layer = SC.Object.extend({
     var cur  = this.get('sublayers'),
         last = this._sc_sublayers,
         func = this._sc_sublayersMembersDidChange;
-        
+
     if (last === cur) return this; // nothing to do
 
     // teardown old observer
@@ -708,8 +708,10 @@ SC.Layer = SC.Object.extend({
     this._sc_layoutDidChange();
 
     // We need to observe sublayers for changes; set that up now.
-    this.sublayers = [];
-    this._sc_sublayersDidChange();
+    if (this.sublayers === null) {
+      this.sublayers = [];
+      this._sc_sublayersDidChange();
+    }
 
     this._sc_isHidden = false; // we start out visible
 

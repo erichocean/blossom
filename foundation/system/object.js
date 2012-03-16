@@ -440,11 +440,18 @@ SC.Object.prototype = {
     for(idx=0;idx<len;idx++) SC._object_extend(this, extensions[idx]) ;
     SC.generateGuid(this) ; // add guid
     this.init() ; // call real init
-    
+
     // Call 'initMixin' methods to automatically setup modules.
     var inits = this.initMixin; len = (inits) ? inits.length : 0 ;
     for(idx=0;idx < len; idx++) inits[idx].call(this);
-    
+
+    // Connect any noDelay bindings.
+    var bindings = this.bindings; len = (bindings) ? bindings.length : 0;
+    for (idx=0; idx<len; ++idx) {
+      var binding = bindings[idx];
+      if (binding.noDelay) binding.sync();
+    }
+
     return this ; // done!
   },
   
