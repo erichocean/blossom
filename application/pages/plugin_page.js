@@ -4,6 +4,8 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+sc_require('system/page');
+
 /** @class
 
   The base page object required by all content-oriented plugins. The

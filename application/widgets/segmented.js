@@ -471,10 +471,11 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
   acceptsFirstResponder: false,
 
   _sc_valueDidChange: function() {
+    // console.log('SC.SegmentedWidget#_sc_valueDidChange()', SC.guidFor(this));
     var value = this.get('value'),
         displayItems = this.get('displayItems'),
         segments = this.get('sublayers'),
-        selected;
+        selected = null;
 
     displayItems.forEach(function(item, idx) {
       if (item[1] === value) selected = segments[idx];
@@ -490,6 +491,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
 
   /** If the items array itself changes, add/remove observer on item... */
   _sc_itemsDidChange: function() {
+    // console.log('SC.SegmentedWidget#_sc_itemsDidChange()', SC.guidFor(this));
     var func = this._sc_itemContentDidChange,
         old = this._sc_items,
         cur = this.get('items');
@@ -508,12 +510,11 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     This method will reginerate the list of items.
   */
   _sc_itemContentDidChange: function() {
+    // console.log('SC.SegmentedWidget#_sc_itemContentDidChange()', SC.guidFor(this));
     var displayItems = this.get('displayItems'),
         value = this.get('value'),
         isEnabled = this.get('isEnabled'),
         font = this.get('font');
-
-    // console.log(displayItems);
 
     var segments = [], len = displayItems.length, last = len-1,
         theme = this.get('theme'),
@@ -554,7 +555,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
   },
 
   updateLayout: function() {
-    // console.log('SC.SegmentWidget#updateLayout()', SC.guidFor(this));
+    // console.log('SC.SegmentedWidget#updateLayout()', SC.guidFor(this));
     if (this._sc_triggerSublayerLayout) {
       this._sc_triggerSublayerLayout = false;
       this.get('sublayers').invoke('triggerLayout');
