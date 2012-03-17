@@ -818,6 +818,8 @@ SC.Observable = {
     if (this._observableInited) return ;
     this._observableInited = true ;
     
+    this._kvo_cache = {};
+
     var loc, keys, key, value, observer, propertyPaths, propertyPathsLength,
         len, ploc, path, dotIndex, root, propertyKey, keysLen;
     
@@ -887,8 +889,6 @@ SC.Observable = {
         }
       }
     }
-
-    this._kvo_cache = {};
   },
   
   // ..........................................
