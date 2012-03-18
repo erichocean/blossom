@@ -396,7 +396,6 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     var that = this;
     this._propagateToChildren(storeKey, function(storeKey) {
       that.writeDataHash(storeKey, null, status);
-      that.notifyPropertyChange('status');
     });
 
     return this ;
@@ -1363,7 +1362,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     register a Child Record to the parent
   */
   registerChildToParent: function(parentStoreKey, childStoreKey, path){
-    var prs, crs, oldPk, oldChildren, pkRef;
+    var prs, crs, oldPk, oldChildren, pkRef, rec;
     // Check the child to see if it has a parent
     crs = this.childRecords || {};
     prs = this.parentRecords || {};
@@ -1380,6 +1379,8 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     crs[childStoreKey] = parentStoreKey;
     // sync the status of the child
     this.writeStatus(childStoreKey, this.statuses[parentStoreKey]);
+    rec = this.records[childStoreKey]; 
+    if (rec) rec.notifyPropertyChange('status');
     this.childRecords = crs;
     this.parentRecords = prs;
   },
