@@ -6,6 +6,8 @@
  * All rights reserved.
  */
 
+sc_require('text/object');
+
 function LinkedList() {
   this.head = null;
   this.tail = null;
