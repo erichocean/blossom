@@ -374,10 +374,14 @@ SC.Binding = {
 
     this.isConnected = true;
     this._connectionPending = true; // It's connected, but not really...
-    this._syncOnConnect = true;
 
-    if (this.noDelay) this._connect();
-    else SC.Binding._connectQueue.add(this) ;
+    if (this.noDelay) {
+      this._syncOnConnect = false; // SC.Object#create() will call sync() for us.
+      this._connect();
+    } else {
+      this._syncOnConnect = true;
+      SC.Binding._connectQueue.add(this);
+    }
 
     return this;
   },

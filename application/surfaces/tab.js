@@ -244,26 +244,61 @@ SC.TabSurface = SC.ContainerSurface.extend({
     var that = this;
     segmentedWidget = this._sc_segmentedWidget = SC.SegmentedWidget.create({
       value: this.get('value'),
+
       action: function() {
         that.set('value', this.get('value'));
       },
-      themeBinding:                             SC.Binding.from('theme',                             this).oneWay().noDelay(),
-      isEnabledBinding:                         SC.Binding.from('isEnabled',                         this).oneWay().noDelay(),
-      allowsEmptySelectionBinding:              SC.Binding.from('allowsEmptySelection',              this).oneWay().noDelay(),
-      allowsMultipleSelectionBinding:           SC.Binding.from('allowsMultipleSelection',           this).oneWay().noDelay(),
+
+      theme: this.get('theme'),
+      themeBinding: SC.Binding.from('theme', this).oneWay().noDelay(),
+
+      isEnabled: this.get('isEnabled'),
+      isEnabledBinding: SC.Binding.from('isEnabled', this).oneWay().noDelay(),
+
+      allowsEmptySelection: this.get('allowsEmptySelection'),
+      allowsEmptySelectionBinding: SC.Binding.from('allowsEmptySelection', this).oneWay().noDelay(),
+
+      allowsMultipleSelection: this.get('allowsMultipleSelection'),
+      allowsMultipleSelectionBinding: SC.Binding.from('allowsMultipleSelection', this).oneWay().noDelay(),
+
+      selectSegmentWhenTriggeringAction: this.get('selectSegmentWhenTriggeringAction'),
       selectSegmentWhenTriggeringActionBinding: SC.Binding.from('selectSegmentWhenTriggeringAction', this).oneWay().noDelay(),
-      localizeBinding:                          SC.Binding.from('localize',                          this).oneWay().noDelay(),
-      alignBinding:                             SC.Binding.from('align',                             this).oneWay().noDelay(),
-      layoutDirectionBinding:                   SC.Binding.from('layoutDirection',                   this).oneWay().noDelay(),
-      itemsBinding:                             SC.Binding.from('items',                             this).oneWay().noDelay(),
-      itemTitleKeyBinding:                      SC.Binding.from('itemTitleKey',                      this).oneWay().noDelay(),
-      itemValueKeyBinding:                      SC.Binding.from('itemValueKey',                      this).oneWay().noDelay(),
-      itemIsEnabledKeyBinding:                  SC.Binding.from('itemIsEnabledKey',                  this).oneWay().noDelay(),
-      itemIconKeyBinding:                       SC.Binding.from('itemIconKey',                       this).oneWay().noDelay(),
-      itemWidthKeyBinding:                      SC.Binding.from('itemWidthKey',                      this).oneWay().noDelay(),
-      itemActionKeyBinding:                     SC.Binding.from('itemActionKey',                     this).oneWay().noDelay(),
-      itemTargetKeyBinding:                     SC.Binding.from('itemTargetKey',                     this).oneWay().noDelay(),
-      itemKeyEquivalentKeyBinding:              SC.Binding.from('itemKeyEquivalentKey',              this).oneWay().noDelay()
+
+      localize: this.get('localize'),
+      localizeBinding: SC.Binding.from('localize', this).oneWay().noDelay(),
+
+      align: this.get('align'),
+      alignBinding: SC.Binding.from('align', this).oneWay().noDelay(),
+
+      layoutDirection: this.get('layoutDirection'),
+      layoutDirectionBinding: SC.Binding.from('layoutDirection', this).oneWay().noDelay(),
+
+      items: this.get('items'),
+      itemsBinding: SC.Binding.from('items', this).oneWay().noDelay(),
+
+      itemTitleKey: this.get('itemTitleKey'),
+      itemTitleKeyBinding: SC.Binding.from('itemTitleKey', this).oneWay().noDelay(),
+
+      itemValueKey: this.get('itemValueKey'),
+      itemValueKeyBinding: SC.Binding.from('itemValueKey', this).oneWay().noDelay(),
+
+      itemIsEnabledKey: this.get('itemIsEnabledKey'),
+      itemIsEnabledKeyBinding: SC.Binding.from('itemIsEnabledKey', this).oneWay().noDelay(),
+
+      itemIconKey: this.get('itemIconKey'),
+      itemIconKeyBinding: SC.Binding.from('itemIconKey', this).oneWay().noDelay(),
+
+      itemWidthKey: this.get('itemWidthKey'),
+      itemWidthKeyBinding: SC.Binding.from('itemWidthKey', this).oneWay().noDelay(),
+
+      itemActionKey: this.get('itemActionKey'),
+      itemActionKeyBinding: SC.Binding.from('itemActionKey', this).oneWay().noDelay(),
+
+      itemTargetKey: this.get('itemTargetKey'),
+      itemTargetKeyBinding: SC.Binding.from('itemTargetKey', this).oneWay().noDelay(),
+
+      itemKeyEquivalentKey: this.get('itemKeyEquivalentKey'),
+      itemKeyEquivalentKeyBinding: SC.Binding.from('itemKeyEquivalentKey', this).oneWay().noDelay()
     });
 
     this._sc_valueDidChange();

@@ -65,7 +65,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   _sc_value: null,
   _sc_valueDidChange: function() {
-    // console.log('SC.SelectWidget#_sc_valueDidChange()');
+    // console.log('SC.SelectWidget#_sc_valueDidChange()', SC.guidFor(this));
     var cur = this.get('value'),
         old = this._sc_value,
         menu = this._sc_menuView,
@@ -375,16 +375,31 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     var that = this, menuView;
     menuView = this._sc_menuView = SC.SelectWidgetMenuView.create({
       value: this.get('value'),
+
       action: function() {
         that.set('value', this.get('value'));
       },
-      themeBinding:                             SC.Binding.from('theme',                             this).oneWay().noDelay(),
-      isEnabledBinding:                         SC.Binding.from('isEnabled',                         this).oneWay().noDelay(),
-      localizeBinding:                          SC.Binding.from('localize',                          this).oneWay().noDelay(),
-      itemsBinding:                             SC.Binding.from('items',                             this).oneWay().noDelay(),
-      itemTitleKeyBinding:                      SC.Binding.from('itemTitleKey',                      this).oneWay().noDelay(),
-      itemValueKeyBinding:                      SC.Binding.from('itemValueKey',                      this).oneWay().noDelay(),
-      itemIsEnabledKeyBinding:                  SC.Binding.from('itemIsEnabledKey',                  this).oneWay().noDelay()
+
+      theme: this.get('theme'),
+      themeBinding: SC.Binding.from('theme', this).oneWay().noDelay(),
+
+      isEnabled: this.get('isEnabled'),
+      isEnabledBinding: SC.Binding.from('isEnabled', this).oneWay().noDelay(),
+
+      localize: this.get('localize'),
+      localizeBinding: SC.Binding.from('localize', this).oneWay().noDelay(),
+
+      items: this.get('items'),
+      itemsBinding: SC.Binding.from('items', this).oneWay().noDelay(),
+
+      itemTitleKey: this.get('itemTitleKey'),
+      itemTitleKeyBinding: SC.Binding.from('itemTitleKey', this).oneWay().noDelay(),
+
+      itemValueKey: this.get('itemValueKey'),
+      itemValueKeyBinding: SC.Binding.from('itemValueKey', this).oneWay().noDelay(),
+
+      itemIsEnabledKey: this.get('itemIsEnabledKey'),
+      itemIsEnabledKeyBinding: SC.Binding.from('itemIsEnabledKey', this).oneWay().noDelay()
     });
 
     this._sc_valueDidChange();
