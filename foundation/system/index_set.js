@@ -4,9 +4,11 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals global */
 
-sc_require('mixins/enumerable') ;
-sc_require('mixins/observable') ;
+sc_require('mixins/enumerable');
+sc_require('mixins/observable');
+sc_require('private/observer_queue');
 sc_require('mixins/freezable');
 sc_require('mixins/copyable');
 
