@@ -197,6 +197,7 @@ SC.View = SC.LeafSurface.extend({
 
     if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
     this._sc_context = ctx;
+    this.triggerRendering();
   },
 
   _sc_scrollTranslation: null,

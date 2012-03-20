@@ -84,12 +84,10 @@ SC.ScrollView = SC.View.extend({
     div.style.overflowY = this.get('hasVerticalScroller')? 'scroll' : 'hidden';
   },
 
-  updateLayout: function() {
-    // console.log('SC.ScrollView#updateLayout()', SC.guidFor(this));
-    var benchKey = 'SC.ScrollView#updateLayout()';
+  adjustLayout: function() {
+    // console.log('SC.ScrollView#adjustLayout()', SC.guidFor(this));
+    var benchKey = 'SC.ScrollView#adjustLayout()';
     SC.Benchmark.start(benchKey);
-
-    arguments.callee.base.apply(this, arguments);
 
     // Our layers have been been updated.  Calculate the union of the the 
     // AABB of all their frames in our own coordinate system.
@@ -121,6 +119,12 @@ SC.ScrollView = SC.View.extend({
     SC.Benchmark.end(benchKey);
   },
 
+  updateLayout: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    this.adjustLayout();
+  },
+
   _sc_scrollingCanvas: null,
 
   init: function() {
@@ -144,7 +148,13 @@ SC.InternalScrollViewCanvas = SC.LeafSurface.extend({
 
   __scrollView__: null,
 
+  surface: function() {
+    // console.log('SC.InternalScrollViewCanvas@surface');
+    return this.__scrollView__;
+  }.property().cacheable(),
+
   didCreateElement: function(canvas) {
+    // console.log('SC.InternalScrollViewCanvas#didCreateElement()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
     var ctx = canvas.getContext('2d');
 
@@ -153,6 +163,7 @@ SC.InternalScrollViewCanvas = SC.LeafSurface.extend({
 
     if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
     this.__scrollView__._sc_context = ctx;
+    this.__scrollView__.triggerRendering();
   }
 
 });

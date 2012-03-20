@@ -376,7 +376,7 @@ SC.Array = {
     @param {Object} context optional context
     @returns {SC.RangeObserver} range observer
   */
-  addRangeObserver: function(indexes, target, method, context) {
+  addRangeObserver: function(indexes, target, method, context, isDeep) {
     var rangeob = this._array_rangeObservers;
     if (!rangeob) rangeob = this._array_rangeObservers = SC.CoreSet.create() ;
 
@@ -387,8 +387,7 @@ SC.Array = {
     }
     
     var C = this.rangeObserverClass ;
-    var isDeep = false; //disable this feature for now
-    var ret = C.create(this, indexes, target, method, context, isDeep) ;
+    var ret = C.create(this, indexes, target, method, context, !!isDeep) ;
     rangeob.add(ret);
     
     // first time a range observer is added, begin observing the [] property
