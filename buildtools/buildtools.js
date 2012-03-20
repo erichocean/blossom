@@ -111,7 +111,7 @@ BT.File = BT.BuildNode.extend({
     var sourcePath = this.get('sourcePath'),
         sourceTree = path.normalize(this.get('sourceTree'));
 
-    return sourcePath.slice(sourceTree.length+1);
+    return sourcePath.slice(sourceTree.length+1).replace(/\\/g, '/');
   }.property().cacheable(),
 
   contents: function() {
