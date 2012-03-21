@@ -311,6 +311,35 @@ BT.Package = BT.BuildNode.extend(
     return sourceTree.slice(parentSourceTree.length+1);
   }.property().cacheable(),
 
+  rootNode: function() {
+    var root = this.parentNode;
+    while(!root.isFramework && !root.isApp && root.parentNode)
+      root = root.parentNode;
+    return root ? root.get('nodeName') : null; 
+  }.property(),
+  
+  clientReadySource: function() {
+    var files = this.get('orderedJavaScriptFiles');
+    var sources = [];
+    var jsp = require('uglify-js').parser;
+    var pro = require('uglify-js').uglify;
+    var uuid = this.get('uuid');
+    var contents;
+    var ast;
+    files.forEach(function(file) {
+      contents = file.get('contents');
+      ast = jsp.parse(contents);
+      ast = pro.ast_mangle(ast);
+      ast = pro.ast_squeeze(ast);
+      contents = pro.gen_code(ast);
+      sources.push(contents);
+    });
+    sources = sources.join(';');
+    sources = sources.replace(/[\'\"]/g, '\\\'');
+    sources = 'SC.PACKAGE_MANIFEST[\''+uuid+'\'].source=\''+sources+'\';';
+    return sources;
+  }.property().cacheable(),
+
   //.............................................
   // METHODS
   //
@@ -480,16 +509,16 @@ BT.Packager = BT.BuildNode.extend(
       var str = '\n', 
           dependencies = package.dependencies, depName, dep;
       if(BT.typeOf(dependencies) === BT.T_ARRAY) {
-        str = ',\n    "dependencies": {\n';
+        str = ',\n    "dependencies": [\n';
         dependencies.forEach(function(depName, idx) {
           dep = that.findPackage(depName);
           if(!dep) return console.log("could not find package dependency "+
             "%@ by %@".fmt(depName, package.get('basename'))+
             ", remember packages can't depend on packages in other frameworks");
-          str += '      "' + depName + '": "' + dep.get('uuid') + '"';
+          str += '      "' + depName + '"';
           if(idx < dependencies.length-1) str += ',\n'; 
         });
-        str += '\n    }\n';
+        str += '\n    ]\n';
       }
       return str;
     }
@@ -499,7 +528,8 @@ BT.Packager = BT.BuildNode.extend(
       manifest += '    "basename": \'' + package.get('basename') + '\',\n';
       manifest += '    "type": \'' + type + '\',\n';
       manifest += '    "rootNode": ' + findRoot(package) + ',\n';
-      manifest += '    "isLoaded": ' + (type === 'core' ? 'true' : 'false');
+      manifest += '    "isLoaded": ' + (type === 'core' ? 'true' : 'false') + ',\n';
+      manifest += '    "isReady": ' + (type === 'core' ? 'true' : 'false');
       manifest += dependenciesFor(package),
       manifest += '  }';
       if(idx < packages.length-1) manifest += ',\n';
@@ -645,6 +675,7 @@ BT.Packager = BT.BuildNode.extend(
     // to be evaluated early and determine if there are any issues
     // this must be done here to ensure that corrections that can be
     // made arbitrarily are issued before any html is generated
+    // in the index files
     this.get('orderedPackages');
   },
 

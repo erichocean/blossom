@@ -18,29 +18,6 @@
 SC.allowsBackspaceToPreviousPage = false;
 
 // ..........................................................
-// Plugins
-// 
-
-// Plugins are loaded on-demand. For more information on Plugins, see the 
-// 'Creating Loadable Plugins' tutorial and documentation.
-SC.mixin(SC,
-/** @scope SC */ {
-    
-  /** @property
-    SC.Plugins each have at least 1 page (@see SC.PluginPage)
-    that houses their default views. Due to the way they are loaded
-    these pages are not stored directly in the namespace of the Plugin
-    but instead in this object.
-
-    ```SC.pages.dev = SC.PluginPage.create(...)```
-  */
-  pages: {},
-
-  views: {}
-
-});
-
-// ..........................................................
 // State Constants
 // 
 
