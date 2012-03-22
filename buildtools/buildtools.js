@@ -311,32 +311,40 @@ BT.Package = BT.BuildNode.extend(
     return sourceTree.slice(parentSourceTree.length+1);
   }.property().cacheable(),
 
-  rootNode: function() {
-    var root = this.parentNode;
-    while(!root.isFramework && !root.isApp && root.parentNode)
-      root = root.parentNode;
-    return root ? root.get('nodeName') : null; 
-  }.property(),
-  
+  packageName: function() {
+    var rootNode = this.get('rootNode');
+    var basename = this.get('basename');
+    return rootNode + '/' + basename;
+  }.property().cacheable(),
+    
   clientReadySource: function() {
     var files = this.get('orderedJavaScriptFiles');
-    var sources = [];
+    var sources = {};
     var jsp = require('uglify-js').parser;
     var pro = require('uglify-js').uglify;
-    var uuid = this.get('uuid');
+    var packageName = this.get('packageName');
     var contents;
     var ast;
+    var layer;
+    var layers;
     files.forEach(function(file) {
+      layer = file.get('applicationLayer');
+      if(!sources[layer]) sources[layer] = [];
       contents = file.get('contents');
       ast = jsp.parse(contents);
       ast = pro.ast_mangle(ast);
       ast = pro.ast_squeeze(ast);
       contents = pro.gen_code(ast);
-      sources.push(contents);
+      sources[layer].push(contents);
     });
-    sources = sources.join(';');
-    sources = sources.replace(/[\'\"]/g, '\\\'');
-    sources = 'SC.PACKAGE_MANIFEST[\''+uuid+'\'].source=\''+sources+'\';';
+    layers = Object.keys(sources);
+    layers.forEach(function(layerKey) {
+      layer = sources[layerKey];
+      layer = layer.join(';');
+      sources[layerKey] = layer;
+    });
+    sources = JSON.stringify(sources);
+    sources = 'SC.PACKAGE_MANIFEST[\''+packageName+'\'].source='+sources+';';
     return sources;
   }.property().cacheable(),
 
@@ -432,6 +440,11 @@ BT.PackageFile = BT.File.extend(
 
   parentSourceTree: null,
 
+  /**
+    NOTE: anything else is considered 'other' for these purposes
+  */
+  layers: "models views controllers".w(),
+
   relativePath: function() {
     var sourcePath = this.get('sourcePath'),
         sourceTree = path.normalize(this.get('parentSourceTree'));
@@ -452,6 +465,16 @@ BT.PackageFile = BT.File.extend(
       ret.push(path.join(that.get('requirePath'), required));
     });
     return ret;
+  }.property().cacheable(),
+
+  applicationLayer: function() {
+    var relativePath  = this.get('relativePath');
+    var basename = path.basename(relativePath);
+    var layer = relativePath.split('/').slice(-2)[0];
+    var layers = this.layers;
+    var idx = layers.indexOf(layer);
+    if(idx < 0) return 'other';
+    else return layer;
   }.property().cacheable()
 
 });
@@ -459,10 +482,6 @@ BT.PackageFile = BT.File.extend(
 //...............................................
 // Package configuration flags
 // 
-// generate hashes for the uuid of valid packages
-function __sha1hash__() {
-  return crypto.createHash('sha1');
-}
 // convenience method to return array of only files
 // from a root path
 function filesFrom(root) {
@@ -507,7 +526,8 @@ BT.Packager = BT.BuildNode.extend(
     }
     function dependenciesFor(package) {
       var str = '\n', 
-          dependencies = package.dependencies, depName, dep;
+          dependencies = package.dependencies, 
+          rootNode = package.get('rootNode'), depName, dep;
       if(BT.typeOf(dependencies) === BT.T_ARRAY) {
         str = ',\n    "dependencies": [\n';
         dependencies.forEach(function(depName, idx) {
@@ -515,7 +535,7 @@ BT.Packager = BT.BuildNode.extend(
           if(!dep) return console.log("could not find package dependency "+
             "%@ by %@".fmt(depName, package.get('basename'))+
             ", remember packages can't depend on packages in other frameworks");
-          str += '      "' + depName + '"';
+          str += '      "' + dep.get('packageName') + '"';
           if(idx < dependencies.length-1) str += ',\n'; 
         });
         str += '\n    ]\n';
@@ -524,12 +544,13 @@ BT.Packager = BT.BuildNode.extend(
     }
     packages.forEach(function(package, idx) {
       var type = package.get('type');
-      manifest += '  "' + package.get('nodeName') + '": {\n';
+      manifest += '  "' + package.get('packageName') + '": {\n';
       manifest += '    "basename": \'' + package.get('basename') + '\',\n';
       manifest += '    "type": \'' + type + '\',\n';
-      manifest += '    "rootNode": ' + findRoot(package) + ',\n';
+      manifest += '    "rootNode": \'' + package.get('rootNode') + '\',\n';
       manifest += '    "isLoaded": ' + (type === 'core' ? 'true' : 'false') + ',\n';
-      manifest += '    "isReady": ' + (type === 'core' ? 'true' : 'false');
+      manifest += '    "isReady": ' + (type === 'core' ? 'true' : 'false') + ',\n';
+      manifest += '    "isExecuted": ' + (type === 'core' ? 'true' : 'false');
       manifest += dependenciesFor(package),
       manifest += '  }';
       if(idx < packages.length-1) manifest += ',\n';
@@ -556,23 +577,26 @@ BT.Packager = BT.BuildNode.extend(
 
     packages.forEach(function(package) {
       var dependencies = package.dependencies || [],
-          name = package.get('nodeName');
+          name = package.get('packageName');
       map[name] = package;
       g.addVertex(name);
       dependencies.forEach(function(dependency) {
-        var uuid = that.findPackage(dependency);
-        if(uuid) {
-          if(package.get('type') === 'core' && uuid.get('type') !== 'core') {
+        var dep = that.findPackage(dependency);
+        if(dep) {
+          if(package.get('type') === 'core' && dep.get('type') !== 'core') {
             console.log("core package depends on non-core package, "+
-              "forcing non-core (%@) dependency to core".fmt(uuid.get('basename')));
-            uuid.set('type', 'core');
+              "forcing non-core (%@) dependency to core".fmt(dep.get('basename')));
+            dep.set('type', 'core');
           }
-          uuid = uuid.get('uuid');
+          dep = dep.get('packageName');
         }
-        else console.log("things are gonna get ugly, couldn't find dependency "+
+        else {
+          console.log("things are gonna get ugly, couldn't find dependency "+
           "%@ for package %@ in %@".fmt(dependency, package.get('basename'),
           path.basename(package.get('parentSourceTree'))));
-        g.addEdge(uuid, name);
+          dep = dependency;
+        }
+        g.addEdge(dep, name);
       });
     });
 
@@ -597,21 +621,19 @@ BT.Packager = BT.BuildNode.extend(
   }.property().cacheable(),
 
   /**
-    Returns a package if it can find it. First tests by
-    direct index (uuid) and if not attempts to find one
-    by name.
+    Returns a package if it can find it. 
 
-    @param {String} uuid Either the uuid of the package or
-      the basename (directory name) of the package.
+    @param {String} packageName The name of the package to
+      retrieve with or without root node prefix.
     @returns {BT.Package} The package request or null if
       it could not be found.
   */
-  findPackage: function(uuid) {
-    var ret = this.get(uuid), packages;
+  findPackage: function(packageName) {
+    var ret = this.get(packageName), packages;
     if(!ret) {
       packages = this.get('packages');
       ret = packages.find(function(package) {
-        if(package.get('basename') === uuid)
+        if(package.get('basename') === packageName)
           return package;
         else return false;
       });
@@ -624,6 +646,7 @@ BT.Packager = BT.BuildNode.extend(
     arguments.callee.base.apply(this, arguments);
     var sourceTree = this.get('sourceTree'),
         parentSourceTree = this.get('parentSourceTree'),
+        rootNode = this.get('rootNode'),
         that = this;
 
     function isPackageDir(source) {
@@ -654,13 +677,12 @@ BT.Packager = BT.BuildNode.extend(
             // lets see if this directory has any packages
             return processDirectory(relativePath, node);
           }
-          var uuid = that.uuid(),
-              package = BT.Package.create({
+          var package = BT.Package.create({
                 sourceTree: relativePath,
                 parentSourceTree: parentSourceTree,
-                uuid: uuid
+                rootNode: rootNode
               });
-          node.set(uuid, package);
+          node.set(package.get('basename'), package);
           // node.set(filename, package);
         } else {
           console.log("the file is something strange => %@".fmt(relativePath));
@@ -677,10 +699,6 @@ BT.Packager = BT.BuildNode.extend(
     // made arbitrarily are issued before any html is generated
     // in the index files
     this.get('orderedPackages');
-  },
-
-  uuid: function() {
-    return __sha1hash__().update(Math.random().toString()).digest('hex');
   },
 
 });
@@ -879,6 +897,7 @@ BT.Target = BT.BuildNode.extend({
       files.forEach(function(filename) {
         if (filename === "node") return;
         var relativePath = path.join(dirname, filename);
+        var rootNode = dirname.slice(dirname.lastIndexOf('/')+1, dirname.length);
         var stat = fs.statSync(relativePath);
         if (stat.isFile()) {
           node.set(filename, BT.File.create({
@@ -899,7 +918,8 @@ BT.Target = BT.BuildNode.extend({
           else if (filename === 'packages') {
             var packager = BT.Packager.create({
               sourceTree: relativePath,
-              parentSourceTree: sourceTree
+              parentSourceTree: sourceTree,
+              rootNode: rootNode
             });
             node.set(filename, packager);
           }

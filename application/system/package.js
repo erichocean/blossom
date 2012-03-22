@@ -23,7 +23,7 @@ SC.PACKAGE_MODE_CONTROLLERS = 0x04;
 // is the perogative of the developer.
 SC.PACKAGE_MODE_OTHER       = 0x08;
 // The normal mode includes all of the possible flags
-SC.PACKAGE_MODE_NORMAL      = 0x16;
+SC.PACKAGE_MODE_NORMAL      = 0x10;
 // The default package flag is set here but can be
 // overridden later or by an extended SC.Package class.
 SC.PACKAGE_MODE = SC.PACKAGE_MODE_NORMAL;
@@ -70,6 +70,8 @@ SC.Package = SC.Object.extend(
     var package = packages[packageName];
     var log = this.log; 
 
+    if(log) SC.Logger.info("SC.Package.loadPackage() for package '%@'".fmt(packageName));
+
     // if there isn't a package we really can't do much
     // so get that out of the way
     if(!package) {
@@ -80,7 +82,7 @@ SC.Package = SC.Object.extend(
     // if the package is loaded already it has a different
     // track to take than one that needs to be loaded
     if(this.isLoaded(package)) {
-      SC.Logger.warn("SC.Package.loadPackage() package already loaded '%@'".fmt(packageName));
+      if(log) SC.Logger.info("SC.Package.loadPackage() package already loaded '%@'".fmt(packageName));
 
       // see if the package is ready to be executed
       if(package.isReady) {
@@ -89,15 +91,12 @@ SC.Package = SC.Object.extend(
 
         // ok send it to be executed (if it has already been executed
         // will be dealt with there)
-        this._evaluateJavaScript(packageName);
+        this._evaluateJavaScriptForPackage(packageName);
         return true; // since it was loaded and ready
       } else {
         if(log) SC.Logger.info("SC.Package.loadPackage() package loaded but was not " +
           "ready yet '%@'".fmt(packageName));
 
-        // if it hasn't already been flagged in the waiting queue
-        // go ahead and add it
-        this._addPackageToWaiting(packageName);
         return false; // since it was loaded but not ready
       }
     } // isLoaded
@@ -115,6 +114,46 @@ SC.Package = SC.Object.extend(
   },
 
   /**
+    Load all available packages.
+  */
+  loadAll: function() {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package;
+    for(package in packages)
+      this.loadPackage(package);
+  },
+
+  /**
+  */
+  loadedPackages: function() {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package;
+    var packageName;
+    var loaded = [];
+    for(packageName in packages) {
+      package = packages[packageName];
+      if(!package) continue;
+      if(package.isLoaded) loaded.push(packageName);
+    }
+    return loaded;
+  },
+
+  /**
+  */
+  executedPackages: function() {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package;
+    var packageName;
+    var executed = [];
+    for(packageName in packages) {
+      package = packages[packageName];
+      if(!package) continue;
+      if(package.isExecuted) executed.push(packageName);
+    }
+    return executed;
+  },
+
+  /**
     Find and load any dependencies for a given package.
 
     @param {String} packageName The target package.
@@ -128,6 +167,9 @@ SC.Package = SC.Object.extend(
     var dependency;
     var dependents;
 
+    if(log) SC.Logger.info("SC.Package._loadDependenciesForPackage() for " +
+      "package '%@'".fmt(packageName));
+
     // if there isn't a package we really can't do much
     // so get that out of the way
     if(!package) {
@@ -136,8 +178,12 @@ SC.Package = SC.Object.extend(
       return;
     }
 
-    dependencies = package.dependencies;
-    
+    // since the operations on the dependencies are not atomic
+    // and the array is mutable we clone it to ensure that
+    // we get through the entire list unscathed by random
+    // index changes
+    dependencies = SC.clone(package.dependencies);
+
     // if there aren't any dependencies...do, nothing?
     if(!dependencies || dependencies.length <= 0) return; 
 
@@ -160,9 +206,11 @@ SC.Package = SC.Object.extend(
       if(log) SC.Logger.info("SC.Package._loadDependenciesForPackage() loading " +
         "dependency '%@' for '%@'".fmt(dependencies[idx], packageName));
 
+      console.log(dependencies[idx]);
+
       // we don't care whether it has been loaded or anything else
       // if its in the list just throw it at the loader
-      this._loadPackage(dependencies[idx]); 
+      this.loadPackage(dependencies[idx]); 
     }
   },
 
@@ -201,9 +249,10 @@ SC.Package = SC.Object.extend(
     // request for the source
     el = document.createElement('script');
     el.setAttribute('type', 'text/javascript');
-    el.setAttrubute('src', url);
+    el.setAttribute('src', url);
     
-    // TODO: need ie hack
+    // needs to be tested with various versions of IE to determine
+    // if this will work
     el.onload = function() {
       SC.run(function() {
 
@@ -251,7 +300,7 @@ SC.Package = SC.Object.extend(
     url.push('packages');
 
     // push the package name (unique to the root node)
-    url.push(packageName);
+    url.push(package.basename);
 
     // it should be noted that the entire package contents is
     // always loaded with the source but only portions of
@@ -280,10 +329,14 @@ SC.Package = SC.Object.extend(
     var part;
     var idx = 0;
 
+    if(log) SC.Logger.info("SC.Package._evaluateJavaScriptForPackage() attempting to " +
+      "execute source for package '%@'".fmt(packageName));
+
     // if there isn't a package we really can't do much
     // so get that out of the way
     if(!package) {
-      if(log) SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() could not find package '%@'".fmt(packageName));
+      if(log) SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() could not " +
+        "find package '%@'".fmt(packageName));
       return;
     }
 
@@ -299,6 +352,7 @@ SC.Package = SC.Object.extend(
 
     source = package.source;
 
+    // the ordering of inclusion is important here
     if(flags & SC.PACKAGE_MODE_NORMAL) {
       parts = "other models controllers views".w();
     } else {
@@ -337,6 +391,12 @@ SC.Package = SC.Object.extend(
         window['eval'].call(window, data);
       })(code);
 
+      // once the code has been executed for the package
+      // we have to let anyone depending on it know that 
+      // its ready but also invoke any waiting callbacks
+      this._packageDidExecute(packageName);
+      // TODO: invoke callbacks
+
     } else {
 
       // we didn't execute anything so don't allow the
@@ -359,6 +419,8 @@ SC.Package = SC.Object.extend(
     var package = packages[packageName];
     var log = this.log;
 
+    if(log) SC.Logger.info("SC.Package._packageDidLoad() for package '%@'".fmt(packageName));
+
     // if there isn't a package we really can't do much
     // so get that out of the way
     if(!package) {
@@ -373,8 +435,7 @@ SC.Package = SC.Object.extend(
     delete package['isLoading'];
 
     // if all the dependencies were met for a package go ahead
-    // and evaluate the source otherwise just make sure it is
-    // in the waiting queue and then load its dependencies
+    // and evaluate the source otherwise load its dependencies
     if(this._dependenciesMetForPackage(packageName)) {
       if(log) SC.Logger.info("SC.Package._packageDidLoad() package loaded and " +
         "dependencies met for '%@'".fmt(packageName));
@@ -382,8 +443,87 @@ SC.Package = SC.Object.extend(
     } else {
       if(log) SC.Logger.info("SC.Package._packageDidLoad() package loaded but " +
         "its dependencies were not met '%@'".fmt(packageName));
-      this._addPackageToWaiting(packageName);
       this._loadDependenciesForPackage(packageName);
+    }
+  },
+
+  /**
+    Once the source for a package has been executed we need to
+    notify any dependents.
+
+    @param {String} packageName The name of the package that was loaded.
+  */
+  _packageDidExecute: function(packageName) {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package = packages[packageName];
+    var log = this.log;
+    var dependents;
+    var dependent;
+    var dependencies;
+    var idx = 0;
+
+
+    if(log) SC.Logger.info("SC.Package._packageDidExecute() for package '%@'".fmt(packageName));
+
+    // if there isn't a package we really can't do much
+    // so get that out of the way
+    if(!package) {
+      SC.Logger.warn("SC.Package._packageDidExecute() unknown package reporting '%@' ".fmt(packageName));
+      return;
+    }
+
+    // make sure we're flagged as having been executed
+    package.isExecuted = true;
+
+    dependents = package.dependents;
+
+    // nothing to do if there aren't any dependents
+    if(!dependents || dependents.length <= 0) return;
+
+    // loop through the dependents and knock the dependency
+    // from the waiting dependent
+    for(; idx < dependents.length; ++idx) {
+      dependent = dependents[idx];
+      dependent = packages[dependent];
+
+      // not much we can do if we can't find the dependent
+      if(!dependent) {
+        throw "SC.Package._packageDidExecute() can't find dependent '%@' for '%@'".fmt(
+          dependents[idx], packageName);
+      }
+
+      dependencies = dependent.dependencies;
+
+      // if the dependent doesn't have any dependencies...wtf?
+      if(!dependencies || dependent.isReady) {
+        if(log) SC.Logger.warn("SC.Package._packageDidExecute() dependent found '%@' for '%@' ".fmt(
+          dependents[idx], packageName) + "but was marked as " +
+          (!dependencies ? "not having dependencies" : "having dependencies") +
+          (dependent.isReady ? " and as ready" : '') + ", so, something aint right yo");
+        continue;
+      }
+
+      // grab the index of the package in the dependencies array
+      // so we can remove then remove it
+      var pos = dependencies.indexOf(packageName);
+      if(pos < 0) {
+        if(log) SC.Logger.warn("SC.Package._packageDidExecute() dependent found '%@' for '%@' ".fmt(
+          dependents[idx], packageName) + "and had dependencies but does not " +
+          "depend on '%@' apparently.".fmt(packageName));
+        continue;
+      }
+            
+      // for convenience...
+      dependent.dependencies = dependencies.removeAt(pos);
+
+      // go ahead and reevaluate the status of the dependency
+      // using the normalized method...this probably ought to
+      // change since it could be done with less overhead
+      if(this._dependenciesMetForPackage(dependents[idx])) {
+
+        // go ahead and let it try again
+        this.loadPackage(dependents[idx]);
+      }
     }
   },
 
@@ -406,6 +546,9 @@ SC.Package = SC.Object.extend(
     var isReady = true;
     var done = [];
 
+    if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for " +
+      "'%@'".fmt(packageName));
+
     // if there isn't a package we really can't do much
     // so get that out of the way
     if(!package) {
@@ -418,7 +561,15 @@ SC.Package = SC.Object.extend(
 
     // if there are no dependencies, not need to worry about
     // testing just return true aint nothing to do
-    if(!dependencies || dependencies.length <= 0) return true; 
+    if(!dependencies || dependencies.length <= 0) {
+
+      if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() no " +
+        "dependencies found for package '%@'".fmt(packageName));
+      
+      // set the ready flag
+      package.isReady = true;
+      return true; 
+    }
     
     // alright iterate through the dependencies left
     // and check 'em out
@@ -435,56 +586,85 @@ SC.Package = SC.Object.extend(
 
       // if it has not been executed, the dependencies
       // aren't loaded
-      if(!dependency.isExecuted) isReady = false;
+      if(!dependency.isExecuted) {
+        package.isReady = false;
+        isReady = false;
+      }
 
       // save the index to the array of found dependencies
       // so we can remove them from the dependencies array
       // and not look for them again in the future
-      done.push(idx);
+      else done.push(idx);
     }
 
     if(isReady) {
 
+      if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for '%@'".fmt(packageName) +
+        " all dependencies loaded and executed, package is ready");
+
       // if we are ready, free up the dependencies array
       delete package['dependencies'];
+
+      // mark the package as ready since all dependencies
+      // are loaded
+      package.isReady = true;
     } else if(done.length > 0) {
+
+      if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() some dependencies " +
+        "were loaded, removing them from the dependencies array");
 
       // if we aren't ready but some dependencies are
       // go ahead and remove them from the array
-      for(idx = 0; idx < done.length; ++idx)
-        delete dependencies[idx];
+      for(idx = 0; idx < done.length; ++idx) {
+        dependencies = dependencies.removeAt(done[idx]);
+      }
 
       // while this should never happen...
       if(dependencies.length <= 0) {
         throw "SC.Package._dependenciesMetForPackage() dependencies not met " +
           "but no dependencies left for '%@'?".fmt(packageName);
       }
+      
+      // ensure we get the correct array back on the package
+      package.dependencies = dependencies;
+    } else {
+      if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for '%@'".fmt(packageName) +
+        " some dependencies were not loaded or executed");
     }
 
     // return our findings
     return isReady;
   },
 
-});
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
 
-SC.ready(function() {
-  var packages = SC.PACKAGE_MANIFEST;
-  var package;
-  var task;
+    var self = this;
 
-  for(packageName in packages) {
-    package = packages[packageName];
-
-    if(package.type === 'lazy') {
-      task = SC.Package.LazyPackageTask.create({ lazyPackageName: packageName });
-      SC.backgroundTaskQueue.push(task);
+    // update the task definition to use the correct
+    // package manager
+    SC.Package.LazyPackageTask.prototype.run = function() {
+      self.loadPackage(this.lazyPackageName);
     }
-  }
+
+    SC.ready(function() {
+      var packages = SC.PACKAGE_MANIFEST;
+      var package;
+      var task;
+      
+      for(packageName in packages) {
+        package = packages[packageName];
+      
+        if(package.type === 'lazy') {
+          task = SC.Package.LazyPackageTask.create({ lazyPackageName: packageName });
+          SC.backgroundTaskQueue.push(task);
+        }
+      }
+    });
+  } // init
+
 });
 
 SC.Package.LazyPackageTask = SC.Task.extend({
   lazyPackageName: null,
-  run: function() {
-    SC.Package.loadPackage(this.lazyPackageName);
-  }
 });
