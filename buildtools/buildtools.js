@@ -194,18 +194,55 @@ BT.Directory = BT.BuildNode.extend({
   `packages` directory in an application or framework (although
   this is not strictly enforced at the moment).
 
-  There are 3 types of packages: core, lazy and demand. Any core
-  packages are processed and included with the application core
-  source at initialization (but executed after any application
-  dependencies and frameworks have been included but before the
-  application core is loaded.
+  A directory structure like the following
+
+  framworks/
+      \__some_framwork/
+          \__packages/
+              \__some_package/
+                  \__node/package.json
+              \__another_package/
+                  \__node/package.json
+              \__a_non_package_dir/
+                  \__a_package_dir_nested/
+                      \__node/package.json
+
+  would lead to the following packages registered in the system:
+
+  'some_framework/some_package'
+  'some_framework/another_package'
+  'some_framework/a_package_dir_nested'
+  
+  It is important to note that within any namespace (framework or
+  application or nested framework) a package must have a unique
+  name but are not required to have unique names across namespaces.
+
+  Packages currently do not support CSS but they do support coffee
+  script. The structure of code in a package is conventional. At
+  runtime the application decides what portion of the code retrieved
+  from the package will be evaluated and executed. Packages do
+  not support framworks or applications and they will be ignored.
+  It does differentiate between the directories `controllers`,
+  `models` and `views`. All other types of directories (not
+  applications or frameworks) will have their source registered
+  as `other`. This allows, at runtime, for the application to
+  include only code for the layer it wishes to expose.
+
+  There are 3 types of packages: core, lazy and demand. 
+  
+  Core packages are loaded with the main source trunk. They are
+  processed inline with their housing target. If a framework is
+  a dependency of an application, packages in the framework will
+  be processed before the application is loaded. Packages embedded
+  in an application will be loaded before the core file. 
    
   Lazy packages are loaded automatically after the application has
-  started (or manually...) but their source was not included with
+  started  but their source was not included with
   the application source and is loaded after (assists in alleviating
-  the need to load and process an entired application at once).
+  the need to load and process an entire application at once).
   
-  Last but not least demand packages are only loaded when needed.
+  Demand packages are only loaded when needed but must be 
+  arbitrarily requested.
 
   Configuration options are set via a specially named file in
   a package tree. There is a directory `node` with a `package.json`
@@ -213,12 +250,22 @@ BT.Directory = BT.BuildNode.extend({
   package object for evaluation during processing. This is where
   the type of package is specified by the property `type`. If no
   file is provided or no type is available it will be assumed to
-  be a core package. The `dependencies` property (array) can contain
+  be a core package. If the `node` directory is not present, however,
+  the directory will not be interpreted as a package and skipped.
+  The `dependencies` property (array) can contain
   the name of any packages the current package requires to be loaded
   first. Any dependencies must be from within the same framework or
   application as a dependence on a package from outside the housing
-  target should be specified as a dependency of the target not the
-  package.
+  target/namespace should be specified as a dependency of the target
+  and not the package.
+
+  A global manifest is generated and included with the source trunk
+  in the index for an application.
+
+  The client-side class responsible for exposing these packages
+  is SC.Package. The class can be extended or instantiated as-is
+  for default behaviors. There are global properties that define
+  other behaviors of the package system at runtime. 
 
 */
 BT.Package = BT.BuildNode.extend(
@@ -518,12 +565,6 @@ BT.Packager = BT.BuildNode.extend(
     var manifest = '',
         packages = this.get('orderedPackages'),
         that = this;
-    function findRoot(package) {
-      var root = package.parentNode;
-      while(!root.isFramework && !root.isApp && root.parentNode)
-        root = root.parentNode;
-      return root ? '\'' + root.get('nodeName') + '\'' : 'null'; 
-    }
     function dependenciesFor(package) {
       var str = '\n', 
           dependencies = package.dependencies, 
@@ -532,10 +573,24 @@ BT.Packager = BT.BuildNode.extend(
         str = ',\n    "dependencies": [\n';
         dependencies.forEach(function(depName, idx) {
           dep = that.findPackage(depName);
-          if(!dep) return console.log("could not find package dependency "+
-            "%@ by %@".fmt(depName, package.get('basename'))+
-            ", remember packages can't depend on packages in other frameworks");
-          str += '      "' + dep.get('packageName') + '"';
+          if(!dep) {
+
+            // try and see if this is one of those directory listings
+            // instead of an actual dependency name
+            var collected = that.packagesBeneathDirectory(depName);
+            if(!collected || collected.length <= 0) {
+              return console.log("could not find package dependency "+
+              "%@ by %@".fmt(depName, package.get('basename'))+
+              ", remember packages can't depend on packages in other frameworks");
+            } else {
+              collected.forEach(function(package, idx) {
+                str += '      "' + package.get('packageName') + '"';
+                if(idx < collected.length-1) str += ',\n';
+              });
+            }
+          } else {
+            str += '      "' + dep.get('packageName') + '"';
+          }
           if(idx < dependencies.length-1) str += ',\n'; 
         });
         str += '\n    ]\n';
@@ -568,34 +623,77 @@ BT.Packager = BT.BuildNode.extend(
     return ret;
   }.property().cacheable(),
 
+  packagesBeneathDirectory: function(dirname) {
+    var packages = this.get('packages');
+    var collection = [];
+    packages.forEach(function(package) {
+      if(!!~package.get('sourceTree').indexOf(dirname)) {
+        collection.push(package);
+      }
+    });
+    return collection;
+  },
+
   orderedPackages: function() {
-    var ret = [],
-        that = this,
-        packages = this.get('packages'),
-        g = new Graph(),
-        map = {}, sorted;
+    var packages = this.get('packages');
+    var g = new Graph();
+    var map = {};
+    var that = this;
+    var ret = [];
+    var sorted;
 
     packages.forEach(function(package) {
-      var dependencies = package.dependencies || [],
-          name = package.get('packageName');
+      var dependencies = package.dependencies || [];
+      var name = package.get('packageName');
       map[name] = package;
       g.addVertex(name);
       dependencies.forEach(function(dependency) {
         var dep = that.findPackage(dependency);
-        if(dep) {
+
+        // here's the interesting part, if we can't find
+        // the legit package being requested we first
+        // try and find if this is a named directory
+        // in the source tree of the framework
+        // if it is, we instead get a list of packages
+        // that are underneath this directory (if any)
+        // and use ALL of those as dependencies
+        if(!dep) {
+            var collected = that.packagesBeneathDirectory(dependency);
+            if(!collected || collected.length <= 0) {
+
+              // at least we now know for sure that we can't find
+              // whatever the hell they were asking for
+              console.log("things are gonna get ugly, couldn't find dependency " +
+                "%@ for package %@ in %@".fmt(dependency, package.get('basename'),
+                package.get('rootNode')));
+              return;
+            } else {
+
+              // for each of the packages in the tree go ahead and add
+              // the relationship for them
+              collected.forEach(function(package) {
+                dep = package.get('packageName');
+                g.addEdge(dep, name);
+              });
+
+              // all done for this pass
+              return;
+            }
+        } else {
+
+          // we have a valid dependency and package for it, wonderful
+          // but we need to make sure that if the requesting package
+          // is core that the dependency is also of type core
+          // or the application will fail to load every time
           if(package.get('type') === 'core' && dep.get('type') !== 'core') {
-            console.log("core package depends on non-core package, "+
-              "forcing non-core (%@) dependency to core".fmt(dep.get('basename')));
+            console.log("core package %@ depends on non-core package %@, ".fmt(
+              package.get('basename'), dependency) + "converting to core");
             dep.set('type', 'core');
           }
           dep = dep.get('packageName');
         }
-        else {
-          console.log("things are gonna get ugly, couldn't find dependency "+
-          "%@ for package %@ in %@".fmt(dependency, package.get('basename'),
-          path.basename(package.get('parentSourceTree'))));
-          dep = dependency;
-        }
+
+        // add the relationship
         g.addEdge(dep, name);
       });
     });
