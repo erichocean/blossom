@@ -197,7 +197,6 @@ SC.ListView = SC.ScrollView.extend({
       content.updateRangeObserver(observer, nowShowing);
     } else {
       var func = this._sc_contentRangeDidChange;
-      console.log(func);
       observer = content.addRangeObserver(nowShowing, this, func, null, true);
       this._sc_contentRangeObserver = observer;
     }

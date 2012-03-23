@@ -168,7 +168,7 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
     else if (this.get('isInputResponder')) {
       SC.BeginEditingTextLayer(this);
     }
-    return false;
+    return true;
   },
 
   color: function() {
