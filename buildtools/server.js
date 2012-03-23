@@ -50,7 +50,7 @@ BT.Server = BT.Object.extend({
         that = this;
 
     this._bt_server = http.createServer(function (req, res) {
-      var url = path.normalize(req.url);
+      var url = path.normalize(req.url).replace(/\\/g, '/');
       var start = new Date().getTime();
 
       // if the url is in the project, send it back

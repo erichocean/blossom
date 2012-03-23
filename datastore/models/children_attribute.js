@@ -27,7 +27,9 @@ sc_require('system/child_array');
 */
 SC.ChildrenAttribute = SC.ChildAttribute.extend(
   /** @scope SC.ChildrenAttribute.prototype */ {
-    
+
+  isChildrenAttribute: true,
+
   // ..........................................................
   // LOW-LEVEL METHODS
   //

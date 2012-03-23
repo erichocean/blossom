@@ -132,6 +132,12 @@ SC.Psurface = function(surface) {
     element.style.webkitBoxShadow = "0px 5px 15px rgba(1,1,1,0.5)";
   }
 
+  var frame = surface.get('frame');
+  style.left   = frame[0]/*x*/      + 'px';
+  style.top    = frame[1]/*y*/      + 'px';
+  style.width  = frame[2]/*width*/  + 'px';
+  style.height = frame[3]/*height*/ + 'px';
+
   surface.didCreateElement(element);
 
   this.parent = null;
