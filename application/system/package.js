@@ -2,7 +2,7 @@
 sc_require('tasks/task');
 
 // for development
-SC.DEBUG_PACKAGES = true;
+SC.DEBUG_PACKAGES = false;
 
 //...............................................
 // Package mode is set globally and allows (mostly for
