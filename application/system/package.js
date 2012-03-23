@@ -124,6 +124,13 @@ SC.Package = SC.Object.extend(
   },
 
   /**
+    Returns the names of all packages that are loaded.
+    This serves little purpose except in development.
+
+    TODO: Probably ought to remove this in the long run
+      or leave it in for debugging purposes?
+
+    @returns {Array} The package names of loaded packages.
   */
   loadedPackages: function() {
     var packages = SC.PACKAGE_MANIFEST;
@@ -139,6 +146,14 @@ SC.Package = SC.Object.extend(
   },
 
   /**
+    Returns the names of all packages that have been
+    loaded and executed. This serves little purpose
+    except in development.
+
+    TODO: Probably ought to remove this in the long run
+      or leave it in for debugging purposes?
+
+    @returns {Array} The package names of executed packages.
   */
   executedPackages: function() {
     var packages = SC.PACKAGE_MANIFEST;
