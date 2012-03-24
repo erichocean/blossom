@@ -506,9 +506,11 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       this.revisions[storeKey] = rev;
       this._notifyRecordPropertyChange(storeKey, statusOnly, key);
 
-      this._propagateToChildren(storeKey, function(storeKey){
-        that.dataHashDidChange(storeKey, null, statusOnly, key);
-      });
+      if(statusOnly) {
+        this._propagateToChildren(storeKey, function(storeKey){
+          that.dataHashDidChange(storeKey, null, statusOnly);
+        });
+      }
     }
 
     return this ;
