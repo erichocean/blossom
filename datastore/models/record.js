@@ -328,7 +328,14 @@ SC.Record = SC.Object.extend(
 
       // If we have a parent, they changed too!
       var p = this.get('parentRecord');
-      if (p) p.recordDidChange();
+      if (p) {
+        var psk = p.get('storeKey'),
+            csk = this.get('storeKey'),
+            store = this.get('store'),
+            path = store.parentRecords[psk][csk];
+    
+        p.recordDidChange(path);
+      }
 
     } else if (prKey){
       rec = store.materializeRecord(prKey);
@@ -356,7 +363,14 @@ SC.Record = SC.Object.extend(
 
     // If we have a parent, they changed too!
     var p = this.get('parentRecord');
-    if (p) p.recordDidChange();
+    if (p) {
+      var psk = p.get('storeKey'),
+          csk = this.get('storeKey'),
+          store = this.get('store'),
+          path = store.parentRecords[psk][csk];
+  
+      p.recordDidChange(path);
+    }
 
     this.get('store').recordDidChange(null, null, this.get('storeKey'), key);
     this.notifyPropertyChange('status');
