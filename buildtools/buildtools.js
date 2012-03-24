@@ -782,7 +782,10 @@ BT.Packager = BT.BuildNode.extend(
                 parentSourceTree: parentSourceTree,
                 rootNode: rootNode
               });
-          node.set(package.get('basename'), package);
+
+          if(package.get('basename') === 'project') {
+            node.set('_project', package);
+          } else { node.set(package.get('basename'), package); }
           // node.set(filename, package);
         } else {
           console.log("the file is something strange => %@".fmt(relativePath));

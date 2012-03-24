@@ -96,9 +96,13 @@ BT.Server = BT.Object.extend({
           var idx, len, node = project, part;
           for (idx=0, len=ary.length; idx<len; ++idx) {
             part = ary[idx];
+            var part2 = '_' + part;
+            var node2 = node.get(part2);
             // console.log(part);
+
             node = node.get(part);
-            if (node) {
+            if (node || node2) {
+              if(!node) node = node2;
               if (idx !== (len-1) && node.get('isBuildNode')) continue;
               else if (idx === (len-1) && node.get('isFile')) continue;
               else if (idx === (len-1) && node.get('isPackage')) continue;
