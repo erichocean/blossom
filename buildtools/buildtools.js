@@ -374,10 +374,12 @@ BT.Package = BT.BuildNode.extend(
     var ast;
     var layer;
     var layers;
+    var regex = new RegExp("sc_require\(.*\);");
     files.forEach(function(file) {
       layer = file.get('applicationLayer');
       if(!sources[layer]) sources[layer] = [];
       contents = file.get('contents');
+      contents = contents.replace(regex, '');
       ast = jsp.parse(contents);
       ast = pro.ast_mangle(ast);
       ast = pro.ast_squeeze(ast);

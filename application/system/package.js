@@ -89,6 +89,19 @@ SC.Package = SC.Object.extend(
         if(log) SC.Logger.info("SC.Package.loadPackage() package already loaded " +
           "and ready '%@'".fmt(packageName));
 
+        if(package.doNotExecute || package.failedDependencies) {
+          if(log) SC.Logger.warn("SC.Package.loadPackage() package flagged not to be " +
+            "executed due to failed dependencies");
+          return true; // technically, its loaded
+        }
+
+        if(package.isExecuted) {
+
+          // could be a few different reason as to why it was requested
+          // to load again but, for now, we can just ignore it
+          return true;
+        }
+
         // ok send it to be executed (if it has already been executed
         // will be dealt with there)
         this._evaluateJavaScriptForPackage(packageName);
@@ -169,6 +182,32 @@ SC.Package = SC.Object.extend(
   },
 
   /**
+    Returns the names of all packages that have been
+    loaded but failed to execute. This serves little purpose
+    except in development.
+
+    TODO: Probably ought to remove this in the long run
+      or leave it in for debugging purposes?
+
+    @returns {Array} The package names of failed packages.
+  */
+  failedPackages: function() {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package;
+    var packageName;
+    var failed = [];
+    for(packageName in packages) {
+      package = packages[packageName];
+      if(!package) continue;
+      if(package.failedDependencies || package.doNotExecute
+          || package.didFailToEvaluate) {
+        failed.push(packageName);
+      }
+    }
+    return failed;
+  },
+
+  /**
     Find and load any dependencies for a given package.
 
     @param {String} packageName The target package.
@@ -220,8 +259,6 @@ SC.Package = SC.Object.extend(
 
       if(log) SC.Logger.info("SC.Package._loadDependenciesForPackage() loading " +
         "dependency '%@' for '%@'".fmt(dependencies[idx], packageName));
-
-      console.log(dependencies[idx]);
 
       // we don't care whether it has been loaded or anything else
       // if its in the list just throw it at the loader
@@ -357,12 +394,14 @@ SC.Package = SC.Object.extend(
 
     // if the package has already been executed...
     if(package.isExecuted) {
-      throw "SC.Package._evaluateJavaScriptForPackage() package '%@' already executed!".fmt(packageName);
+      SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() package '%@' already executed!".fmt(packageName));
+      return;
     }
 
     // if there is no source we can't do much either
     if(!package.source) {
-      throw "SC.Package._evaluateJavaScriptForPackage() no source on requested package '%@'".fmt(packageName);
+      SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() no source on requested package '%@'".fmt(packageName));
+      return;
     }
 
     source = package.source;
@@ -389,6 +428,9 @@ SC.Package = SC.Object.extend(
     for(; idx < parts.length; ++idx) {
       part = parts[idx];
       if(source[part]) {
+
+        if(code && code.length > 0) code += ';';
+
         code += source[part];
 
         // free the used element of the source from
@@ -400,11 +442,24 @@ SC.Package = SC.Object.extend(
     // if we accumulated any code go ahead and execute it
     if(code && code.length > 0) {
       
-      // need to execute in the global scope and
-      // make up for msie shortcomings
-      (window.execScript || function(data) {
-        window['eval'].call(window, data);
-      })(code);
+      try {
+
+        // need to execute in the global scope and
+        // make up for msie shortcomings
+        (window.execScript || function(data) {
+          window['eval'].call(window, data);
+        })(code);
+
+      } catch(err) {
+        SC.Logger.warn("Caught error when processing package source '%@'".fmt(packageName) +
+          ": %@".fmt(err));
+        if(log) SC.Logger.info(code);
+
+        // make sure no package expecting this one will
+        // think we executed ok
+        package.isExecuted = false;
+        package.didFailToEvaluate = true;
+      }
 
       // once the code has been executed for the package
       // we have to let anyone depending on it know that 
@@ -454,6 +509,7 @@ SC.Package = SC.Object.extend(
     if(this._dependenciesMetForPackage(packageName)) {
       if(log) SC.Logger.info("SC.Package._packageDidLoad() package loaded and " +
         "dependencies met for '%@'".fmt(packageName));
+      if(package.isExecuted) return;
       this._evaluateJavaScriptForPackage(packageName);
     } else {
       if(log) SC.Logger.info("SC.Package._packageDidLoad() package loaded but " +
@@ -476,6 +532,7 @@ SC.Package = SC.Object.extend(
     var dependent;
     var dependencies;
     var idx = 0;
+    var didFail = false;
 
 
     if(log) SC.Logger.info("SC.Package._packageDidExecute() for package '%@'".fmt(packageName));
@@ -488,7 +545,9 @@ SC.Package = SC.Object.extend(
     }
 
     // make sure we're flagged as having been executed
-    package.isExecuted = true;
+    if(!package.didFailToEvaluate) {
+      package.isExecuted = true;
+    } else { didFail = true; }
 
     dependents = package.dependents;
 
@@ -527,6 +586,16 @@ SC.Package = SC.Object.extend(
           "depend on '%@' apparently.".fmt(packageName));
         continue;
       }
+
+      // if the package that was executed failed during evaluation
+      // set a flag on the dependents letting them know they
+      // will never load because of a failed dependency
+      if(didFail) {
+        if(!dependent.failedDependencies) dependent.failedDependencies = [];
+        dependent.failedDependencies.push(packageName);
+        dependent.doNotExecute = true;
+        continue;
+      }
             
       // for convenience...
       dependent.dependencies = dependencies.removeAt(pos);
@@ -559,7 +628,6 @@ SC.Package = SC.Object.extend(
     var dependencies;
     var dependency;
     var isReady = true;
-    var done = [];
 
     if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for " +
       "'%@'".fmt(packageName));
@@ -605,11 +673,6 @@ SC.Package = SC.Object.extend(
         package.isReady = false;
         isReady = false;
       }
-
-      // save the index to the array of found dependencies
-      // so we can remove them from the dependencies array
-      // and not look for them again in the future
-      else done.push(idx);
     }
 
     if(isReady) {
@@ -623,25 +686,6 @@ SC.Package = SC.Object.extend(
       // mark the package as ready since all dependencies
       // are loaded
       package.isReady = true;
-    } else if(done.length > 0) {
-
-      if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() some dependencies " +
-        "were loaded, removing them from the dependencies array");
-
-      // if we aren't ready but some dependencies are
-      // go ahead and remove them from the array
-      for(idx = 0; idx < done.length; ++idx) {
-        dependencies = dependencies.removeAt(done[idx]);
-      }
-
-      // while this should never happen...
-      if(dependencies.length <= 0) {
-        throw "SC.Package._dependenciesMetForPackage() dependencies not met " +
-          "but no dependencies left for '%@'?".fmt(packageName);
-      }
-      
-      // ensure we get the correct array back on the package
-      package.dependencies = dependencies;
     } else {
       if(log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for '%@'".fmt(packageName) +
         " some dependencies were not loaded or executed");
