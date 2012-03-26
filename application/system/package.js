@@ -27,6 +27,9 @@ SC.PACKAGE_MODE_NORMAL      = 0x10;
 // The default package flag is set here but can be
 // overridden later or by an extended SC.Package class.
 SC.PACKAGE_MODE = SC.PACKAGE_MODE_NORMAL;
+// To make a combination of other settings do something
+// like the following to create the proper bitmask:
+// SC.PACKAGE_MODE = SC.PACKAGE_MODE_MODELS | SC.PACKAGE_MODE_OTHER;
 
 /**
   @class
@@ -35,7 +38,38 @@ SC.PACKAGE_MODE = SC.PACKAGE_MODE_NORMAL;
   built-out by the build tools that can be included in the
   running application in various forms (core, lazy or demand).
 
-  TODO: complete documentation
+  There need only be one package manager for any running
+  application as multiples would simply look at the same
+  package information. 
+
+  There are global mode settings that can be set to override
+  defaults at the application level. Packages can be set
+  to evaluate only portions of the source code from the package.
+  The buildtools separate content by convention not by inspection.
+  Files located in the `models` directory will be included as
+  models, `controllers` as controllers and `views` as views. All
+  other files (exempting `core.js` that is a specially prioritized
+  file) will be included (and ordered) as `other`. The application
+  can instruct packages to load combinations of these separated
+  layers or all of the (SC.PACKAGE_MODE_NORMAL the default setting).
+  It is up to the developer to ensure the files can be programatically
+  ordered by their sc_require statements and that files are organized
+  in the correct directory structures. If type `other` is selected it
+  will be evaluated _before any other types_. This option is
+  currently non-configurable.
+
+  @see #SC#PACKAGE_MODE
+  @see #SC#PACKAGE_MODE_MODELS
+  @see #SC#PACKAGE_MODE_VIEWS
+  @see #SC#PACKAGE_MODE_CONTROLLERS'
+  @see #SC#PACKAGE_MODE_OTHER
+  @see #SC#PACKAGE_MODE_NORMAL
+
+  @see #SC#DEBUG_PACKAGES
+
+  See build-tools documentation for more details @see#BT#Package
+
+  @author W. Cole Davis
 */
 SC.Package = SC.Object.extend(
   /** @scope SC.Package.prototype */ {
@@ -61,14 +95,23 @@ SC.Package = SC.Object.extend(
   },
 
   /**
-    Attempt to load a requested package.
+    Attempt to load a package. If it has been loaded but not evaluated will be
+    evaluated. If already loaded and evaluated but a new callback is supplied it
+    will be executed immediately (along with any other queued callbacks). Callbacks
+    will always be supplied with the first parameter as the name of the package
+    that was loaded and that is invoking it.
 
-    TODO: needs complete documentation.
+    @param {String} packageName The name of the package to load.
+    @param {Object} [target] The context from which to call the callback method.
+    @param {Function} [method] The function to execute as the callback.
+    @param {...} [args] Any additional arguments will be supplied to the
+      callback as paramters.
   */
   loadPackage: function(packageName, target, method) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log; 
+    var args = SC.A(arguments).slice(3);
 
     if(log) SC.Logger.info("SC.Package.loadPackage() for package '%@'".fmt(packageName));
 
@@ -89,7 +132,7 @@ SC.Package = SC.Object.extend(
         if(log) SC.Logger.info("SC.Package.loadPackage() package already loaded " +
           "and ready '%@'".fmt(packageName));
 
-        if(package.doNotExecute || package.failedDependencies) {
+        if(package.doNotExecute || package.failedDependencies || package.didFailToEvaluate) {
           if(log) SC.Logger.warn("SC.Package.loadPackage() package flagged not to be " +
             "executed due to failed dependencies");
           return true; // technically, its loaded
@@ -97,8 +140,15 @@ SC.Package = SC.Object.extend(
 
         if(package.isExecuted) {
 
+          // try and register any hopeful post-load callback
+          this.registerCallbackForPackage(packageName, target, method, args);
+
+          // now immediately fire it in the correct context since
+          // the package is already loaded
+          this._invokeCallbacksForPackage(packageName);
+
           // could be a few different reason as to why it was requested
-          // to load again but, for now, we can just ignore it
+          // after loading but go ahead and do this anyways
           return true;
         }
 
@@ -118,7 +168,8 @@ SC.Package = SC.Object.extend(
     // callback that was passed in and then go get the source
     // the rest is handled after it is received
 
-    //...REGISTER CALLBACK HERE
+    // register the callback if there was one supplied with it
+    this.registerCallbackForPackage(packageName, target, method, args);
 
     // go ahead and fire off the request for the source
     // from the handler 
@@ -179,6 +230,64 @@ SC.Package = SC.Object.extend(
       if(package.isExecuted) executed.push(packageName);
     }
     return executed;
+  },
+
+  /**
+    Register a callback method to be called once the package has successfully
+    loaded and been evaluated. Additional arguments will be applied as
+    arguments to the callback when it is executed.
+
+    @param {String} packageName The name of the package for which to
+      register the callback.
+    @param {Object} [target] The context for which to run the callback method.
+    @param {Function} [method] The callback function to execute.
+    @param {...} [args] Any other arguments will be used as parameters to the callback.  
+  */
+  registerCallbackForPackage: function(packageName, target, method, args) {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package = packages[packageName];
+    var log = this.log;
+    var args = args || [];
+    var cb;
+    
+    // if there isn't a package we really can't do much
+    // so get that out of the way
+    if(!package) {
+      if(log) SC.Logger.warn("SC.Package._registerCallbackForPackage() " +
+        "could not find package '%@'".fmt(packageName));
+      return;
+    }
+
+    if(SC.none(target) && SC.none(method)) return;
+
+    if(target) {
+      if(SC.typeOf(target) === SC.T_FUNCTION) {
+        if(!SC.none(method)) args.unshift(method);
+        method = target;
+        target = null;
+      }
+    } else { target = null; }
+
+    if(!method || (SC.typeOf(method) !== SC.T_FUNCTION)) return;
+    
+    // maintain that for the callbacks the first parameter
+    // is always the name of the package that was loaded
+    args.unshift(packageName);
+
+    cb = function() { 
+      var needsRunLoop = !!SC.RunLoop.currentRunLoop;
+      if(needsRunLoop) {
+        SC.run(function() {
+          method.apply(target, args)
+        });
+      } else {
+        method.apply(target, args);
+      }
+    }
+
+    if(!package.callbacks)
+      package.callbacks = [];
+    package.callbacks.push(cb);
   },
 
   /**
@@ -533,6 +642,7 @@ SC.Package = SC.Object.extend(
     var dependencies;
     var idx = 0;
     var didFail = false;
+    var callbacks;
 
 
     if(log) SC.Logger.info("SC.Package._packageDidExecute() for package '%@'".fmt(packageName));
@@ -549,6 +659,12 @@ SC.Package = SC.Object.extend(
       package.isExecuted = true;
     } else { didFail = true; }
 
+    // if we successfully execute the package we want
+    // to fire off the callbacks for the package before
+    // telling all the dependents otherwise god only
+    // knows when this will actually happen
+    this._invokeCallbacksForPackage(packageName);
+
     dependents = package.dependents;
 
     // nothing to do if there aren't any dependents
@@ -556,7 +672,7 @@ SC.Package = SC.Object.extend(
 
     // loop through the dependents and knock the dependency
     // from the waiting dependent
-    for(; idx < dependents.length; ++idx) {
+    for(idx = 0; idx < dependents.length; ++idx) {
       dependent = dependents[idx];
       dependent = packages[dependent];
 
@@ -609,6 +725,35 @@ SC.Package = SC.Object.extend(
         this.loadPackage(dependents[idx]);
       }
     }
+  },
+
+  /**
+    Retrieves any available callbacks for the named package
+    and executes them in the order they were entered in the
+    queue. Callbacks are freed once they have been executed.
+
+    @param {String} packageName The name of the package whose
+      callbacks need to be executed.
+  */
+  _invokeCallbacksForPackage: function(packageName) {
+    var packages = SC.PACKAGE_MANIFEST;
+    var package = packages[packageName];
+    var callbacks = package.callbacks;
+    var log = this.log;
+    var idx = 0;
+
+    for(; idx < callbacks.length; ++idx) {
+      try {
+        callbacks[idx]();
+      } catch(err) {
+        SC.Logger.warn("SC.Package._packageDidExecute() error when attempting " +
+          "to execute package callback for package '%@'".fmt(packageName));
+      }
+    }
+
+    // do this to make sure we don't ever run them twice
+    // but also to release them
+    delete package['callbacks'];
   },
 
   /**
