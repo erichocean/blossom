@@ -5,6 +5,11 @@
 // ==========================================================================
 /*globals global require __dirname BT */
 
+/**
+  @author Erich Ocean
+  @author W. Cole Davis
+*/
+
 var http = require('http'),
     fs = require('fs'),
     path = require('path'),
@@ -307,6 +312,12 @@ BT.Package = BT.BuildNode.extend(
     return ret;
   }.property().cacheable(),
 
+  packageType: function() {
+    var type = this.get('type');
+    var core = this.get('loadAsCore');
+    return core ? 'core' : type;
+  }.property().cacheable(),
+
   orderFiles: function(files) {
     var g = new Graph();
     var map = {};
@@ -600,7 +611,7 @@ BT.Packager = BT.BuildNode.extend(
       return str;
     }
     packages.forEach(function(package, idx) {
-      var type = package.get('type');
+      var type = package.get('packageType');
       manifest += '  "' + package.get('packageName') + '": {\n';
       manifest += '    "basename": \'' + package.get('basename') + '\',\n';
       manifest += '    "type": \'' + type + '\',\n';
@@ -687,7 +698,7 @@ BT.Packager = BT.BuildNode.extend(
           // but we need to make sure that if the requesting package
           // is core that the dependency is also of type core
           // or the application will fail to load every time
-          if(package.get('type') === 'core' && dep.get('type') !== 'core') {
+          if(package.get('packageType') === 'core' && dep.get('packageType') !== 'core') {
             console.log("core package %@ depends on non-core package %@, ".fmt(
               package.get('basename'), dependency) + "converting to core");
             dep.set('type', 'core');
@@ -749,6 +760,8 @@ BT.Packager = BT.BuildNode.extend(
         rootNode = this.get('rootNode'),
         that = this;
 
+    var loadAsCore = this.get('loadAsCore');
+
     function isPackageDir(source) {
       var stat, packageSource;
       packageSource = path.join(source, 'node', 'package.json');
@@ -780,7 +793,8 @@ BT.Packager = BT.BuildNode.extend(
           var package = BT.Package.create({
                 sourceTree: relativePath,
                 parentSourceTree: parentSourceTree,
-                rootNode: rootNode
+                rootNode: rootNode,
+                loadAsCore: loadAsCore
               });
 
           node.set(package.get('basename'), package);
@@ -931,6 +945,16 @@ BT.Target = BT.BuildNode.extend({
   usePackages: true,
 
   /**
+    Can force ALL packages to load as core which is
+    especially helpful for development to assist in
+    debugging package source code.
+
+    @type Boolean
+    @default false
+  */
+  loadPackagesAsCore: false,
+
+  /**
     Supplies a manifest to be included with the source
     of an application so that packages are known to
     the application before they are loaded.
@@ -964,7 +988,7 @@ BT.Target = BT.BuildNode.extend({
     if(!packager) return packageFiles;
     packages = packager.get('orderedPackages');
     packages.forEach(function(package) {
-      if(package.get('type') !== 'core') return;
+      if(package.get('packageType') !== 'core') return;
       packageFiles = packageFiles.concat(
         package.get('orderedJavaScriptFiles')
       );
@@ -992,6 +1016,8 @@ BT.Target = BT.BuildNode.extend({
     var sourceTree = this.get('sourceTree'),
         frameworks = this.get('frameworks'),
         that = this;
+  
+    var loadPackagesAsCore = this.get('loadPackagesAsCore');
 
     function processDirectory(dirname, node, deep) {
       var files = fs.readdirSync(dirname);
@@ -1020,7 +1046,8 @@ BT.Target = BT.BuildNode.extend({
             var packager = BT.Packager.create({
               sourceTree: relativePath,
               parentSourceTree: sourceTree,
-              rootNode: rootNode
+              rootNode: rootNode,
+              loadAsCore: loadPackagesAsCore
             });
             node.set(filename, packager);
           }

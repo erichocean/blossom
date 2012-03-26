@@ -5,6 +5,11 @@
 // ==========================================================================
 /*globals global require __dirname BT */
 
+/**
+  @author Erich Ocean
+  @author W. Cole Davis
+*/
+
 var fs = require('fs'),
     path = require('path'),
     http = require('http'),
