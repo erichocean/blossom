@@ -36,7 +36,7 @@ if (ENFORCE_BLOSSOM_2DCONTEXT_API) {
   CanvasRenderingContext2D.prototype.drawImage = function() {
     throw "CanvasRenderingContext2D#drawImage() is not available in Blossom. Use #drawLayer() instead."; 
   };
-  CanvasRenderingContext2D.prototype.drawImage = function() {
+  CanvasRenderingContext2D.prototype.createPattern = function() {
     throw "CanvasRenderingContext2D#createPattern() is not available in Blossom. Use SC.Layer#patternForContext(context, repetition) instead."; 
   };
 }
