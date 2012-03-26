@@ -39,7 +39,7 @@ function traverse(kind) {
       var obj = node[key];
       if (obj && obj.get && typeof obj.get === "function" &&
           obj.get(conditionKey) &&
-          key !== 'project' && key !== 'parentNode') {
+          key !== '_project' && key !== 'parentNode') {
         // HACK: Make sure nodes know their parent and their name.
         if (!obj.get('nodeName')) obj.set('nodeName', key);
         if (!obj.get('parentNode')) obj.set('parentNode', node);
@@ -783,9 +783,7 @@ BT.Packager = BT.BuildNode.extend(
                 rootNode: rootNode
               });
 
-          if(package.get('basename') === 'project') {
-            node.set('_project', package);
-          } else { node.set(package.get('basename'), package); }
+          node.set(package.get('basename'), package);
           // node.set(filename, package);
         } else {
           console.log("the file is something strange => %@".fmt(relativePath));
@@ -886,7 +884,7 @@ BT.Target = BT.BuildNode.extend({
   }.property().cacheable(),
 
   orderedFrameworks: function() {
-    var project = this.get('project'),
+    var project = this.get('_project'),
         frameworks = this.get('frameworks'),
         ary = [];
 
@@ -1148,7 +1146,7 @@ BT.Project = BT.BuildNode.extend({
   },
 
   indexHTML: function() {
-    var ret = "", project = this.get('project'),
+    var ret = "", project = this.get('_project'),
         isBuilding = this.get('isBuilding');
 
     ret += '<html>\n';
@@ -1184,7 +1182,7 @@ BT.Project = BT.BuildNode.extend({
     // HACK: Make sure every node knows what project it's part of.
     function setProject() {
       return function(node, name, depth) {
-        node.set('project', project);
+        node.set('_project', project);
         arguments.callee.base.apply(this, arguments);
       };
     }
@@ -1351,7 +1349,7 @@ BT.App = BT.Target.extend({
   }.property().cacheable(),
 
   indexHTML: function() {
-    var ret = "", project = this.get('project');
+    var ret = "", project = this.get('_project');
 
     ret += '<html>\n';
     ret += '  <head>\n';
@@ -1397,7 +1395,7 @@ BT.App = BT.Target.extend({
   }.property(),
 
   javascriptSourceFiles: function() {
-    var ary = [], project = this.get('project');
+    var ary = [], project = this.get('_project');
 
     this.get('orderedFrameworks').forEach(function(framework) {
       var files = framework.get('orderedJavaScriptFiles');
@@ -1411,7 +1409,7 @@ BT.App = BT.Target.extend({
   }.property(),
 
   productionIndexHTML: function() {
-    var ret = "", project = this.get('project');
+    var ret = "", project = this.get('_project');
 
     ret += '<html>\n';
     ret += '  <head>\n';
