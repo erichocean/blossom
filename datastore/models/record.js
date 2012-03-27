@@ -965,9 +965,9 @@ SC.Record = SC.Object.extend(
           store.writeDataHash(sk, hash);
           cr = store.materializeRecord(sk);
         } else {
-          sk = store.pushRetrieve(recordType, id, hash);
-          cr = store.materializeRecord(sk);
+          cr = store.createRecord(recordType, hash) ;
           if (SC.none(id)){
+            sk = cr.get('storeKey');
             id = 'cr'+sk;
             SC.Store.replaceIdFor(sk, id);
             hash = store.readEditableDataHash(sk);
