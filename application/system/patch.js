@@ -168,7 +168,7 @@ SC.Patch = SC.Object.extend(
     }
   
     // try and find the prototype
-    target = target.__proto__ ? target.__proto__ : target.prototype;
+    target = target.prototype;
     
     // target might be undefined for some reason
     if (!target) return null;
