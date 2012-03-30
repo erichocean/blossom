@@ -1325,3 +1325,5 @@ SC.mapDisplayNames = function(obj, level, path, seenHash, seenArray) {
 
   path.pop();
 };
+
+SC.THROW_ALL_ERRORS = false;

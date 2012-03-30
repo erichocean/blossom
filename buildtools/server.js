@@ -5,6 +5,11 @@
 // ==========================================================================
 /*globals global require __dirname BT */
 
+/**
+  @author Erich Ocean
+  @author W. Cole Davis
+*/
+
 var fs = require('fs'),
     path = require('path'),
     http = require('http'),
@@ -97,6 +102,7 @@ BT.Server = BT.Object.extend({
           for (idx=0, len=ary.length; idx<len; ++idx) {
             part = ary[idx];
             // console.log(part);
+
             node = node.get(part);
             if (node) {
               if (idx !== (len-1) && node.get('isBuildNode')) continue;
