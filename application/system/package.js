@@ -145,7 +145,7 @@ SC.Package = SC.Object.extend(
 
           // now immediately fire it in the correct context since
           // the package is already loaded
-          this._invokeCallbacksForPackage(packageName);
+          this._sc_invokeCallbacksForPackage(packageName);
 
           // could be a few different reason as to why it was requested
           // after loading but go ahead and do this anyways
@@ -154,7 +154,7 @@ SC.Package = SC.Object.extend(
 
         // ok send it to be executed (if it has already been executed
         // will be dealt with there)
-        this._evaluateJavaScriptForPackage(packageName);
+        this._sc_evaluateJavaScriptForPackage(packageName);
         return true; // since it was loaded and ready
       } else {
         if (log) SC.Logger.info("SC.Package.loadPackage() package loaded but was not " +
@@ -173,7 +173,7 @@ SC.Package = SC.Object.extend(
 
     // go ahead and fire off the request for the source
     // from the handler 
-    this._loadJavaScript(packageName);
+    this.loadJavaScript(packageName);
     return false; // since it is being loaded but isn't ready
   },
 
@@ -321,7 +321,7 @@ SC.Package = SC.Object.extend(
 
     @param {String} packageName The target package.
   */
-  _loadDependenciesForPackage: function(packageName) {
+  _sc_loadDependenciesForPackage: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log;
@@ -330,13 +330,13 @@ SC.Package = SC.Object.extend(
     var dependency;
     var dependents;
 
-    if (log) SC.Logger.info("SC.Package._loadDependenciesForPackage() for " +
+    if (log) SC.Logger.info("SC.Package._sc_loadDependenciesForPackage() for " +
       "package '%@'".fmt(packageName));
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      if (log) SC.Logger.warn("SC.Package._loadDependenciesForPackage() " +
+      if (log) SC.Logger.warn("SC.Package._sc_loadDependenciesForPackage() " +
         "could not find package '%@'".fmt(packageName));
       return;
     }
@@ -358,7 +358,7 @@ SC.Package = SC.Object.extend(
       // if we can't find this dependency as a known package
       // we're really in trouble
       if (!dependency) {
-        throw "SC.Package._loadDependenciesForPackage() could not find a " +
+        throw "SC.Package._sc_loadDependenciesForPackage() could not find a " +
           "requried dependency for package '%@'; needed '%@'".fmt(packageName, dependencies[idx]);
       }
 
@@ -366,7 +366,7 @@ SC.Package = SC.Object.extend(
       dependents.push(packageName);
       dependency.dependents = dependents;
 
-      if (log) SC.Logger.info("SC.Package._loadDependenciesForPackage() loading " +
+      if (log) SC.Logger.info("SC.Package._sc_loadDependenciesForPackage() loading " +
         "dependency '%@' for '%@'".fmt(dependencies[idx], packageName));
 
       // we don't care whether it has been loaded or anything else
@@ -378,28 +378,28 @@ SC.Package = SC.Object.extend(
   /**
     Attempt to retrieve the source JavaScript for a
     package from the webserver. This method can be
-    overridden in extendenions of SC.Package to
+    overridden in extensions of SC.Package to
     retrieve the source by some other means. 
 
     @param {String} packageName The name of the requested
       package to retrieve.
     @returns {SC.Package} receiver
   */
-  _loadJavaScript: function(packageName) {
+  loadJavaScript: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log; 
     var el;
-    var url = this._urlForPackage(packageName);
+    var url = this._sc_urlForPackage(packageName);
     var self = this;
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      if (log) SC.Logger.warn("SC.Package._loadJavaScript() could not find package '%@'".fmt(packageName));
+      if (log) SC.Logger.warn("SC.Package.loadJavaScript() could not find package '%@'".fmt(packageName));
       return this;
     } else if (package.isLoaded) {
-      if (log) SC.Logger.warn("SC.Package._loadedJavaScript() package '%@' already loaded".fmt(packageName));
+      if (log) SC.Logger.warn("SC.Package.loadJavaScript() package '%@' already loaded".fmt(packageName));
       return this;
     }
 
@@ -419,7 +419,7 @@ SC.Package = SC.Object.extend(
 
         // we don't know who is handling this thus
         // the scoping back to self
-        self._packageDidLoad(packageName);
+        self._sc_packageDidLoad(packageName);
       });
     }
 
@@ -438,7 +438,7 @@ SC.Package = SC.Object.extend(
     @returns {String} The constructed url or null if it could
       not be built or determined.
   */
-  _urlForPackage: function(packageName) {
+  _sc_urlForPackage: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var mask = SC.PACKAGE_MODE;
@@ -448,7 +448,7 @@ SC.Package = SC.Object.extend(
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      if (log) SC.Logger.warn("SC.Package._urlForPackage() could not find package '%@'".fmt(packageName));
+      if (log) SC.Logger.warn("SC.Package._sc_urlForPackage() could not find package '%@'".fmt(packageName));
       return null;
     }
 
@@ -479,7 +479,7 @@ SC.Package = SC.Object.extend(
     @param {String} packageName The name of the package from which
       to evaluate source code.
   */
-  _evaluateJavaScriptForPackage: function(packageName) {
+  _sc_evaluateJavaScriptForPackage: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var flags = SC.PACKAGE_MODE;
@@ -490,26 +490,26 @@ SC.Package = SC.Object.extend(
     var part;
     var idx = 0;
 
-    if (log) SC.Logger.info("SC.Package._evaluateJavaScriptForPackage() attempting to " +
+    if (log) SC.Logger.info("SC.Package._sc_evaluateJavaScriptForPackage() attempting to " +
       "execute source for package '%@'".fmt(packageName));
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      if (log) SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() could not " +
+      if (log) SC.Logger.warn("SC.Package._sc_evaluateJavaScriptForPackage() could not " +
         "find package '%@'".fmt(packageName));
       return;
     }
 
     // if the package has already been executed...
     if (package.isExecuted) {
-      SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() package '%@' already executed!".fmt(packageName));
+      SC.Logger.warn("SC.Package._sc_evaluateJavaScriptForPackage() package '%@' already executed!".fmt(packageName));
       return;
     }
 
     // if there is no source we can't do much either
     if (!package.source) {
-      SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() no source on requested package '%@'".fmt(packageName));
+      SC.Logger.warn("SC.Package._sc_evaluateJavaScriptForPackage() no source on requested package '%@'".fmt(packageName));
       return;
     }
 
@@ -573,7 +573,7 @@ SC.Package = SC.Object.extend(
       // once the code has been executed for the package
       // we have to let anyone depending on it know that 
       // its ready but also invoke any waiting callbacks
-      this._packageDidExecute(packageName);
+      this._sc_packageDidExecute(packageName);
       // TODO: invoke callbacks
 
     } else {
@@ -582,7 +582,7 @@ SC.Package = SC.Object.extend(
       // package to pretend that it did
       package.isExecuted = false;
 
-      if (log) SC.Logger.warn("SC.Package._evaluateJavaScriptForPackage() " +
+      if (log) SC.Logger.warn("SC.Package._sc_evaluateJavaScriptForPackage() " +
         "no package source found for given package mode for package '%@'".fmt(packageName));
     }
   },
@@ -593,17 +593,17 @@ SC.Package = SC.Object.extend(
     @param {String} packageName The name of the package that
       was loaded.
   */
-  _packageDidLoad: function(packageName) {
+  _sc_packageDidLoad: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log;
 
-    if (log) SC.Logger.info("SC.Package._packageDidLoad() for package '%@'".fmt(packageName));
+    if (log) SC.Logger.info("SC.Package._sc_packageDidLoad() for package '%@'".fmt(packageName));
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      SC.Logger.warn("SC.Package._packageDidLoad() unknown package loaded '%@' ".fmt(packageName));
+      SC.Logger.warn("SC.Package._sc_packageDidLoad() unknown package loaded '%@' ".fmt(packageName));
       return;
     }
 
@@ -615,15 +615,15 @@ SC.Package = SC.Object.extend(
 
     // if all the dependencies were met for a package go ahead
     // and evaluate the source otherwise load its dependencies
-    if (this._dependenciesMetForPackage(packageName)) {
-      if (log) SC.Logger.info("SC.Package._packageDidLoad() package loaded and " +
+    if (this._sc_dependenciesMetForPackage(packageName)) {
+      if (log) SC.Logger.info("SC.Package._sc_packageDidLoad() package loaded and " +
         "dependencies met for '%@'".fmt(packageName));
       if (package.isExecuted) return;
-      this._evaluateJavaScriptForPackage(packageName);
+      this._sc_evaluateJavaScriptForPackage(packageName);
     } else {
-      if (log) SC.Logger.info("SC.Package._packageDidLoad() package loaded but " +
+      if (log) SC.Logger.info("SC.Package._sc_packageDidLoad() package loaded but " +
         "its dependencies were not met '%@'".fmt(packageName));
-      this._loadDependenciesForPackage(packageName);
+      this._sc_loadDependenciesForPackage(packageName);
     }
   },
 
@@ -633,7 +633,7 @@ SC.Package = SC.Object.extend(
 
     @param {String} packageName The name of the package that was loaded.
   */
-  _packageDidExecute: function(packageName) {
+  _sc_packageDidExecute: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log;
@@ -645,12 +645,12 @@ SC.Package = SC.Object.extend(
     var callbacks;
 
 
-    if (log) SC.Logger.info("SC.Package._packageDidExecute() for package '%@'".fmt(packageName));
+    if (log) SC.Logger.info("SC.Package._sc_packageDidExecute() for package '%@'".fmt(packageName));
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      SC.Logger.warn("SC.Package._packageDidExecute() unknown package reporting '%@' ".fmt(packageName));
+      SC.Logger.warn("SC.Package._sc_packageDidExecute() unknown package reporting '%@' ".fmt(packageName));
       return;
     }
 
@@ -663,7 +663,7 @@ SC.Package = SC.Object.extend(
     // to fire off the callbacks for the package before
     // telling all the dependents otherwise god only
     // knows when this will actually happen
-    this._invokeCallbacksForPackage(packageName);
+    this._sc_invokeCallbacksForPackage(packageName);
 
     dependents = package.dependents;
 
@@ -678,7 +678,7 @@ SC.Package = SC.Object.extend(
 
       // not much we can do if we can't find the dependent
       if (!dependent) {
-        throw "SC.Package._packageDidExecute() can't find dependent '%@' for '%@'".fmt(
+        throw "SC.Package._sc_packageDidExecute() can't find dependent '%@' for '%@'".fmt(
           dependents[idx], packageName);
       }
 
@@ -686,7 +686,7 @@ SC.Package = SC.Object.extend(
 
       // if the dependent doesn't have any dependencies...wtf?
       if (!dependencies || dependent.isReady) {
-        if (log) SC.Logger.warn("SC.Package._packageDidExecute() dependent found '%@' for '%@' ".fmt(
+        if (log) SC.Logger.warn("SC.Package._sc_packageDidExecute() dependent found '%@' for '%@' ".fmt(
           dependents[idx], packageName) + "but was marked as " +
           (!dependencies ? "not having dependencies" : "having dependencies") +
           (dependent.isReady ? " and as ready" : '') + ", so, something aint right yo");
@@ -697,7 +697,7 @@ SC.Package = SC.Object.extend(
       // so we can remove then remove it
       var pos = dependencies.indexOf(packageName);
       if (pos < 0) {
-        if (log) SC.Logger.warn("SC.Package._packageDidExecute() dependent found '%@' for '%@' ".fmt(
+        if (log) SC.Logger.warn("SC.Package._sc_packageDidExecute() dependent found '%@' for '%@' ".fmt(
           dependents[idx], packageName) + "and had dependencies but does not " +
           "depend on '%@' apparently.".fmt(packageName));
         continue;
@@ -719,7 +719,7 @@ SC.Package = SC.Object.extend(
       // go ahead and reevaluate the status of the dependency
       // using the normalized method...this probably ought to
       // change since it could be done with less overhead
-      if (this._dependenciesMetForPackage(dependents[idx])) {
+      if (this._sc_dependenciesMetForPackage(dependents[idx])) {
 
         // go ahead and let it try again
         this.loadPackage(dependents[idx]);
@@ -735,10 +735,10 @@ SC.Package = SC.Object.extend(
     @param {String} packageName The name of the package whose
       callbacks need to be executed.
   */
-  _invokeCallbacksForPackage: function(packageName) {
+  _sc_invokeCallbacksForPackage: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
-    var callbacks = package.callbacks;
+    var callbacks = package.callbacks || [];
     var log = this.log;
     var idx = 0;
 
@@ -746,7 +746,7 @@ SC.Package = SC.Object.extend(
       try {
         callbacks[idx]();
       } catch(err) {
-        SC.Logger.warn("SC.Package._packageDidExecute() error when attempting " +
+        SC.Logger.warn("SC.Package._sc_packageDidExecute() error when attempting " +
           "to execute package callback for package '%@'".fmt(packageName));
       }
     }
@@ -765,7 +765,7 @@ SC.Package = SC.Object.extend(
     @returns {Boolean} YES|NO depending on whether all of the
       dependencies have been met.
   */
-  _dependenciesMetForPackage: function(packageName) {
+  _sc_dependenciesMetForPackage: function(packageName) {
     var packages = SC.PACKAGE_MANIFEST;
     var package = packages[packageName];
     var log = this.log;
@@ -774,13 +774,13 @@ SC.Package = SC.Object.extend(
     var dependency;
     var isReady = true;
 
-    if (log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for " +
+    if (log) SC.Logger.info("SC.Package._sc_dependenciesMetForPackage() for " +
       "'%@'".fmt(packageName));
 
     // if there isn't a package we really can't do much
     // so get that out of the way
     if (!package) {
-      if (log) SC.Logger.warn("SC.Package._dependenciesMetForPackage() could " +
+      if (log) SC.Logger.warn("SC.Package._sc_dependenciesMetForPackage() could " +
         " not find package '%@'".fmt(packageName));
       return false;
     }
@@ -791,7 +791,7 @@ SC.Package = SC.Object.extend(
     // testing just return true aint nothing to do
     if (!dependencies || dependencies.length <= 0) {
 
-      if (log) SC.Logger.info("SC.Package._dependenciesMetForPackage() no " +
+      if (log) SC.Logger.info("SC.Package._sc_dependenciesMetForPackage() no " +
         "dependencies found for package '%@'".fmt(packageName));
       
       // set the ready flag
@@ -808,7 +808,7 @@ SC.Package = SC.Object.extend(
       // if we can't find this dependency as a known package
       // we're really in trouble
       if (!dependency) {
-        throw "SC.Package._dependenciesMetForPackage() could not find a " +
+        throw "SC.Package._sc_dependenciesMetForPackage() could not find a " +
           "requried dependency for package '%@'; needed '%@'".fmt(packageName, dependencies[idx]);
       }
 
@@ -822,7 +822,7 @@ SC.Package = SC.Object.extend(
 
     if (isReady) {
 
-      if (log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for '%@'".fmt(packageName) +
+      if (log) SC.Logger.info("SC.Package._sc_dependenciesMetForPackage() for '%@'".fmt(packageName) +
         " all dependencies loaded and executed, package is ready");
 
       // if we are ready, free up the dependencies array
@@ -832,7 +832,7 @@ SC.Package = SC.Object.extend(
       // are loaded
       package.isReady = true;
     } else {
-      if (log) SC.Logger.info("SC.Package._dependenciesMetForPackage() for '%@'".fmt(packageName) +
+      if (log) SC.Logger.info("SC.Package._sc_dependenciesMetForPackage() for '%@'".fmt(packageName) +
         " some dependencies were not loaded or executed");
     }
 
