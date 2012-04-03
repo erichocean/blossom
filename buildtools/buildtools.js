@@ -1234,7 +1234,7 @@ BT.Project = BT.BuildNode.extend({
 
     BT.Server.create({
       project: this,
-      host: host,
+      hostname: host,
       port: port
     });
   },
