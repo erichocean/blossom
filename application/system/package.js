@@ -140,12 +140,36 @@ SC.Package = SC.Object.extend(
 
         if (package.isExecuted) {
 
+          if (log) SC.Logger.info("SC.Package.loadPackage() package already loaded, " +
+            "ready and executed, attempting to invoke any callbacks");
+
           // try and register any hopeful post-load callback
           this.registerCallbackForPackage(packageName, target, method, args);
 
           // now immediately fire it in the correct context since
           // the package is already loaded
           this._sc_invokeCallbacksForPackage(packageName);
+
+          if (package.dependents) {
+            var dependents = package.dependents;
+            var dependent;
+            var idx = 0;
+            var pos;
+            var name;
+            for (; idx < dependents.length; ++idx) {
+              name = dependents[idx];
+              dependent = packages[name];
+              if (!dependent) continue;
+              if (!dependent.dependencies) continue;
+              pos = dependent.dependencies.indexOf(packageName);
+              if (pos < 0) continue;
+              dependent.dependencies = dependent.dependencies.splice(pos, 1);
+              
+              if (this._sc_dependenciesMetForPackage(name)) {
+                this._sc_evaluateJavaScriptForPackage(name);
+              }
+            }
+          }
 
           // could be a few different reason as to why it was requested
           // after loading but go ahead and do this anyways
@@ -173,7 +197,7 @@ SC.Package = SC.Object.extend(
 
     // go ahead and fire off the request for the source
     // from the handler 
-    this.loadJavaScript(packageName);
+    if(!package.isLoading) this.loadJavaScript(packageName);
     return false; // since it is being loaded but isn't ready
   },
 
@@ -618,7 +642,10 @@ SC.Package = SC.Object.extend(
     if (this._sc_dependenciesMetForPackage(packageName)) {
       if (log) SC.Logger.info("SC.Package._sc_packageDidLoad() package loaded and " +
         "dependencies met for '%@'".fmt(packageName));
-      if (package.isExecuted) return;
+      if (package.isExecuted) {
+        throw "PACKAGE DID LOAD BUT WAS ALREADY EXECUTED?!?!?!?!";
+        return;
+      }
       this._sc_evaluateJavaScriptForPackage(packageName);
     } else {
       if (log) SC.Logger.info("SC.Package._sc_packageDidLoad() package loaded but " +
@@ -682,7 +709,7 @@ SC.Package = SC.Object.extend(
           dependents[idx], packageName);
       }
 
-      dependencies = dependent.dependencies;
+      dependencies = SC.clone(dependent.dependencies);
 
       // if the dependent doesn't have any dependencies...wtf?
       if (!dependencies || dependent.isReady) {
@@ -707,6 +734,7 @@ SC.Package = SC.Object.extend(
       // set a flag on the dependents letting them know they
       // will never load because of a failed dependency
       if (didFail) {
+        console.warn("IN DID FAIL CASE");
         if (!dependent.failedDependencies) dependent.failedDependencies = [];
         dependent.failedDependencies.push(packageName);
         dependent.doNotExecute = true;
@@ -773,6 +801,7 @@ SC.Package = SC.Object.extend(
     var dependencies;
     var dependency;
     var isReady = true;
+    var loaded = [];
 
     if (log) SC.Logger.info("SC.Package._sc_dependenciesMetForPackage() for " +
       "'%@'".fmt(packageName));
@@ -817,7 +846,15 @@ SC.Package = SC.Object.extend(
       if (!dependency.isExecuted) {
         package.isReady = false;
         isReady = false;
+      } else {
+        loaded.push("%@/%@".fmt(dependency.rootNode, dependency.basename));
       }
+    }
+
+    for (idx = 0; idx < loaded.length; ++idx) {
+      var name = loaded[idx];
+      var targ = dependencies.indexOf(name);
+      dependencies = dependencies.splice(targ, 1);
     }
 
     if (isReady) {
