@@ -9,8 +9,7 @@ sc_require("tasks/task");
 
 /**
   Runs a set of tasks. Most importantly, has a runWhenIdle option that allows
-  it to run when no user input is occurring. This allows, for instance, preloading
-  bundles while not blocking user interaction.
+  it to run when no user input is occurring. 
 */
 SC.TaskQueue = SC.Task.extend({
   /**
