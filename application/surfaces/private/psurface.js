@@ -288,7 +288,7 @@ SC.Psurface.prototype = {
     }
 
     // HACK:
-    if (id === 'ui') el.style.webkitTransformStyle = 'preserve-3d';
+    if (id === 'ui' && SC.ENABLE_3D_TRANSFORMS) el.style.webkitTransformStyle = 'preserve-3d';
 
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false,
@@ -400,12 +400,20 @@ SC.Psurface.prototype = {
             durationRule = '-webkit-transition-duration: '+durations.join(', '),
             timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', '),
             delayRule = '-webkit-transition-delay: '+delays.join(', '),
-            rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n');
-      
-        // console.log(rule);
-        var transitionsRuleIndex = this.transitionsRuleIndex;
-        if (transitionsRuleIndex >= 0) ss.deleteRule(transitionsRuleIndex);
-        this.transitionsRuleIndex = ss.insertRule( '#'+id+' { '+rule+'; }', ss.cssRules? ss.cssRules.length : 0 );
+            rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n'),
+            transitionsRuleIndex = this.transitionsRuleIndex,
+            cssRule = '#'+id+' { '+rule+'; }';
+
+        // console.log(cssRule);
+
+        if (transitionsRuleIndex >= 0) {
+          ss.deleteRule(transitionsRuleIndex);
+        } else {
+          transitionsRuleIndex = ss.cssRules? ss.cssRules.length : 0;
+        }
+
+        this.transitionsRuleIndex = ss.insertRule(cssRule, transitionsRuleIndex);
+        if (DEBUG_PSURFACES) sc_assert(this.transitionsRuleIndex === transitionsRuleIndex, "Must be the same to retain indexing across psurface instances.");
       }
     }
 
