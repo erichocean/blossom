@@ -28,6 +28,8 @@ sc_require('models/record_attribute');
 SC.SingleAttribute = SC.RecordAttribute.extend(
   /** @scope SC.SingleAttribute.prototype */ {
 
+    isSingleAttribute: true, // Walk like a duck.
+
   /**
     Specifies the property on the member record that represents the inverse
     of the current relationship.  If set, then modifying this relationship

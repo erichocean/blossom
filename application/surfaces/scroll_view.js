@@ -41,6 +41,7 @@ SC.ScrollView = SC.View.extend({
   __useContentSize__: false,
 
   isCompositeSurface: true, // Walk like a duck.
+  subsurfaces: [],
 
   /** 
     true if the view should maintain a horizontal scroller.   This property 

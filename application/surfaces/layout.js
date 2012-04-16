@@ -13,7 +13,7 @@ SC.LayoutSurface = SC.CompositeSurface.extend(
   isLayoutSurface: true,
 
   updateLayout: function() {
-    // console.log('SC.LayoutSurface#updateLayout()');
+    // console.log('SC.LayoutSurface#updateLayout()', SC.guidFor(this));
     var subsurfaces = this.get('subsurfaces'),
         frame = this._sc_frame,
         width = frame[2]/*width*/,
@@ -42,6 +42,11 @@ SC.LayoutSurface = SC.CompositeSurface.extend(
         // origin of `frame`. 
         frame[0]/*x*/ = position[0]/*x*/;
         frame[1]/*y*/ = position[1]/*y*/;
+
+        // HACK: Avoid zero widths.
+        if (frame[2] <= 0) frame[2] = subsurface.__contentWidth__ = width;
+        if (frame[3] <= 0) frame[3] = subsurface.__contentHeight__ = height;
+
       }
     }
   },
