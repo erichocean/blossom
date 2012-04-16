@@ -6,7 +6,7 @@
 /*globals sc_assert CanvasRenderingContext2D HTMLCanvasElement 
   ENFORCE_BLOSSOM_2DCONTEXT_API */
 
-var ENFORCE_BLOSSOM_2DCONTEXT_API = true; // removes context.canvas and context.drawImage()
+var ENFORCE_BLOSSOM_2DCONTEXT_API = false; // removes context.canvas and context.drawImage()
 
 CanvasRenderingContext2D.prototype.__defineGetter__('width', function() {
   var canvas = this.__sc_canvas__;
