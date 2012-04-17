@@ -166,7 +166,6 @@ SC.Package = SC.Object.extend(
     @method
   */
   loadAll: function() {
-    debugger
     var packageName;
     var package;
     for (packageName in SC.PACKAGE_MANIFEST) {
