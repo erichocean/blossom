@@ -149,6 +149,9 @@ SC.Layer = SC.Object.extend({
     var t = this._sc_transformFromSuperlayerToLayer;
 
     ctx.save();
+    sc_assert(Math.round(t[4]) === t[4]);
+    sc_assert(Math.round(t[5]) === t[5]);
+    // console.log(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.drawLayer(this, 0, 0);
     this.get('sublayers').invoke('copyIntoContext', ctx);
@@ -796,6 +799,9 @@ SC.Layer = SC.Object.extend({
     if (superlayer && superlayer._sc_hasSublayerTransform) {
       SC.AffineTransformConcatTo(superlayer._sc_sublayerTransform, transformFromSuperlayer, transformFromSuperlayer);
     }
+
+    transformFromSuperlayer[4]/*tx*/ = Math.round(transformFromSuperlayer[4]);
+    transformFromSuperlayer[5]/*tx*/ = Math.round(transformFromSuperlayer[5]);
 
     this._sc_transformFromSuperlayerToLayerIsDirty = false;
   },
