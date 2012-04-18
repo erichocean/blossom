@@ -156,6 +156,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         uiContainer.set('frame', SC.MakeRect(0, 0, sz[0]/*w*/, sz[1]/*h*/));
         SC.AnimationTransaction.end();
       }
+
+      this.get('surfaces').invoke('viewportSizeDidChange', sz);
     }
 
     if (SC.needsLayout) {
