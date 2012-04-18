@@ -1184,6 +1184,7 @@ BT.Project = BT.BuildNode.extend({
     ret += '    </style>\n';
 
     ret += '    <meta name="apple-mobile-web-app-capable" content="yes">';
+    // ret += '    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />';
 
     ret += '  </head>\n';
     ret += '  <body style="background: #fdf6e3; margin: 40; overflow: hidden;">\n';
@@ -1392,6 +1393,7 @@ BT.App = BT.Target.extend({
     ret += '    </script>\n';
 
     ret += '    <meta name="apple-mobile-web-app-capable" content="yes">';
+    // ret += '    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />';
 
     function outputScriptTag(file) {
       ret += '    <script src="' + file.get('targetPath') + '"></script>\n';
