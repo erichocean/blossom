@@ -140,7 +140,7 @@ SC.ListView = SC.ScrollView.extend({
 
     frame[0]/*x*/ = 0;
     frame[1]/*y*/ = 0;
-    frame[2]/*w*/ = frame[2]/*w*/ - 15; // account for scroller
+    frame[2]/*w*/ = frame[2]/*w*/ ; // - 15; // account for scroller
     frame[3]/*h*/ = Math.max(rows*rowHeight, frame[3]/*h*/);
 
     // We never have to offset in this manner.
