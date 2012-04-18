@@ -1082,8 +1082,9 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   awake: function() {
     // console.log('SC.Application#awake()');
+
     // handle touch events
-    // this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
+    this.listenFor('touchstart touchmove touchend touchcancel'.w(), document);
 
     // handle basic events
     this.listenFor('keydown keyup beforedeactivate mousedown mouseup click mousemove selectstart contextmenu'.w(), document);
@@ -1481,6 +1482,49 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         this._sc_mouseDownResponder.tryToPerform('mouseDragged', evt);
       }
     }
+  },
+
+  // ..........................................................
+  // MOUSE HANDLING
+  //
+
+  touchstart: function(evt) {
+    console.log('touchstart');
+    var touch = evt.touches[0];
+    evt.clientX = touch.clientX;
+    evt.clientY = touch.clientY;
+    evt.target = touch.target;
+    console.log(touch.target);
+    console.log(touch.clientX);
+    console.log(touch.clientY);
+    return this.mousedown(evt);
+  },
+
+  touchmove: function(evt) {
+    console.log('touchmove');
+    var touch = evt.touches[0];
+    evt.clientX = touch.clientX;
+    evt.clientY = touch.clientY;
+    evt.target = touch.target;
+    return this.mousemove(evt);
+  },
+
+  touchend: function(evt) {
+    console.log('touchend');
+    // var touch = evt.touches[0];
+    // evt.pageX = touch.pageX;
+    // evt.pageY = touch.pageY;
+    // evt.target = touch.target;
+    return this.mouseup(evt);
+  },
+
+  touchcancel: function(evt) {
+    console.log('touchcancel');
+    // var touch = evt.touches[0];
+    // evt.pageX = touch.pageX;
+    // evt.pageY = touch.pageY;
+    // evt.target = touch.target;
+    return this.mouseup(evt);
   },
 
   _sc_showingViewTrees: false,

@@ -297,7 +297,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     }
 
     // Draw Title
-    ctx.font = "11pt Calibri";
+    ctx.font = "11pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "left";
     ctx.shadowBlur = 0;
@@ -367,7 +367,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   acceptsFirstResponder: false,
 
-  font: "11pt Calibri",
+  font: "11pt Helvetica",
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
@@ -783,7 +783,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
     arguments.callee.base.apply(this, arguments);
   },
 
-  font: "11pt Calibri",
+  font: "11pt Helvetica",
 
   measuredWidth: 10,
 
@@ -867,7 +867,7 @@ SC.SelectMenuItemLayer = SC.Layer.extend(SC.Control, {
     }
 
     // Draw Title
-    ctx.font = "11pt Calibri";
+    ctx.font = "11pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "left";
     ctx.shadowBlur = 0;

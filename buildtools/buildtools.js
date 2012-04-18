@@ -1183,6 +1183,8 @@ BT.Project = BT.BuildNode.extend({
     ret += '      .sc-pane { position: absolute; margin: 0; }\n';
     ret += '    </style>\n';
 
+    ret += '    <meta name="apple-mobile-web-app-capable" content="yes">';
+
     ret += '  </head>\n';
     ret += '  <body style="background: #fdf6e3; margin: 40; overflow: hidden;">\n';
 
@@ -1388,6 +1390,8 @@ BT.App = BT.Target.extend({
     ret += '      var ENFORCE_BLOSSOM_2DCONTEXT_API = %@;\n'.fmt(this.ENFORCE_BLOSSOM_2DCONTEXT_API);
     ret += '      var DEBUG_PSURFACES = %@;\n'.fmt(this.DEBUG_PSURFACES);
     ret += '    </script>\n';
+
+    ret += '    <meta name="apple-mobile-web-app-capable" content="yes">';
 
     function outputScriptTag(file) {
       ret += '    <script src="' + file.get('targetPath') + '"></script>\n';

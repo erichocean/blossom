@@ -92,7 +92,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -109,7 +109,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.stroke();
     
       ctx.fillStyle = base3;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -124,7 +124,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.stroke();
     
       ctx.fillStyle = base3;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -142,7 +142,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -174,7 +174,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     // // ctx.strokeRect(-0.5, -0.5, 141, 25);
     // roundRect(ctx, -0.5, -0.5, buttonWidth+1, 25);
     // if (!active) ctx.stroke();
-    // ctx.font ="12pt Calibri";
+    // ctx.font ="12pt Helvetica";
     // ctx.textAlign = "center";
     // ctx.textBaseline = "middle";
     // ctx.fillStyle = white;
