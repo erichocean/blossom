@@ -617,8 +617,7 @@ BT.Packager = BT.BuildNode.extend(
       manifest += '    "type": \'' + type + '\',\n';
       manifest += '    "rootNode": \'' + package.get('rootNode') + '\',\n';
       manifest += '    "isLoaded": ' + (type === 'core' ? 'true' : 'false') + ',\n';
-      manifest += '    "isReady": ' + (type === 'core' ? 'true' : 'false') + ',\n';
-      manifest += '    "isExecuted": ' + (type === 'core' ? 'true' : 'false');
+      manifest += '    "isReady": ' + (type === 'core' ? 'true' : 'false');
       manifest += dependenciesFor(package),
       manifest += '  }';
       if (idx < packages.length-1) manifest += ',\n';
