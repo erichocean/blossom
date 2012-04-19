@@ -31,6 +31,8 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
 
   isWidget: true, // Walk like a duck.
 
+  isSingleLine: true,
+
   behavior: function(key, val) {
     sc_assert(val === undefined, "This property is read-only.");
     return this;

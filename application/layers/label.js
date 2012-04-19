@@ -17,7 +17,7 @@ SC.LabelLayer = SC.Layer.extend({
   displayProperties: 'value'.w(),
 
   // FIXME: Add more text properties.
-  font: "11pt Calibri, sans",
+  font: "11pt Helvetica, sans",
   color: base03,
   backgroundColor: base3,
   textAlign: 'left',

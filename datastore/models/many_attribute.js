@@ -32,7 +32,9 @@ sc_require('system/many_array');
 */
 SC.ManyAttribute = SC.RecordAttribute.extend(
   /** @scope SC.ManyAttribute.prototype */ {
-  
+
+    isManyAttribute: true, // Walk like a duck.
+
   /**
     Set the foreign key on content objects that represent the inversion of
     this relationship. The inverse property should be a `toOne()` or

@@ -6,7 +6,7 @@
 /*globals sc_assert CanvasRenderingContext2D HTMLCanvasElement 
   ENFORCE_BLOSSOM_2DCONTEXT_API */
 
-var ENFORCE_BLOSSOM_2DCONTEXT_API = true; // removes context.canvas and context.drawImage()
+var ENFORCE_BLOSSOM_2DCONTEXT_API = false; // removes context.canvas and context.drawImage()
 
 CanvasRenderingContext2D.prototype.__defineGetter__('width', function() {
   var canvas = this.__sc_canvas__;
@@ -36,7 +36,7 @@ if (ENFORCE_BLOSSOM_2DCONTEXT_API) {
   CanvasRenderingContext2D.prototype.drawImage = function() {
     throw "CanvasRenderingContext2D#drawImage() is not available in Blossom. Use #drawLayer() instead."; 
   };
-  CanvasRenderingContext2D.prototype.drawImage = function() {
+  CanvasRenderingContext2D.prototype.createPattern = function() {
     throw "CanvasRenderingContext2D#createPattern() is not available in Blossom. Use SC.Layer#patternForContext(context, repetition) instead."; 
   };
 }

@@ -563,7 +563,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
     arguments.callee.base.apply(this, arguments);
   },
 
-  font: "11pt Calibri",
+  font: "11pt Helvetica",
 
   measuredWidth: function() {
     var width = 0;

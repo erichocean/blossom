@@ -56,7 +56,7 @@ SC.ListView = SC.ScrollView.extend({
     context.lineTo(width, height - 0.5);
     context.stroke();
 
-    context.font = "12pt Calibri";
+    context.font = "12pt Helvetica";
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
@@ -107,9 +107,25 @@ SC.ListView = SC.ScrollView.extend({
 
   mouseDown: function(evt) {
     // console.log('SC.ListView#mouseDown()', SC.guidFor(this));
-    var idx = Math.floor((evt.pageY - evt.target.getBoundingClientRect().top) / this.get('rowHeight')),
+    var top = evt.target.getBoundingClientRect().top;
+    this._scrollTop = top;
+    this._scrollTarget = evt.target;
+    this._rowIndex = Math.floor((evt.pageY - top) / this.get('rowHeight'));
+    evt.allowDefault();
+    return true;
+  },
+
+  mouseUp: function(evt) {
+    var idx = this._rowIndex,
         content = this._sc_content,
-        selection = this._sc_selection;
+        selection = this._sc_selection,
+        scrollTarget = this._scrollTarget;
+
+    this._scrollTarget = null;
+
+    if (Math.abs(this._scrollTop - scrollTarget.getBoundingClientRect().top) > 15) {
+      return; // We're scrolling...
+    }
 
     if (content && selection) {
       var obj = content.objectAt(idx);
@@ -140,7 +156,7 @@ SC.ListView = SC.ScrollView.extend({
 
     frame[0]/*x*/ = 0;
     frame[1]/*y*/ = 0;
-    frame[2]/*w*/ = frame[2]/*w*/ - 15; // account for scroller
+    frame[2]/*w*/ = frame[2]/*w*/ ; // - 15; // account for scroller
     frame[3]/*h*/ = Math.max(rows*rowHeight, frame[3]/*h*/);
 
     // We never have to offset in this manner.

@@ -163,7 +163,10 @@ SC.ContainerSurface = SC.CompositeSurface.extend({
   }.observes('contentSurface'),
 
   computeContentSurfaceFrame: function() {
-    return this.get('frame');
+    var frame = SC.MakeRect(this.get('frame'));
+    frame.x = 0;
+    frame.y = 0;
+    return frame;
   },
 
   _sc_containerFrameDidChange: function() {

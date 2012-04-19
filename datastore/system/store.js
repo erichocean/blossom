@@ -589,7 +589,10 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       }
     }
 
-    this.invokeOnce(this.flush);
+    if (SC.STORE_NEEDS_FINAL_FLUSH) {
+      this.invokeOnce(this.flush);
+      SC.STORE_NEEDS_FINAL_FLUSH = false;
+    }
     return this;
   },
 

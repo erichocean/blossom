@@ -19,13 +19,15 @@ SC.TextLayer = SC.Layer.extend({
   displayProperties: 'value'.w(),
 
   // FIXME: Add more text properties.
-  font: "11pt Calibri, sans",
+  font: "11pt Helvetica, sans",
   color: base03,
   backgroundColor: base3,
   textBaseline: 'top',
   textAlign: 'left',
   tolerance: 10,
   lineHeight: 18,
+
+  isSingleLine: false,
 
   _sc_textPropertiesDidChange: function() {
     this.__needsTextLayout__ = true;
@@ -106,7 +108,11 @@ SC.TextLayer = SC.Layer.extend({
 
         // Subtle, we don't want to trigger layout, which would reposition 
         // our layer.
-        height = Math.max(that.get('layout').minHeight || 0, lines.length*that.get('lineHeight'));
+        if (that.get('isSingleLine')) {
+          height = Math.max(that.get('layout').minHeight || 0, that.get('lineHeight'));
+        } else {
+          height = Math.max(that.get('layout').minHeight || 0, lines.length*that.get('lineHeight'));
+        }
         that.__sc_element__.height = that._sc_bounds[3]/*height*/ = height;
         that.triggerRendering();
       } else {

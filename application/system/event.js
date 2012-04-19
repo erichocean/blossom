@@ -578,8 +578,8 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     "charCode clientX clientY ctrlKey currentTarget data detail eventPhase " +
     "fromElement handler keyCode metaKey newValue originalTarget pageX "     +
     "pageY prevValue relatedNode relatedTarget screenX screenY shiftKey "    +
-    "srcElement target timeStamp toElement type view which animationName "   +
-    "elapsedTime").split(" ")
+    "srcElement target timeStamp toElement touches targetTouches "           +
+    "changedTouches type view which animationName elapsedTime").split(" ")
 
 });
 

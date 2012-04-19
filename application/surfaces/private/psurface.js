@@ -8,6 +8,7 @@
 sc_require('surfaces/private/ptransition_animation');
 
 SC.ENABLE_CSS_TRANSITIONS = true;
+SC.ENABLE_3D_TRANSFORMS = false;
 
 SC.psurfaces = {};
 SC.psurfaceTransitions = {};
@@ -272,7 +273,8 @@ SC.Psurface.prototype = {
 
   discover: function(surface) {
     var id = this.id, idx, len,
-        cssTransitionsAreEnabled = SC.ENABLE_CSS_TRANSITIONS;
+        cssTransitionsAreEnabled = SC.ENABLE_CSS_TRANSITIONS,
+        enable3DTransforms = SC.ENABLE_3D_TRANSFORMS;
 
     SC._sc_psurfaceColor[id] = 1; // grey
 
@@ -286,7 +288,7 @@ SC.Psurface.prototype = {
     }
 
     // HACK:
-    if (id === 'ui') el.style.webkitTransformStyle = 'preserve-3d';
+    if (id === 'ui' && SC.ENABLE_3D_TRANSFORMS) el.style.webkitTransformStyle = 'preserve-3d';
 
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false,
@@ -328,39 +330,61 @@ SC.Psurface.prototype = {
             // }
 
           } else {
-            properties.push(transition.cssKey);
-            durations.push(transition.duration+'ms');
-            timingFunctions.push(transition.timingFunction);
-            delays.push(transition.delay+'ms');
-
             // Update element.style
             if (cssTransitionsAreEnabled) {
               if (key === 'perspectiveOrigin') {
-                value =  transition.value;
-                style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
-                style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+                if (enable3DTransforms) {
+                  properties.push(transition.cssKey);
+                  durations.push(transition.duration+'ms');
+                  timingFunctions.push(transition.timingFunction);
+                  delays.push(transition.delay+'ms');
+
+                  value =  transition.value;
+                  style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+                  style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+                }
             
               } else if (key === 'transformOrigin') {
-                value =  transition.value;
-                style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
-                style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
-                style[transition.cssKey+'-z'] = Math.floor(value[2]/*z*/)+'px';
+                if (enable3DTransforms) {
+                  properties.push(transition.cssKey);
+                  durations.push(transition.duration+'ms');
+                  timingFunctions.push(transition.timingFunction);
+                  delays.push(transition.delay+'ms');
+
+                  value =  transition.value;
+                  style[transition.cssKey+'-x'] = Math.floor(value[0]/*x*/ * 100)+'%';
+                  style[transition.cssKey+'-y'] = Math.floor(value[1]/*y*/ * 100)+'%';
+                  style[transition.cssKey+'-z'] = Math.floor(value[2]/*z*/)+'px';
+                }
             
               } else if (key === 'transform') {
-                value =  transition.value;
-                style[transition.cssKey] = 'matrix3d('+[
-                  value[0] .toFixed(10) , value[1] .toFixed(10) , value[2] .toFixed(10) , value[3] .toFixed(10) ,
-                  value[4] .toFixed(10) , value[5] .toFixed(10) , value[6] .toFixed(10) , value[7] .toFixed(10) ,
-                  value[8] .toFixed(10) , value[9] .toFixed(10) , value[10].toFixed(10) , value[11].toFixed(10) ,
-                  value[12].toFixed(10) , value[13].toFixed(10) , value[14].toFixed(10) , value[15].toFixed(10)
-            
-                  // Quick check to see if scale(2) is working:
-                  // 2         , value[1]  , value[2]  , value[3]  ,
-                  // value[4]  , 2         , value[6]  , value[7]  ,
-                  // value[8]  , value[9]  , 2         , value[11] ,
-                  // value[12] , value[13] , value[14] , value[15]
-                ].join(', ')+')';
+                if (enable3DTransforms) {
+                  properties.push(transition.cssKey);
+                  durations.push(transition.duration+'ms');
+                  timingFunctions.push(transition.timingFunction);
+                  delays.push(transition.delay+'ms');
+
+                  value =  transition.value;
+                  style[transition.cssKey] = 'matrix3d('+[
+                    value[0] .toFixed(10) , value[1] .toFixed(10) , value[2] .toFixed(10) , value[3] .toFixed(10) ,
+                    value[4] .toFixed(10) , value[5] .toFixed(10) , value[6] .toFixed(10) , value[7] .toFixed(10) ,
+                    value[8] .toFixed(10) , value[9] .toFixed(10) , value[10].toFixed(10) , value[11].toFixed(10) ,
+                    value[12].toFixed(10) , value[13].toFixed(10) , value[14].toFixed(10) , value[15].toFixed(10)
+
+                    // Quick check to see if scale(2) is working:
+                    // 2         , value[1]  , value[2]  , value[3]  ,
+                    // value[4]  , 2         , value[6]  , value[7]  ,
+                    // value[8]  , value[9]  , 2         , value[11] ,
+                    // value[12] , value[13] , value[14] , value[15]
+                  ].join(', ')+')';
+                }
+
               } else { // The remaining properties are set directly.
+                properties.push(transition.cssKey);
+                durations.push(transition.duration+'ms');
+                timingFunctions.push(transition.timingFunction);
+                delays.push(transition.delay+'ms');
+
                 style[transition.cssKey] = transition.value;
               }
             } else if (key !== 'perspectiveOrigin' || key !== 'transformOrigin' || key !== 'transform') {
@@ -376,12 +400,20 @@ SC.Psurface.prototype = {
             durationRule = '-webkit-transition-duration: '+durations.join(', '),
             timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', '),
             delayRule = '-webkit-transition-delay: '+delays.join(', '),
-            rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n');
-      
-        // console.log(rule);
-        var transitionsRuleIndex = this.transitionsRuleIndex;
-        if (transitionsRuleIndex >= 0) ss.deleteRule(transitionsRuleIndex);
-        this.transitionsRuleIndex = ss.insertRule( '#'+id+' { '+rule+'; }', ss.cssRules? ss.cssRules.length : 0 );
+            rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n'),
+            transitionsRuleIndex = this.transitionsRuleIndex,
+            cssRule = '#'+id+' { '+rule+'; }';
+
+        // console.log(cssRule);
+
+        if (transitionsRuleIndex >= 0) {
+          ss.deleteRule(transitionsRuleIndex);
+        } else {
+          transitionsRuleIndex = ss.cssRules? ss.cssRules.length : 0;
+        }
+
+        this.transitionsRuleIndex = ss.insertRule(cssRule, transitionsRuleIndex);
+        if (DEBUG_PSURFACES) sc_assert(this.transitionsRuleIndex === transitionsRuleIndex, "Must be the same to retain indexing across psurface instances.");
       }
     }
 

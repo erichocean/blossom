@@ -41,6 +41,7 @@ SC.ScrollView = SC.View.extend({
   __useContentSize__: false,
 
   isCompositeSurface: true, // Walk like a duck.
+  subsurfaces: [],
 
   /** 
     true if the view should maintain a horizontal scroller.   This property 
@@ -82,6 +83,7 @@ SC.ScrollView = SC.View.extend({
     // We don't want SC.View's implementation; don't call it.
     div.style.overflowX = this.get('hasHorizontalScroller')? 'scroll' : 'hidden';
     div.style.overflowY = this.get('hasVerticalScroller')? 'scroll' : 'hidden';
+    div.style.webkitOverflowScrolling = 'touch';
   },
 
   adjustLayout: function() {

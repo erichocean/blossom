@@ -424,7 +424,7 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
@@ -441,7 +441,7 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
       ctx.stroke();
     
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
@@ -456,7 +456,7 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
       ctx.stroke();
     
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
@@ -474,7 +474,7 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
       ctx.stroke();
 
       ctx.fillStyle = base03;
-      ctx.font = "11pt Calibri";
+      ctx.font = "11pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
