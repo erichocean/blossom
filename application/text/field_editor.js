@@ -209,7 +209,7 @@ SC.BeginEditingTextLayer = function(textLayer, password) {
   element.appendChild(input);
   setTimeout(function() {
     SC.RunLoop.begin();
-    input.setSelectionRange(0, value.length);
+    input.setSelectionRange(0, value? value.length : 0);
     SC.RunLoop.end();
   }, 0);
 };

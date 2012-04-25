@@ -35,7 +35,7 @@ SC.Layer = SC.Object.extend({
     @property {Array}
     @readOnly
   */
-  displayProperties: ['foo', 'bar', 'baz'],
+  displayProperties: ['isVisible'],
 
   view: function() {
     var view = this.get('view'),
@@ -147,6 +147,8 @@ SC.Layer = SC.Object.extend({
   copyIntoContext: function(ctx) {
     // console.log('SC.Layer#copyIntoContext()', SC.guidFor(this));
     var t = this._sc_transformFromSuperlayerToLayer;
+
+    if (!this.get('isVisible')) return;
 
     ctx.save();
     sc_assert(Math.round(t[4]) === t[4]);

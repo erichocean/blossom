@@ -963,6 +963,7 @@ SC.Binding = {
       valueBBinding: pathB,
 
       and: function() {
+        console.log('re-evaluating and() condition');
         return (this.get('valueA') && this.get('valueB'));
       }.property('valueA', 'valueB').cacheable()
     });

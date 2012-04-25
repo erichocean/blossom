@@ -17,8 +17,7 @@ SC.MeasureText = function(font, str) {
   sc_assert(ctx);
   sc_assert(font);
   sc_assert(typeof font === 'string');
-  sc_assert(str);
-  sc_assert(typeof str === 'string');
+  sc_assert(typeof str === 'string' || (str && str.constructor === String));
   ctx.font = font;
   return ctx.measureText(str);
 };
