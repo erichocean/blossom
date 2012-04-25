@@ -85,6 +85,7 @@ SC.ListView = SC.ScrollView.extend({
     var content = this.get('content'),
         selection = this.get('selection'),
         idx, len, w = ctx.w, h = this.get('rowHeight');
+    sc_assert(selection  && selection.contains, "ListView must have a selection and it must respond to `contains()`");
 
     if (content && (len = content.get('length')) > 0) {
       for (idx=0; idx<len; ++idx) {
