@@ -161,7 +161,7 @@ SC.View = SC.LeafSurface.extend({
   },
 
   updateLayout: function() {
-    // console.log('SC.View#updateLayout()', SC.guidFor(this));
+    console.log('SC.View#updateLayout()', SC.guidFor(this));
     var benchKey = 'SC.View#updateLayout()';
     SC.Benchmark.start(benchKey);
 
@@ -170,10 +170,10 @@ SC.View = SC.LeafSurface.extend({
 
     for (var idx=0, len=layers.length; idx<len; ++idx) {
       layer = layers[idx];
-      layer.updateLayout();
-      if (layer.updateTextLayout && layer.__needsTextLayout__) {
-        textLayersNeedingLayout.push(layer);
-      }
+      layer.updateLayout(textLayersNeedingLayout);
+      // if (layer.updateTextLayout && layer.__needsTextLayout__) {
+      //   textLayersNeedingLayout.push(layer);
+      // }
     }
     this._sc_hitTestLayer.updateLayout();
 

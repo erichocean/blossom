@@ -52,7 +52,7 @@ SC.TextLayer = SC.Layer.extend({
   }.observes('value'),
 
   updateTextLayout: function() {
-    // console.log('SC.TextLayer#updateTextLayout()');
+    console.log('SC.TextLayer#updateTextLayout()');
     var context = this.get('context'),
         text = String(this.get('value') || ''),
         line, that = this;

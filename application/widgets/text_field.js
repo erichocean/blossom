@@ -165,6 +165,7 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   }.observes('isInputResponder'),
 
   mouseDown: function(evt) {
+    // debugger;
     SC.app.set('inputSurface', this.get('surface'));
     if (!this.get('isFirstResponder')) this.becomeFirstResponder();
     else if (this.get('isInputResponder')) {

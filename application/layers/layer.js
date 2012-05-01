@@ -97,8 +97,8 @@ SC.Layer = SC.Object.extend({
     if (this.get('surface')) SC.needsLayout = SC.needsRendering = true;
   },
 
-  updateLayout: function() {
-    // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
+  updateLayout: function(layersNeedingTextLayout) {
+    console.log('SC.Layer#updateLayout()', SC.guidFor(this));
     if (this.__needsLayout__) {
       var bounds = this.get('bounds'), // Sets this.__needsLayout__ to false.
           canvas = this.__sc_element__;
@@ -109,7 +109,10 @@ SC.Layer = SC.Object.extend({
       this._sc_computeTransformFromSuperlayerToLayer();
     }
 
-    this.get('sublayers').invoke('updateLayout');
+    if (this.updateTextLayout && this.__needsTextLayout__) {
+      layersNeedingTextLayout.push(this);
+    }
+    this.get('sublayers').invoke('updateLayout', layersNeedingTextLayout);
   },
 
   updateDisplay: function() {

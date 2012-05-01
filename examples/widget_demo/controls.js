@@ -269,7 +269,8 @@ var segmentedWidget3 = SC.SegmentedWidget.create({
 
 rootLayer.get('sublayers').pushObjects([segmentedWidget, segmentedWidget2, segmentedWidget3]);
 
-var selectWidget = SC.SelectWidget.create({
+var selectWidget = SC.ComboboxWidget.create({
+// var selectWidget = SC.SelectWidget.create({
   layout: { top: 430, left: 510, width: 140, height: 24 },
   theme: 'regular',
   items: [{ title: "Red",
