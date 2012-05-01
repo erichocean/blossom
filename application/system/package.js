@@ -135,7 +135,7 @@ SC.Package = SC.Object.extend(
 
         this.invokeLast(function() {
           package.isReady = true;
-          this._packageDidBecomeReady(packageName);
+          this._sc_packageDidBecomeReady(packageName);
         });
 
         return false;
@@ -209,7 +209,7 @@ SC.Package = SC.Object.extend(
     cb = function() {
       var needsRunLoop = !!SC.RunLoop.currentRunloop;
       if (needsRunLoop) {
-        SC.Run(function() {
+        SC.run(function() {
           method.apply(target, args);
         });
       } else {
@@ -471,7 +471,11 @@ SC.Package = SC.Object.extend(
     var part;
     var idx = 0;
 
-    if (log) SC.Logger.info("_sc_evaluateJavaScriptForPackage() attempting to " +
+    if (package.isEvaluated) {
+      return;
+    }
+
+    if (log) SC.Logger.info("_sc_evaluatePackageSource() attempting to " +
       "execute source for package '%@'".fmt(packageName));
 
     // if there is no source we can't do much either
@@ -525,6 +529,8 @@ SC.Package = SC.Object.extend(
           window['eval'].call(window, data);
         })(code);
 
+        package.isEvaluated = true;
+
       } catch(err) {
         throw "SC.Package: failed to evaluate source for package '%@' ".fmt(packageName) +
           "due to the following error: " + err.message;
@@ -532,7 +538,7 @@ SC.Package = SC.Object.extend(
 
     } else {
 
-      if (log) SC.Logger.warn("_sc_evaluateJavaScriptForPackage() " +
+      if (log) SC.Logger.warn("_sc_evaluatePackageSource() " +
         "no package source found for given package mode for package '%@'".fmt(packageName));
 
     }
