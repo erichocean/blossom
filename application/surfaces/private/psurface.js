@@ -100,6 +100,7 @@ SC.Psurface = function(surface) {
   element.id = surfaceId;
   if (DEBUG_PSURFACES) sc_assert(element, "Failed to create element with tagName"+(tagName || 'div'));
   this.__element__ = element;
+  this.animate = !surface.__neverAnimate__;
   style.position = 'absolute';
 
   // Prevent user-resizing of text areas.
@@ -308,11 +309,13 @@ SC.Psurface.prototype = {
         var transition = currentHash[key];
         if (transition) {
           if (key === 'frame') {
-            properties.push('left', 'top', 'width', 'height');
-            for (idx=0, len=4; idx<len; ++idx) {
-              durations.push(transition.duration+'ms');
-              timingFunctions.push(transition.timingFunction);
-              delays.push(transition.delay+'ms');
+            if (this.animate) {
+              properties.push('left', 'top', 'width', 'height');
+              for (idx=0, len=4; idx<len; ++idx) {
+                durations.push(transition.duration+'ms');
+                timingFunctions.push(transition.timingFunction);
+                delays.push(transition.delay+'ms');
+              }
             }
             value =  transition.value;
             style.left   = value[0]/*x*/      + 'px';
@@ -380,10 +383,12 @@ SC.Psurface.prototype = {
                 }
 
               } else { // The remaining properties are set directly.
-                properties.push(transition.cssKey);
-                durations.push(transition.duration+'ms');
-                timingFunctions.push(transition.timingFunction);
-                delays.push(transition.delay+'ms');
+                if (this.animate) {
+                  properties.push(transition.cssKey);
+                  durations.push(transition.duration+'ms');
+                  timingFunctions.push(transition.timingFunction);
+                  delays.push(transition.delay+'ms');
+                }
 
                 style[transition.cssKey] = transition.value;
               }

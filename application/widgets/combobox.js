@@ -213,72 +213,36 @@ SC.ComboboxWidget = SC.TextFieldWidget.extend({
 
   render: function(ctx) {
     console.log('SC.ComboboxWidget#render()', SC.guidFor(this));
-    var h = ctx.height,
-        w = ctx.width,
-        isEnabled = this.get('isEnabled'),
-        context = ctx;
-
-    ctx.fillStyle = this.get('backgroundColor');
-    ctx.fillRect(0, 0, w, h);
-
-    ctx.save();
-    ctx.translate(4, 3);
-
-    var lines = this._sc_lines,
-        lineLengths = [this.get('bounds')[2]/*width*/],
-        maxLength = Math.max.apply(null, lineLengths),
-        lineHeight = this.get('lineHeight'),
-        center = false, y = 0;
-
-    sc_assert(!this.__needsTextLayout__);
-    sc_assert(lines);
+    var bounds = this.get('bounds'),
+        h = bounds.height, w = bounds.width,
+        isEnabled = this.get('isEnabled');
 
     // Always clear the rect in case someone wants transparency.
-    context.clearRect(0, 0, context.width, context.height);
+    ctx.clearRect(0, 0, w, h);
 
-    context.fillStyle = this.get('backgroundColor');
-    context.fillRect(0, 0, context.width, context.height);
+    ctx.fillStyle = this.get('backgroundColor');
+    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, 5);
+    ctx.fill();
 
-    context.textBaseline = this.get('textBaseline');
-    context.font = this.get('font');
-    context.fillStyle = this.get('color');
-
-    lines.forEach(function (line, lineIndex) {
-      var x = 0, lineLength = lineIndex < lineLengths.length ? lineLengths[lineIndex] : lineLengths[lineLengths.length - 1];
-
-      if (center) {
-        x += (maxLength - lineLength) / 2;
-      }
-
-      line.nodes.forEach(function (node, index) {
-        if (node.type === 'box') {
-          context.fillText(node.value, x, y);
-          x += node.width;
-        } else if (node.type === 'glue') {
-          x += node.width + line.ratio * (line.ratio < 0 ? node.shrink : node.stretch);
-        }
-      });
-
-      y += lineHeight;
-    });
-
-    ctx.restore();
+    // Draw the text.
+    ctx.textAlign = 'left';
+    ctx.textBaseline = this.get('textBaseline');
+    ctx.font = this.get('font');
+    ctx.fillStyle = this.get('color');
+    var val = this.get('value');
+    if (val && val.elide) val = val.elide(ctx, w - 23);
+    ctx.fillText(val, 4, 3);
 
     // Draw the box.
-    ctx.strokeStyle = this.get('borderColor');
-    ctx.beginPath();
-    ctx.moveTo(0.5, 0.5);
-    ctx.lineTo(0.5, h-0.5);
-    ctx.lineTo(w-0.5, h-0.5);
-    ctx.lineTo(w-0.5, 0.5);
-    ctx.closePath();
+    ctx.strokeStyle = 'rgb(252,188,126)'; // this.get('borderColor');
+    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, 5);
     ctx.lineWidth = this.get('borderWidth');
     ctx.stroke();
 
     // Draw Divider Line and Arrows
     var popupWidth = 26; // Should be even.
 
-    center = w - popupWidth/2 - 0.5;
+    var center = w - popupWidth/2 - 0.5;
     ctx.beginPath();
     ctx.moveTo(Math.floor(w-popupWidth)+1.5, 4);
     ctx.lineTo(Math.floor(w-popupWidth)+1.5, h-4);
@@ -319,7 +283,9 @@ SC.ComboboxWidget = SC.TextFieldWidget.extend({
     if (idx < 0) idx = 0;
     if (evt.hitPoint.x < menuView.measuredWidth) {
       menuView._sc_activeMenuItem = menuView.get('layers')[idx];
-      menuView._sc_activeMenuItem.set('isActive', true);
+      if (menuView._sc_activeMenuItem) {
+        menuView._sc_activeMenuItem.set('isActive', true);
+      }
     }
     
     frame.x = evt.clientX - evt.hitPoint.x;
@@ -798,11 +764,10 @@ SC.CheckboxMenuItemLayer = SC.Layer.extend(SC.Control, {
         mixed = (selected === SC.MIXED_STATE),
         active = this.get('isActive'),
         font = this.get('font'),
-        w = ctx.width, h = ctx.height;
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
-
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     ctx.beginPath();
     ctx.moveTo(0, 0.5);

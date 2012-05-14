@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
+/*globals sc_assert */
 
 sc_require('surfaces/view');
 
@@ -83,6 +83,20 @@ SC.ScrollView = SC.View.extend({
     // We don't want SC.View's implementation; don't call it.
     div.style.overflowX = this.get('hasHorizontalScroller')? 'scroll' : 'hidden';
     div.style.overflowY = this.get('hasVerticalScroller')? 'scroll' : 'hidden';
+
+    // FIXME: This should be done dynamically, per scrollview. I'm not doing 
+    // it now because the CSS has pseudo-selectors, so I have to generate 
+    // stylesheet code specially. (Here and a few other places, actually.)
+    //
+    // For now, I'll specially customize the CSS to work with Postbooks' UI
+    // correctly.
+    div.className = 'frame';
+
+    // This should probably only be set on mobile Safari/Google Chrome for 
+    // Android.
+    //
+    // See http://stackoverflow.com/questions/7763458/ios5-webkit-overflow-scrolling-causes-touch-events-stopping-work
+    // for a fix I haven't yet implemented, too.
     div.style.webkitOverflowScrolling = 'touch';
   },
 
@@ -163,9 +177,12 @@ SC.InternalScrollViewCanvas = SC.LeafSurface.extend({
     // Enables ctx.width and ctx.height to work.
     ctx.__sc_canvas__ = canvas;
 
-    if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
     this.__scrollView__._sc_context = ctx;
     this.__scrollView__.triggerRendering();
+  },
+
+  targetResponderForEvent: function(evt) {
+    return this.get('surface').targetResponderForEvent(evt);
   }
 
 });

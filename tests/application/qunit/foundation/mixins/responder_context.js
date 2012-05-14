@@ -7,8 +7,8 @@
 var S, A, a, B, Manager;
 suite("ResponderContext", {
   setup: function() {
-    Manager = SC.Responder.create(SC.ResponderContext, {  });
-    var TestResponder = SC.Responder.extend({
+    Manager = SC.Object.create(SC.Responder, SC.ResponderContext, {  });
+    var TestResponder = SC.Object.extend(SC.Responder, {
       didBecomeFirstResponder: function() {
         this.didBecome = true;
         this.hasFirst = true;

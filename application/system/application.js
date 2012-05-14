@@ -10,6 +10,7 @@
 // ==========================================================================
 /*globals sc_assert */
 
+sc_require('system/responder');
 sc_require('ext/float32');
 sc_require('surfaces/surface');
 sc_require('surfaces/container');
@@ -108,7 +109,7 @@ SC.needsRendering = false;
   @extends SC.DelegateSupport
   @since Blossom 1.0
 */
-SC.Application = SC.Responder.extend(SC.DelegateSupport,
+SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
 /** SC.Application.prototype */ {
 
   isApp: true, // Walk like a duck.
@@ -134,7 +135,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // console.log('SC.Application#performLayoutAndRendering()');
     // console.log('==========================================');
     sc_assert(SC.app === this, "SC.Application#performLayoutAndRendering() called with this != SC.app.");
-    sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
+    // sc_assert(!SC.isAnimating, "SC.Application#performLayoutAndRendering() called when SC.isAnimating is true (should be false).");
 
     var benchKey = 'SC.Application#performLayoutAndRendering()';
     SC.Benchmark.start(benchKey);
@@ -183,9 +184,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     SC.Benchmark.end(benchKey);
 
-    if (!SC.RunLoop.currentRunLoop.flushApplicationQueues()) {
-      console.log("The run loop should not be needed during layout and rendering.");
-    }
+    // FIXME: Ideally address this warning at some point.
+    // if (!SC.RunLoop.currentRunLoop.flushApplicationQueues()) {
+    //   console.log("The run loop should not be needed during layout and rendering.");
+    // }
     SC.ScheduleLayoutAndRendering();
     // SC.LOG_BINDINGS = SC.LOG_OBSERVERS = false;
   },
@@ -814,6 +816,32 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     return target ;
   },
 
+  tooltip: null,
+  _sc_lastMouseMoved: null,
+  _sc_showingTooltip: false,
+
+  showTooltip: function(evt) {
+    // console.log('SC.Application#showTooltip()');
+    var tooltipSurface = this._sc_tooltipSurface,
+        frame = tooltipSurface.get('frame');
+
+    frame.width = tooltipSurface.computeDesiredWidth();
+    frame.height = 24;
+    frame.x = evt.pageX - 1;
+    frame.y = evt.pageY + 18; // Avoid the pointer
+    tooltipSurface.set('frame', frame); // Won't animate since it's not onscreen yet.
+
+    this.addSurface(tooltipSurface);
+    this._sc_showingTooltip = true;
+  },
+
+  hideTooltip: function() {
+    // console.log('SC.Application#hideTooltip()');
+    sc_assert(this._sc_showingTooltip);
+    this.removeSurface(this._sc_tooltipSurface);
+    this._sc_showingTooltip = false;
+  },
+
   /**
     Attempts to send an event down the responder chain.  This method will
     invoke the sendEvent() method on either the surface you pass in, the 
@@ -825,28 +853,25 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
 
     @param {String} action
     @param {SC.Event} evt
-    @param {SC.Resonder} target
+    @param {SC.Responder} target
     @returns {Object} object that handled the event or null if not handled
   */
   sendEvent: function(action, evt, target) {
     // console.log('SC.Application#sendEvent(', action, evt, target, ')');
     var surface, ret, fieldEditor = this.get('fieldEditor');
 
-    if (fieldEditor && !target) {
-      if (evt.keyCode === 13) SC.EndEditingTextLayer();
+    if (fieldEditor && (!target || target.isFieldEditor)) {
+      if (evt.keyCode === 13) SC.CloseFieldEditor();
       else ret = fieldEditor.tryToPerform(action, evt) ? target : null ;
     } else {
       if (target) {
         surface = target.get('surface');
         sc_assert(surface);
-        // if (!surface) {
-        //   console.log("calling target.get('container') in SC.Application#sendEvent()");
-        //   surface = target.get('container') ; // FIXME: Why?
-        // }
+      } else {
+        surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui');
       }
-      else surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui') ;
 
-      if (surface === this) surface = null;
+      if (surface === this || surface.isFieldEditor) surface = null;
 
       // If we found a valid surface, send the event to it.
       ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
@@ -1151,6 +1176,47 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this.focus();
     this._sc_uiDidChange();
     this._sc_perspectiveDidChange();
+
+    this._sc_tooltipSurface = SC.View.create({
+      tooltipBinding: SC.Binding.from('tooltip', this),
+
+      computeDesiredWidth: function() {
+        var tooltip = String(this.get('tooltip')),
+            ctx = this._measureContext,
+            frame = this.get('frame');
+
+        if (!ctx) {
+          ctx = this._measureContext = document.createElement('canvas').getContext('2d');
+          ctx.font = "11pt Helvetica";
+        }
+
+        return ctx.measureText(tooltip).width + 12;
+      },
+
+      willRenderLayers: function(ctx) {
+        // console.log('rendering tooltip');
+        var tooltip = String(this.get('tooltip'));
+
+        var lingrad = ctx.createLinearGradient(0,0,0,ctx.h);
+        lingrad.addColorStop(0, 'rgb(252,188,126)');
+        lingrad.addColorStop(0.9, 'rgb(255,102,0)');
+        lingrad.addColorStop(1, 'rgb(255,178,128)');
+
+        ctx.fillStyle = lingrad;
+        ctx.fillRect(0,0,ctx.w,ctx.h);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(0,0,ctx.w,ctx.h);
+
+        ctx.fillStyle = 'white';
+        ctx.font = "11pt Helvetica";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "left";
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "rgba(0,0,0,0)";
+        ctx.fillText(tooltip, 6, ctx.h/2);
+      }
+    });
   },
 
   /**
@@ -1162,18 +1228,26 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
   */
   targetResponderForEvent: function(evt) {
     // console.log('SC.Application#targetResponderForEvent()');
-    var parentNode = evt.target, id, ret, surfaces = SC.surfaces;
+    var parentNode = evt.target, id, ret, surfaces = SC.surfaces,
+        fieldEditor = this.get('fieldEditor');
 
-    if (surfaces === null) this.updateSurfacesHash();
+    // If the target is the field editor, use that.
+    if (fieldEditor && fieldEditor._sc_input === parentNode) {
+      ret = fieldEditor;
 
-    while (parentNode && !ret) {
-      id = parentNode.id;
-      if (id) ret = surfaces[id];
-      parentNode = parentNode.parentNode;
+    // Otherwise, find the nearest surface.
+    } else {
+      if (surfaces === null) this.updateSurfacesHash();
+
+      while (parentNode && !ret) {
+        id = parentNode.id;
+        if (id) ret = surfaces[id];
+        parentNode = parentNode.parentNode;
+      }
+
+      ret = ret? ret.targetResponderForEvent(evt) : null;
     }
 
-    ret = ret? ret.targetResponderForEvent(evt) : null;
-    // Duck type here, SC.Behavior is a responder and does not subclass SC.Responder.
     sc_assert(ret === null || ret.isResponder, "Error in SC.Application#targetResponderForEvent()");
     return ret;
   },
@@ -1191,7 +1265,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     the keypress event.
   */
   keydown: function(evt) {
-    // console.log('SC.Application#keydown()');
+    // console.log('SC.Application#keydown(', evt, ')');
     if (SC.none(evt)) return true;
 
     var keyCode = evt.keyCode,
@@ -1247,6 +1321,8 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         ret = evt.hasCustomEventHandling ;
         if (ret) forceBlock = false ; // code asked explicitly to let delete go
       }
+    } else {
+      ret = this.sendEvent('keyDown', evt);
     }
 
     return forceBlock ? false : ret ;
@@ -1261,7 +1337,7 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     trigger a keyDown.
   */
   keypress: function(evt) {
-    // console.log('SC.Application#keypress()');
+    // console.log('SC.Application#keypress(', evt, ')');
     var ret,
         keyCode   = evt.keyCode,
         isFirefox = SC.isMozilla();
@@ -1371,6 +1447,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // if(!SC.browser.msie) window.focus();
     window.focus();
     
+    if (this._tooltipTrigger) clearTimeout(this._tooltipTrigger);
+    this._tooltipTrigger = null;
+    if (this._sc_showingTooltip) this.hideTooltip();
+
     // First, save the click count. The click count resets if the mouse down
     // event occurs more than 200 ms later than the mouse up event or more
     // than 8 pixels away from the mouse down event.
@@ -1390,27 +1470,18 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     this._sc_lastMouseDownX = evt.clientX;
     this._sc_lastMouseDownY = evt.clientY;
 
-    var fr, surface = this.targetResponderForEvent(evt), handler;
-
-    // HACK: InlineTextField needs to loose firstResponder whenever you click 
-    // outside the view.  This is a special case as textfields are not 
-    // supposed to loose focus unless you click on a list, another textfield 
-    // or on a special view/control.
-    // if (view) fr = view.getPath('pane.firstResponder');
-    // if (fr && fr.kindOf(SC.InlineTextFieldView) && fr !== view) {
-    //   fr.resignFirstResponder();
-    // }
+    var fr, responder = this.targetResponderForEvent(evt), handler;
 
     // When a menu surface is active, we remove the menu surface 
     // automatically if a mousedown occurs on anything but the menu surface.
     var menuSurface = this.get('menuSurface');
-    if (menuSurface && surface !== menuSurface) {
+    if (menuSurface && responder.get('surface') !== menuSurface) {
       this.set('menuSurface', null);
       this.removeSurface(menuSurface);
       return true;
     }
 
-    handler = this._sc_mouseDownResponder = this.sendEvent('mouseDown', evt, surface);
+    handler = this._sc_mouseDownResponder = this.sendEvent('mouseDown', evt, responder);
     if (handler && handler.respondsTo('mouseDragged')) this._sc_mouseCanDrag = true;
 
     return handler ? evt.hasCustomEventHandling : true ;
@@ -1430,6 +1501,10 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
     // or some such UI absolutely needs this information.
     this._sc_lastMoveX = evt.clientX;
     this._sc_lastMoveY = evt.clientY;
+
+    if (this._tooltipTrigger) clearTimeout(this._tooltipTrigger);
+    this._tooltipTrigger = null;
+    if (this._sc_showingTooltip) this.hideTooltip();
 
     // only do mouse[Moved|Entered|Exited|Dragged] if not in a drag session
     // drags send their own events, e.g. drag[Moved|Entered|Exited]
@@ -1460,8 +1535,14 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         exited = responder.respondsTo('mouseExited');
         if (exited && nh.indexOf(responder) === -1) {
           responder.tryToPerform('mouseExited', evt);
+
+          if (this._sc_showingTooltip) {
+            this.hideTooltip();
+          }
         }
       }
+
+      var tooltip = null;
 
       // Finally, either perform mouse moved or mouse entered depending on
       // whether a responding surface was or was not part of the last hovered 
@@ -1470,10 +1551,29 @@ SC.Application = SC.Responder.extend(SC.DelegateSupport,
         responder = nh[loc];
         if (lh.indexOf(responder) !== -1) {
           responder.tryToPerform('mouseMoved', evt);
+
         } else {
           responder.tryToPerform('mouseEntered', evt);
+
+          while (responder && !tooltip) {
+            tooltip = responder.get('tooltip');
+            responder = responder.get('nextResponder') ;
+          }
+
+          // console.log('setting tooltip to', tooltip);
+          this.set('tooltip', tooltip); // Private, bound property.
         }
       }
+
+      // Trigger a tooltip in 300ms if nothing else happens.
+      this._tooltipTrigger = setTimeout(function() {
+        var tooltip = SC.app.get('tooltip');
+        // console.log('tooltip trigger', tooltip);
+        if (!tooltip) return;
+        SC.RunLoop.begin();
+        SC.app.showTooltip(evt);
+        SC.RunLoop.end();
+      }, 500);
 
       // Keep track of the surfaces that were last hovered.
       this._sc_lastHovered = nh;

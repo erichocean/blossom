@@ -5,9 +5,10 @@
 // ==========================================================================
 /*globals sc_assert */
 
+sc_require('system/responder');
 sc_require('surfaces/leaf');
 
-SC.FieldEditor = SC.Responder.extend({
+SC.FieldEditor = SC.Object.extend(SC.Responder, {
 
   isFieldEditor: true, // Walk like a duck.
 
@@ -15,7 +16,7 @@ SC.FieldEditor = SC.Responder.extend({
 
   isEnabled: true,
 
-  textLayer: null,
+  widget: null,
 
   value: null,
 
@@ -30,13 +31,13 @@ SC.FieldEditor = SC.Responder.extend({
     // cur === old === val on init(), so nothing to do.
     if (cur === old) return;
 
-    // This happens when our 'value' was updated by our text area. Avoid 
-    // a loop by not setting 'value' on the text area again.
+    // This happens when our 'value' was updated by our input element. Avoid 
+    // a loop by not setting 'value' on the input element again.
     if (cur === val) {
       this._sc_value = cur;
 
     // This happens when our 'value' has been updated by anyone but our 
-    // text area.  Let our text area know we've changed.
+    // input element.  Let our input element know we've changed.
     } else {
       this._sc_value = cur;
       txt.value = cur;
@@ -44,37 +45,46 @@ SC.FieldEditor = SC.Responder.extend({
   }.observes('value'),
 
   selection: function(key, value) {
-    var textarea = this._sc_textarea;
+    var input = this._sc_input;
 
     if (value !== undefined) {
       sc_assert(value instanceof SC.TextSelection);
       sc_assert(value.isValid);
 
-      if (!textarea.value) {
-        textarea.setSelectionRange(0, 0);
+      if (!input.value) {
+        input.setSelectionRange(0, 0);
       } else {
-        textarea.setSelectionRange(value.start, value.end);
+        input.setSelectionRange(value.start, value.end);
       }
     } else {
-      return new SC.TextSelection(textarea.selectionStart, textarea.selectionEnd);
+      return new SC.TextSelection(input.selectionStart, input.selectionEnd);
     }
   }.property('value'),
 
+  surface: function() {
+    return this;
+  }.property(),
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
+
     var input,
         isEnabled = this.get('isEnabled'),
         isPassword = this.get('isPassword');
 
     input = this._sc_input = document.createElement('input');
     input.type = isPassword? 'password' : 'text';
+
     if (isEnabled) input.id = isPassword? 'password-editor' : 'field-editor';
     else input.id = isPassword? 'disabled-password-editor' : 'disabled-field-editor';
+
     var style = input.style;
+
     style.zIndex = 'auto';
     style.display = 'none';
     style.position = 'absolute';
     if (!isEnabled) style.outline = 'none';
+
     document.body.appendChild(input);
 
     // Become the input surface.
@@ -106,6 +116,20 @@ SC.FieldEditor = SC.Responder.extend({
     } else {
       evt.preventDefault();
     }
+
+    var widget = this.widget;
+    if (widget) widget.tryToPerform('keyDown', evt);
+
+    if (evt.which === 9) {
+      evt.preventDefault();
+      console.log('evt.shiftKey', evt.shiftKey);
+      var nextInputResponder = evt.shiftKey? widget.get('previousInputResponder') : widget.get('nextInputResponder');
+      if (nextInputResponder && nextInputResponder.isTextField) {
+        SC.OpenFieldEditorFor(nextInputResponder);
+      } else {
+        SC.CloseFieldEditor();
+      }
+    }
   },
 
   keyUp: function(evt) {
@@ -114,6 +138,27 @@ SC.FieldEditor = SC.Responder.extend({
       evt.allowDefault(); // We want the browser's behavior here.
       this.set('value', this._sc_input.value);
     } else evt.preventDefault();
+
+    var widget = this.widget;
+    if (widget) widget.tryToPerform('keyUp', evt);
+  },
+
+  mouseDown: function(evt) {
+    console.log('SC.FieldEditor#mouseDown()');
+    var widget = this.widget;
+    if (widget) widget.tryToPerform('mouseDown', evt);
+    evt.allowDefault();
+  },
+
+  mouseMoved: function(evt) {
+    var widget = this.widget;
+    if (widget) widget.tryToPerform('mouseMoved', evt);
+  },
+
+  mouseUp: function(evt) {
+    var widget = this.widget;
+    if (widget) widget.tryToPerform('mouseUp', evt);
+    evt.allowDefault();
   },
 
   _sc_inputDidFocus: function(evt) {
@@ -123,112 +168,119 @@ SC.FieldEditor = SC.Responder.extend({
 
   _sc_inputDidBlur: function(evt) {
     // console.log('SC.FieldEditor#_sc_inputDidBlur()', this.isPassword? 'password' : 'text');
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
     SC.app.set('fieldEditor', null);
   },
 
   _sc_inputDidSelect: function(evt) {
-    // console.log('SC.FieldEditor#_sc_inputDidSelect()', this.isPassword? 'password' : 'text');
+    console.log('SC.FieldEditor#_sc_inputDidSelect()', this.isPassword? 'password' : 'text');
     this.notifyPropertyChange('selection');
   },
 
   _sc_inputDidChange: function(evt) {
     // console.log('SC.FieldEditor#_sc_inputDidChange()', this.isPassword? 'password' : 'text');
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
   }
 
 });
 
-SC.BeginEditingTextLayer = function(textLayer, password) {
-  sc_assert(textLayer);
-  sc_assert(textLayer.kindOf(SC.TextLayer));
+SC.OpenFieldEditorFor = function(widget) {
+  console.log('SC.OpenFieldEditorFor');
+  sc_assert(widget);
+  sc_assert(widget.isWidget);
 
-  var editor;
-  if (textLayer.get('isEnabled')) editor = password? SC.passwordEditor : SC.fieldEditor;
-  else editor = password? SC.disabledPasswordEditor : SC.disabledFieldEditor;
+  if (SC.activeEditor && SC.activeEditor.widget === widget) return;
+
+  var editor = widget.get('isEnabled')
+      ? SC.fieldEditor
+      : SC.disabledFieldEditor;
+
+  SC._sc_openEditorForWidget(editor, widget);
+};
+
+SC.OpenPasswordEditorFor = function(widget) {
+  console.log('SC.OpenPasswordEditorFor');
+  sc_assert(widget);
+  sc_assert(widget.isWidget);
+
+  if (SC.activeEditor && SC.activeEditor.widget === widget) return;
+
+  var editor = widget.get('isEnabled')
+      ? SC.passwordEditor
+      : SC.disabledPasswordEditor;
+
+  SC._sc_openEditorForWidget(editor, widget);
+};
+
+/** @private */
+SC._sc_openEditorForWidget = function(editor, widget) {
   sc_assert(editor);
+  sc_assert(editor.isFieldEditor);
+  sc_assert(widget);
+  sc_assert(widget.isWidget);
+
+  if (SC.activeEditor) SC.CloseFieldEditor();
+
+  editor.widget = widget;
+  SC.activeEditor = editor;
 
   var input = editor._sc_input;
   sc_assert(input);
   sc_assert(document.getElementById(input.id));
-  var value = textLayer.get('value');
-  input.value = value;
-  var style = input.style;
-  style.display = 'block';
 
-  SC.activeEditor = editor;
-  editor.textLayer = textLayer;
+  widget.tryToPerform('styleInputElement', input);
 
-  // Need to position and style the input correctly, and then append ourself 
-  // to the nearest surface that takes children.
-  var surface = textLayer.get('surface');
+  var surface = widget.computeSupersurface();
   sc_assert(surface);
-  while (surface.isLeafSurface) surface = surface.get('supersurface');
-  sc_assert(surface);
-
-  style.border  = textLayer.get('borderWidth');
-  style.borderStyle = 'solid ';
-  style.borderColor = textLayer.get('borderColor');
-  style.font = textLayer.get('font');
-  style.color = textLayer.get('color');
-  style.backgroundColor = textLayer.get('backgroundColor');
-
-  // Determine our position relative to our immediate surface.  This is a 
-  // little bit involved and involves a few levels of indirection.
-  var surfaceFrame = textLayer.get('surface').get('frame'),
-      textFrame = textLayer.get('frame'),
-      x = textFrame.x, y = textFrame.y,
-      superlayer = textLayer.get('superlayer'), frame;
-
-  // `textFrame` must be expressed in the coordinate space of `surfaceFrame`
-  // (its currently expressed in terms of its superlayer OR its surface). 
-  // Walk up the layer tree until we no longer have a superlayer, taking into 
-  // account the frames on the way up.
-  while (superlayer) {
-    frame = superlayer.get('frame');
-    x += frame.x;
-    y += frame.y;
-    superlayer = superlayer.get('superlayer');
-  }
-
-  style.paddingLeft = 2;
-  style.paddingRight = 2;
-  style.top     = surfaceFrame.y + y - 1;
-  style.left    = surfaceFrame.x + x;
-  style.width   = textFrame.width;
-  style.height  = textFrame.height;
-
-  // FIXME: Also need to take into acccount the accumuplated layer transform.
-
   var psurface = SC.psurfaces[surface.__id__];
   sc_assert(psurface);
-
   var element = psurface.__element__;
   sc_assert(element);
   sc_assert(document.getElementById(element.id));
+
   element.appendChild(input);
+
+  // Need to use setTimeout(), it must be the next event cycle.
   setTimeout(function() {
     SC.RunLoop.begin();
-    input.setSelectionRange(0, value? value.length : 0);
+    widget.tryToPerform('setSelectionForInputElement', input);
     SC.RunLoop.end();
   }, 0);
 };
 
-SC.EndEditingTextLayer = function() {
+SC.CloseFieldEditor = function() {
+  console.log('SC.CloseFieldEditor');
   var editor = SC.activeEditor;
   if (!editor) return;
 
-  var textLayer = editor.textLayer;
-  sc_assert(textLayer);
+  var widget = editor.widget;
+  sc_assert(widget);
 
   var input = editor._sc_input;
   sc_assert(input);
   sc_assert(document.getElementById(input.id));
-  textLayer.set('value', input.value);
-  input.style.display = 'none';
+
+  var value = input.value,
+      old;
+
+  if (widget.valueForFieldEditor) {
+    old = widget.valueForFieldEditor();
+  } else {
+    old = widget.get('value');
+  }
+
+  if (old !== value) {
+    if (widget.takeValueFromFieldEditor) widget.takeValueFromFieldEditor(value);
+    else widget.set('value', value);
+  }
+
+  widget.tryToPerform('fieldEditorDidClose');
 
   SC.activeEditor = null;
-  editor.textLayer = null;
+  editor.widget = null;
+  SC.app.set('fieldEditor', null);
+
+  input.style.display = 'none';
   document.body.appendChild(input);
 };
 

@@ -43,10 +43,9 @@ SC.LabelLayer = SC.Layer.extend({
     }
   }.observes('value'),
 
-  updateTextLayout: function() {
+  updateTextLayout: function(context) {
     // console.log('SC.LabelLayer#updateTextLayout()');
-    var context = this.get('context'),
-        str = String(this.get('value') || ''),
+    var str = String(this.get('value') || ''),
         width;
 
     this.__needsTextLayout__ = false;
@@ -59,13 +58,11 @@ SC.LabelLayer = SC.Layer.extend({
   render: function(ctx) {
     // console.log('SC.LabelLayer#render()');
     var str = String(this.get('value') || ''),
-        w = ctx.w, h = ctx.h,
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height,
         textAlign = this.get('textAlign');
 
     sc_assert(!this.__needsTextLayout__);
-
-    // Always clear the rect in case someone wants transparency.
-    ctx.clearRect(0, 0, w, h);
 
     ctx.fillStyle = this.get('backgroundColor');
     ctx.fillRect(0, 0, w, h);

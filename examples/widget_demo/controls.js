@@ -23,7 +23,9 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-WidgetDemo.controlsSurface = SC.View.create();
+WidgetDemo.controlsSurface = SC.View.create({
+  _sc_backgroundColor: 'grey'
+});
 
 // These two arrays are in sync.
 var anchors   = [70,  190,   310,      430],
@@ -33,11 +35,14 @@ var rootLayer = SC.Layer.create({
   layout: { centerX: 0, centerY: 0, width: 850, height: 550 },
 
   render: function(ctx) {
-    ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
+
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = base0;
     ctx.lineWidth = 2; // overlap of 1 on the inside
-    ctx.strokeRect(0, 0, ctx.width, ctx.height);
+    ctx.strokeRect(0, 0, w, h);
 
     ctx.fillStyle = base00;
     ctx.font = "14pt Calibri";
@@ -303,6 +308,7 @@ var selectWidget2 = SC.SelectWidget.create({
             value: "red",
             enabled: true,
             icon: "button_red" },
+          "", // Spacer
           { title: "Green",
             value: "green",
             enabled: true,

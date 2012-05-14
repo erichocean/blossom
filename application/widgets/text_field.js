@@ -3,9 +3,9 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert */
+/*globals sc_assert formatter linebreak */
 
-sc_require('layers/text');
+sc_require('widgets/widget');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -26,12 +26,47 @@ var green =    "#859900";
 var white =    "white";
 var black =    "black";
 
-// NOTE: Keep this in sync with SC.Responder's implementation.
-SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
+SC.TextFieldWidget = SC.Widget.extend({
 
-  isWidget: true, // Walk like a duck.
+  displayProperties: 'value'.w(),
 
-  isSingleLine: true,
+  isTextField: true,
+
+  // FIXME: Add more text properties.
+  font: "10pt Helvetica, sans",
+  color: base03,
+  backgroundColor: base3,
+  textBaseline: 'top',
+  textAlign: 'left',
+  tolerance: 10,
+  lineHeight: 18,
+
+  isSingleLine: false,
+
+  _sc_textPropertiesDidChange: function() {
+    var surface = this.get('surface');
+    if (surface) surface.triggerLayoutAndRendering();
+  }.observes('font', 'color', 'backgroundColor', 'textBaseline',
+             'textBaseline', 'tolerance', 'lineHeight'),
+
+  value: null, // should be a String or null
+
+  _sc_value: null,
+  _sc_valueDidChange: function() {
+    var value = this.get('value');
+    if (value !== this._sc_value) {
+      this._sc_value = value;
+      if (value) {
+        var surface = this.get('surface');
+        if (surface) surface.triggerLayoutAndRendering();
+      }
+    }
+  }.observes('value'),
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this._sc_valueDidChange();
+  },
 
   behavior: function(key, val) {
     sc_assert(val === undefined, "This property is read-only.");
@@ -70,97 +105,10 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
     }
   }.observes('isEnabled'),
 
-  // ..........................................................
-  // PRETEND WE'RE AN SC.RESPONDER SUBCLASS
-  //
-
-  isResponder: true,
-
-  /** @property
-    Set to true if your responder is willing to accept first responder status.
-    This is used when calculcating the key responder loop.
-  */
-  acceptsFirstResponder: true,
-
-  /** @property
-    The surface this responder belongs to.  This is used to determine where 
-    you belong to in the responder chain.  Normally you should leave this 
-    property set to null.
-
-    @type SC.Surface
-  */
-  surface: null,
-
-  /** @property 
-    True when the responder is currently the first responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isFirstResponder: false,
-
-  /** @property 
-    True when the responder is currently the input responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isInputResponder: false,
-
-  /** @property 
-    True when the responder is currently the menu responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isMenuResponder: false,
-
-  /** @property
-    This is the nextResponder in the responder chain.  If the receiver does 
-    not implement a particular event handler, it will bubble up to the next 
-    responder.
-  */
-  nextResponder: function(key, val) {
-    sc_assert(val === undefined, "This property is read-only.");
-    var superlayer = this.get('superlayer');
-    while (superlayer && !superlayer.isResponder) {
-      superlayer = superlayer.get('superlayer');
-    }
-    return superlayer || null;
-  }.property('superlayer'),
-
-  /** 
-    Call this method on your responder to make it become the first responder 
-    in its surface.  If the surface is also the app's keyboard surface, the 
-    responder will have its `isInputResponder` property set to true.
-  */
-  becomeFirstResponder: function() {  
-    var surface = this.get('surface');
-    if (surface && this.get('acceptsFirstResponder')) {
-      if (surface.get('firstResponder') !== this) {
-        surface.set('firstResponder', this);
-      }
-    }
-  },
-
-  /**
-    Call this method on your responder to resign your first responder status. 
-    Normally this is not necessary since you will lose first responder status 
-    automatically when another responder becomes first responder.
-  */
-  resignFirstResponder: function() {
-    var surface = this.get('surface');
-    if (surface && surface.get('firstResponder') === this) {
-      surface.set('firstResponder', null);
-    }
-  },
-
-  lineHeight: 22,
-
   _sc_didBecomeInputResponder: function() {
     // console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
     if (this.get('isInputResponder')) {
-      SC.BeginEditingTextLayer(this);
+      SC.OpenFieldEditorFor(this);
     }
   }.observes('isInputResponder'),
 
@@ -169,7 +117,7 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
     SC.app.set('inputSurface', this.get('surface'));
     if (!this.get('isFirstResponder')) this.becomeFirstResponder();
     else if (this.get('isInputResponder')) {
-      SC.BeginEditingTextLayer(this);
+      SC.OpenFieldEditorFor(this);
     }
     return true;
   },
@@ -183,34 +131,111 @@ SC.TextFieldWidget = SC.TextLayer.extend(SC.DelegateSupport, {
   }.property('isEnabled'),
 
   borderColor: function() {
-    return this.get('isEnabled')? black : 'rgba(0,43,54,0.5)';
+    return this.get('isEnabled')? 'rgb(128,128,128)' : 'rgba(0,43,54,0.5)';
   }.property('isEnabled'),
 
   borderWidth: 1,
 
   render: function(ctx) {
-    var h = ctx.height,
-        w = ctx.width,
+    var bounds = this.get('bounds'),
+        h = bounds.height, w = bounds.width,
         isEnabled = this.get('isEnabled');
 
     ctx.fillStyle = this.get('backgroundColor');
-    ctx.fillRect(0, 0, w, h);
+    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, 5);
+    ctx.fill();
 
-    ctx.save();
-    ctx.translate(4, 2);
-    arguments.callee.base.apply(this, arguments);
-    ctx.restore();
+    // Draw the text.
+    ctx.textBaseline = this.get('textBaseline');
+    ctx.font = this.get('font');
+    ctx.fillStyle = this.get('color');
+    var val = this.get('value');
+    if (val && val.elide) val = val.elide(ctx, w - 23);
+    ctx.fillText(val, 4, 3);
 
     // Draw the box.
     ctx.strokeStyle = this.get('borderColor');
-    ctx.beginPath();
-    ctx.moveTo(0.5, 0.5);
-    ctx.lineTo(0.5, h-0.5);
-    ctx.lineTo(w-0.5, h-0.5);
-    ctx.lineTo(w-0.5, 0.5);
-    ctx.closePath();
+    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, 5);
     ctx.lineWidth = this.get('borderWidth');
     ctx.stroke();
+  },
+
+  computeSupersurface: function() {
+    var surface = this.get('surface');
+    sc_assert(surface);
+    while (surface.isLeafSurface) surface = surface.get('supersurface');
+    sc_assert(surface);
+    return surface;
+  },
+
+  computeFrameInSupersurface: function() {
+    // Determine our position relative to our immediate surface.  This is a 
+    // little bit involved and involves a few levels of indirection.
+    var surface = this.get('surface'),
+        surfaceFrame = surface.get('frame'),
+        textFrame = this.get('frame'),
+        x = textFrame.x, y = textFrame.y,
+        superlayer = this.get('superlayer'), frame;
+
+    // `textFrame` must be expressed in the coordinate space of `surfaceFrame`
+    // (its currently expressed in terms of its superlayer OR its surface). 
+    // Walk up the layer tree until we no longer have a superlayer, taking into 
+    // account the frames on the way up.
+    var rootLayer = superlayer;
+    while (superlayer) {
+      rootLayer = superlayer;
+      frame = superlayer.get('frame');
+      x += frame.x;
+      y += frame.y;
+      superlayer = superlayer.get('superlayer');
+    }
+
+    // FIXME: Also need to take into account the accumulated layer transform.
+
+    var rowOffsetForLayerTree = 0;
+    if (surface.rowOffsetForLayerTree) rowOffsetForLayerTree = surface.rowOffsetForLayerTree(rootLayer);
+
+    return SC.MakeRect(
+        surfaceFrame.x + x,
+        surfaceFrame.y + y + rowOffsetForLayerTree,
+        textFrame.width,
+        textFrame.height
+      );
+  },
+
+  styleInputElement: function(input) {
+    var style = input.style,
+        frame = this.computeFrameInSupersurface();
+
+    input.value = this.get('value');
+
+    style.display = 'block';
+    style.border  = this.get('borderWidth') + 'px';
+    style.borderStyle = 'solid ';
+    style.borderRadius = '5px';
+    style.borderColor = 'rgb(252,188,126)'; // this.get('borderColor');
+    style.font = this.get('font');
+    style.color = this.get('color');
+    style.backgroundColor = this.get('backgroundColor');
+    style.backgroundImage = 'none';
+    style.outline = 'none'; // FIXME: This breaks other users of the field editor.
+    if (this.get('isEnabled')) {
+      style.boxShadow = '0px 0px 3px 1px ' + 'rgb(252,102,32)' + ', 0px 0px 1px 0px ' + 'rgb(128,128,128)' + ' inset';
+    } else style.boxShadow = 'none';
+
+    // Without the 'px' ending, these do nothing in WebKit.
+    style.paddingTop = '0px';
+    style.paddingLeft = '2px';
+    style.paddingRight = '1px';
+    style.top    = frame.y      + 'px';
+    style.left   = frame.x      + 'px';
+    style.width  = frame.width  + 'px';
+    style.height = frame.height + 'px';
+  },
+
+  setSelectionForInputElement: function(input) {
+    var value = this.get('value');
+    input.setSelectionRange(0, value? value.length : 0);
   }
 
 });

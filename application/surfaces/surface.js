@@ -124,7 +124,7 @@ SC.animatablePropertyBuilder = function(key, assertion) {
   @extends SC.Responder
   @since Blossom 1.0
 */
-SC.Surface = SC.Responder.extend({
+SC.Surface = SC.Object.extend(SC.Responder, {
 
   isSurface: true,
   isResponderContext: true, // We can dispatch to other responders.
@@ -646,6 +646,8 @@ SC.Surface = SC.Responder.extend({
 
   __useContentSize__: false,
 
+  __neverAnimate__: false,
+
   // These only apply to leaf surfaces, but I'm putting them here because the 
   // frame method is what updates them.
   __contentWidth__: 0,
@@ -730,6 +732,8 @@ SC.Surface = SC.Responder.extend({
         style[cssKey] = value;
       }
     }
+    // 
+    // style.overflow = 'auto';
   },
 
   // ..........................................................

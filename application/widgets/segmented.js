@@ -260,9 +260,7 @@ SC.SegmentedWidget = SC.Widget.extend(SC.Control, {
   }.property('items', 'itemTitleKey', 'itemValueKey', 'itemIsEnabledKey',
              'localize', 'itemIconKey', 'itemWidthKey', 'itemToolTipKey'),
 
-  render: function(ctx) {
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
-  },
+  render: function(ctx) { },
 
 
   // ..........................................................
@@ -635,24 +633,23 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
         mixed = (selected === SC.MIXED_STATE),
         active = this.get('isActive'),
         segmentType = this.get('segmentType'),
-        font = this.get('font');
+        font = this.get('font'),
+        bounds = this.get('bounds');
 
     selected = (selected && (selected !== SC.MIXED_STATE));
-
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     sc_assert(this.get('theme') !== 'checkbox' || this.get('theme') !== 'radio', "SC.SegmentedWidget only supports these themes: 'square', 'capsule', and 'regular'.");
 
     if (segmentType === 'left') {
       switch (this.get('theme')) {
         case 'square':
-          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 0);
+          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, bounds.width-2, bounds.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPathLeft(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 12);
+          SC.CreateRoundRectPathLeft(ctx, 0.5, 1.5, bounds.width-2, bounds.height-3, 12);
           break;
         case 'regular':
-          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, ctx.width-2, ctx.height-3, 5);
+          SC.CreateRoundRectPathLeft(ctx, 1.5, 1.5, bounds.width-2, bounds.height-3, 5);
           break;
         default:
           sc_assert(false, "Unknown theme:"+this.get('theme'));
@@ -662,13 +659,13 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
     } else if (segmentType === 'right') {
       switch (this.get('theme')) {
         case 'square':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 0);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, bounds.width-2, bounds.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, bounds.width-1, bounds.height-3, 12);
           break;
         case 'regular':
-          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, ctx.width-2, ctx.height-3, 5);
+          SC.CreateRoundRectPathRight(ctx, 0.5, 1.5, bounds.width-2, bounds.height-3, 5);
           break;
         default:
           sc_assert(false, "Unknown theme:"+this.get('theme'));
@@ -677,22 +674,22 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
 
     } else if (segmentType === 'center') {
       ctx.beginPath();
-      ctx.moveTo(0.5 + ctx.width-1, 1.5); // Top-right
+      ctx.moveTo(0.5 + bounds.width-1, 1.5); // Top-right
       ctx.lineTo(0.5, 1.5);
-      ctx.lineTo(0.5, 1.5 + ctx.height-3);
-      ctx.lineTo(0.5 + ctx.width-1, 1.5 + ctx.height-3);
+      ctx.lineTo(0.5, 1.5 + bounds.height-3);
+      ctx.lineTo(0.5 + bounds.width-1, 1.5 + bounds.height-3);
       // Don't close the path, segments draw the line on the right (only).
 
     } else { // 'full'
       switch (this.get('theme')) {
         case 'square':
-          SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
+          SC.CreateRoundRectPath(ctx, 1.5, 1.5, bounds.width-3, bounds.height-3, 0);
           break;
         case 'capsule':
-          SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 12);
+          SC.CreateRoundRectPath(ctx, 1.5, 1.5, bounds.width-3, bounds.height-3, 12);
           break;
         case 'regular':
-          SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+          SC.CreateRoundRectPath(ctx, 1.5, 1.5, bounds.width-3, bounds.height-3, 5);
           break;
         default:
           sc_assert(false, "Unknown theme:"+this.get('theme'));
@@ -716,7 +713,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, bounds.width/2, bounds.height/2);
 
     } else if (disabled && selected) {
       ctx.globalAlpha = 0.5;
@@ -733,7 +730,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, bounds.width/2, bounds.height/2);
 
     } else if (active || selected) {
       ctx.fillStyle = base03;
@@ -748,7 +745,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, bounds.width/2, bounds.height/2);
 
     } else {
       // console.log('rendering normally');
@@ -766,7 +763,7 @@ SC.SegmentWidget = SC.ButtonWidget.extend({
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, bounds.width/2, bounds.height/2);
     }
   }
 

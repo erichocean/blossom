@@ -37,99 +37,106 @@ SC.CheckboxWidget = SC.ButtonWidget.extend({
         selected = this.get('isSelected'),
         disabled = !this.get('isEnabled'),
         mixed = (selected === SC.MIXED_STATE),
-        active = this.get('isActive');
+        active = this.get('isActive'),
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
-
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     sc_assert(this.get('theme') === 'checkbox');
 
     SC.CreateRoundRectPath(ctx, 1.5, 4.5, 15, 15, 5);
 
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    lingrad.addColorStop(0, 'rgb(252,188,126)');
+    lingrad.addColorStop(1, 'rgb(255,102,0)');
+
     if ((disabled && !selected) || (disabled && !active && !selected)) {
-      ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = lingrad;
       ctx.fill();
 
-      ctx.globalAlpha = 0.5;
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, h/2 + 2);
 
     } else if (disabled) {
       ctx.globalAlpha = 0.5;
-      ctx.fillStyle = base03;
+      ctx.fillStyle = lingrad;
       ctx.fill();
 
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
     
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, h/2 + 2);
 
     } else if (active) {
-      ctx.fillStyle = base03;
+      lingrad = ctx.createLinearGradient(0,0,0,h);
+      lingrad.addColorStop(0, 'rgb(252,188,126)');
+      lingrad.addColorStop(1, 'rgb(255,178,128)');
+
+      ctx.fillStyle = lingrad;
       ctx.fill();
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
     
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = white;
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, h/2 + 2);
 
     } else {
       // console.log('rendering normally');
       ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.fillStyle = lingrad;
       ctx.fill();
 
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = white;
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.shadowColor = 'rgba(0,0,0,0)';
+      ctx.fillText(title, 22, h/2 + 2);
     }
 
     if ((selected && !active) || (!selected && active)) {
       // Draw the check mark.
       ctx.beginPath();
       ctx.moveTo(8.5, 17);
-      ctx.lineTo(3.5, 13.5);
-      ctx.lineTo(5.5, 12.5);
-      ctx.lineTo(8.5, 16);
+      ctx.lineTo(3.75, 13.5);
+      ctx.lineTo(5.5, 12);
+      ctx.lineTo(8.5, 14.5);
       ctx.lineTo(12.5, 7);
       ctx.lineTo(14, 9);
       ctx.lineTo(8.5, 17);
       ctx.closePath();
-      ctx.fillStyle = (active || disabled)? base3 : base03;
+      ctx.fillStyle = (active || disabled)? 'rgba(255,255,255,0.7)' : white;
       ctx.fill();
-      ctx.strokeStyle = (active || disabled)? base3 : base03;
+      ctx.strokeStyle = (active || disabled)? 'rgba(255,255,255,0.7)' : white;
       ctx.lineCap = 'round';
       ctx.lineWidth = 0.5;
       ctx.stroke();

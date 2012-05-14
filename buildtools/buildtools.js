@@ -1413,9 +1413,13 @@ BT.App = BT.Target.extend({
     files.forEach(outputScriptTag);
 
     ret += '    <style>\n';
+    // ret += '      html { overflow: hidden; }\n';
     ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';
     ret += '      div, canvas { border-style: solid; border-width: 0; }\n';
-    ret += '      #ui { border-style: none }\n';
+    ret += '      #ui { border-style: none; overflow: hidden; }\n';
+    ret += '      .frame { border-radius: 5px; }\n';
+    ret += '      .frame::-webkit-scrollbar { -webkit-appearance: none; width: 11px; }\n';
+    ret += '      .frame::-webkit-scrollbar-thumb { border-radius: 8px; border: 2px solid grey; /* should match background, can\'t be transparent */ background-color: rgba(0,0,0,.5); }\n';
     ret += '    </style>\n';
     ret += '  </head>\n';
     
@@ -1460,6 +1464,9 @@ BT.App = BT.Target.extend({
     ret += '      * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }\n';
     ret += '      div, canvas { border-style: solid; border-width: 0; }\n';
     ret += '      #ui { border-style: none }\n';
+    ret += '      .frame { border-radius: 5px; }\n';
+    ret += '      .frame::-webkit-scrollbar { -webkit-appearance: none; width: 11px; }\n';
+    ret += '      .frame::-webkit-scrollbar-thumb { border-radius: 8px; border: 2px solid red; /* should match background, can\'t be transparent */ background-color: rgba(0,0,0,.5); }\n';
     ret += '    </style>\n';
     ret += '  </head>\n';
     

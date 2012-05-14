@@ -3,8 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals CanvasRenderingContext2D HTMLCanvasElement
-  ENFORCE_BLOSSOM_2DCONTEXT_API sc_assert */
+/*globals CanvasRenderingContext2D HTMLCanvasElement sc_assert */
 
 sc_require('system/matrix');
 sc_require('ext/browser');
@@ -98,13 +97,9 @@ SC.Layer = SC.Object.extend({
   },
 
   updateLayout: function(layersNeedingTextLayout) {
-    console.log('SC.Layer#updateLayout()', SC.guidFor(this));
+    // console.log('SC.Layer#updateLayout()', SC.guidFor(this));
     if (this.__needsLayout__) {
-      var bounds = this.get('bounds'), // Sets this.__needsLayout__ to false.
-          canvas = this.__sc_element__;
-
-      canvas.width = bounds.width;
-      canvas.height = bounds.height;
+      var bounds = this.get('bounds'); // Sets this.__needsLayout__ to false.
       this._sc_transformFromSuperlayerToLayerIsDirty = true; // HACK
       this._sc_computeTransformFromSuperlayerToLayer();
     }
@@ -160,6 +155,31 @@ SC.Layer = SC.Object.extend({
     ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
     ctx.drawLayer(this, 0, 0);
     this.get('sublayers').invoke('copyIntoContext', ctx);
+    ctx.restore();
+  },
+
+  renderIntoContext: function(ctx) {
+    // console.log('SC.Layer#renderIntoContext()', SC.guidFor(this));
+    sc_assert(!this._sc_transformFromSuperlayerToLayerIsDirty);
+    var t = this._sc_transformFromSuperlayerToLayer;
+
+    if (!this.get('isVisible')) return;
+
+    ctx.save();
+      sc_assert(Math.round(t[4]) === t[4]);
+      sc_assert(Math.round(t[5]) === t[5]);
+      // console.log(t[0], t[1], t[2], t[3], t[4], t[5], SC.guidFor(this));
+      ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5]);
+
+      this.renderBoundsPath(ctx, true);
+      ctx.clip();
+
+      var delegate = this.get('delegate');
+      if (delegate && delegate.render) delegate.render(ctx, this);
+      else this.render(ctx);
+      this.__needsRendering__ = false;
+
+      this.get('sublayers').invoke('renderIntoContext', ctx);
     ctx.restore();
   },
 
@@ -285,6 +305,8 @@ SC.Layer = SC.Object.extend({
     } else return this._sc_position;
   }.property(),
 
+  __forceWidthHeight__: false,
+
   /**
     Specifies the bounds rectangle of the receiver. Animatable.
 
@@ -312,6 +334,13 @@ SC.Layer = SC.Object.extend({
         } else {
           // Give width and height a try, otherwise we'll get the minimum
           // possible size once `this._sc_layoutFunction()` runs.
+          pbounds = {
+            width: this.get('width') || 0,
+            height: this.get('height') || 0
+          };
+        }
+
+        if (this.__forceWidthHeight__) {
           pbounds = {
             width: this.get('width') || 0,
             height: this.get('height') || 0
@@ -559,8 +588,7 @@ SC.Layer = SC.Object.extend({
     Clears the layer.
   */
   clear: function() {
-    var context = this.get('context');
-    if (context) context.clearRect(0, 0, context.width, context.height);
+    console.log('SC.Layer#clear() is deprecated.');
   },
 
   initElement: function() {
@@ -571,8 +599,6 @@ SC.Layer = SC.Object.extend({
     this.context = context;
     this.__sc_element__ = canvas;
     context.__sc_canvas__ = canvas;
-
-    if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete context.canvas;
 
     canvas.id = this.get('id');
     canvas.width = bounds[2]/*width*/;
@@ -725,7 +751,7 @@ SC.Layer = SC.Object.extend({
 
     // This is a specialized initializer for our subclasses, so that each 
     // subclass can create their own backing layer type (canvas, video, etc.).
-    this.initElement();
+    // this.initElement();
 
     // debugger;
     this.__needsLayout__ = true;
@@ -768,6 +794,7 @@ SC.Layer = SC.Object.extend({
   },
 
   _sc_computeTransformFromSuperlayerToLayer: function() {
+    // console.log('SC.Layer#_sc_computeTransformFromSuperlayerToLayer()', SC.guidFor(this));
     // Assume our callers have checked to determine if we should be called.
     // if (!this._sc_transformFromSuperlayerToLayerIsDirty) return;
     sc_assert(this._sc_transformFromSuperlayerToLayerIsDirty);
@@ -867,7 +894,7 @@ SC.Layer = SC.Object.extend({
     SC.RectApplyAffineTransformTo(rect, tmpTransform, dest);
   },
 
-  renderBoundsPath: function(context) {
+  renderBoundsPath: function(context, isClip) {
     var b = this.get('bounds'),
         cornerRadius = this.get('cornerRadius');
 
@@ -875,17 +902,25 @@ SC.Layer = SC.Object.extend({
     // adjusted so that bounds.x and bounds.y are positioned at (0,0).
     if (cornerRadius > 0) {
       var width =  b[2]/*width*/,
-          height = b[3]/*height*/;
+          height = b[3]/*height*/,
+          zero = 0;
 
-      context.moveTo(cornerRadius, 0);
-      context.lineTo(width - cornerRadius, 0);
-      context.quadraticCurveTo(width, 0, width, cornerRadius);
+      // Slightly grow the clipping to enable anti-aliasing
+      if (isClip) {
+        width += 1;
+        height += 1;
+        zero = -0.5;
+      }
+
+      context.moveTo(cornerRadius, zero);
+      context.lineTo(width - cornerRadius, zero);
+      context.quadraticCurveTo(width, zero, width, cornerRadius);
       context.lineTo(width, height - cornerRadius);
       context.quadraticCurveTo(width, height, width - cornerRadius, height);
       context.lineTo(cornerRadius, height);
-      context.quadraticCurveTo(0, height, 0, height - cornerRadius);
+      context.quadraticCurveTo(0, height, zero, height - cornerRadius);
       context.lineTo(0, cornerRadius);
-      context.quadraticCurveTo(0, 0, cornerRadius, 0);
+      context.quadraticCurveTo(zero, zero, cornerRadius, zero);
       context.closePath();
     } else {
       context.rect(0, 0, b[2]/*width*/, b[3]/*height*/);
@@ -950,7 +985,7 @@ SC.Layer = SC.Object.extend({
   },
 
   addSublayer: function(layer) {
-    sc_assert(layer && layer.instanceOf(SC.Layer));
+    sc_assert(layer && layer.kindOf(SC.Layer));
     sc_assert(!layer.get('superlayer'));
     
     var sublayers = this.get('sublayers');
@@ -959,7 +994,7 @@ SC.Layer = SC.Object.extend({
   },
 
   removeSublayer: function(layer) {
-    sc_assert(layer && layer.instanceOf(SC.Layer));
+    sc_assert(layer && layer.kindOf(SC.Layer));
     sc_assert(layer.get('superlayer') === this);
     
     var sublayers = this.get('sublayers');

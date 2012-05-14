@@ -194,10 +194,7 @@ SC.RadioWidget = SC.Widget.extend(SC.Control, {
   }.property('items', 'itemTitleKey', 'itemWidthKey', 'itemValueKey',
              'itemIsEnabledKey', 'localize', 'itemIconKey'),
 
-  render: function(ctx) {
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
-  },
-
+  render: function(ctx) {},
 
   // ..........................................................
   // EVENT HANDLING
@@ -399,97 +396,104 @@ SC.RadioButtonWidget = SC.ButtonWidget.extend({
         selected = this.get('isSelected'),
         disabled = !this.get('isEnabled'),
         mixed = (selected === SC.MIXED_STATE),
-        active = this.get('isActive');
+        active = this.get('isActive'),
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.h;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
     disabled = disabled || !this.getPath('superlayer.isEnabled');
 
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
-
     sc_assert(this.get('theme') === 'radio');
 
-    SC.CreateRoundRectPath(ctx, 1.5, 4.5, 15, 15, 5);
     ctx.beginPath();
-    ctx.arc(8.75, 12, 6, 0, Math.PI*2);
+    ctx.arc(9, 12, 7, 0, Math.PI*2);
     ctx.closePath();
 
+    var radgrad = ctx.createRadialGradient(9, 2, 0.5, 9, 14, 7);
+    radgrad.addColorStop(0, 'rgb(252,188,126)');
+    radgrad.addColorStop(1, 'rgb(255,102,0)');
+
     if ((disabled && !selected) || (disabled && !active && !selected)) {
-      ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = radgrad;
       ctx.fill();
 
       ctx.globalAlpha = 0.5;
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, bounds.height/2 + 1);
 
     } else if (disabled) {
       ctx.globalAlpha = 0.5;
-      ctx.fillStyle = base03;
+      ctx.fillStyle = radgrad;
       ctx.fill();
 
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
     
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, bounds.height/2 + 1);
 
     } else if (active) {
-      ctx.fillStyle = base03;
+      radgrad = ctx.createRadialGradient(9, 2, 0.5, 9, 14, 7);
+      radgrad.addColorStop(0, 'rgb(252,188,126)');
+      radgrad.addColorStop(1, 'rgb(255,178,128)');
+
+      ctx.fillStyle = radgrad;
       ctx.fill();
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
     
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = white;
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, bounds.height/2 + 1);
 
     } else {
       // console.log('rendering normally');
       ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.fillStyle = radgrad;
       ctx.fill();
 
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = white;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.fillStyle = white;
+      ctx.font = "10pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, 22, ctx.height/2);
+      ctx.fillText(title, 22, bounds.height/2 + 1);
     }
 
     if ((selected && !active) || (!selected && active)) {
-      // Draw the check mark.
+      // Draw the button mark.
       ctx.beginPath();
-      ctx.arc(8.75, 12, 3.5, 0, Math.PI*2);
+      ctx.arc(9, 12, 3, 0, Math.PI*2);
       ctx.closePath();
-      ctx.fillStyle = (active || disabled)? base3 : base03;
+      ctx.fillStyle = (active || disabled)? 'rgba(255,255,255,0.7)' : white;
       ctx.fill();
-      ctx.strokeStyle = (active || disabled)? base3 : base03;
+      ctx.strokeStyle = (active || disabled)? 'rgba(255,255,255,0.7)' : white;
       ctx.lineCap = 'round';
       ctx.lineWidth = 0.5;
       ctx.stroke();

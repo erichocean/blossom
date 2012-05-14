@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
+/*globals sc_assert */
 
 sc_require('surfaces/scroll_view');
 
@@ -64,6 +64,9 @@ SC.ListView = SC.ScrollView.extend({
     context.fillText(String(index), width/2, height/2);
   },
 
+  hasHorizontalScroller: false,
+  clearBackground: true,
+
   updateDisplay: function() {
     // console.log('SC.ListView#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ListView#updateDisplay()';
@@ -91,7 +94,11 @@ SC.ListView = SC.ScrollView.extend({
         var obj = content.objectAt(idx);
         ctx.save();
         ctx.translate(0, idx*h);
-        this.renderRow(ctx, w, h, idx, obj, selection.contains(obj));
+        if (this.renderRow) {
+          this.renderRow(ctx, w, h, idx, obj, selection.contains(obj),
+            idx===0? true : false,
+            idx===(len-1)? true : false);
+        }
         ctx.restore();
       }
     }
@@ -115,6 +122,7 @@ SC.ListView = SC.ScrollView.extend({
     return true;
   },
 
+  // FIXME: This behavior is only needed on touch devices!
   mouseUp: function(evt) {
     var idx = this._rowIndex,
         content = this._sc_content,

@@ -4,6 +4,7 @@
 //            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals sc_assert */
 
 sc_require('system/query');
 
@@ -331,7 +332,6 @@ SC.Record = SC.Object.extend(
       if (p) {
         var psk = p.get('storeKey'),
             csk = this.get('storeKey'),
-            store = this.get('store'),
             path = store.parentRecords[psk][csk];
     
         p.recordDidChange(path);
@@ -1509,7 +1509,57 @@ SC.Record.mixin( /** @scope SC.Record */ {
   /** @private - enhance extend to notify SC.Query as well. */
   extend: function() {
     var ret = SC.Object.extend.apply(this, arguments);
-    if(SC.Query) SC.Query._scq_didDefineRecordType(ret);
+    if (SC.Query) SC.Query._scq_didDefineRecordType(ret);
     return ret ;
   }
 }) ;
+
+/*
+  This little bit of code swaps out the implementation of .get() in SC.Record 
+  for an implementation that keeps track of each record that had a property 
+  accessed, by storeKey.
+
+  A caller can use this to quickly determine which storeKeys were accessed 
+  during a specific time period, perhaps to monitor them for changes later.
+
+  This works in conjunction with SC.Store's ability to notice which storeKeys 
+  have been updated within a given run loop.
+
+  The primary client of this functionality is SC.ListView and subclasses.
+*/
+SC.Record.storeKeys = [];
+SC.Record.topStoreKeyHash = null;
+
+SC.Record.capturingGet = function() {
+  // console.log('SC.Record.capturingGet()');
+  sc_assert(this.kindOf(SC.Record));
+  sc_assert(SC.Record.topStoreKeyHash);
+  SC.Record.topStoreKeyHash[this.storeKey] = true;
+  return SC.Observable.get.apply(this, arguments);
+};
+
+SC.Record.beginCapturingStoreKeys = function() {
+  var hash = {},
+      storeKeys = SC.Record.storeKeys;
+
+  SC.Record.topStoreKeyHash = hash;
+  SC.Record.storeKeys.push(hash);
+  SC.Record.prototype.get = SC.Record.capturingGet; 
+};
+
+SC.Record.endCapturingStoreKeys = function() {
+  var hash = SC.Record.topStoreKeyHash,
+      storeKeys = SC.Record.storeKeys;
+
+  sc_assert(hash !== null, "`SC.Record.endCapturingStoreKeys()` called without first calling `SC.Record.beginCapturingStoreKeys()`");
+
+  storeKeys.pop();
+  if (storeKeys.length > 0) {
+    SC.Record.topStoreKeyHash = storeKeys[storeKeys.length - 1];
+  } else {
+    SC.Record.topStoreKeyHash = null;
+    SC.Record.prototype.get = SC.Observable.get;
+  }
+
+  return hash;
+};

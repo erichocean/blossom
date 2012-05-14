@@ -5,10 +5,10 @@
 // ==========================================================================
 /*globals sc_assert */
 
+sc_require('system/responder');
 sc_require('layers/layer');
 
-// NOTE: Keep this in sync with SC.Responder's implementation.
-SC.Widget = SC.Layer.extend(SC.DelegateSupport, {
+SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
 
   isWidget: true, // Walk like a duck.
 
@@ -22,12 +22,7 @@ SC.Widget = SC.Layer.extend(SC.DelegateSupport, {
   //
 
   /**
-    Set to true when the item is enabled.   Note that changing this value
-    will also alter the isVisibleInWindow property for this view and any
-    child views.
-
-    Note that if you apply the SC.Control mixin, changing this property will
-    also automatically add or remove a 'disabled' CSS class name as well.
+    Set to `true` when the item is enabled.
 
     This property is observable and bindable.
 
@@ -37,9 +32,9 @@ SC.Widget = SC.Layer.extend(SC.DelegateSupport, {
   isEnabledBindingDefault: SC.Binding.oneWay().bool(),
 
   /** @private
-    Observes the isEnabled property and resigns first responder if set to false.
-    This will avoid cases where, for example, a disabled text field retains
-    its focus rings.
+    Observes the `isEnabled` property and resigns first responder if set to 
+    `false`.  This will avoid cases where, for example, a disabled text field 
+    retains its focus rings.
 
     @observes isEnabled
   */
@@ -49,89 +44,57 @@ SC.Widget = SC.Layer.extend(SC.DelegateSupport, {
     }
   }.observes('isEnabled'),
 
-  // ..........................................................
-  // PRETEND WE'RE AN SC.RESPONDER SUBCLASS
-  //
+  nextInputResponder: function() {
+    var layers = this.getPath('surface.layers'),
+        nextInputResponder = null,
+        foundSelf = false,
+        that = this;
 
-  isResponder: true,
-
-  /** @property
-    Set to true if your responder is willing to accept first responder status.
-    This is used when calculcating the key responder loop.
-  */
-  acceptsFirstResponder: true,
-
-  /** @property
-    The surface this responder belongs to.  This is used to determine where 
-    you belong to in the responder chain.  Normally you should leave this 
-    property set to null.
-
-    @type SC.Surface
-  */
-  surface: null,
-
-  /** @property 
-    True when the responder is currently the first responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isFirstResponder: false,
-
-  /** @property 
-    True when the responder is currently the input responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isInputResponder: false,
-
-  /** @property 
-    True when the responder is currently the menu responder.  This property 
-    is always updated by a surface when its `firstResponder` property is set.
-
-    @type {Boolean}
-  */
-  isMenuResponder: false,
-
-  /** @property
-    This is the nextResponder in the responder chain.  If the receiver does 
-    not implement a particular event handler, it will bubble up to the next 
-    responder.
-  */
-  nextResponder: function(key, val) {
-    sc_assert(val === undefined, "This property is read-only.");
-    var superlayer = this.get('superlayer');
-    while (superlayer && !superlayer.isResponder) {
-      superlayer = superlayer.get('superlayer');
+    if (!layers) return null;
+    
+    try {
+      layers.forEach(function processLayer(layer) {
+        if (foundSelf && layer.get('acceptsFirstResponder')) {
+          nextInputResponder = layer;
+          throw "Found it";
+        } else {
+          layer.get('sublayers').forEach(processLayer);
+        }
+    
+        if (layer === that) foundSelf = true;
+      });
+    } catch (e) {
+      // nothing to do
     }
-    return superlayer || null;
-  }.property('superlayer'),
 
-  /** 
-    Call this method on your responder to make it become the first responder 
-    in its surface.  If the surface is also the app's keyboard surface, the 
-    responder will have its `isKeyboardResponder` property set to true.
-  */
-  becomeFirstResponder: function() {  
-    var surface = this.get('surface');
-    if (surface && this.get('acceptsFirstResponder')) {
-      if (surface.get('firstResponder') !== this) {
-        surface.set('firstResponder', this);
-      }
-    }
-  },
+    return nextInputResponder;
+  }.property(),
 
-  /**
-    Call this method on your responder to resign your first responder status. 
-    Normally this is not necessary since you will lose first responder status 
-    automatically when another responder becomes first responder.
-  */
-  resignFirstResponder: function() {
-    var surface = this.get('surface');
-    if (surface && surface.get('firstResponder') === this) {
-      surface.set('firstResponder', null);
+  previousInputResponder: function() {
+    var layers = this.getPath('surface.layers'),
+        nextInputResponder = null,
+        foundSelf = false,
+        that = this;
+
+    if (!layers) return null;
+
+    try {
+      layers.slice().reverse().forEach(function processLayer(layer) {
+        if (foundSelf && layer.get('acceptsFirstResponder')) {
+          nextInputResponder = layer;
+          throw "Found it";
+        } else {
+          layer.get('sublayers').slice().reverse().forEach(processLayer);
+        }
+    
+        if (layer === that) foundSelf = true;
+      });
+    } catch (e) {
+      // nothing to do
     }
-  }
+    
+     return nextInputResponder;
+  }.property()
+  
 
 });

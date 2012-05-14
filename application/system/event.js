@@ -56,6 +56,8 @@ SC.Event = function(originalEvent) {
       key = props[idx] ;
       this[key] = originalEvent[key] ;
     }
+
+    if (originalEvent.isBehaviorEvent) return this;
   }
 
   // Fix timeStamp property, if necessary.
@@ -446,6 +448,8 @@ SC.mixin(SC.Event, /** @scope SC.Event */ {
     args = SC.A(arguments);
     args[0] = event = SC.Event.normalizeEvent(event || window.event);
 
+    // console.log(event.type);
+
     // get the handlers for this event type
     handlers = (SC.data(this, "events") || {})[event.type];
     if (!handlers) return false; // nothing to do
@@ -708,3 +712,22 @@ SC.Event.prototype = {
   }
 
 } ;
+
+// Create these ones, and re-use when needed.
+SC.DefaultEvent = SC.Event.create({
+  isBehaviorEvent: true,
+  type: 'defaultTransition',
+  target: null
+});
+
+SC.EnterEvent = SC.Event.create({
+  isBehaviorEvent: true,
+  type: 'enter',
+  target: null
+});
+
+SC.ExitEvent = SC.Event.create({
+  isBehaviorEvent: true,
+  type: 'exit',
+  target: null
+});

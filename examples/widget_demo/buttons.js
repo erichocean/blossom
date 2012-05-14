@@ -33,11 +33,14 @@ var rootLayer = SC.Layer.create({
   layout: { centerX: 0, centerY: 0, width: 850, height: 550 },
 
   render: function(ctx) {
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
+
     ctx.fillStyle = base3;
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = base0;
     ctx.lineWidth = 2; // overlap of 1 on the inside
-    ctx.strokeRect(0, 0, ctx.width, ctx.height);
+    ctx.strokeRect(0, 0, w, h);
 
     ctx.fillStyle = base00;
     ctx.font = "14pt Calibri";

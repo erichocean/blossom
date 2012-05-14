@@ -53,6 +53,29 @@ SC.mixin(SC.String, {
     if (SC.typeOf(str) !== SC.T_STRING) str = this;
     var args = SC.$A(arguments); args.shift(); // remove def param
     return str.fmt.apply(str,args) ;
+  },
+
+  /**
+    Accepts canvas 2D rendering context and maximum pixel length arguments 
+    and returns a string that does not exceed the maximum width. If the 
+    original string is too long for the width it will be truncated with 
+    elipses placed at the beginning of a text aligned right context or the 
+    end of a text aligned left or center context.
+
+    @param {CanvasRenderingContext2D} context
+    @param {Number) maxLength maximum length in pixels of the resulting
+  */
+  elide: function(context, maxLength) {
+    if (maxLength <= 0) return '';
+    var ret = this, isRight = context.textAlign === 'right';
+    if (context.measureText(ret).width > maxLength) {
+      var e = '...', len = context.measureText(e).width;
+      while (context.measureText(ret).width+len > maxLength) {
+        ret = ret.slice(0, ret.length-1);
+      }
+      ret = ret+e;
+    }
+    return ret;
   }
 
 });

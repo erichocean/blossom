@@ -3,7 +3,7 @@
 // Copyright: ©2012 Fohr Motion Picture Studios. All rights reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals sc_assert ENFORCE_BLOSSOM_2DCONTEXT_API */
+/*globals sc_assert */
 
 sc_require('surfaces/leaf');
 
@@ -47,12 +47,31 @@ SC.View = SC.LeafSurface.extend({
     this.layers = [];
     this._sc_layersDidChange();
 
-    this._sc_hitTestLayer = SC.Layer.create({
-      // `layout` is whatever the default on SC.Layer is
-      isHitTestOnly: true,
-      surface: this,
-      delegate: this
-    });
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        bounds = this.get('frame');
+
+    this._sc_hitTestCanvas = canvas;
+    context.__sc_canvas__ = canvas;
+
+    canvas.width = bounds[2]/*width*/;
+    canvas.height = bounds[3]/*height*/;
+
+    if (this.get('isHitTestOnly')) {
+      var defineRect = SC.Layer._sc_defineRect, K = SC.K;
+
+      // Override those drawing operations that take time, but that we'll 
+      // never see the visible effects of.
+      SC.mixin(context, {
+        stroke: K,
+        fill: K,
+        drawImage: K,
+        fillText: K,
+        strokeText: K,
+        fillRect: defineRect,
+        strokeRect: defineRect
+      });
+    }
   },
 
   layers: [],
@@ -161,7 +180,7 @@ SC.View = SC.LeafSurface.extend({
   },
 
   updateLayout: function() {
-    console.log('SC.View#updateLayout()', SC.guidFor(this));
+    // console.log('SC.View#updateLayout()', SC.guidFor(this));
     var benchKey = 'SC.View#updateLayout()';
     SC.Benchmark.start(benchKey);
 
@@ -175,27 +194,32 @@ SC.View = SC.LeafSurface.extend({
       //   textLayersNeedingLayout.push(layer);
       // }
     }
-    this._sc_hitTestLayer.updateLayout();
+    var frame = this.get('frame'),
+        hitTestCanvas = this._sc_hitTestCanvas,
+        ctx = hitTestCanvas.getContext('2d');
+
+    hitTestCanvas.width = frame[2]/*width*/;
+    hitTestCanvas.height = frame[3]/*height*/;
 
     for (idx=0, len=textLayersNeedingLayout.length; idx<len; ++idx) {
-      textLayersNeedingLayout[idx].updateTextLayout();
+      textLayersNeedingLayout[idx].updateTextLayout(ctx);
     }
 
     SC.Benchmark.end(benchKey);
   },
 
-  clearBackground: true,
+  clearBackground: false,
 
   _sc_backgroundColor: base3,
 
   didCreateElement: function(canvas) {
+    // console.log('SC.View#didCreateElement()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
     var ctx = canvas.getContext('2d');
 
     // Enables ctx.width and ctx.height to work.
     ctx.__sc_canvas__ = canvas;
 
-    if (ENFORCE_BLOSSOM_2DCONTEXT_API) delete ctx.canvas;
     this._sc_context = ctx;
     this.triggerRendering();
   },
@@ -206,6 +230,7 @@ SC.View = SC.LeafSurface.extend({
     // console.log('SC.View#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.ViewSurface#updateDisplay()',
         updateKey = 'SC.ViewSurface#updateDisplay() - update',
+        renderKey = 'SC.ViewSurface#updateDisplay() - render',
         copyKey = 'SC.ViewSurface#updateDisplay() - copy';
     SC.Benchmark.start(benchKey);
 
@@ -215,6 +240,12 @@ SC.View = SC.LeafSurface.extend({
 
     // Clear the background if requested.
     if (this.get('clearBackground')) ctx.clearRect(0, 0, ctx.w, ctx.h);
+    else {
+      // We need to draw the background color, even though it is also 
+      // applied with CSS, in order to get correct anti-aliasing.
+      ctx.fillStyle = this.get('backgroundColor');
+      ctx.fillRect(0, 0, ctx.w, ctx.h);
+    }
 
     if (this.willRenderLayers) {
       ctx.save();
@@ -222,13 +253,13 @@ SC.View = SC.LeafSurface.extend({
       ctx.restore();
     }
 
-    // Re-cache layers that need updating.
-    SC.Benchmark.start(updateKey);
-    var layers = this.get('layers');
-    for (var idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].updateDisplay();
-    }
-    SC.Benchmark.end(updateKey);
+    // // Re-cache layers that need updating.
+    // SC.Benchmark.start(updateKey);
+    // var layers = this.get('layers');
+    // for (var idx=0, len=layers.length; idx<len; ++idx) {
+    //   layers[idx].updateDisplay();
+    // }
+    // SC.Benchmark.end(updateKey);
 
     var scrollTranslation = this._sc_scrollTranslation;
     if (scrollTranslation) {
@@ -236,12 +267,20 @@ SC.View = SC.LeafSurface.extend({
       ctx.translate(scrollTranslation[0]/*x*/, scrollTranslation[1]/*y*/);
     }
 
-    // Composite layers into view's canvas.
-    SC.Benchmark.start(copyKey);
-    for (idx=0, len=layers.length; idx<len; ++idx) {
-      layers[idx].copyIntoContext(ctx);
+    // // Composite layers into view's canvas.
+    // SC.Benchmark.start(copyKey);
+    // for (idx=0, len=layers.length; idx<len; ++idx) {
+    //   layers[idx].copyIntoContext(ctx);
+    // }
+    // SC.Benchmark.end(copyKey);
+
+    // Render layers into view's canvas directly.
+    SC.Benchmark.start(renderKey);
+    var layers = this.get('layers');
+    for (var idx=0, len=layers.length; idx<len; ++idx) {
+      layers[idx].renderIntoContext(ctx);
     }
-    SC.Benchmark.end(copyKey);
+    SC.Benchmark.end(renderKey);
 
     if (scrollTranslation) ctx.restore();
 
@@ -260,7 +299,7 @@ SC.View = SC.LeafSurface.extend({
   */
   targetResponderForEvent: function(evt) {
     // console.log('SC.ViewSurface#targetResponderForEvent(', evt, ')');
-    var context = this._sc_hitTestLayer.get('context'),
+    var context = this._sc_hitTestCanvas.getContext('2d'),
         hitLayer = null, zIndex = -1,
         boundingRect, x, y;
 

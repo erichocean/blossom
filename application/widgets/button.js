@@ -54,11 +54,11 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         disabled = !this.get('isEnabled'),
         mixed = (selected === SC.MIXED_STATE),
         active = this.get('isActive'),
-        isDefault = this.get('isDefault');
+        isDefault = this.get('isDefault'),
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
-
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     switch (this.get('theme')) {
       case 'checkbox':
@@ -68,16 +68,16 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
         sc_assert(false, "Please use SC.RadioWidget instead.");
         break;
       case 'square':
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, w-3, h-3, 0);
         break;
       case 'capsule':
-        SC.CreateRoundRectPath(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
+        SC.CreateRoundRectPath(ctx, 0.5, 1.5, w-1, h-3, 12);
         break;
       case 'regular':
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, w-3, h-3, 5);
         break;
       default:
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
+        SC.CreateRoundRectPath(ctx, 1.5, 1.5, w-3, h-3, 5);
         break;
     }
 
@@ -97,7 +97,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+      ctx.fillText(title || "(no title)", w/2, h/2);
 
     } else if (disabled && selected) {
       ctx.globalAlpha = 0.5;
@@ -114,7 +114,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, w/2, h/2);
 
     } else if (active || selected) {
       ctx.fillStyle = base03;
@@ -129,7 +129,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title, ctx.width/2, ctx.height/2);
+      ctx.fillText(title, w/2, h/2);
 
     } else {
       // console.log('rendering normally');
@@ -147,40 +147,8 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(title || "(no title)", ctx.width/2, ctx.height/2);
+      ctx.fillText(title || "(no title)", w/2, h/2);
     }
-
-    // Alternate button styling:
-    // var buttonWidth = ctx.width;
-    // var gradient = ctx.createLinearGradient(0,0,0,24); // vertical
-    // 
-    // gradient.addColorStop(0, base3);
-    // gradient.addColorStop(0.5, base2);
-    // gradient.addColorStop(1, base3);
-    // ctx.fillStyle = gradient;
-    // // ctx.fillRect(0, 0, 140, 24);
-    // roundRect(ctx, 0,0,buttonWidth,24);
-    // ctx.fill();
-    // ctx.strokeStyle = active? base2 : white;
-    // ctx.lineWidth = 1;
-    // // ctx.strokeRect(0.5, 0.5, 139, 23);
-    // roundRect(ctx, 0.5, 0.5, buttonWidth-1, 23);
-    // ctx.stroke();
-    // ctx.strokeStyle = active? white : base2;
-    // // ctx.beginPath();
-    // // ctx.moveTo(0.5, 24.5);
-    // // ctx.lineTo(139.5, 24.5);
-    // // ctx.stroke();
-    // // ctx.strokeRect(-0.5, -0.5, 141, 25);
-    // roundRect(ctx, -0.5, -0.5, buttonWidth+1, 25);
-    // if (!active) ctx.stroke();
-    // ctx.font ="12pt Helvetica";
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillStyle = white;
-    // if (!active) ctx.fillText(title, buttonWidth/2, 13);
-    // ctx.fillStyle = active? base01 : green;
-    // ctx.fillText(title, buttonWidth/2, 12);
   },
 
   /**
@@ -394,6 +362,7 @@ SC.ButtonWidget = SC.Widget.extend(SC.Control, SC.Button, {
     On mouse down, set active only if enabled.
   */
   mouseDown: function(evt) {
+    // console.log('SC.ButtonWidget#mouseDown()', SC.guidFor(this));
     var buttonBehavior = this.get('buttonBehavior');
 
     if (!this.get('isEnabled')) return true ; // handled event, but do nothing

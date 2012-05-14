@@ -160,7 +160,11 @@ SC.SelectWidget = SC.ButtonWidget.extend({
       // if the item is a string, build the array using defaults...
       itemType = SC.typeOf(item);
       if (itemType === SC.T_STRING) {
-        cur = [item.humanize().titleize(), item, true, null, null,  null, idx] ;
+        if (itemType.length > 0) {
+          cur = [item.humanize().titleize(), item, true, null, null,  null, idx, false] ;
+        } else {
+          cur = [item.humanize().titleize(), item, true, null, null,  null, idx, true] ;
+        }
 
       // if the item is not an array, try to use the itemKeys.
       } else if (itemType !== SC.T_ARRAY) {
@@ -211,6 +215,18 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     return item;
   }.property('value'),
 
+  cornerRadius: 5,
+
+  renderButtonShape: function(ctx) {
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height,
+        radius = this.get('cornerRadius');
+
+    if (radius === undefined) radius = 5;
+
+    SC.CreateRoundRectPath(ctx, 1.5, 1.5, w-3, h-3, radius);
+  },
+
   render: function(ctx) {
     // console.log('SC.SelectWidget#render()', SC.guidFor(this));
     var selectedItem = this.get('selectedItem'),
@@ -220,84 +236,32 @@ SC.SelectWidget = SC.ButtonWidget.extend({
         mixed = (selected === SC.MIXED_STATE),
         active = false,
         isDefault = this.get('isDefault'),
-        w = ctx.width, h = ctx.height;
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
 
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
+    var isEnabled = this.get('isEnabled');
 
-    switch (this.get('theme')) {
-      case 'checkbox':
-        sc_assert(false, "Please use SC.CheckboxWidget instead.");
-        break;
-      case 'radio':
-        sc_assert(false, "Please use SC.RadioWidget instead.");
-        break;
-      case 'square':
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 0);
-        break;
-      case 'capsule':
-        SC.CreateRoundRectPath(ctx, 0.5, 1.5, ctx.width-1, ctx.height-3, 12);
-        break;
-      case 'regular':
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
-        break;
-      default:
-        SC.CreateRoundRectPath(ctx, 1.5, 1.5, ctx.width-3, ctx.height-3, 5);
-        break;
-    }
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    lingrad.addColorStop(0, 'rgb(250,250,250)');
+    lingrad.addColorStop(0.475, 'rgb(230,230,230)');
+    lingrad.addColorStop(0.525, 'rgb(220,220,220)');
+    lingrad.addColorStop(1, 'rgb(194,194,194)');
 
-    if ((disabled && !selected) || (disabled && !active && !selected)) {
-      ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
-      ctx.fill();
+    ctx.globalAlpha = isEnabled? 1.0 : 0.5;
 
-      ctx.globalAlpha = 0.5;
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = isDefault? 2 : 1;
-      ctx.stroke();
+    ctx.beginPath();
+    ctx.fillStyle = lingrad;
+    this.renderButtonShape(ctx);
+    ctx.fill();
+    ctx.strokeStyle = 'grey';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-      ctx.fillStyle = base03;
-      ctx.strokeStyle = base03;
-
-    } else if (disabled && selected) {
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = base03;
-      ctx.fill();
-
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = isDefault? 2 : 1;
-      ctx.stroke();
-    
-      ctx.fillStyle = base3;
-      ctx.strokeStyle = base3;
-
-    } else if (active || selected) {
-      ctx.fillStyle = base03;
-      ctx.fill();
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = isDefault? 2 : 1;
-      ctx.stroke();
-    
-      ctx.fillStyle = base3;
-      ctx.strokeStyle = base3;
-
-    } else {
-      // console.log('rendering normally');
-      ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
-      ctx.fill();
-
-      ctx.strokeStyle = base03;
-      ctx.lineWidth = isDefault? 2 : 1;
-      ctx.stroke();
-
-      ctx.fillStyle = base03;
-      ctx.strokeStyle = base03;
-    }
-
-    // Draw Title
-    ctx.font = "11pt Helvetica";
+    // Draw some text.
+    ctx.fillStyle = isEnabled?  'black' : 'rgba(0,0,0,0.7)';
+    ctx.font = "10pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "left";
     ctx.shadowBlur = 0;
@@ -335,6 +299,8 @@ SC.SelectWidget = SC.ButtonWidget.extend({
         displayItems = this.get('displayItems'),
         value = this.get('value'), idx, len;
 
+    if (displayItems.length === 0) return;
+
     for (idx=0, len=displayItems.length; idx<len; ++idx) {
       if (displayItems[idx][1] === value) break;
     }
@@ -342,13 +308,31 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     if (idx < 0) idx = 0;
     if (evt.hitPoint.x < menuView.measuredWidth) {
       menuView._sc_activeMenuItem = menuView.get('layers')[idx];
-      menuView._sc_activeMenuItem.set('isActive', true);
+      if (menuView._sc_activeMenuItem) {
+        menuView._sc_activeMenuItem.set('isActive', true);
+      }
     }
 
+    // var surface = this.get('surface'),
+    //     rowOffsetForLayerTree = 0,
+    //     superlayer = this,
+    //     rootLayer = superlayer;
+    // 
+    // while (superlayer) {
+    //   rootLayer = superlayer;
+    //   superlayer = superlayer.get('superlayer');
+    // }
+    // 
+    // if (surface && surface.rowOffsetForLayerTree) {
+    //   rowOffsetForLayerTree = surface.rowOffsetForLayerTree(rootLayer);
+    // }
+
     frame.x = evt.clientX - evt.hitPoint.x;
-    frame.y = evt.clientY - evt.hitPoint.y - idx*24 - 6;
+    frame.y = evt.clientY - evt.hitPoint.y - idx*24 - 6; // + rowOffsetForLayerTree;
     frame.width = menuView.measuredWidth;
     frame.height = menuView.measuredHeight;
+
+    if (frame.width === 0 || frame.height === 0) return;
 
     SC.app.addSurface(menuView);
     SC.app.set('menuSurface', menuView);
@@ -367,7 +351,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   acceptsFirstResponder: false,
 
-  font: "11pt Helvetica",
+  font: "10pt Helvetica",
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
@@ -375,6 +359,8 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     var that = this, menuView;
     menuView = this._sc_menuView = SC.SelectWidgetMenuView.create({
       value: this.get('value'),
+
+      _sc_backgroundColor: 'rgb(70,70,70)',
 
       action: function() {
         that.set('value', this.get('value'));
@@ -401,6 +387,8 @@ SC.SelectWidget = SC.ButtonWidget.extend({
       itemIsEnabledKey: this.get('itemIsEnabledKey'),
       itemIsEnabledKeyBinding: SC.Binding.from('itemIsEnabledKey', this).oneWay().noDelay()
     });
+
+    // menuView.set('backgroundColor', 'rgb(70,70,70)');
 
     this._sc_valueDidChange();
   }
@@ -555,7 +543,11 @@ SC.SelectWidgetMenuView = SC.View.extend({
       // if the item is a string, build the array using defaults...
       itemType = SC.typeOf(item);
       if (itemType === SC.T_STRING) {
-        cur = [item.humanize().titleize(), item, true, null, null,  null, idx] ;
+        if (item.length > 0) {
+          cur = [item.humanize().titleize(), item, true, null, null,  null, idx, false] ;
+        } else {
+          cur = [item.humanize().titleize(), item, true, null, null,  null, idx, true] ;
+        }
 
       // if the item is not an array, try to use the itemKeys.
       } else if (itemType !== SC.T_ARRAY) {
@@ -639,11 +631,13 @@ SC.SelectWidgetMenuView = SC.View.extend({
     if (old === cur) return true;
 
     if (old) old.set('isActive', false);
-    this._sc_activeMenuItem = cur;
-    if (cur && cur.get('isEnabled') && this.get('isEnabled')) {
+    if (cur && cur.get('isEnabled') && this.get('isEnabled') && !cur.get('isSpacer')) {
+      this._sc_activeMenuItem = cur;
       document.body.style.cursor = "pointer";
       this._sc_activeMenuItem = cur;
       cur.set('isActive', true);
+    } else {
+      this._sc_activeMenuItem = null;
     }
     return true;
   },
@@ -747,23 +741,25 @@ SC.SelectWidgetMenuView = SC.View.extend({
     // console.log(displayItems);
 
     var menuItems = [], len = displayItems.length, last = len-1,
-        y = 6, padding = 50, height = 24, maxWidth = 0;
+        y = 6, padding = 50, height = 24, spacerHeight = 12, maxWidth = 0;
 
     displayItems.forEach(function(item, idx) {
       var width = Math.ceil(SC.MeasureText(font, item[0]).width + padding); // Magic!
       if (width % 2 !== 0) width++;
 
       var menuItem = SC.SelectMenuItemLayer.create({
-        layout: { left: 0, right: 0, top: y, height: 24 },
+        layout: { left: 0, right: 0, top: y, height: item[7]? spacerHeight : height },
         title: item[0],
         isEnabled: item[2],
         isSelected: item[1] === value? true : false,
-        font: font
+        font: font,
+        isSpacer: item[7]
       });
       menuItems.push(menuItem);
 
       maxWidth = Math.max(maxWidth, width);
-      y += height;
+      // console.log('item[7]', item[7]);
+      y += item[7]? spacerHeight : height;
     });
 
     y += 6;
@@ -783,7 +779,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
     arguments.callee.base.apply(this, arguments);
   },
 
-  font: "11pt Helvetica",
+  font: "10pt Helvetica",
 
   measuredWidth: 10,
 
@@ -792,6 +788,12 @@ SC.SelectWidgetMenuView = SC.View.extend({
   init: function() {
     arguments.callee.base.apply(this, arguments);
     this._sc_itemsDidChange() ;
+  },
+
+  willRenderLayers: function(ctx) {
+    ctx.strokeStyle = 'grey';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(0,0,ctx.w, ctx.h);
   }
 
 });
@@ -820,59 +822,72 @@ SC.SelectMenuItemLayer = SC.Layer.extend(SC.Control, {
         mixed = (selected === SC.MIXED_STATE),
         active = this.get('isActive'),
         font = this.get('font'),
-        w = ctx.width, h = ctx.height;
+        bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
 
     selected = (selected && (selected !== SC.MIXED_STATE));
 
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
-
     ctx.beginPath();
-    ctx.moveTo(0, 0.5);
-    ctx.lineTo(w, 0.5);
-    ctx.lineTo(w, h);
-    ctx.lineTo(0, h);
+    ctx.moveTo(1, 0.5);
+    ctx.lineTo(w-2, 0.5);
+    ctx.lineTo(w-2, h);
+    ctx.lineTo(1, h);
     ctx.closePath();
+
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    lingrad.addColorStop(0, 'rgb(252,188,126)');
+    lingrad.addColorStop(0.9, 'rgb(255,102,0)');
+    lingrad.addColorStop(1, 'rgb(255,178,128)');
 
     if ((disabled && !selected) || (disabled && !active && !selected)) {
       ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.fillStyle = 'rgb(70,70,70)';
       ctx.fill();
 
-      ctx.fillStyle = base03;
-      ctx.strokeStyle = base03;
+      ctx.fillStyle = 'rgb(70,70,70)';
+      ctx.strokeStyle = 'rgb(70,70,70)';
 
     } else if (disabled && selected) {
       ctx.globalAlpha = 0.5;
-      ctx.fillStyle = base03;
+      ctx.fillStyle = lingrad;
       ctx.fill();
 
-      ctx.fillStyle = base3;
-      ctx.strokeStyle = base3;
+      ctx.fillStyle = 'rgb(0,0,0,0.5)';
+      ctx.strokeStyle = 'rgb(0,0,0,0.5)';
 
     } else if (active) {
-      ctx.fillStyle = base03;
+      ctx.fillStyle = lingrad;
       ctx.fill();
 
-      ctx.fillStyle = base3;
-      ctx.strokeStyle = base3;
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'white';
 
     } else {
       // console.log('rendering normally');
       ctx.globalAlpha = 1.0;
-      ctx.fillStyle = base3;
+      ctx.fillStyle = 'rgb(70,70,70)';
       ctx.fill();
 
-      ctx.fillStyle = base03;
-      ctx.strokeStyle = base03;
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'white';
     }
 
     // Draw Title
-    ctx.font = "11pt Helvetica";
+    ctx.font = "10pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "left";
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
     ctx.fillText(title, 15, h/2);
+
+    if (this.get('isSpacer')) {
+      ctx.beginPath();
+      ctx.moveTo(1, Math.floor(h/2)+0.5);
+      ctx.lineTo(w-1, Math.floor(h/2)+0.5);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'grey';
+      ctx.stroke();
+    }
 
     // Draw Checkbox
     // ctx.translate(2, 0);

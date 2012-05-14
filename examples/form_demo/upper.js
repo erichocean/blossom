@@ -73,7 +73,7 @@ var incidentNumberLabel = SC.TextLayer.create({
 });
 
 var incidentNumberField = SC.TextFieldWidget.create({
-  layout: { top: 6, left: 90, right: 270, height: 24 },
+  layout: { top: 6, left: 90, right: 270, height: 22 },
   value: "15000",
   isEnabled: false
 });
@@ -89,7 +89,7 @@ var descriptionLabel = SC.TextLayer.create({
 });
 
 var descriptionField = SC.TextFieldWidget.create({
-  layout: { top: 40, left: 90, right: 90, height: 24 },
+  layout: { top: 40, left: 90, right: 90, height: 22 },
   value: "Review Product For Potential Custom Adaptation"
 });
 

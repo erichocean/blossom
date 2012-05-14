@@ -21,8 +21,9 @@ var project = BT.Project.create({
     "bindings_demo": require('./examples/bindings_demo'),
     "psurfaces_test": require('./examples/psurfaces_test'),
     "text_demo": require('./examples/text_demo'),
+    "list_demo": require('./examples/list_demo'),
     // "stage_test": require('./examples/stage_test'),
-    // "behavior_test": require('./examples/behavior_test'),
+    "behavior_test": require('./examples/behavior_test'),
     // "bullet_test": require('./examples/bullet_test'),
     // "box2d_test": require('./examples/box2d_test'),
 

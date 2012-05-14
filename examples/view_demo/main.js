@@ -34,6 +34,9 @@ var MyLayer = SC.Layer.extend({
     var benchKey = 'MyLayer#render()';
     SC.Benchmark.start(benchKey);
 
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
+
     ctx.beginPath();
     this.renderHitTestPath(ctx);
     ctx.fillStyle = this.get('color');
@@ -46,12 +49,12 @@ var MyLayer = SC.Layer.extend({
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText("Hello from Blossom.", ctx.width/4, ctx.height/4);
+    ctx.fillText("Hello from Blossom.", w/4, h/4);
     var dragPoint = this.dragPoint;
     if (dragPoint) {
-      ctx.fillText("<%@, %@>".fmt(dragPoint.x.toFixed(), dragPoint.y.toFixed()),ctx.width/2, ctx.height/2);
+      ctx.fillText("<%@, %@>".fmt(dragPoint.x.toFixed(), dragPoint.y.toFixed()),w/2, h/2);
     }
-    ctx.fillText("The future of SproutCore.", (ctx.width/4)*3, (ctx.height/4)*3);
+    ctx.fillText("The future of SproutCore.", (w/4)*3, (h/4)*3);
 
     SC.Benchmark.end(benchKey);
   }

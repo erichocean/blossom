@@ -1,0 +1,13 @@
+{
+  "name"          : "blossom-list_demo",
+  "description"   : "Blossom List Demo Application",
+  "url"           : "http://fohr.com/blossom",
+  "keywords"      : ["sproutcore", "blossom" , "sample code"],
+  "author"        : "Erich Ocean <eocean@fohr.com>",
+  "contributors"  : [],
+  "dependencies"  : {},
+  "main"          : "./node/buildfile.js",
+  "version"       : "0.1.0",
+  "scripts"       : {},
+  "engines"       : {"node": "0.6.x"}
+}

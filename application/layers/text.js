@@ -51,10 +51,9 @@ SC.TextLayer = SC.Layer.extend({
     }
   }.observes('value'),
 
-  updateTextLayout: function() {
-    console.log('SC.TextLayer#updateTextLayout()');
-    var context = this.get('context'),
-        text = String(this.get('value') || ''),
+  updateTextLayout: function(context) {
+    // console.log('SC.TextLayer#updateTextLayout()');
+    var text = String(this.get('value') || ''),
         line, that = this;
 
     this.__needsTextLayout__ = false;
@@ -113,7 +112,7 @@ SC.TextLayer = SC.Layer.extend({
         } else {
           height = Math.max(that.get('layout').minHeight || 0, lines.length*that.get('lineHeight'));
         }
-        that.__sc_element__.height = that._sc_bounds[3]/*height*/ = height;
+        that._sc_bounds[3]/*height*/ = height;
         that.triggerRendering();
       } else {
         console.log('Paragraph can not be set with the given tolerance.', tolerance);
@@ -130,16 +129,17 @@ SC.TextLayer = SC.Layer.extend({
         lineLengths = [this.get('bounds')[2]/*width*/],
         maxLength = Math.max.apply(null, lineLengths),
         lineHeight = this.get('lineHeight'),
-        center = false, y = 0;
+        center = false, y = 0,
+        bounds = this.get('bounds'),
+        backgroundColor = this.get('backgroundColor');
 
     sc_assert(!this.__needsTextLayout__);
     sc_assert(lines);
 
-    // Always clear the rect in case someone wants transparency.
-    context.clearRect(0, 0, context.width, context.height);
-
-    context.fillStyle = this.get('backgroundColor');
-    context.fillRect(0, 0, context.width, context.height);
+    if (backgroundColor) {
+      context.fillStyle = backgroundColor;
+      context.fillRect(0, 0, bounds.width, bounds.height);
+    }
 
     context.textBaseline = this.get('textBaseline');
     context.font = this.get('font');

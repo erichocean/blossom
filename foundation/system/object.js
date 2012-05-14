@@ -452,6 +452,12 @@ SC.Object.prototype = {
       if (binding.noDelay) binding.sync();
     }
 
+    // Init any behaviors, if needed.
+    if (this.__behaviorKey__) {
+      if (SC.isReady) this.initBehavior();
+      else SC.ready(this, this.initBehavior);
+    }
+
     return this ; // done!
   },
   

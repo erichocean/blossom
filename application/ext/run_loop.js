@@ -10,6 +10,10 @@
 // view queues and Timers.
 
 var runLoopBenchKey = 'SC.RunLoop#loop()';
+var BREAK = false;
+
+SC.changedStoreKeys = {};
+SC.didChangeStoreKeys = false;
 
 SC.RunLoop = SC.RunLoop.extend(
 /** @scope SC.RunLoop.prototype */ {
@@ -18,11 +22,15 @@ SC.RunLoop = SC.RunLoop.extend(
     Override so we can benchmark it.
   */
   beginRunLoop: function() {
+    // console.log('SC.RunLoop#beginRunLoop()');
     SC.Benchmark.start(runLoopBenchKey);
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
     SC.AnimationTransaction.begin();
     SC.STORE_NEEDS_FINAL_FLUSH = true;
+    // if (SC.didChangeStoreKeys) console.log(SC.changedStoreKeys);
+    SC.changedStoreKeys = {}; // reset
+    SC.didChangeStoreKeys = false;
     return ret;
   },
   
@@ -202,6 +210,7 @@ SC.ScheduleLayoutAndRendering = function closure() {
     SC.Benchmark.start(benchKey);
     didRequestAnimationFrame = false;
     SC.isAnimating = true;
+    SC.requestAnimationFrame = false;
     SC.app.performLayoutAndRendering(timestamp);
     SC.isAnimating = false;
     SC.Benchmark.end(benchKey);
@@ -214,6 +223,7 @@ SC.ScheduleLayoutAndRendering = function closure() {
     // Viewport size changes occur much less often, so we test second.
     if (SC.requestAnimationFrame || force) {
       didRequestAnimationFrame = true;
+      console.log('requesting a new animation frame', SC.requestAnimationFrame, force);
       SC.RequestAnimationFrame(callback);
     }
   };

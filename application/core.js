@@ -121,7 +121,7 @@ SC.AugmentBaseClassWithDisplayProperties = function(K) {
         if (displayPropertiesHash[key] !== undefined) throw "A displayProperty collides with a predefined name on Object: "+key+". Please use a different name.";
         displayPropertiesHash[key] = true;
       }
-      console.log(displayPropertiesHash);
+      // console.log(displayPropertiesHash);
       ret.displayPropertiesHash = displayPropertiesHash;
     }
 

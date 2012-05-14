@@ -589,6 +589,9 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
       }
     }
 
+    // Hash for fast lookup by clients.
+    SC.didChangeStoreKeys = SC.changedStoreKeys[storeKey] = true;
+
     if (SC.STORE_NEEDS_FINAL_FLUSH) {
       this.invokeOnce(this.flush);
       SC.STORE_NEEDS_FINAL_FLUSH = false;
