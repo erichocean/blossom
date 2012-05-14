@@ -260,8 +260,15 @@ SC.CloseFieldEditor = function() {
   sc_assert(input);
   sc_assert(document.getElementById(input.id));
 
+  SC.activeEditor = null;
+  editor.widget = null;
+  SC.app.set('fieldEditor', null);
+
   var value = input.value,
       old;
+
+  input.style.display = 'none';
+  document.body.appendChild(input);
 
   if (widget.valueForFieldEditor) {
     old = widget.valueForFieldEditor();
@@ -271,17 +278,12 @@ SC.CloseFieldEditor = function() {
 
   if (old !== value) {
     if (widget.takeValueFromFieldEditor) widget.takeValueFromFieldEditor(value);
-    else widget.set('value', value);
+    else {
+      widget.set('value', value);
+    }
   }
 
   widget.tryToPerform('fieldEditorDidClose');
-
-  SC.activeEditor = null;
-  editor.widget = null;
-  SC.app.set('fieldEditor', null);
-
-  input.style.display = 'none';
-  document.body.appendChild(input);
 };
 
 SC.ready(function() {
