@@ -56,10 +56,8 @@ SC.TextFieldWidget = SC.Widget.extend({
     var value = this.get('value');
     if (value !== this._sc_value) {
       this._sc_value = value;
-      if (value) {
-        var surface = this.get('surface');
-        if (surface) surface.triggerLayoutAndRendering();
-      }
+      var surface = this.get('surface');
+      if (surface) surface.triggerLayoutAndRendering();
     }
   }.observes('value'),
 
