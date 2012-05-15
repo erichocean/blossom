@@ -121,15 +121,15 @@ SC.TextFieldWidget = SC.Widget.extend({
   },
 
   color: function() {
-    return this.get('isEnabled')? black : 'rgba(0,43,54,0.5)';
+    return this.get('isEnabled')? black : 'white'; // 'rgba(0,43,54,0.5)';
   }.property('isEnabled'),
 
   backgroundColor: function() {
-    return this.get('isEnabled')? white : base3;
+    return this.get('isEnabled')? white : 'rgb(70,70,70)';
   }.property('isEnabled'),
 
   borderColor: function() {
-    return this.get('isEnabled')? 'rgb(128,128,128)' : 'rgba(0,43,54,0.5)';
+    return this.get('isEnabled')? 'rgb(128,128,128)' : 'rgba(128,128,128,0.5)'; // ''rgba(0,43,54,0.5)';
   }.property('isEnabled'),
 
   borderWidth: 1,
@@ -211,7 +211,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     style.border  = this.get('borderWidth') + 'px';
     style.borderStyle = 'solid ';
     style.borderRadius = '5px';
-    style.borderColor = 'rgb(252,188,126)'; // this.get('borderColor');
+    style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
     style.font = this.get('font');
     style.color = this.get('color');
     style.backgroundColor = this.get('backgroundColor');
@@ -232,7 +232,7 @@ SC.TextFieldWidget = SC.Widget.extend({
   },
 
   setSelectionForInputElement: function(input) {
-    var value = this.get('value');
+    var value = String(this.get('value'));
     input.setSelectionRange(0, value? value.length : 0);
   }
 
