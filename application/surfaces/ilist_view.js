@@ -247,6 +247,8 @@ SC.IListView = SC.View.extend({
 
   _sc_plistItems: null,
 
+  __forceFullRender__: false,
+
   updateDisplay: function() {
     // console.log('SC.IListView#updateDisplay()', SC.guidFor(this));
     var benchKey = 'SC.IListView#updateDisplay()';
@@ -271,7 +273,10 @@ SC.IListView = SC.View.extend({
         len = this._sc_rowLength,
         w = ctx.w, h = this.get('rowHeight'),
         plistItems = this._sc_plistItems,
-        newPlistItems = {};
+        newPlistItems = {},
+        forceFullRender = this.__forceFullRender__;
+
+    this.__forceFullRender__ = false;
 
     // If we have fewer rows (no scrolling), don't try and render too much.
     len = Math.min(len, (content? content.get('length') : 0) - rowIndex);
@@ -303,29 +308,35 @@ SC.IListView = SC.View.extend({
           // list view itself.
           if (plistItem.index !== idx + rowIndex) {
             plistItem.index = idx + rowIndex;
+            console.log(storeKey, 'needs rendering because', 'its index changed');
             needsRendering = true;
           }
 
           if (plistItem.offset !== idx*h) {
             plistItem.offset = idx*h;
+            console.log(storeKey, 'needs rendering because', 'its offset changed');
             needsRendering = true;
           }
 
           var isSelected = selection.contains(obj);
           if (plistItem.isSelected !== isSelected) {
             plistItem.isSelected = isSelected;
+            console.log(storeKey, 'needs rendering because', 'its isSelected value changed');
             needsRendering = true;
           }
 
           var isLast = (idx + rowIndex) === len - 1;
           if (plistItem.isLast !== isLast) {
             plistItem.isLast = isSelected;
+            console.log(storeKey, 'needs rendering because', 'its isLast value changed');
             needsRendering = true;
           }
 
           // Next we check the storeKeys for changes *if*
           if (!needsRendering && !plistItem.needsRendering) {
-            if (changedStoreKeys[storeKey]) needsRendering = true;
+            if (changedStoreKeys[storeKey]) {
+              console.log(storeKey, 'needs rendering because', 'its storeKey change');
+            }
 
             // Okay, check our dependent keys.
             if (!needsRendering) {
@@ -335,6 +346,7 @@ SC.IListView = SC.View.extend({
                   if (!dependentKeys.hasOwnProperty(dependentKey)) continue;
                   if (changedStoreKeys[dependentKey]) {
                     needsRendering = true;
+                    console.log(storeKey, 'needs rendering because', 'a dependent key changed');
                     break;
                   }
                 }
@@ -349,8 +361,10 @@ SC.IListView = SC.View.extend({
             if (!layerTree) layerTree = plistItem.renderLayerTree;
 
             if (layerTree) {
-              if (layerTree.__needsRendering__) needsRendering = true;
-              else layerTree.get('sublayers').forEach(processLayer);
+              if (layerTree.__needsRendering__) {
+                console.log(storeKey, 'needs rendering because', 'its layer tree needs rendering');
+                needsRendering = true;
+              } else layerTree.get('sublayers').forEach(processLayer);
             }
           }
 
@@ -363,6 +377,8 @@ SC.IListView = SC.View.extend({
           plistItem.isLast = (idx + rowIndex) === len - 1;
           // item is already marked as needing rendering on init
         }
+
+        needsRendering = false; // Reset
       }
     }
 
@@ -385,6 +401,8 @@ SC.IListView = SC.View.extend({
     // Keep for next round.
     this._sc_plistItems = newPlistItems;
 
+    console.log(newPlistItems);
+
     var clearBackground = this.get('clearBackground'),
         backgroundColor = this.get('backgroundColor');
 
@@ -392,7 +410,8 @@ SC.IListView = SC.View.extend({
     for (storeKey in newPlistItems) {
       if (!newPlistItems.hasOwnProperty(storeKey)) continue;
       plistItem = newPlistItems[storeKey];
-      if (plistItem.needsRendering) {
+      if (forceFullRender || plistItem.needsRendering) {
+        console.log('rendering storeKey', storeKey);
         plistItem.needsRendering = false;
         ctx.save();
         ctx.translate(0, plistItem.offset);
@@ -427,6 +446,10 @@ SC.IListView = SC.View.extend({
         }
 
         // Render with either the layer tree or the render function.
+        ctx.beginPath();
+        ctx.rect(0,0,w,h);
+        ctx.clip();
+
         if (layerTree) {
           // Set the properties for the layer tree.
           layerTree.set('rowIndex', plistItem.index);
@@ -663,8 +686,8 @@ SC.IListView = SC.View.extend({
   },
   
   adjustLayout: function() {
-    // console.log('SC.IListView#adjustLayout()', SC.guidFor(this));
-    var benchKey = 'SC.ListView#adjustLayout()';
+    console.log('SC.IListView#adjustLayout()', SC.guidFor(this));
+    var benchKey = 'SC.IListView#adjustLayout()';
     SC.Benchmark.start(benchKey);
 
     var frame = SC.MakeRect(this.get('frame')),
@@ -765,7 +788,7 @@ SC.IListView = SC.View.extend({
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var scrollingSurface;
-    scrollingSurface = this._sc_scrollingSurface = SC.InternalListViewSurface.create({
+    scrollingSurface = this._sc_scrollingSurface = SC.InternalIListViewSurface.create({
       supersurface: this,
       __scrollView__: this
     });
@@ -798,7 +821,7 @@ SC.IListView = SC.View.extend({
 });
 
 /** @private */
-SC.InternalListViewSurface = SC.LeafSurface.extend({
+SC.InternalIListViewSurface = SC.LeafSurface.extend({
 
   __tagName__: 'div',
 
@@ -817,7 +840,7 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   //
 
   _sc_compositeIsPresentInViewportDidChange: function() {
-    // console.log("SC.InternalListViewSurface#_sc_compositeIsPresentInViewportDidChange()");
+    // console.log("SC.InternalIListViewSurface#_sc_compositeIsPresentInViewportDidChange()");
     var isPresentInViewport = this.get('isPresentInViewport');
     this._sc_scrollingCanvas.set('isPresentInViewport', isPresentInViewport);
   }.observes('isPresentInViewport'),
@@ -825,12 +848,12 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   __scrollView__: null,
 
   surface: function() {
-    // console.log('SC.InternalListViewSurface@surface');
+    // console.log('SC.InternalIListViewSurface@surface');
     return this.__scrollView__;
   }.property().cacheable(),
 
   didCreateElement: function(div) {
-    // console.log('SC.InternalListViewSurface#didCreateElement()', SC.guidFor(this));
+    // console.log('SC.InternalIListViewSurface#didCreateElement()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
     div.style.overflow = 'hidden';
   },
@@ -840,7 +863,7 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   },
 
   // performLayoutIfNeeded: function(timestamp) {
-  //   console.log('SC.InternalListViewSurface#performLayoutIfNeeded()', SC.guidFor(this));
+  //   console.log('SC.InternalIListViewSurface#performLayoutIfNeeded()', SC.guidFor(this));
   //   arguments.callee.base.apply(this, arguments);
   //   // this._sc_scrollingCanvas.performLayoutIfNeeded(timestamp);
   // },
@@ -850,7 +873,7 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   //
 
   updatePsurface: function(psurface, surfaces) {
-    // console.log('SC.InternalListViewSurface#updatePsurface()');
+    // console.log('SC.InternalIListViewSurface#updatePsurface()');
 
     sc_assert(this === SC.surfaces[this.__id__], "SC.Surface#updatePsurface() can only be called on active surfaces.");
 
@@ -866,7 +889,7 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   },
 
   updateLayout: function() {
-    // console.log('SC.InternalListViewSurface#updateLayout()', SC.guidFor(this));
+    // console.log('SC.InternalIListViewSurface#updateLayout()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
 
     this.adjustLayout();
@@ -884,7 +907,7 @@ SC.InternalListViewSurface = SC.LeafSurface.extend({
   },
 
   adjustLayout: function() {
-    // console.log('SC.InternalListViewSurface#adjustLayout()', SC.guidFor(this));
+    console.log('SC.InternalIListViewSurface#adjustLayout()', SC.guidFor(this));
     var frame = SC.MakeRect(this.__scrollView__.get('frame')),
         myFrame = SC.MakeRect(this.get('frame')),
         rowHeight = this.__scrollView__.get('rowHeight');
@@ -914,6 +937,11 @@ SC.InternalListViewCanvas = SC.LeafSurface.extend({
 
   __scrollSurface__: null,
 
+  triggerContentSizeUpdate: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.__scrollSurface__.__scrollView__.__forceFullRender__ = true;
+  },
+
   surface: function() {
     // console.log('SC.InternalListViewCanvas@surface');
     return this.__scrollSurface__;
@@ -928,6 +956,7 @@ SC.InternalListViewCanvas = SC.LeafSurface.extend({
     ctx.__sc_canvas__ = canvas;
 
     this.__scrollSurface__.__scrollView__._sc_context = ctx;
+    this.__scrollSurface__.__scrollView__.__forceFullRender__ = true;
     this.__scrollSurface__.__scrollView__.triggerRendering();
   },
 

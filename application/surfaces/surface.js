@@ -258,12 +258,14 @@ SC.Surface = SC.Object.extend(SC.Responder, {
       value[3] = Math.ceil(value[3]);
 
       // Cache the new frame so we don't need to compute it later.
-      if (frame !== value) frame.set(value);
-      this._sc_triggerFrameChange('x', 'y', 'width', 'height');
+      if (!SC.EqualRect(frame, value)) {
+        frame.set(value);
+        this._sc_triggerFrameChange('x', 'y', 'width', 'height');
 
-      this.__contentWidth__  = frame[2]/*width*/;
-      this.__contentHeight__ = frame[3]/*height*/;
-      this.triggerContentSizeUpdate();
+        this.__contentWidth__  = frame[2]/*width*/;
+        this.__contentHeight__ = frame[3]/*height*/;
+        this.triggerContentSizeUpdate();
+      }
     } else {
       return frame;
     }
@@ -656,6 +658,7 @@ SC.Surface = SC.Object.extend(SC.Responder, {
   __contentSizeNeedsUpdate__: false,
 
   triggerContentSizeUpdate: function() {
+    console.log('content size did update for surface', this.__id__);
     this.__needsRendering__ = true;
     this.__contentSizeNeedsUpdate__ = true;
     SC.needsLayout = true;

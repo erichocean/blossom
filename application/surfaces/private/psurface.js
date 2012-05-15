@@ -283,6 +283,7 @@ SC.Psurface.prototype = {
         style = el.style;
 
     if (this.useContentSize && surface.__contentSizeNeedsUpdate__) {
+      console.log('updating canvas width for surface', el.id);
       el.width  = surface.__contentWidth__;
       el.height = surface.__contentHeight__;
       surface.__contentSizeNeedsUpdate__ = false;
