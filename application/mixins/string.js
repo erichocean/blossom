@@ -79,3 +79,12 @@ SC.mixin(SC.String, {
   }
 
 });
+
+/** @private */
+String.prototype.loc = SC.String.loc;
+
+/** @private */
+String.prototype.locWithDefault = SC.String.locWithDefault;
+
+/** @private */
+String.prototype.elide = SC.String.elide;
