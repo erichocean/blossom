@@ -336,6 +336,7 @@ SC.IListView = SC.View.extend({
           if (!needsRendering && !plistItem.needsRendering) {
             if (changedStoreKeys[storeKey]) {
               console.log(storeKey, 'needs rendering because', 'its storeKey change');
+              needsRendering = true;
             }
 
             // Okay, check our dependent keys.
@@ -345,8 +346,8 @@ SC.IListView = SC.View.extend({
                 for (var dependentKey in dependentKey) {
                   if (!dependentKeys.hasOwnProperty(dependentKey)) continue;
                   if (changedStoreKeys[dependentKey]) {
-                    needsRendering = true;
                     console.log(storeKey, 'needs rendering because', 'a dependent key changed');
+                    needsRendering = true;
                     break;
                   }
                 }
