@@ -229,7 +229,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
     if (radius === undefined) radius = 5;
 
-    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-2, h-1, radius);
+    SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, radius);
   },
 
   render: function(ctx) {
