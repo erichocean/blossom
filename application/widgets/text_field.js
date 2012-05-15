@@ -28,7 +28,7 @@ var black =    "black";
 
 SC.TextFieldWidget = SC.Widget.extend({
 
-  displayProperties: 'value'.w(),
+  displayProperties: 'value isEnabled'.w(),
 
   isTextField: true,
 
@@ -125,7 +125,7 @@ SC.TextFieldWidget = SC.Widget.extend({
   }.property('isEnabled'),
 
   backgroundColor: function() {
-    return this.get('isEnabled')? white : 'rgb(70,70,70)';
+    return this.get('isEnabled')? white : 'rgba(70,70,70, 0.5)';
   }.property('isEnabled'),
 
   borderColor: function() {
@@ -214,7 +214,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
     style.font = this.get('font');
     style.color = this.get('color');
-    style.backgroundColor = this.get('backgroundColor');
+    style.backgroundColor = this.get('isEnabled') ? this.get('backgroundColor') : 'rgb(70,70,70)';
     style.backgroundImage = 'none';
     style.outline = 'none'; // FIXME: This breaks other users of the field editor.
     if (this.get('isEnabled')) {

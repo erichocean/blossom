@@ -95,15 +95,15 @@ SC.ObjectController = SC.Controller.extend(
     return !SC.none(this.get('observableContent'));
   }.property('observableContent'),
   
-  /**
-    Makes a controller editable or not editable.  The SC.Controller class 
-    itself does not do anything with this property but subclasses will 
-    respect it when modifying content.
-    
-    @property {Boolean}
-  */
-  isEditable: true,
-  
+  // /**
+  //   Makes a controller editable or not editable.  The SC.Controller class 
+  //   itself does not do anything with this property but subclasses will 
+  //   respect it when modifying content.
+  //   
+  //   @property {Boolean}
+  // */
+  // isEditable: true,
+
   /**
     Primarily for internal use.  Normally you should not access this property 
     directly.  

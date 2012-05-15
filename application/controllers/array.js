@@ -49,13 +49,13 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   */
   content: null,
 
-  /**
-    Makes the array editable or not.  If this is set to false, then any attempts
-    at changing the array content itself will throw an exception.
-    
-    @property {Boolean}
-  */
-  isEditable: true,
+  // /**
+  //   Makes the array editable or not.  If this is set to false, then any attempts
+  //   at changing the array content itself will throw an exception.
+  //   
+  //   @property {Boolean}
+  // */
+  // isEditable: true,
   
   /**
     Used to sort the array.
