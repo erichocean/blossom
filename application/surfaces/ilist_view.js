@@ -7,6 +7,8 @@
 
 sc_require('surfaces/view');
 
+SC.LOG_ILIST_UPDATES = false;
+
 var base03 =   "#002b36";
 var base02 =   "#073642";
 var base01 =   "#586e75";
@@ -254,6 +256,8 @@ SC.IListView = SC.View.extend({
     var benchKey = 'SC.IListView#updateDisplay()';
     SC.Benchmark.start(benchKey);
 
+    var LOG = SC.LOG_ILIST_UPDATES;
+
     var ctx = this._sc_context;
     sc_assert(ctx);
     sc_assert(document.getElementById(ctx.__sc_canvas__.id));
@@ -308,34 +312,34 @@ SC.IListView = SC.View.extend({
           // list view itself.
           if (plistItem.index !== idx + rowIndex) {
             plistItem.index = idx + rowIndex;
-            console.log(storeKey, 'needs rendering because', 'its index changed');
+            if (LOG) console.log(storeKey, 'needs rendering because', 'its index changed');
             needsRendering = true;
           }
 
           if (plistItem.offset !== idx*h) {
             plistItem.offset = idx*h;
-            console.log(storeKey, 'needs rendering because', 'its offset changed');
+            if (LOG) console.log(storeKey, 'needs rendering because', 'its offset changed');
             needsRendering = true;
           }
 
           var isSelected = selection.contains(obj);
           if (plistItem.isSelected !== isSelected) {
             plistItem.isSelected = isSelected;
-            console.log(storeKey, 'needs rendering because', 'its isSelected value changed');
+            if (LOG) console.log(storeKey, 'needs rendering because', 'its isSelected value changed');
             needsRendering = true;
           }
 
           var isLast = (idx + rowIndex) === len - 1;
           if (plistItem.isLast !== isLast) {
             plistItem.isLast = isSelected;
-            console.log(storeKey, 'needs rendering because', 'its isLast value changed');
+            if (LOG) console.log(storeKey, 'needs rendering because', 'its isLast value changed');
             needsRendering = true;
           }
 
           // Next we check the storeKeys for changes *if*
           if (!needsRendering && !plistItem.needsRendering) {
             if (changedStoreKeys[storeKey]) {
-              console.log(storeKey, 'needs rendering because', 'its storeKey change');
+              if (LOG) console.log(storeKey, 'needs rendering because', 'its storeKey change');
               needsRendering = true;
             }
 
@@ -346,7 +350,7 @@ SC.IListView = SC.View.extend({
                 for (var dependentKey in dependentKey) {
                   if (!dependentKeys.hasOwnProperty(dependentKey)) continue;
                   if (changedStoreKeys[dependentKey]) {
-                    console.log(storeKey, 'needs rendering because', 'a dependent key changed', dependentKey);
+                    if (LOG) console.log(storeKey, 'needs rendering because', 'a dependent key changed', dependentKey);
                     needsRendering = true;
                     break;
                   }
@@ -363,7 +367,7 @@ SC.IListView = SC.View.extend({
 
             if (layerTree) {
               if (layerTree.__needsRendering__) {
-                console.log(storeKey, 'needs rendering because', 'its layer tree needs rendering');
+                if (LOG) console.log(storeKey, 'needs rendering because', 'its layer tree needs rendering');
                 needsRendering = true;
               } else layerTree.get('sublayers').forEach(processLayer);
             }
@@ -402,7 +406,7 @@ SC.IListView = SC.View.extend({
     // Keep for next round.
     this._sc_plistItems = newPlistItems;
 
-    console.log(newPlistItems);
+    if (LOG) console.log(newPlistItems);
 
     var clearBackground = this.get('clearBackground'),
         backgroundColor = this.get('backgroundColor');
@@ -412,7 +416,7 @@ SC.IListView = SC.View.extend({
       if (!newPlistItems.hasOwnProperty(storeKey)) continue;
       plistItem = newPlistItems[storeKey];
       if (forceFullRender || plistItem.needsRendering) {
-        console.log('rendering storeKey', storeKey);
+        if (LOG) console.log('rendering storeKey', storeKey);
         plistItem.needsRendering = false;
         ctx.save();
         ctx.translate(0, plistItem.offset);

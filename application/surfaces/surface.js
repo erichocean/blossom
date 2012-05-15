@@ -658,7 +658,7 @@ SC.Surface = SC.Object.extend(SC.Responder, {
   __contentSizeNeedsUpdate__: false,
 
   triggerContentSizeUpdate: function() {
-    console.log('content size did update for surface', this.__id__);
+    // console.log('content size did update for surface', this.__id__);
     this.__needsRendering__ = true;
     this.__contentSizeNeedsUpdate__ = true;
     SC.needsLayout = true;
