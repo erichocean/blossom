@@ -136,7 +136,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
     @property {Array}
   */
-  itemKeys: 'itemTitleKey itemValueKey itemIsEnabledKeye'.w(),
+  itemKeys: 'itemTitleKey itemValueKey itemIsEnabledKey'.w(),
 
   /**
     This computed property is generated from the items array based on the
