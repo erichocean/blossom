@@ -296,6 +296,17 @@ SC.IsRect = function(rect) {
   return (rect.length === 4 && rect.constructor === Float32Array);
 };
 
+SC.EqualRect = function(rect, rect2) {
+  sc_assert(rect.length === 4 && rect.constructor === Float32Array);
+  sc_assert(rect2.length === 4 && rect2.constructor === Float32Array);
+
+  if (rect === rect2) return true;
+  else if (rect[0] === rect2[0] && rect[1] === rect2[1] && rect[2] === rect2[2] && rect[3] === rect2[3]) return true;
+  else return false;
+};
+
+
+
 // ..........................................................
 // Affine Transforms
 //
