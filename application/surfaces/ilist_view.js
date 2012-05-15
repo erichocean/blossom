@@ -346,7 +346,7 @@ SC.IListView = SC.View.extend({
                 for (var dependentKey in dependentKey) {
                   if (!dependentKeys.hasOwnProperty(dependentKey)) continue;
                   if (changedStoreKeys[dependentKey]) {
-                    console.log(storeKey, 'needs rendering because', 'a dependent key changed');
+                    console.log(storeKey, 'needs rendering because', 'a dependent key changed', dependentKey);
                     needsRendering = true;
                     break;
                   }
