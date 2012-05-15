@@ -32,6 +32,13 @@ SC.TextFieldWidget = SC.Widget.extend({
 
   isTextField: true,
 
+  acceptsFirstResponder: function() {
+    var value = this.get('value'),
+        isEnabled = this.get('isEnabled');
+
+    return isEnabled || (value && String(value).length > 0);
+  }.property('value'),
+
   // FIXME: Add more text properties.
   font: "10pt Helvetica, sans",
   color: base03,
