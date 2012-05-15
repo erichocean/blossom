@@ -65,23 +65,28 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   _sc_value: null,
   _sc_valueDidChange: function() {
-    // console.log('SC.SelectWidget#_sc_valueDidChange()', SC.guidFor(this));
+    console.log('SC.SelectWidget#_sc_valueDidChange()', SC.guidFor(this));
     var cur = this.get('value'),
         old = this._sc_value,
         menu = this._sc_menuView,
         val = menu.get('value');
 
     // cur === old === val on init(), so nothing to do.
-    if (cur === old) return;
+    if (cur === old) {
+      console.log('value did not change from', cur);
+      return;
+    }
 
     // This happens when our 'value' was updated by our select widget. Avoid 
     // a loop by not setting 'value' on select widget again.
     if (cur === val) {
+      console.log('value was updated by our select widget to', val);
       this._sc_value = cur;
 
     // This happens when our 'value' has been updated by anyone but select 
     // widget.  Let our select widget know we've changed.
     } else {
+      console.log('value was updated by our model to', cur);
       this._sc_value = cur;
       menu.set('value', cur);
     }
