@@ -69,9 +69,6 @@ SC.mixin({
       // okay, now we're ready (any SC.ready() calls will now be called immediately)
       SC.isReady = true ;
 
-      // clear the queue
-      SC._sc_readyQueue = null ;
-
       // trigger any bound ready events
       SC.Event.trigger(document, "ready", null, false);
 
