@@ -4,6 +4,7 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*global global */
 
 sc_require('system/object');
 sc_require('system/binding');
@@ -1068,9 +1069,15 @@ SC.DateTime.mixin(SC.Comparable,
                        0 if a == b
   */
   compare: function(a, b) {
-    var ma = a.get('milliseconds');
-    var mb = b.get('milliseconds');
-    return ma < mb ? -1 : ma === mb ? 0 : 1;
+    if (!a && !b) return a;
+    else if (!a)  return b;
+    else if (!b)  return a;
+    else {
+      var ma = a.get('milliseconds'),
+          mb = b.get('milliseconds');
+
+      return ma < mb ? -1 : ma === mb ? 0 : 1;
+    }
   },
   
   /**
