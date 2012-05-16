@@ -260,7 +260,7 @@ SC.RangeObserver = {
       
     // lazily convert index to IndexSet.  
     if (index && !index.isIndexSet) {
-      index = this[guid] = SC.IndexSet.create(index).freeze();
+      index = this[guid] = SC.IndexSet.create(index);
     }
     
     if (context) {
