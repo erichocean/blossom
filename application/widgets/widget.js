@@ -52,48 +52,40 @@ SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
 
     if (!layers) return null;
     
-    try {
-      layers.forEach(function processLayer(layer) {
-        if (foundSelf && layer.get('acceptsFirstResponder')) {
-          nextInputResponder = layer;
-          throw "Found it";
-        } else {
-          layer.get('sublayers').forEach(processLayer);
-        }
-    
-        if (layer === that) foundSelf = true;
-      });
-    } catch (e) {
-      // nothing to do
-    }
+    layers.forEach(function processLayer(layer) {
+      if (nextInputResponder) return;
+      else if (foundSelf && layer.get('acceptsFirstResponder')) {
+        nextInputResponder = layer;
+      } else {
+        layer.get('sublayers').forEach(processLayer);
+      }
+  
+      if (!nextInputResponder && layer === that) foundSelf = true;
+    });
 
     return nextInputResponder;
   }.property(),
 
   previousInputResponder: function() {
     var layers = this.getPath('surface.layers'),
-        nextInputResponder = null,
+        previousInputResponder = null,
         foundSelf = false,
         that = this;
 
     if (!layers) return null;
 
-    try {
-      layers.slice().reverse().forEach(function processLayer(layer) {
-        if (foundSelf && layer.get('acceptsFirstResponder')) {
-          nextInputResponder = layer;
-          throw "Found it";
-        } else {
-          layer.get('sublayers').slice().reverse().forEach(processLayer);
-        }
-    
-        if (layer === that) foundSelf = true;
-      });
-    } catch (e) {
-      // nothing to do
-    }
-    
-     return nextInputResponder;
+    layers.slice().reverse().forEach(function processLayer(layer) {
+      if (previousInputResponder) return;
+      else if (foundSelf && layer.get('acceptsFirstResponder')) {
+        previousInputResponder = layer;
+      } else {
+        layer.get('sublayers').slice().reverse().forEach(processLayer);
+      }
+  
+      if (!previousInputResponder && layer === that) foundSelf = true;
+    });
+
+     return previousInputResponder;
   }.property()
   
 
