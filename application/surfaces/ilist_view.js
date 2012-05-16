@@ -178,6 +178,11 @@ SC.IListView = SC.View.extend({
         // sc_assert(offset % rowHeight === 0);
         // sc_assert(offset >= 0 && offset <= listHeight - canvasHeight);
 
+        if (offset === (listHeight - canvasHeight)) {
+          console.log('requesting more records');
+          this._sc_tellSurrogateToFetchMoreRecords = true;
+        }
+
         canvas.style.top = offset + 'px';
         this.triggerRendering();
         this._sc_rowIndex = offset/rowHeight;
@@ -225,7 +230,20 @@ SC.IListView = SC.View.extend({
   rowHeight: 30,
 
   renderRow: function(context, width, height, index, object, isSelected, isLast) {
-    context.fillStyle = isSelected? '#99CCFF' : 'white';
+    context.fillStyle = 'grey';
+    context.fillRect(0, 0, width, height);
+
+    context.font = "12pt Helvetica";
+    context.fillStyle = 'black';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+
+    context.fillText(String(index), width/2, height/2);
+  },
+
+  renderSurrogate: function(context, width, height, index, object, isSelected, isLast) {
+    console.log('rendering surrogate', object.status);
+    context.fillStyle = 'clear';
     context.fillRect(0, 0, width, height);
     
     context.strokeStyle = 'grey';
@@ -236,12 +254,21 @@ SC.IListView = SC.View.extend({
     context.lineTo(width, height - 0.5);
     context.stroke();
 
-    context.font = "12pt Helvetica";
+    context.font = "10pt Helvetica";
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
 
-    context.fillText(String(index), width/2, height/2);
+    var status = object.get('status');
+    if (status === 'FULL') {
+      context.fillText("All "+index+" records are loaded.", width/2, height/2+1);
+      context.fillStyle = 'white';
+      context.fillText("All "+index+" records are loaded.", width/2, height/2);
+    } else {
+      context.fillText(object.get('status'), width/2, height/2+1);
+      context.fillStyle = 'white';
+      context.fillText(object.get('status'), width/2, height/2);
+    }
   },
 
   hasHorizontalScroller: false,
@@ -299,7 +326,10 @@ SC.IListView = SC.View.extend({
  
       for (var idx = 0; idx<len; ++idx) {
         var obj = content.objectAt(idx + rowIndex),
-            storeKey = obj.storeKey;
+            storeKey = obj.storeKey,
+            isSurrogate = obj.isIRecordArray;
+
+        if (isSurrogate) storeKey = -1; // Won't collide with actual records.
 
         sc_assert(storeKey);
         var plistItem = plistItems[storeKey];
@@ -334,6 +364,25 @@ SC.IListView = SC.View.extend({
             plistItem.isLast = isSelected;
             if (LOG) console.log(storeKey, 'needs rendering because', 'its isLast value changed');
             needsRendering = true;
+          }
+
+          if (isSurrogate) {
+            var status = obj.status;
+            if (plistItem.status !== obj.status) {
+              plistItem.status = status;
+              if (LOG) console.log(storeKey, 'needs rendering because', 'its status changed');
+              needsRendering = true;
+            }
+
+            if (this._sc_tellSurrogateToFetchMoreRecords) {
+              this._sc_tellSurrogateToFetchMoreRecords = false;
+              obj.fetchRecords();
+            }
+
+            // Early exit for speed.
+            if (needsRendering) plistItem.needsRendering = true;
+            needsRendering = false; // Reset
+            break; // We're done examining the surrogate.
           }
 
           // Next we check the storeKeys for changes *if*
@@ -381,6 +430,10 @@ SC.IListView = SC.View.extend({
           plistItem.isSelected = selection.contains(obj);
           plistItem.isLast = (idx + rowIndex) === len - 1;
           // item is already marked as needing rendering on init
+          if (isSurrogate) {
+            plistItem.isSurrogate = true;
+            plistItem.status = obj.status;
+          }
         }
 
         needsRendering = false; // Reset
@@ -421,33 +474,38 @@ SC.IListView = SC.View.extend({
         ctx.save();
         ctx.translate(0, plistItem.offset);
 
-        // We render the most complicated option.
-        layerTree = plistItem.editableLayerTree;
-        if (!layerTree) layerTree = plistItem.mouseLayerTree;
-        if (!layerTree) layerTree = plistItem.renderLayerTree;
+        if (!plistItem.isSurrogate) {
+          // We render the most complicated option.
+          layerTree = plistItem.editableLayerTree;
+          if (!layerTree) layerTree = plistItem.mouseLayerTree;
+          if (!layerTree) layerTree = plistItem.renderLayerTree;
 
-        var renderFunction = plistItem.renderFunction;
-        if (!layerTree && !renderFunction) {
-          // We need to find or create the correct one.
-          if (this.createRenderLayerTree) {
-            // console.log('creating render tree');
-            layerTree = plistItem.renderLayerTree = this.createRenderLayerTree();
+          var renderFunction = plistItem.renderFunction;
+          if (!layerTree && !renderFunction) {
+            if (plistItem.isSurrogate) {
+            // We need to find or create the correct one.
+            } else if (this.createRenderLayerTree) {
+              // console.log('creating render tree');
+              layerTree = plistItem.renderLayerTree = this.createRenderLayerTree();
 
-            if (layerTree) {
-              // sc_assert(layerTree);
-              // sc_assert(layerTree.kindOf(SC.Layer));
+              if (layerTree) {
+                // sc_assert(layerTree);
+                // sc_assert(layerTree.kindOf(SC.Layer));
 
-              layerTree.__forceWidthHeight__ = true;
-              layerTree.set('width', w);
-              layerTree.set('height', h);
-              layerTree.__needsLayout__ = true;
-            }
-          } else {
-            // FIXME: Seems like this could be done better...
-            if (this.renderRow) {
-              renderFunction = plistItem.renderFunction = this.renderRow;
+                layerTree.__forceWidthHeight__ = true;
+                layerTree.set('width', w);
+                layerTree.set('height', h);
+                layerTree.__needsLayout__ = true;
+              }
+            } else {
+              // FIXME: Seems like this could be done better...
+              if (this.renderRow) {
+                renderFunction = plistItem.renderFunction = this.renderRow;
+              }
             }
           }
+        } else {
+          renderFunction = this.renderSurrogate;
         }
 
         // Render with either the layer tree or the render function.
@@ -1003,6 +1061,9 @@ SC.PListItem = function(index, object, offset) {
   // A PListItem can only have mouse or editable, not both.
   this.mouseLayerTree = null;    // Exclusive to this PListItem
   this.editableLayerTree = null; // Exclusive to this PListItem
+
+  this.status = null;
+  this.isSurrogate = false;
 
   return this;
 };
