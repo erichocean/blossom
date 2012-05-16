@@ -47,8 +47,7 @@ SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
   nextInputResponder: function() {
     var layers = this.getPath('surface.layers'),
         nextInputResponder = null,
-        foundSelf = false,
-        that = this;
+        foundSelf = false;
 
     if (!layers) return null;
     
@@ -57,11 +56,11 @@ SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
       else if (foundSelf && layer.get('acceptsFirstResponder')) {
         nextInputResponder = layer;
       } else {
-        layer.get('sublayers').forEach(processLayer);
+        layer.get('sublayers').forEach(processLayer, this);
       }
   
-      if (!nextInputResponder && layer === that) foundSelf = true;
-    });
+      if (!nextInputResponder && layer === this) foundSelf = true;
+    }, this);
 
     return nextInputResponder;
   }.property(),
@@ -69,8 +68,7 @@ SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
   previousInputResponder: function() {
     var layers = this.getPath('surface.layers'),
         previousInputResponder = null,
-        foundSelf = false,
-        that = this;
+        foundSelf = false;
 
     if (!layers) return null;
 
@@ -79,11 +77,11 @@ SC.Widget = SC.Layer.extend(SC.Responder, SC.DelegateSupport, {
       else if (foundSelf && layer.get('acceptsFirstResponder')) {
         previousInputResponder = layer;
       } else {
-        layer.get('sublayers').slice().reverse().forEach(processLayer);
+        layer.get('sublayers').slice().reverse().forEach(processLayer, this);
       }
   
-      if (!previousInputResponder && layer === that) foundSelf = true;
-    });
+      if (!previousInputResponder && layer === this) foundSelf = true;
+    }, this);
 
      return previousInputResponder;
   }.property()
