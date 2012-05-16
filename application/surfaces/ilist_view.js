@@ -919,6 +919,9 @@ SC.InternalIListViewSurface = SC.LeafSurface.extend({
     // console.log('SC.InternalIListViewSurface#didCreateElement()', SC.guidFor(this));
     arguments.callee.base.apply(this, arguments);
     div.style.overflow = 'hidden';
+    div.style.backgroundImage = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAgCAMAAAARxWmYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEJQTFRF/////f39/v7++vr67u7u4+Pj9fX1vcC+0tPTvb6+09TT0tTT9fb14+Tj09TUvcC97e7uvb690tTU09PTvsC9vsC+wY1AyAAAAFpJREFUeNp8j0kOgDAMA8sSIKQp+/+/inqoqJHc3EaWxnG4FxmnoetDvrmGzVhyJK+SVRBigYcKFEpNiE0TS8D2/2AnPaC+vPFO/MDJuMYESE62BwRqRP0KMABnbwVKLpuQOQAAAABJRU5ErkJggg==)';
+    div.style.backgroundPosition = 'right top';
+    div.style.backgroundRepeat = 'repeat-y';
   },
 
   targetResponderForEvent: function(evt) {
@@ -983,7 +986,7 @@ SC.InternalIListViewSurface = SC.LeafSurface.extend({
     // Record how many rows we can render.
     this.__scrollView__._sc_rowLength = frame[3] / rowHeight;
 
-    frame.x = myFrame.x;
+    frame.x = myFrame.x-12;
     frame.y = myFrame.y;
     this._sc_scrollingCanvas.set('frame', frame);
   }
