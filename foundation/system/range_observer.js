@@ -56,7 +56,7 @@ SC.RangeObserver = {
   create: function(source, indexSet, target, method, context, isDeep) {
     var ret = SC.beget(this);
     ret.source = source;
-    ret.indexes = indexSet ? indexSet.frozenCopy() : null;
+    ret.indexes = indexSet ? indexSet.copy() : null;
     ret.target = target;
     ret.method = method;
     ret.context = context ;
@@ -101,7 +101,7 @@ SC.RangeObserver = {
   update: function(source, indexSet) {
     if (this.indexes && this.indexes.isEqual(indexSet)) return this ;
     
-    this.indexes = indexSet ? indexSet.frozenCopy() : null ;
+    this.indexes = indexSet ? indexSet.copy() : null ;
     this.endObserving().beginObserving();
     return this;
   },
