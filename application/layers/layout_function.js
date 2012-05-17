@@ -244,15 +244,10 @@ SC.GetLayoutFunction = function(hmode, vmode, hmax, vmax, layoutMode) {
 
       // Update the position and bounds structs with the newly-computed 
       // values, offset to take into account anchorX and anchorY.
-      // position.x    = x + anchorX * width;
-      // position.y    = y + anchorY * height;
-      // bounds.width  = width;
-      // bounds.height = height;
-
-      Float32Array.prototype.__lookupSetter__('x').call(position, Math.floor(x + anchorX * width));
-      Float32Array.prototype.__lookupSetter__('y').call(position, Math.floor(y + anchorY * height));
-      Float32Array.prototype.__lookupSetter__('width').call(bounds, Math.ceil(width));
-      Float32Array.prototype.__lookupSetter__('height').call(bounds, Math.ceil(height));
+      position.x    = Math.floor(x + anchorX * width);
+      position.y    = Math.floor(y + anchorY * height);
+      bounds.width  = Math.ceil(width);
+      bounds.height = Math.ceil(height);
 
       if (shouldBenchmark) {
         SC.Benchmark.end(benchKey);
