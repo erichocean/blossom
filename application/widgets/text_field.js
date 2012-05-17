@@ -50,6 +50,8 @@ SC.TextFieldWidget = SC.Widget.extend({
 
   isSingleLine: false,
 
+  isPassword: false,
+
   _sc_textPropertiesDidChange: function() {
     var surface = this.get('surface');
     if (surface) surface.triggerLayoutAndRendering();
@@ -113,7 +115,11 @@ SC.TextFieldWidget = SC.Widget.extend({
   _sc_didBecomeInputResponder: function() {
     // console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
     if (this.get('isInputResponder')) {
-      SC.OpenFieldEditorFor(this);
+      if (this.get('isPassword')) {
+        SC.OpenPasswordEditorFor(this);
+      } else {
+        SC.OpenFieldEditorFor(this);
+      }
     }
   }.observes('isInputResponder'),
 
@@ -122,7 +128,11 @@ SC.TextFieldWidget = SC.Widget.extend({
     SC.app.set('inputSurface', this.get('surface'));
     if (!this.get('isFirstResponder')) this.becomeFirstResponder();
     else if (this.get('isInputResponder')) {
-      SC.OpenFieldEditorFor(this);
+      if (this.get('isPassword')) {
+        SC.OpenPasswordEditorFor(this);
+      } else {
+        SC.OpenFieldEditorFor(this);
+      }
     }
     return true;
   },
