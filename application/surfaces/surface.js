@@ -566,8 +566,6 @@ SC.Surface = SC.Object.extend(SC.Responder, {
     }
   },
 
-  isPresentInViewport: false,
-
   // ..........................................................
   // KEY-VALUE CODING SUPPORT
   //
