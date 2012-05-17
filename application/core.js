@@ -28,7 +28,6 @@ SC.RequestAnimationFrame = function(callback) {
   var ret = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame || 
     function(callback) { window.setTimeout(function() { callback(); }, 1/60); } ;
 
