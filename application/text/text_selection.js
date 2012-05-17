@@ -19,18 +19,24 @@ SC.TextSelection = function(start, end) {
   return this;
 };
 
-SC.TextSelection.prototype.__defineGetter__('length', function() {
-  return this.end - this.start;
+var proto = SC.TextSelection.prototype;
+
+Object.defineProperty(proto, 'length', {
+  get: function() {
+    return this.end - this.start;  
+  }
 });
 
-SC.TextSelection.prototype.__defineGetter__('isValid', function() {
-  var start = this.start,
-      end = this.end;
+Object.defineProperty(proto, 'isValid', {
+  get: function() {
+    var start = this.start,
+        end = this.end;
 
-  if (typeof start === 'number' && Math.floor(start) === start &&
-      typeof end === 'number' && Math.floor(end) === end &&
-      0 <= start && start <= end)
-  {
-    return true;
-  } else return false;
+    if (typeof start === 'number' && Math.floor(start) === start &&
+        typeof end === 'number' && Math.floor(end) === end &&
+        0 <= start && start <= end)
+    {
+      return true;
+    } else return false;  
+  }
 });
