@@ -330,7 +330,7 @@ SC.Surface = SC.Object.extend(SC.Responder, {
     if (!transition) {
       var transitions = this.getPath('transitions');
       sc_assert(transitions === null || (typeof transitions === "object" && transitions instanceof Object));
-      transition = transitions? transitions['anchorPoint'] : null;
+      transition = transitions? transitions.anchorPoint : null;
     }
     if (!transition) transition = SC.Surface.transitions[key];
     sc_assert(transition, "An SC.TransitionAnimation could not be found for '%@'.".fmt(key));
