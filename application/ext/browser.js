@@ -7,35 +7,45 @@
 
 var ENFORCE_BLOSSOM_2DCONTEXT_API = false; // removes context.canvas and context.drawImage()
 
-var proto = CanvasRenderingContext2D.prototype;
-
-Object.defineProperty(proto, 'width', {
-  get: function() {
-    var canvas = this.__sc_canvas__;
-    return canvas? canvas.width : 0;
-  }
-});
-
-Object.defineProperty(proto, 'height', {
-  get: function() {
-    var canvas = this.__sc_canvas__;
-    return canvas? canvas.height : 0; 
-  }
-});
-
-Object.defineProperty(proto, 'w', {
-  get: function() {
-    var canvas = this.__sc_canvas__;
-    return canvas? canvas.width : 0; 
-  }
-});
-
-Object.defineProperty(proto, 'h', {
-  get: function() {
-    var canvas = this.__sc_canvas__;
-    return canvas? canvas.height : 0;  
-  }
-});
+(function() {
+  var p = CanvasRenderingContext2D.prototype;
+  
+  Object.defineProperty(p, 'width', {
+    get: function() {
+      var canvas = this.__sc_canvas__;
+      return canvas? canvas.width : 0;
+    },
+    enumerable: false,
+    configurable: false
+  });
+  
+  Object.defineProperty(p, 'height', {
+    get: function() {
+      var canvas = this.__sc_canvas__;
+      return canvas? canvas.height : 0; 
+    },
+    enumerable: false,
+    configurable: false
+  });
+  
+  Object.defineProperty(p, 'w', {
+    get: function() {
+      var canvas = this.__sc_canvas__;
+      return canvas? canvas.width : 0; 
+    },
+    enumerable: false,
+    configurable: false
+  });
+  
+  Object.defineProperty(p, 'h', {
+    get: function() {
+      var canvas = this.__sc_canvas__;
+      return canvas? canvas.height : 0;  
+    },
+    enumerable: false,
+    configurable: false
+  });
+})();
 
 CanvasRenderingContext2D.prototype._sc_drawImage = CanvasRenderingContext2D.prototype.drawImage;
 CanvasRenderingContext2D.prototype._sc_createPattern = CanvasRenderingContext2D.prototype.createPattern;
@@ -49,3 +59,4 @@ CanvasRenderingContext2D.prototype.drawLayer = function(layer, sx, sy, sw, sh, d
     default: return this._sc_drawImage(el, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 };
+  

@@ -1134,13 +1134,17 @@ SC.Surface.styleProperties.forEach(function(key) {
   }
 });
 
-var proto = SC.Surface.prototype;
+(function() {
+  var p = SC.Surface.prototype;
 
-Object.defineProperty(proto, '__needsRendering__', {
-  get: function() {
-    return this.__sc_needsRendering__;  
-  },
-  set: function(value) {
-    this.__sc_needsRendering__ = value;  
-  }
-});
+  Object.defineProperty(p, '__needsRendering__', {
+    get: function() {
+      return this.__sc_needsRendering__;  
+    },
+    set: function(value) {
+      this.__sc_needsRendering__ = value;  
+    },
+    enumerable: false,
+    configurable: false
+  });
+})();

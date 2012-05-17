@@ -19,24 +19,30 @@ SC.TextSelection = function(start, end) {
   return this;
 };
 
-var proto = SC.TextSelection.prototype;
-
-Object.defineProperty(proto, 'length', {
-  get: function() {
-    return this.end - this.start;  
-  }
-});
-
-Object.defineProperty(proto, 'isValid', {
-  get: function() {
-    var start = this.start,
-        end = this.end;
-
-    if (typeof start === 'number' && Math.floor(start) === start &&
-        typeof end === 'number' && Math.floor(end) === end &&
-        0 <= start && start <= end)
-    {
-      return true;
-    } else return false;  
-  }
-});
+(function() {
+  var p = SC.TextSelection.prototype;
+  
+  Object.defineProperty(p, 'length', {
+    get: function() {
+      return this.end - this.start;  
+    },
+    enumerable: false,
+    configurable: false
+  });
+  
+  Object.defineProperty(p, 'isValid', {
+    get: function() {
+      var start = this.start,
+          end = this.end;
+  
+      if (typeof start === 'number' && Math.floor(start) === start &&
+          typeof end === 'number' && Math.floor(end) === end &&
+          0 <= start && start <= end)
+      {
+        return true;
+      } else return false;  
+    },
+    enumerable: false,
+    configurable: false
+  });
+})();
