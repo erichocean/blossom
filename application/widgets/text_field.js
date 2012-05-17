@@ -212,7 +212,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     var style = input.style,
         frame = this.computeFrameInSupersurface();
 
-    input.value = this.get('value');
+    input.value = this.valueForFieldEditor();
 
     style.display = 'block';
     style.border  = this.get('borderWidth') + 'px';
