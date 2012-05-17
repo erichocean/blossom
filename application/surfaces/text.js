@@ -100,6 +100,15 @@ SC.TextSurface = SC.LeafSurface.extend({
   _sc_textAreaDidFocus: function(evt) {
     // console.log('SC.TextSurface#_sc_textAreaDidFocus()', SC.guidFor(this));
     SC.app.set('inputSurface', this);
+    var that = this;
+    setTimeout(function() {
+      SC.RunLoop.begin();
+      var value = that.get('value');
+      if (!value) value = ''
+      else value = String(value);
+      that._sc_textarea.setSelectionRange(0, value? value.length : 0);
+      SC.RunLoop.end();
+    },0);
   },
 
   _sc_textAreaDidSelect: function(evt) {

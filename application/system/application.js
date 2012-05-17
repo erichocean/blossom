@@ -476,8 +476,8 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
     this._sc_inputSurface = cur;
     if (cur) cur.set('isInputSurface', true);
 
-    if (old && old.didLoseInputTo) old.didLoseInputTo(cur);
-    if (cur && cur.didBecomeInputFrom) cur.didBecomeInputFrom(old);
+    if (old && old.didLoseInputSurfaceTo) old.didLoseInputSurfaceTo(cur);
+    if (cur && cur.didBecomeInputSurfaceFrom) cur.didBecomeInputSurfaceFrom(old);
   }.observes('inputSurface'),
 
   // ..........................................................
