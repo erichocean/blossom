@@ -1134,11 +1134,13 @@ SC.Surface.styleProperties.forEach(function(key) {
   }
 });
 
-SC.Surface.prototype.__defineGetter__('__needsRendering__', function() {
-  return this.__sc_needsRendering__;
-});
+var proto = SC.Surface.prototype;
 
-SC.Surface.prototype.__defineSetter__('__needsRendering__', function(value) {
-  this.__sc_needsRendering__ = value;
-  // console.log('SC.Surface@__needsRendering__ did change to', value, SC.guidFor(this));
+Object.defineProperty(proto, '__needsRendering__', {
+  get: function() {
+    return this.__sc_needsRendering__;  
+  },
+  set: function(value) {
+    this.__sc_needsRendering__ = value;  
+  }
 });

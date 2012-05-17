@@ -7,24 +7,34 @@
 
 var ENFORCE_BLOSSOM_2DCONTEXT_API = false; // removes context.canvas and context.drawImage()
 
-CanvasRenderingContext2D.prototype.__defineGetter__('width', function() {
-  var canvas = this.__sc_canvas__;
-  return canvas? canvas.width : 0;
+var proto = CanvasRenderingContext2D.prototype;
+
+Object.defineProperty(proto, 'width', {
+  get: function() {
+    var canvas = this.__sc_canvas__;
+    return canvas? canvas.width : 0;
+  }
 });
 
-CanvasRenderingContext2D.prototype.__defineGetter__('height', function() {
-  var canvas = this.__sc_canvas__;
-  return canvas? canvas.height : 0;
+Object.defineProperty(proto, 'height', {
+  get: function() {
+    var canvas = this.__sc_canvas__;
+    return canvas? canvas.height : 0; 
+  }
 });
 
-CanvasRenderingContext2D.prototype.__defineGetter__('w', function() {
-  var canvas = this.__sc_canvas__;
-  return canvas? canvas.width : 0;
+Object.defineProperty(proto, 'w', {
+  get: function() {
+    var canvas = this.__sc_canvas__;
+    return canvas? canvas.width : 0; 
+  }
 });
 
-CanvasRenderingContext2D.prototype.__defineGetter__('h', function() {
-  var canvas = this.__sc_canvas__;
-  return canvas? canvas.height : 0;
+Object.defineProperty(proto, 'h', {
+  get: function() {
+    var canvas = this.__sc_canvas__;
+    return canvas? canvas.height : 0;  
+  }
 });
 
 CanvasRenderingContext2D.prototype._sc_drawImage = CanvasRenderingContext2D.prototype.drawImage;
