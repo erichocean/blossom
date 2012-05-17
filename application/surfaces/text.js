@@ -81,6 +81,9 @@ SC.TextSurface = SC.LeafSurface.extend({
     // Become the input surface.
     SC.Event.add(textarea, 'focus', this, this._sc_textAreaDidFocus);
 
+    // Resign the input surface.
+    SC.Event.add(textarea, 'blur', this, this._sc_textAreaDidBlur);
+
     // There are certain ways users can select text that we can't identify via
     // our key/mouse down/up handlers (such as the user choosing Select All
     // from a menu).
@@ -109,6 +112,11 @@ SC.TextSurface = SC.LeafSurface.extend({
       that._sc_textarea.setSelectionRange(0, value? value.length : 0);
       SC.RunLoop.end();
     },0);
+  },
+
+  _sc_textAreaDidBlur: function(evt) {
+    // console.log('SC.TextSurface#_sc_textAreaDidBlur()', SC.guidFor(this));
+    SC.app.set('inputSurface', null);
   },
 
   _sc_textAreaDidSelect: function(evt) {
