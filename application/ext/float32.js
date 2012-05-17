@@ -844,180 +844,389 @@ SC.Transform3DTranslate3DTo = function(src, x, y, z, dst) {
 // Note that it is more efficient to index into them, so Blossom's own code 
 // should always use the indices, not the getter/setters.
 
-Float32Array.prototype.__defineGetter__('x', function() {
-  return this[0];
-});
+(function() {
+  var p = Float32Array.prototype;
 
-Float32Array.prototype.__defineSetter__('x', function(val) {
-  var old = this[0];
-  this[0] = val;
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'x', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('y', function() {
-  return this[1];
-});
-
-Float32Array.prototype.__defineSetter__('y', function(val) {
-  var old = this[1];
-  this[1] = val;
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'y', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('z', function() {
-  return this[2];
-});
-
-Float32Array.prototype.__defineSetter__('z', function(val) {
-  var old = this[2];
-  this[2] = val;
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'z', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('w', function() {
-  return this.length === 2 ? this[0] : this[2];
-});
-
-Float32Array.prototype.__defineSetter__('w', function(val) {
-  var old;
-  if (this.length === 2) {
-    old = this[0];
-    this[0] = val;
-  } else {
-    old = this[2];
-    this[2] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('width', function() {
-  return this.length === 2 ? this[0] : this[2];
-});
-
-Float32Array.prototype.__defineSetter__('width', function(val) {
-  var old;
-  if (this.length === 2) {
-    old = this[0];
-    this[0] = val;
-  } else {
-    old = this[2];
-    this[2] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('h', function() {
-  return this.length === 2 ? this[1] : this[3];
-});
-
-Float32Array.prototype.__defineSetter__('h', function(val) {
-  var old;
-  if (this.length === 2) {
-    old = this[1];
-    this[1] = val;
-  } else {
-    old = this[3];
-    this[3] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
-});
-
-Float32Array.prototype.__defineGetter__('height', function() {
-  return this.length === 2 ? this[1] : this[3];
-});
-
-Float32Array.prototype.__defineSetter__('height', function(val) {
-  var old;
-  if (this.length === 2) {
-    old = this[1];
-    this[1] = val;
-  } else {
-    old = this[3];
-    this[3] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
-});
-
-// Allow structure access to SC.AffineTransform and SC.Transform3D members.
-'m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34 m41 m42 m43 m44'.w().forEach(function(prop, idx) {
-
-  // The m21 and m22 props are defined below, but we leave them in here
-  // so the indexing for subsquent properties is correct.
-  if (prop === 'm21' || prop === 'm22') return;
-
-  Float32Array.prototype.__defineGetter__(prop, function() {
-    return this[idx];
+  Object.defineProperty(p, 'x', {
+    get: function() {
+      return this[0];
+    },
+    set: function(val) {
+      var old = this[0];
+      this[0] = val;
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'x', old, val);
+    },
+    enumerable: false,
+    configurable: false
   });
 
-  Float32Array.prototype.__defineSetter__(prop, function(val) {
-    var old = this[idx];
-    this[idx] = val;
-    var owner = this.owner;
-    if (owner) owner.structureDidChange(this, this.keyName, prop, old, val);
+  // Float32Array.prototype.__defineGetter__('x', function() {
+  //   return this[0];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('x', function(val) {
+  //   var old = this[0];
+  //   this[0] = val;
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'x', old, val);
+  // });
+
+  Object.defineProperty(p, 'y', {
+    get: function() {
+      return this[1];
+    },
+    set: function(val) {
+      var old = this[1];
+      this[1] = val;
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'y', old, val);
+    },
+    enumerable: false,
+    configurable: false
   });
 
-});
+  // Float32Array.prototype.__defineGetter__('y', function() {
+  //   return this[1];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('y', function(val) {
+  //   var old = this[1];
+  //   this[1] = val;
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'y', old, val);
+  // });
 
-// The m21 and m22 members have different indices depending on array length.
-Float32Array.prototype.__defineGetter__('m21', function() {
-  return (this.length === 6) ? this[2] : this[4];
-});
+  Object.defineProperty(p, 'z', {
+    get: function() {
+      return this[2];
+    },
+    set: function(val) {
+      var old = this[2];
+      this[2] = val;
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'z', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
 
-Float32Array.prototype.__defineSetter__('m21', function(val) {
-  var old;
-  if (this.length === 6) {
-    old = this[2];
-    this[2] = val;
-  } else {
-    old = this[4];
-    this[4] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'm21', old, val);
-});
+  // Float32Array.prototype.__defineGetter__('z', function() {
+  //   return this[2];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('z', function(val) {
+  //   var old = this[2];
+  //   this[2] = val;
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'z', old, val);
+  // });
 
-Float32Array.prototype.__defineGetter__('m22', function() {
-  return (this.length === 6) ? this[3] : this[5];
-});
+  Object.defineProperty(p, 'w', {
+    get: function() {
+      return this.length === 2 ? this[0] : this[2];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 2) {
+        old = this[0];
+        this[0] = val;
+      } else {
+        old = this[2];
+        this[2] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
 
-Float32Array.prototype.__defineSetter__('m22', function(val) {
-  var old;
-  if (this.length === 6) {
-    old = this[3];
-    this[3] = val;
-  } else {
-    old = this[5];
-    this[5] = val;
-  }
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'm22', old, val);
-});
+  // Float32Array.prototype.__defineGetter__('w', function() {
+  //   return this.length === 2 ? this[0] : this[2];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('w', function(val) {
+  //   var old;
+  //   if (this.length === 2) {
+  //     old = this[0];
+  //     this[0] = val;
+  //   } else {
+  //     old = this[2];
+  //     this[2] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
+  // });
 
-Float32Array.prototype.__defineGetter__('tx', function() {
-  return this[4];
-});
+  Object.defineProperty(p, 'width', {
+    get: function() {
+      return this.length === 2 ? this[0] : this[2];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 2) {
+        old = this[0];
+        this[0] = val;
+      } else {
+        old = this[2];
+        this[2] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
 
-Float32Array.prototype.__defineSetter__('tx', function(val) {
-  var old = this[4];
-  this[4] = val;
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'tx', old, val);
-});
+  // Float32Array.prototype.__defineGetter__('width', function() {
+  //   return this.length === 2 ? this[0] : this[2];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('width', function(val) {
+  //   var old;
+  //   if (this.length === 2) {
+  //     old = this[0];
+  //     this[0] = val;
+  //   } else {
+  //     old = this[2];
+  //     this[2] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'width', old, val);
+  // });
 
-Float32Array.prototype.__defineGetter__('ty', function() {
-  return this[5];
-});
+  Object.defineProperty(p, 'h', {
+    get: function() {
+      return this.length === 2 ? this[1] : this[3];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 2) {
+        old = this[1];
+        this[1] = val;
+      } else {
+        old = this[3];
+        this[3] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
 
-Float32Array.prototype.__defineSetter__('ty', function(val) {
-  var old = this[5];
-  this[5] = val;
-  var owner = this.owner;
-  if (owner) owner.structureDidChange(this, this.keyName, 'ty', old, val);
-});
+  // Float32Array.prototype.__defineGetter__('h', function() {
+  //   return this.length === 2 ? this[1] : this[3];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('h', function(val) {
+  //   var old;
+  //   if (this.length === 2) {
+  //     old = this[1];
+  //     this[1] = val;
+  //   } else {
+  //     old = this[3];
+  //     this[3] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
+  // });
+
+  Object.defineProperty(p, 'height', {
+    get: function() {
+      return this.length === 2 ? this[1] : this[3];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 2) {
+        old = this[1];
+        this[1] = val;
+      } else {
+        old = this[3];
+        this[3] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
+
+  // Float32Array.prototype.__defineGetter__('height', function() {
+  //   return this.length === 2 ? this[1] : this[3];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('height', function(val) {
+  //   var old;
+  //   if (this.length === 2) {
+  //     old = this[1];
+  //     this[1] = val;
+  //   } else {
+  //     old = this[3];
+  //     this[3] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'height', old, val);
+  // });
+
+  // Allow structure access to SC.AffineTransform and SC.Transform3D members.
+  'm11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34 m41 m42 m43 m44'.w().forEach(function(prop, idx) {
+
+    // The m21 and m22 props are defined below, but we leave them in here
+    // so the indexing for subsquent properties is correct.
+    if (prop === 'm21' || prop === 'm22') return;
+
+    Object.defineProperty(p, prop, {
+      get: function() {
+        return this[idx];
+      },
+      set: function(val) {
+        var old = this[idx];
+        this[idx] = val;
+        var owner = this.owner;
+        if (owner) owner.structureDidChange(this, this.keyName, prop, old, val);
+      },
+      enumerable: false,
+      configurable: false
+    });
+
+    // Float32Array.prototype.__defineGetter__(prop, function() {
+    //   return this[idx];
+    // });
+    // 
+    // Float32Array.prototype.__defineSetter__(prop, function(val) {
+    //   var old = this[idx];
+    //   this[idx] = val;
+    //   var owner = this.owner;
+    //   if (owner) owner.structureDidChange(this, this.keyName, prop, old, val);
+    // });
+
+  });
+
+  // The m21 and m22 members have different indices depending on array length.
+  Object.defineProperty(p, 'm21', {
+    get: function() {
+      return (this.length === 6) ? this[2] : this[4];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 6) {
+        old = this[2];
+        this[2] = val;
+      } else {
+        old = this[4];
+        this[4] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'm21', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
+
+  // Float32Array.prototype.__defineGetter__('m21', function() {
+  //   return (this.length === 6) ? this[2] : this[4];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('m21', function(val) {
+  //   var old;
+  //   if (this.length === 6) {
+  //     old = this[2];
+  //     this[2] = val;
+  //   } else {
+  //     old = this[4];
+  //     this[4] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'm21', old, val);
+  // });
+
+  Object.defineProperty(p, 'm22', {
+    get: function() {
+      return (this.length === 6) ? this[3] : this[5];
+    },
+    set: function(val) {
+      var old;
+      if (this.length === 6) {
+        old = this[3];
+        this[3] = val;
+      } else {
+        old = this[5];
+        this[5] = val;
+      }
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'm22', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
+
+  // Float32Array.prototype.__defineGetter__('m22', function() {
+  //   return (this.length === 6) ? this[3] : this[5];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('m22', function(val) {
+  //   var old;
+  //   if (this.length === 6) {
+  //     old = this[3];
+  //     this[3] = val;
+  //   } else {
+  //     old = this[5];
+  //     this[5] = val;
+  //   }
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'm22', old, val);
+  // });
+
+  Object.defineProperty(p, 'tx', {
+    get: function() {
+      return this[4];
+    },
+    set: function(val) {
+      var old = this[4];
+      this[4] = val;
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'tx', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
+
+  // Float32Array.prototype.__defineGetter__('tx', function() {
+  //   return this[4];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('tx', function(val) {
+  //   var old = this[4];
+  //   this[4] = val;
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'tx', old, val);
+  // });
+
+  Object.defineProperty(p, 'ty', {
+    get: function() {
+      return this[5];
+    },
+    set: function(val) {
+      var old = this[5];
+      this[5] = val;
+      var owner = this.owner;
+      if (owner) owner.structureDidChange(this, this.keyName, 'ty', old, val);
+    },
+    enumerable: false,
+    configurable: false
+  });
+
+  // Float32Array.prototype.__defineGetter__('ty', function() {
+  //   return this[5];
+  // });
+  // 
+  // Float32Array.prototype.__defineSetter__('ty', function(val) {
+  //   var old = this[5];
+  //   this[5] = val;
+  //   var owner = this.owner;
+  //   if (owner) owner.structureDidChange(this, this.keyName, 'ty', old, val);
+  // });
+})();
+
