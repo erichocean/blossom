@@ -14,6 +14,7 @@ sc_require('system/responder');
 sc_require('ext/float32');
 sc_require('surfaces/surface');
 sc_require('surfaces/container');
+sc_require('surfaces/private/ptransition_animation');
 
 /** Set to false to leave the backspace key under the control of the browser.*/
 SC.CAPTURE_BACKSPACE_KEY = false ;
@@ -346,7 +347,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
     var perspective = this.get('perspective');
     sc_assert(typeof perspective === "number");
     sc_assert(Math.floor(perspective) === perspective); // Integral
-    document.body.style.webkitPerspective = perspective+'px';
+    document.body.style[SC.vendorPrefix+'Perspective'] = perspective+'px';
   }.observes('perspective'),
 
   // .......................................................

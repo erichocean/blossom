@@ -698,12 +698,14 @@ SC.Surface = SC.Object.extend(SC.Responder, {
     var style = el.style,
         styleProperties = SC.Surface.styleProperties,
         cssProperties = SC.Surface.cssProperties,
-        idx, len, key, value, cssKey;
+        vendorProperties = SC.Surface.vendorProperties,
+        idx, len, key, value, cssKey, vendorKey;
 
     for (idx=0, len=styleProperties.length; idx<len; ++idx) {
       key = styleProperties[idx];
       value = this[key];
       cssKey = cssProperties[idx];
+      vendorKey = vendorProperties[idx];
 
       if (key === '_sc_frame') {
         style.left   = value[0]/*x*/      + 'px';
@@ -729,10 +731,10 @@ SC.Surface = SC.Object.extend(SC.Responder, {
         ].join(', ')+')';
 
       } else if (key === '_sc_isVisible') {
-        style[cssKey] = value? 'visible': 'hidden';
+        style[vendorKey] = value? 'visible': 'hidden';
 
       } else { // The remaining properties are set directly.
-        style[cssKey] = value;
+        style[vendorKey] = value;
       }
     }
     // 
@@ -1068,107 +1070,6 @@ SC.Surface = SC.Object.extend(SC.Responder, {
   */
   applicationHasFocus: false
 
-  // createLayersForContainer: function(container, width, height) {
-  //   if (this._sc_didCreateLayers) return;
-  //   this._sc_didCreateLayers = true;
-  //
-  //   // SC.Pane only has two layers `layer` and `hitTestLayer`.
-  //   var K = this.get('layerClass');
-  //   sc_assert(K && K.kindOf(SC.Layer));
-  //
-  //   // We want to allow the developer to provide a layout hash on the view,
-  //   // or to override the 'layout' computed property.
-  //   if (this.hasOwnProperty('layout')) {
-  //     // It's still possible that layout is a computed property. Don't use
-  //     // `get()` to find out!
-  //     var layout = this.layout;
-  //     if (typeof layout === "object") {
-  //       // We assume `layout` is a layout hash. The layer will throw an
-  //       // exception if `layout` is invalid -- don't test for that here.
-  //       this._sc_layer = K.create({
-  //         layout: layout,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //       this._sc_hitTestLayer = K.create({
-  //         layout: layout,
-  //         isHitTestOnly: true,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //     } else {
-  //       this._sc_layer = K.create({
-  //         // `layout` is whatever the default on SC.Layer is
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //       this._sc_hitTestLayer = K.create({
-  //         // `layout` is whatever the default on SC.Layer is
-  //         isHitTestOnly: true,
-  //         owner: this, // TODO: Do we need owner here?
-  //         container: container,
-  //         delegate: this
-  //       });
-  //     }
-  //
-  //     // Only delete layout if it is not a computed property. This allows
-  //     // the computed property on the prototype to shine through.
-  //     if (typeof layout !== "function" || !layout.isProperty) {
-  //       // console.log('deleting layout');
-  //       delete this.layout;
-  //     }
-  //   } else {
-  //     this._sc_layer = K.create({
-  //       // `layout` is whatever the default on SC.Layer is
-  //       owner: this, // TODO: Do we need owner here?
-  //       container: container,
-  //       delegate: this
-  //     });
-  //     this._sc_hitTestLayer = K.create({
-  //       // `layout` is whatever the default on SC.Layer is
-  //       isHitTestOnly: true,
-  //       owner: this, // TODO: Do we need owner here?
-  //       container: container,
-  //       delegate: this
-  //     });
-  //   }
-  //
-  //   this.notifyPropertyChange('layer');
-  //   this.notifyPropertyChange('hitTestLayer');
-  // },
-
-//   container: function(key, element) {
-//     if (element !== undefined) {
-//       this._pane_container = element ;
-//     } else {
-//       element = this._pane_container;
-//       if (!element) {
-//         this._pane_container = element = document.createElement('div');
-//         element.id = this.get('containerId');
-//         element.className = ['sc-pane', this.get('transitionsStyle')].join(' ');
-// //        element.style.boxShadow = "0px 4px 14px rgba(0, 0, 0, 0.61)";
-//         // element.style.webkitTransform = "translateZ(0)";
-//         element.style.webkitTransform = "rotateY(45deg)";
-//
-//         // apply the layout style manually for now...
-//         // var layoutStyle = this.get('layoutStyle');
-//         // for (key in layoutStyle) {
-//         //   if (!layoutStyle.hasOwnProperty(key)) continue;
-//         //   if (layoutStyle[key] !== null) {
-//         //     element.style[key] = layoutStyle[key];
-//         //   }
-//         // }
-//
-//         // Make sure SproutCore can find this view.
-//         SC.surfaces[this.get('containerId')] = this;
-//       }
-//     }
-//     return element ;
-//   }.property(),
-
 });
 
 SC.AugmentBaseClassWithDisplayProperties(SC.Surface);
@@ -1207,12 +1108,29 @@ SC.Surface.styleProperties.forEach(function(key) {
   } else if (key === '_sc_isVisible') {
     SC.Surface.cssProperties.push('visibility');
 
-  } else if ('_sc_'+key in SC.webkitProperties) {
-    SC.Surface.cssProperties.push('-webkit-'+key.dasherize());
+  } else if ('_sc_'+key in SC.vendorProperties) {
+    SC.Surface.cssProperties.push(SC.cssPrefix+key.dasherize());
 
   } else {
     // Need to drop the '_sc_' in front.
     SC.Surface.cssProperties.push(key.slice(4).dasherize());
+  }
+});
+
+SC.Surface.vendorProperties = [];
+SC.Surface.styleProperties.forEach(function(key) {
+  if (key === '_sc_cornerRadius') {
+    SC.Surface.vendorProperties.push('borderRadius');
+
+  } else if (key === '_sc_isVisible') {
+    SC.Surface.vendorProperties.push('visibility');
+
+  } else if ('_sc_'+key in SC.vendorProperties) {
+    SC.Surface.vendorProperties.push(SC.vendorPrefix+key.slice(0,1).toUpperCase()+key.slice(1));
+
+  } else {
+    // Need to drop the '_sc_' in front.
+    SC.Surface.vendorProperties.push(key.slice(4));
   }
 });
 

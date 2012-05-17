@@ -9,6 +9,14 @@
 //            (see BLOSSOM-LICENSE).
 // ==========================================================================
 
+SC.isIE = function() {
+  var isIE = this._sc_isIE;
+  if (isIE === undefined) {
+    isIE = this._sc_isIE = (navigator.appName == 'Microsoft Internet Explorer');
+  }
+  return isIE;
+};
+
 SC.isMozilla = function() {
   var isMozilla = this._sc_isMozilla, userAgent;
   if (isMozilla === undefined) {
