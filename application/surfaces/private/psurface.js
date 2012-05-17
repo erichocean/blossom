@@ -131,7 +131,7 @@ SC.Psurface = function(surface) {
   // FIXME: This gives a drop shadow to all root surfaces other than the #ui
   // div.  What we need is an API for drop shadows on SC.Surface itself.
   if (surfaceId !== 'ui' && !SC.surfaces[surfaceId].get('supersurface')) {
-    element.style.webkitBoxShadow = "0px 5px 15px rgba(1,1,1,0.5)";
+    element.style[SC.vendorPrefix+'BoxShadow'] = "0px 5px 15px rgba(1,1,1,0.5)";
   }
 
   var frame = surface.get('frame');
@@ -139,6 +139,11 @@ SC.Psurface = function(surface) {
   style.top    = frame[1]/*y*/      + 'px';
   style.width  = frame[2]/*width*/  + 'px';
   style.height = frame[3]/*height*/ + 'px';
+
+  // HACK:
+  if (surfaceId === 'ui' && SC.ENABLE_3D_TRANSFORMS) {
+    element.style[SC.vendorPrefix+'TransformStyle'] = 'preserve-3d';
+  }
 
   surface.didCreateElement(element);
 
@@ -289,9 +294,6 @@ SC.Psurface.prototype = {
       surface.__contentSizeNeedsUpdate__ = false;
     }
 
-    // HACK:
-    if (id === 'ui' && SC.ENABLE_3D_TRANSFORMS) el.style.webkitTransformStyle = 'preserve-3d';
-
     // Handle property transitions.
     var transitions = SC.surfaceTransitions[id] || false,
         currentHash = SC.psurfaceTransitions[id];
@@ -402,10 +404,10 @@ SC.Psurface.prototype = {
 
       // FIXME: WebKit-only.
       if (cssTransitionsAreEnabled) {
-        var propertyRule = '-webkit-transition-property: '+properties.join(', '),
-            durationRule = '-webkit-transition-duration: '+durations.join(', '),
-            timingFunctionRule = '-webkit-transition-timing-function: '+timingFunctions.join(', '),
-            delayRule = '-webkit-transition-delay: '+delays.join(', '),
+        var propertyRule = SC.cssPrefix+'transition-property: '+properties.join(', '),
+            durationRule = SC.cssPrefix+'transition-duration: '+durations.join(', '),
+            timingFunctionRule = SC.cssPrefix+'transition-timing-function: '+timingFunctions.join(', '),
+            delayRule = SC.cssPrefix+'transition-delay: '+delays.join(', '),
             rule = [propertyRule, durationRule, timingFunctionRule, delayRule].join(';\n'),
             transitionsRuleIndex = this.transitionsRuleIndex,
             cssRule = '#'+id+' { '+rule+'; }';
