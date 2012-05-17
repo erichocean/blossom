@@ -376,7 +376,7 @@ SC.Binding = {
     this.isConnected = true;
     this._connectionPending = true; // It's connected, but not really...
 
-    if (typeof this.noDelay !== 'function' && this.noDelay) {
+    if (this.isNoDelayBinding) {
       this._syncOnConnect = false; // SC.Object#create() will call sync() for us.
       this._connect();
     } else {
@@ -485,7 +485,7 @@ SC.Binding = {
     if (v !== this._bindingValue || key === '[]') {
 
       this._setBindingValue(target, key) ;
-      if (typeof this.noDelay !== 'function' && this.noDelay) {
+      if (this.isNoDelayBinding) {
         this.applyBindingValue();
       } else {
         this._changePending = true ;
@@ -513,7 +513,7 @@ SC.Binding = {
     // schedule to register an update.
     if (v !== this._transformedBindingValue) {
       this._setBindingValue(target, key) ;
-      if (typeof this.noDelay !== 'function' && this.noDelay) {
+      if (this.isNoDelayBinding) {
         this.applyBindingValue();
       } else {
         this._changePending = true ;
@@ -683,7 +683,7 @@ SC.Binding = {
       // schedule to register an update.
       if (v !== this._bindingValue || key === '[]') {
         this._setBindingValue(target, key) ;
-        if (typeof this.noDelay !== 'function' && this.noDelay) {
+        if (this.isNoDelayBinding) {
           this.applyBindingValue();
         } else {
           this._changePending = true ;
@@ -813,7 +813,7 @@ SC.Binding = {
   */
   noDelay: function() {
     var binding = (this === SC.Binding) ? this.beget() : this ;
-    binding.noDelay = true;
+    binding.isNoDelayBinding = true;
     return binding;
   },
 

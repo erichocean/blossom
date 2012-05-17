@@ -165,6 +165,10 @@ SC.TextFieldWidget = SC.Widget.extend({
     ctx.stroke();
   },
 
+  valueForFieldEditor: function() {
+    return this.get('value');
+  },
+
   computeSupersurface: function() {
     var surface = this.get('surface');
     sc_assert(surface);
