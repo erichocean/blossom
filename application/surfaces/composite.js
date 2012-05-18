@@ -95,7 +95,9 @@ SC.CompositeSurface = SC.Surface.extend(
       subsurface.set('isPresentInViewport', isPresentInViewport);
     }
 
-    this.triggerLayout();
+    // Make sure our own updateLayout() method is run, so we can lay out our
+    // subsurfaces.
+    if (isPresentInViewport) this.triggerLayout();
 
     SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache
   },
