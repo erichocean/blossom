@@ -95,6 +95,8 @@ SC.CompositeSurface = SC.Surface.extend(
       subsurface.set('isPresentInViewport', isPresentInViewport);
     }
 
+    this.triggerLayout();
+
     SC.surfacesHashNeedsUpdate = true; // causes the surfaces hash to recache
   },
 
