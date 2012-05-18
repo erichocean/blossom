@@ -55,6 +55,8 @@ SC.CompositeSurface = SC.Surface.extend(
     for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
       subsurfaces[idx].set('isPresentInViewport', isPresentInViewport);
     }
+
+    if (isPresentInViewport) this.triggerLayoutAndRendering();
   }.observes('isPresentInViewport'),
 
   // When the subsurfaces property changes, we need to observe it's members
