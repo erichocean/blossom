@@ -59,8 +59,6 @@ var MyLayer = SC.Layer.extend({
 });
 
 function main() {
-  SC.Application.create();
-
   var surface = SC.View.create();
 
   surface.get('layers').pushObject(MyLayer.create({

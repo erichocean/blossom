@@ -23,6 +23,5 @@ function main() {
   // BlossomTest.stressExample(stage);
   // BlossomTest.dragExample(stage);
 
-  SC.Application.create();
   SC.app.set('ui', stage);
 }

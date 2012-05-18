@@ -113,6 +113,5 @@ function main() {
   var ui = SC.LayoutSurface.create();
   ui.get('subsurfaces').pushObject(surface);
 
-  SC.Application.create();
   SC.app.set('ui', ui);
 }

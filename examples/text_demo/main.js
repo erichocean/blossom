@@ -12,8 +12,6 @@ var base03 = "#002b36";
 DEBUG_PSURFACES = true;
 
 function main() {
-  SC.Application.create();
-
   var surface = SC.View.create();
 
   var textLayer = SC.TextLayer.create({

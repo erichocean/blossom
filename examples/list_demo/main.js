@@ -6,7 +6,6 @@
 /*global ListDemo */
 
 function main() {
-  SC.Application.create();
   var ui = SC.LayoutSurface.create();
   ui.set('backgroundColor', 'blue');
 

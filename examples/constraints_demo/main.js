@@ -11,9 +11,6 @@ var base3 =    "#fdf6e3";
 var green =    "#859900";
 
 function main() {
-  // console.log('main()');
-  SC.Application.create(); // Assigns itself automatically to SC.app
-
   var sz = SC.app.computeViewportSize();
 
   var qd = new QuadDemo(sz.width, sz.height);

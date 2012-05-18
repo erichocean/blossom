@@ -113,6 +113,5 @@ function main() {
   });
   surface.get('layers').pushObject(blueLayer);
 
-  SC.Application.create();
   SC.app.set('ui', surface);
 }

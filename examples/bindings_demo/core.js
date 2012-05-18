@@ -67,8 +67,6 @@ var blossomAnimate = function() {
 var COLUMNS = 20;
 
 function main() {
-  SC.Application.create(); // Assigns itself automatically to SC.app
-
   var surface = SC.View.create({
 
     willRenderLayers: function(ctx) {

@@ -410,7 +410,6 @@ function test() {
 }
 
 function main() {
-  SC.Application.create(); // Assigns itself automatically to SC.app
   SC.app.set('ui', surface);
   uiContainer = SC.app.get('uiContainer');
   SC.app.addSurface(tree);

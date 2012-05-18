@@ -81,7 +81,6 @@ function main() {
 
   layout.get('subsurfaces').pushObjects([view, view2]);
 
-  SC.Application.create();
   SC.app.set('ui', layout);
   // debugger;
 

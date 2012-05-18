@@ -31,7 +31,6 @@ var green =    "#859900";
 var white =    "white";
 
 function main() {
-  SC.Application.create();
   SC.app.set('ui', SC.View.create());
 
   var form = FormDemo.form;

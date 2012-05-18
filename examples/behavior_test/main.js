@@ -6,7 +6,6 @@
 /*globals BehaviorTest */
 
 function main() {
-  SC.Application.create();
   var ui = BehaviorTest.create();
   SC.app.set('ui', ui);
   
