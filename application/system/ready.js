@@ -72,6 +72,8 @@ SC.mixin({
       // trigger any bound ready events
       SC.Event.trigger(document, "ready", null, false);
 
+      if (!SC.app) SC.Application.create();
+
       // Now execute main, if defined and SC.UserDefaults is ready
       if (SC.userDefaults.get('ready')) {
         SC.isExecutingMain = true;
