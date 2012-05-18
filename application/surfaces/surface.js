@@ -435,6 +435,11 @@ SC.Surface = SC.Object.extend(SC.Responder, {
   */
   isPresentInViewport: false,
 
+  _sc_surfaceIsPresentInViewport: function() {
+    SC.needsLayout = true;
+    this.triggerLayoutAndRendering();
+  }.observes('isPresentInViewport'),
+
   // ..........................................................
   // RESPONDER SUPPORT
   //
