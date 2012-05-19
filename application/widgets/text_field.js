@@ -50,6 +50,8 @@ SC.TextFieldWidget = SC.Widget.extend({
 
   isSingleLine: false,
 
+  isPassword: false,
+
   _sc_textPropertiesDidChange: function() {
     var surface = this.get('surface');
     if (surface) surface.triggerLayoutAndRendering();
@@ -113,7 +115,11 @@ SC.TextFieldWidget = SC.Widget.extend({
   _sc_didBecomeInputResponder: function() {
     // console.log('SC.TextFieldWidget#_sc_didBecomeInputResponder');
     if (this.get('isInputResponder')) {
-      SC.OpenFieldEditorFor(this);
+      if (this.get('isPassword')) {
+        SC.OpenPasswordEditorFor(this);
+      } else {
+        SC.OpenFieldEditorFor(this);
+      }
     }
   }.observes('isInputResponder'),
 
@@ -122,7 +128,11 @@ SC.TextFieldWidget = SC.Widget.extend({
     SC.app.set('inputSurface', this.get('surface'));
     if (!this.get('isFirstResponder')) this.becomeFirstResponder();
     else if (this.get('isInputResponder')) {
-      SC.OpenFieldEditorFor(this);
+      if (this.get('isPassword')) {
+        SC.OpenPasswordEditorFor(this);
+      } else {
+        SC.OpenFieldEditorFor(this);
+      }
     }
     return true;
   },
@@ -155,6 +165,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     ctx.font = this.get('font');
     ctx.fillStyle = this.get('color');
     var val = this.get('value');
+    if (this.get('isPassword')) val = "\u2022".repeat(val.length);
     if (val && val.elide) val = val.elide(ctx, w - 23);
     ctx.fillText(val, 4, 3);
 
