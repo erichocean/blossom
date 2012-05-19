@@ -165,6 +165,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     ctx.font = this.get('font');
     ctx.fillStyle = this.get('color');
     var val = this.get('value');
+    if (this.get('isPassword')) val = "\u2022".repeat(val.length);
     if (val && val.elide) val = val.elide(ctx, w - 23);
     ctx.fillText(val, 4, 3);
 

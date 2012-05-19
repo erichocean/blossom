@@ -404,6 +404,16 @@ SC.String = {
     }
     return ret;
   },
+
+  /**
+    Returns a new string that is this string repeated `num` times
+
+    @param {Number} num How many times to repeat the string
+    @return {String}
+  */
+  repeat: function(num) {
+    return new Array( num + 1 ).join( this );
+  },
   
   /**
     Removes any extra whitespace from the edges of the string. This method is 
