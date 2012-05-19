@@ -37,7 +37,7 @@ SC.animatablePropertyBuilder = function(key, assertion) {
 
       // Determine the current duration and delay values for the transition.
       var transaction = SC.AnimationTransaction.top();
-      sc_assert(transaction);
+      sc_assert(transaction, "No active animation transaction found, this means your code is running outside the runloop.");
       var transactionDuration = transaction.get('duration');
       var transactionDelay    = transaction.get('delay');
       var duration = transactionDuration !== null? transactionDuration : transition.get('duration');
