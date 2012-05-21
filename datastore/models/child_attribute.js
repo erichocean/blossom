@@ -89,7 +89,7 @@ SC.ChildAttribute = SC.RecordAttribute.extend(
       value = this.fromType(record, key, value) ; // convert to attribute.
     } else {
       value = record.readAttribute(attrKey);
-      if (SC.none(value) && (value = this.get('defaultValue'))) {
+      if (SC.none(value) && (record.status & SC.Record.READY) && (value = this.get('defaultValue'))) {
         if (typeof value === SC.T_FUNCTION) {
           value = this.defaultValue(record, key, this);
           // write default value so it doesn't have to be executed again
