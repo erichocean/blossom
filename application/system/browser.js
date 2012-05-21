@@ -25,3 +25,7 @@ SC.isMozilla = function() {
   }
   return isMozilla;
 };
+
+SC.isTouch = function() {
+  return 'ontouchstart' in document.documentElement;
+}
