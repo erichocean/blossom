@@ -1517,7 +1517,8 @@ BT.Proxy = BT.BuildNode.extend({
       body += chunk;
     }).on('end', function() {
       var proxyClient, proxyRequest,
-          url = request.url;
+          url = request.url,
+          method = request.method;
 
       url = url.replace(prefix, that.get('proxyPrefix'));
 
@@ -1525,7 +1526,7 @@ BT.Proxy = BT.BuildNode.extend({
         port: that.get('proxyPort'), 
         host: that.get('proxyHost'),
         path: url,
-        method: 'POST'
+        method: method
       }, function(proxyResponse) {
         response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
         proxyResponse.on('data', function(chunk) {
