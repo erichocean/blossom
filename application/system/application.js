@@ -1592,7 +1592,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
   //
 
   touchstart: function(evt) {
-    console.log('touchstart');
+    // console.log('touchstart');
     var touch = evt.touches[0];
     evt.clientX = touch.clientX;
     evt.clientY = touch.clientY;
@@ -1604,7 +1604,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
   },
 
   touchmove: function(evt) {
-    console.log('touchmove');
+    // console.log('touchmove');
     var touch = evt.touches[0];
     evt.clientX = touch.clientX;
     evt.clientY = touch.clientY;
@@ -1613,7 +1613,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
   },
 
   touchend: function(evt) {
-    console.log('touchend');
+    // console.log('touchend');
     // var touch = evt.touches[0];
     // evt.pageX = touch.pageX;
     // evt.pageY = touch.pageY;
@@ -1622,7 +1622,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
   },
 
   touchcancel: function(evt) {
-    console.log('touchcancel');
+    // console.log('touchcancel');
     // var touch = evt.touches[0];
     // evt.pageX = touch.pageX;
     // evt.pageY = touch.pageY;
