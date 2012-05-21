@@ -592,12 +592,14 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     // Hash for fast lookup by clients.
     SC.didChangeStoreKeys = SC.changedStoreKeys[storeKey] = true;
 
-    if (SC.STORE_NEEDS_FINAL_FLUSH) {
+    if (this.needsFinalFlush) {
       this.invokeOnce(this.flush);
-      SC.STORE_NEEDS_FINAL_FLUSH = false;
+      this.needsFinalFlush = false;
     }
     return this;
   },
+
+  needsFinalFlush: true,
 
   /**
     Delivers any pending changes to materialized records.  Normally this
@@ -646,6 +648,8 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     records.clear();
     // Provide full reference to overwrite
     this.recordPropertyChanges.propertyForStoreKeys = {};
+
+    this.needsFinalFlush = true;
 
     return this;
   },

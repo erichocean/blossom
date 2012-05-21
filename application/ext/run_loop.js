@@ -27,7 +27,6 @@ SC.RunLoop = SC.RunLoop.extend(
     var ret = arguments.callee.base.apply(this, arguments); // do everything else
     // sc_assert(SC.animationTransactions.length === 0); // Not true on tested run loops.
     SC.AnimationTransaction.begin();
-    SC.STORE_NEEDS_FINAL_FLUSH = true;
     // if (SC.didChangeStoreKeys) console.log(SC.changedStoreKeys);
     SC.changedStoreKeys = {}; // reset
     SC.didChangeStoreKeys = false;
