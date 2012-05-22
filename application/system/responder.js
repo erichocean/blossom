@@ -244,7 +244,7 @@ SC.Responder = {
   */
   tryToPerform: function(methodName, arg1, arg2) {
     // console.log('SC.Responder#tryToPerform(', methodName, ')');
-    var ret, oldType;
+    var ret, oldType, evt;
 
     if (this.__behaviorKey__) {
       // Are we trying to perform an event?
@@ -255,11 +255,10 @@ SC.Responder = {
 
       // No, we're trying to perform an action.
       } else {
-        ret = this.dispatchEvent(SC.Event.create({
-          type: methodName,
-          arg1: arg1,
-          arg2: arg2
-        }));
+        evt = SC.Event.create({ type: methodName });
+        evt.arg1 = arg1;
+        evt.arg2 = arg2;
+        ret = this.dispatchEvent(evt);
       }
     }
     
