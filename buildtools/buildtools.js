@@ -1526,7 +1526,8 @@ BT.Proxy = BT.BuildNode.extend({
         port: that.get('proxyPort'), 
         host: that.get('proxyHost'),
         path: url,
-        method: method
+        method: method,
+        headers: request.headers
       }, function(proxyResponse) {
         response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
         proxyResponse.on('data', function(chunk) {
