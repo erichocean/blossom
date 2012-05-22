@@ -4,6 +4,7 @@
 //            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals sc_assert */
 
 sc_require('system/store');
 
@@ -275,7 +276,7 @@ SC.NestedStore = SC.Store.extend(
   */
   _lock: function(storeKey) {
     var locks = this.locks, rev, editables, 
-        pk, pr, path, tup, obj, key;
+        pk, pr, path, tup, obj, key, dataHash;
     
     // already locked -- nothing to do
     if (locks && locks[storeKey]) return this;
@@ -309,16 +310,21 @@ SC.NestedStore = SC.Store.extend(
           path = pr[storeKey];
           tup = path ? SC.tupleForPropertyPath(path, this.dataHashes[pk]) : null;
           if (tup){ obj = tup[0]; key = tup[1]; }
-          this.dataHashes[storeKey] = obj && key ? obj[key] : null;
+          dataHash = this.dataHashes[storeKey] = obj && key ? obj[key] : null;
+          sc_assert(typeof dataHash === 'object');
         }
       }
       else {
-        this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], true);
+        dataHash = this.dataHashes[storeKey] = SC.clone(pstore.dataHashes[storeKey], true);
+        sc_assert(typeof dataHash === 'object');
       }
       if (!editables) editables = this.editables = [];
       editables[storeKey] = 1 ; // mark as editable
       
-    } else this.dataHashes[storeKey] = pstore.dataHashes[storeKey];
+    } else {
+      dataHash = this.dataHashes[storeKey] = pstore.dataHashes[storeKey];
+      sc_assert(typeof dataHash === 'object');
+    }
     
     // also copy the status + revision
     this.statuses[storeKey] = this.statuses[storeKey];
@@ -350,14 +356,15 @@ SC.NestedStore = SC.Store.extend(
     much. 
   */
   writeDataHash: function(storeKey, hash, status) {
-    var locks = this.locks, didLock = false, rev ;
+    var locks = this.locks, didLock = false, rev, dataHash;
 
     // Update our dataHash and/or status, depending on what was passed in.
     // Note that if no new hash was passed in, we'll lock the storeKey to
     // properly fork our dataHash from our parent store.  Similarly, if no
     // status was passed in, we'll save our own copy of the value.
     if (hash) {
-      this.dataHashes[storeKey] = hash;
+      dataHash = this.dataHashes[storeKey] = hash;
+      sc_assert(typeof dataHash === 'object');
     }
     else {
       this._lock(storeKey);

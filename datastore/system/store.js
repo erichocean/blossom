@@ -4,6 +4,7 @@
 //            Portions ©2008-2011 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*globals sc_assert */
 
 sc_require('models/record');
 
@@ -332,6 +333,7 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     if (!editables[storeKey]) {
       editables[storeKey] = 1 ; // use number to store as dense array
       ret = this.dataHashes[storeKey] = SC.clone(ret, true);
+      sc_assert(typeof ret === 'object');
     }
     return ret;
   },
@@ -383,9 +385,13 @@ SC.Store = SC.Object.extend( /** @scope SC.Store.prototype */ {
     @returns {SC.Store} receiver
   */
   writeDataHash: function(storeKey, hash, status) {
+    var dataHash;
 
     // update dataHashes and optionally status.
-    if (hash) this.dataHashes[storeKey] = hash;
+    if (hash) {
+      dataHash = this.dataHashes[storeKey] = hash;
+      sc_assert(typeof dataHash === 'object');
+    }
     if (status) this.statuses[storeKey] = status ;
 
     // also note that this hash is now editable
