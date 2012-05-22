@@ -102,7 +102,7 @@ SC.FieldEditor = SC.Object.extend(SC.Responder, {
   },
 
   keyDown: function(evt) {
-    // console.log('SC.FieldEditor#keyDown()', this.isPassword? 'password' : 'text');
+    // console.log('SC.FieldEditor#keyDown()', this.isPassword? 'password' : 'text', evt);
 
     // Allow all keyboard behavior when we're enabled.
     if (this.get('isEnabled')) {
@@ -129,6 +129,8 @@ SC.FieldEditor = SC.Object.extend(SC.Responder, {
       } else {
         SC.CloseFieldEditor();
       }
+    } else if (evt.keyCode === 13) {
+      SC.CloseFieldEditor();
     }
   },
 
@@ -144,7 +146,7 @@ SC.FieldEditor = SC.Object.extend(SC.Responder, {
   },
 
   mouseDown: function(evt) {
-    console.log('SC.FieldEditor#mouseDown()');
+    // console.log('SC.FieldEditor#mouseDown()');
     var widget = this.widget;
     if (widget) widget.tryToPerform('mouseDown', evt);
     evt.allowDefault();
@@ -167,13 +169,13 @@ SC.FieldEditor = SC.Object.extend(SC.Responder, {
   },
 
   _sc_inputDidBlur: function(evt) {
-    // console.log('SC.FieldEditor#_sc_inputDidBlur()', this.isPassword? 'password' : 'text');
+    // console.log('SC.FieldEditor#_sc_inputDidBlur()', this.isPassword? 'password' : 'text', evt);
     SC.CloseFieldEditor();
     SC.app.set('fieldEditor', null);
   },
 
   _sc_inputDidSelect: function(evt) {
-    console.log('SC.FieldEditor#_sc_inputDidSelect()', this.isPassword? 'password' : 'text');
+    // console.log('SC.FieldEditor#_sc_inputDidSelect()', this.isPassword? 'password' : 'text');
     this.notifyPropertyChange('selection');
   },
 

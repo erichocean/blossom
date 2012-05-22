@@ -862,8 +862,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
     var surface, ret, fieldEditor = this.get('fieldEditor');
 
     if (fieldEditor && (!target || target.isFieldEditor)) {
-      if (evt.keyCode === 13) SC.CloseFieldEditor();
-      else ret = fieldEditor.tryToPerform(action, evt) ? target : null ;
+      ret = fieldEditor.tryToPerform(action, evt) ? target : null ;
     } else {
       if (target) {
         surface = target.get('surface');
