@@ -599,7 +599,7 @@ SC.IListView = SC.View.extend({
     function hitTestLayer(layer, point, depth) {
       // debugger;
       // console.log(spaces(depth), "on entry:", point.x, point.y);
-      if (layer.get('isHidden')) return;
+      if (!layer.get('isVisible')) return;
       context.save();
 
       // Prevent this layer and any sublayer from drawing paths outside our

@@ -747,8 +747,6 @@ SC.Layer = SC.Object.extend({
       this._sc_sublayersDidChange();
     }
 
-    this._sc_isHidden = false; // we start out visible
-
     // This is a specialized initializer for our subclasses, so that each 
     // subclass can create their own backing layer type (canvas, video, etc.).
     // this.initElement();
@@ -967,12 +965,6 @@ SC.Layer = SC.Object.extend({
     // Finally, test the point for intersection with the path(s).
     return context.isPointInPath(x, y);
   },
-
-  isHidden: function(key, value) {
-    if (value !== undefined) {
-      throw "No implementation for SC.Layer#set('isHidden', value)";
-    } else return this._sc_isHidden;
-  }.property(),
 
   /**
     Destroy the layer (and all of its sublayers), including any related 
