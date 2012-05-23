@@ -39,6 +39,11 @@ var project = BT.Project.create({
     "sc-theme-repeat-x.png": BT.File.create({
       sourcePath: path.join(__dirname, "application/resources/classic/images/sc-theme-repeat-x.png"),
       mimeType: 'image/png'
+    }),
+
+    "fontawesome-webfont.ttf": BT.File.create({
+      sourcePath: path.join(__dirname, "examples/widget_demo/fontawesome-webfont.ttf"),
+      mimeType: 'font/opentype'
     })
   })
 });

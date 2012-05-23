@@ -65,6 +65,11 @@ var rootLayer = SC.Layer.create({
     controlBehaviors.forEach(function(behavior, idx) {
       ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 184, 83+idx*120);
     });
+
+
+    ctx.font = "48pt FontAwesome";
+    ctx.fillStyle = 'black';
+    ctx.fillText("\uf000", 60, 90);
   }
 });
 
@@ -193,6 +198,13 @@ controlBehaviors.forEach(function(behavior, idx) {
 });
 
 rootLayer.get('sublayers').pushObjects(layers);
+
+var dateWidget = SC.DateWidget.create({
+  layout: { top: 370, left: 210, width: 200, height: 24 },
+  date: SC.DateTime.create()
+});
+
+rootLayer.get('sublayers').pushObject(dateWidget);
 
 var segmentedWidget = SC.SegmentedWidget.create({
   layout: { top: 430, left: 210, width: 500, height: 24 },

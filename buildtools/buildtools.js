@@ -1420,6 +1420,12 @@ BT.App = BT.Target.extend({
     ret += '      .frame { border-radius: 5px; }\n';
     ret += '      .frame::-webkit-scrollbar { -webkit-appearance: none; width: 11px; }\n';
     ret += '      .frame::-webkit-scrollbar-thumb { border-radius: 8px; border: 2px solid grey; /* should match background, can\'t be transparent */ background-color: rgba(0,0,0,.5); }\n';
+    ret += '       @font-face {\n';
+    ret += '           font-family: "FontAwesome";\n';
+    ret += '           src: url(/static/fontawesome-webfont.ttf);\n';
+    ret += '           font-weight: normal;\n';
+    ret += '           font-style: normal;\n';
+    ret += '       }\n';
     ret += '    </style>\n';
     ret += '  </head>\n';
     

@@ -235,6 +235,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     style.borderRadius = '5px';
     style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
     style.font = this.get('font');
+    style.textAlight = 'left';
     style.color = this.get('color');
     style.backgroundColor = this.get('isEnabled') ? this.get('backgroundColor') : 'rgb(70,70,70)';
     style.backgroundImage = 'none';
