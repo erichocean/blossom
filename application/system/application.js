@@ -871,7 +871,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
         surface = this.get('menuSurface') || this.get('inputSurface') || this.get('ui');
       }
 
-      if (surface === this || surface.isFieldEditor) surface = null;
+      if (surface === this || surface && surface.isFieldEditor) surface = null;
 
       // If we found a valid surface, send the event to it.
       ret = (surface) ? surface.sendEvent(action, evt, target) : null ;
