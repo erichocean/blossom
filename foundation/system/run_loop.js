@@ -271,8 +271,8 @@ SC.RunLoop.isRunLoopInProgress = function() {
   opportunity to handle it before allowing the exception to bubble again.
 
   @param {Function} callback callback to execute
-  @param {Object} target context for callback
-  @param {Boolean} if true, does not start/end a new runloop if one is already running
+  @param {Object} [target] context for callback
+  @param {Boolean} [useExistingRunLoop] if true, does not start/end a new runloop if one is already running
 */
 SC.run = function(callback, target, useExistingRunLoop) {
   if(useExistingRunLoop) {

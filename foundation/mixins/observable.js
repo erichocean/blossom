@@ -1286,7 +1286,7 @@ SC.Observable = {
     propertyDidChange().
     
     @param key {String} The property key that has just changed.
-    @param value {Object} The new value of the key.  May be null.
+    @param [value] {Object} The new value of the key.  May be null.
     @returns {SC.Observable}
   */
   notifyPropertyChange: function(key, value) {
