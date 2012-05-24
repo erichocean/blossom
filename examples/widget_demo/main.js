@@ -10,5 +10,8 @@ sc_require('tabs');
 SC.ENABLE_CSS_TRANSITIONS = false;
 
 function main() {
+  WidgetDemo.setUpControls();
+  WidgetDemo.setUpButtons();
+  WidgetDemo.setUpTabs();
   SC.app.set('ui', WidgetDemo.tabsSurface);
 }

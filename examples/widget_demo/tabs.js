@@ -26,23 +26,26 @@ var white =    "white";
 sc_require('buttons');
 sc_require('controls');
 
-SC.AnimationTransaction.begin();
-WidgetDemo.tabsSurface = SC.TabSurface.create({
-  theme: 'regular',
-  items: [{ title: "Buttons",
-            value: "buttonsSurface",
-            enabled: true },
-          { title: "Controls",
-            value: "controlsSurface",
-            enabled: true }
-        ],
-  value: 'controlsSurface',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled',
+WidgetDemo.setUpTabs = function() {
 
-  buttonsSurface: WidgetDemo.buttonsSurface,
-  controlsSurface: WidgetDemo.controlsSurface
-});
-SC.AnimationTransaction.end();
+  WidgetDemo.tabsSurface = SC.TabSurface.create({
+    theme: 'regular',
+    items: [{ title: "Buttons",
+              value: "buttonsSurface",
+              enabled: true },
+            { title: "Controls",
+              value: "controlsSurface",
+              enabled: true }
+          ],
+    value: 'controlsSurface',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled',
+
+    buttonsSurface: WidgetDemo.buttonsSurface,
+    controlsSurface: WidgetDemo.controlsSurface
+  });
+
+};
+

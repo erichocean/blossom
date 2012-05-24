@@ -23,349 +23,353 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-WidgetDemo.controlsSurface = SC.View.create({
-  _sc_backgroundColor: 'grey'
-});
+WidgetDemo.setUpControls = function() {
 
-// These two arrays are in sync.
-var anchors   = [70,  190,   310,      430],
-    controlBehaviors = 'TOGGLE TOGGLE_ON TOGGLE_OFF'.w();
+  WidgetDemo.controlsSurface = SC.View.create({
+    _sc_backgroundColor: 'grey'
+  });
 
-var rootLayer = SC.Layer.create({
-  layout: { centerX: 0, centerY: 0, width: 850, height: 550 },
+  // These two arrays are in sync.
+  var anchors   = [70,  190,   310,      430],
+      controlBehaviors = 'TOGGLE TOGGLE_ON TOGGLE_OFF'.w();
 
-  render: function(ctx) {
-    var bounds = this.get('bounds'),
-        w = bounds.width, h = bounds.height;
+  var rootLayer = SC.Layer.create({
+    layout: { centerX: 0, centerY: 0, width: 850, height: 550 },
 
-    ctx.fillStyle = 'grey';
-    ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = base0;
-    ctx.lineWidth = 2; // overlap of 1 on the inside
-    ctx.strokeRect(0, 0, w, h);
+    render: function(ctx) {
+      var bounds = this.get('bounds'),
+          w = bounds.width, h = bounds.height;
 
-    ctx.fillStyle = base00;
-    ctx.font = "14pt Calibri";
-    ctx.textBaseline = "top";
-    ctx.fillText("Controls", 15, 10);
+      ctx.fillStyle = 'grey';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = base0;
+      ctx.lineWidth = 2; // overlap of 1 on the inside
+      ctx.strokeRect(0, 0, w, h);
 
-    ctx.fillStyle = green;
-    ctx.font = "10pt Calibri";
-    ctx.fillText("Rendered with Blossom\u2122", 15, 33);
+      ctx.fillStyle = base00;
+      ctx.font = "14pt Calibri";
+      ctx.textBaseline = "top";
+      ctx.fillText("Controls", 15, 10);
 
-    ctx.font = "10pt Calibri";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = base1;
-    'Enabled Disabled Selected Selected&Disabled'.w().forEach(function(title, idx) {
-      ctx.fillText(title.split('&').join(' & '), 280+idx*150, 46);
-    });
+      ctx.fillStyle = green;
+      ctx.font = "10pt Calibri";
+      ctx.fillText("Rendered with Blossom\u2122", 15, 33);
 
-    ctx.textAlign = "right";
-    controlBehaviors.forEach(function(behavior, idx) {
-      ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 184, 83+idx*120);
-    });
+      ctx.font = "10pt Calibri";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = base1;
+      'Enabled Disabled Selected Selected&Disabled'.w().forEach(function(title, idx) {
+        ctx.fillText(title.split('&').join(' & '), 280+idx*150, 46);
+      });
+
+      ctx.textAlign = "right";
+      controlBehaviors.forEach(function(behavior, idx) {
+        ctx.fillText('SC.'+behavior+'_BEHAVIOR:', 184, 83+idx*120);
+      });
 
 
-    ctx.font = "48pt FontAwesome";
-    ctx.fillStyle = 'black';
-    ctx.fillText("\uf000", 60, 90);
-  }
-});
-
-var layers = [];
-
-controlBehaviors.forEach(function(behavior, idx) {
-  var anchor = anchors[idx],
-      buttonBehavior = SC[behavior+'_BEHAVIOR'];
-
-  var button = SC.CheckboxWidget.create({
-    layout: { top: anchor, left: 210, width: 140, height: 24 },
-    title: "Checkbox Label",
-    buttonBehavior: buttonBehavior,
-    action: function() {
-      SC.app.set('ui', WidgetDemo.controlsSurface);
+      ctx.font = "48pt FontAwesome";
+      ctx.fillStyle = 'black';
+      ctx.fillText("\uf000", 60, 90);
     }
   });
-  layers.push(button);
 
-  var buttonD = SC.CheckboxWidget.create({
-    layout: { top: anchor, left: 360, width: 140, height: 24 },
-    title: "Checkbox Label",
-    isEnabled: false,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(buttonD);
+  var layers = [];
 
-  var buttonS = SC.CheckboxWidget.create({
-    layout: { top: anchor, left: 510, width: 140, height: 24 },
-    title: "Checkbox Label",
-    isSelected: true,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(buttonS);
+  controlBehaviors.forEach(function(behavior, idx) {
+    var anchor = anchors[idx],
+        buttonBehavior = SC[behavior+'_BEHAVIOR'];
 
-  var buttonDS = SC.CheckboxWidget.create({
-    layout: { top: anchor, left: 660, width: 140, height: 24 },
-    title: "Checkbox Label",
-    isEnabled: false,
-    isSelected: true,
-    buttonBehavior: buttonBehavior
-  });
-  layers.push(buttonDS);
-
-  if (idx === 0) {
-    var radio = SC.RadioWidget.create({
-      layout: { top: anchor+30, left: 210, width: 140, height: 48 },
-      items: [{ title: "Red",
-                value: "red",
-                enabled: true,
-                icon: "button_red" },
-              { title: "Green",
-                value: "green",
-                enabled: true,
-                icon: 'button_green' }],
-      value: null,
-      itemTitleKey: 'title',
-      itemValueKey: 'value',
-      itemIconKey: 'icon',
-      itemIsEnabledKey: 'enabled',
-      buttonBehavior: buttonBehavior
+    var button = SC.CheckboxWidget.create({
+      layout: { top: anchor, left: 210, width: 140, height: 24 },
+      title: "Checkbox Label",
+      buttonBehavior: buttonBehavior,
+      action: function() {
+        SC.app.set('ui', WidgetDemo.controlsSurface);
+      }
     });
-    layers.push(radio);
+    layers.push(button);
 
-    var radioD = SC.RadioWidget.create({
-      layout: { top: anchor+30, left: 360, width: 140, height: 48 },
-      items: [{ title: "Red",
-                value: "red",
-                enabled: true,
-                icon: "button_red" },
-              { title: "Green",
-                value: "green",
-                enabled: true,
-                icon: 'button_green' }],
-      value: null,
-      itemTitleKey: 'title',
-      itemValueKey: 'value',
-      itemIconKey: 'icon',
-      itemIsEnabledKey: 'enabled',
+    var buttonD = SC.CheckboxWidget.create({
+      layout: { top: anchor, left: 360, width: 140, height: 24 },
+      title: "Checkbox Label",
       isEnabled: false,
       buttonBehavior: buttonBehavior
     });
-    layers.push(radioD);
+    layers.push(buttonD);
 
-    var radioS = SC.RadioWidget.create({
-      layout: { top: anchor+30, left: 510, width: 140, height: 48 },
-      items: [{ title: "Red",
-                value: "red",
-                enabled: true,
-                icon: "button_red" },
-              { title: "Green",
-                value: "green",
-                enabled: true,
-                icon: 'button_green' }],
-      value: 'red',
-      itemTitleKey: 'title',
-      itemValueKey: 'value',
-      itemIconKey: 'icon',
-      itemIsEnabledKey: 'enabled',
+    var buttonS = SC.CheckboxWidget.create({
+      layout: { top: anchor, left: 510, width: 140, height: 24 },
+      title: "Checkbox Label",
       isSelected: true,
       buttonBehavior: buttonBehavior
     });
-    layers.push(radioS);
+    layers.push(buttonS);
 
-    var radioDS = SC.RadioWidget.create({
-      layout: { top: anchor+30, left: 660, width: 140, height: 48 },
-      items: [{ title: "Red",
-                value: "red",
-                enabled: true,
-                icon: "button_red" },
-              { title: "Green",
-                value: "green",
-                enabled: true,
-                icon: 'button_green' }],
-      value: 'red',
-      itemTitleKey: 'title',
-      itemValueKey: 'value',
-      itemIconKey: 'icon',
-      itemIsEnabledKey: 'enabled',
+    var buttonDS = SC.CheckboxWidget.create({
+      layout: { top: anchor, left: 660, width: 140, height: 24 },
+      title: "Checkbox Label",
       isEnabled: false,
+      isSelected: true,
       buttonBehavior: buttonBehavior
     });
-    layers.push(radioDS);
-  }
+    layers.push(buttonDS);
 
-});
+    if (idx === 0) {
+      var radio = SC.RadioWidget.create({
+        layout: { top: anchor+30, left: 210, width: 140, height: 48 },
+        items: [{ title: "Red",
+                  value: "red",
+                  enabled: true,
+                  icon: "button_red" },
+                { title: "Green",
+                  value: "green",
+                  enabled: true,
+                  icon: 'button_green' }],
+        value: null,
+        itemTitleKey: 'title',
+        itemValueKey: 'value',
+        itemIconKey: 'icon',
+        itemIsEnabledKey: 'enabled',
+        buttonBehavior: buttonBehavior
+      });
+      layers.push(radio);
 
-rootLayer.get('sublayers').pushObjects(layers);
+      var radioD = SC.RadioWidget.create({
+        layout: { top: anchor+30, left: 360, width: 140, height: 48 },
+        items: [{ title: "Red",
+                  value: "red",
+                  enabled: true,
+                  icon: "button_red" },
+                { title: "Green",
+                  value: "green",
+                  enabled: true,
+                  icon: 'button_green' }],
+        value: null,
+        itemTitleKey: 'title',
+        itemValueKey: 'value',
+        itemIconKey: 'icon',
+        itemIsEnabledKey: 'enabled',
+        isEnabled: false,
+        buttonBehavior: buttonBehavior
+      });
+      layers.push(radioD);
 
-var dateWidget = SC.DateWidget.create({
-  layout: { top: 370, left: 210, width: 200, height: 24 },
-  date: SC.DateTime.create()
-});
+      var radioS = SC.RadioWidget.create({
+        layout: { top: anchor+30, left: 510, width: 140, height: 48 },
+        items: [{ title: "Red",
+                  value: "red",
+                  enabled: true,
+                  icon: "button_red" },
+                { title: "Green",
+                  value: "green",
+                  enabled: true,
+                  icon: 'button_green' }],
+        value: 'red',
+        itemTitleKey: 'title',
+        itemValueKey: 'value',
+        itemIconKey: 'icon',
+        itemIsEnabledKey: 'enabled',
+        isSelected: true,
+        buttonBehavior: buttonBehavior
+      });
+      layers.push(radioS);
 
-rootLayer.get('sublayers').pushObject(dateWidget);
+      var radioDS = SC.RadioWidget.create({
+        layout: { top: anchor+30, left: 660, width: 140, height: 48 },
+        items: [{ title: "Red",
+                  value: "red",
+                  enabled: true,
+                  icon: "button_red" },
+                { title: "Green",
+                  value: "green",
+                  enabled: true,
+                  icon: 'button_green' }],
+        value: 'red',
+        itemTitleKey: 'title',
+        itemValueKey: 'value',
+        itemIconKey: 'icon',
+        itemIsEnabledKey: 'enabled',
+        isEnabled: false,
+        buttonBehavior: buttonBehavior
+      });
+      layers.push(radioDS);
+    }
 
-var segmentedWidget = SC.SegmentedWidget.create({
-  layout: { top: 430, left: 210, width: 500, height: 24 },
-  theme: 'regular',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  valueBinding: 'WidgetDemo.value',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  });
 
-var segmentedWidget2 = SC.SegmentedWidget.create({
-  layout: { top: 430+30, left: 210, width: 500, height: 24 },
-  theme: 'capsule',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  value: 'red',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  rootLayer.get('sublayers').pushObjects(layers);
 
-var segmentedWidget3 = SC.SegmentedWidget.create({
-  layout: { top: 430+60, left: 210, width: 500, height: 24 },
-  theme: 'square',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  value: 'red',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  var dateWidget = SC.DateWidget.create({
+    layout: { top: 370, left: 210, width: 200, height: 24 },
+    value: SC.DateTime.create()
+  });
 
-rootLayer.get('sublayers').pushObjects([segmentedWidget, segmentedWidget2, segmentedWidget3]);
+  rootLayer.get('sublayers').pushObject(dateWidget);
 
-var selectWidget = SC.ComboboxWidget.create({
-// var selectWidget = SC.SelectWidget.create({
-  layout: { top: 430, left: 510, width: 140, height: 24 },
-  theme: 'regular',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  valueBinding: 'WidgetDemo.value',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  var segmentedWidget = SC.SegmentedWidget.create({
+    layout: { top: 430, left: 210, width: 500, height: 24 },
+    theme: 'regular',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    valueBinding: 'WidgetDemo.value',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
 
-var selectWidget2 = SC.SelectWidget.create({
-  layout: { top: 430+30, left: 510, width: 140, height: 24 },
-  theme: 'capsule',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          "", // Spacer
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  value: 'red',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  var segmentedWidget2 = SC.SegmentedWidget.create({
+    layout: { top: 430+30, left: 210, width: 500, height: 24 },
+    theme: 'capsule',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    value: 'red',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
 
-var selectWidget3 = SC.SelectWidget.create({
-  layout: { top: 430+60, left: 510, width: 140, height: 24 },
-  theme: 'square',
-  items: [{ title: "Red",
-            value: "red",
-            enabled: true,
-            icon: "button_red" },
-          { title: "Green",
-            value: "green",
-            enabled: true,
-            icon: 'button_green' },
-          { title: "Purple",
-            value: "purple",
-            enabled: true,
-            icon: 'button_purple' },
-          { title: "Blue",
-            value: "blue",
-            enabled: true,
-            icon: 'button_blue' }],
-  value: 'red',
-  itemTitleKey: 'title',
-  itemValueKey: 'value',
-  itemIconKey: 'icon',
-  itemIsEnabledKey: 'enabled'
-});
+  var segmentedWidget3 = SC.SegmentedWidget.create({
+    layout: { top: 430+60, left: 210, width: 500, height: 24 },
+    theme: 'square',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    value: 'red',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
 
-rootLayer.get('sublayers').pushObjects([selectWidget, selectWidget2, selectWidget3]);
+  rootLayer.get('sublayers').pushObjects([segmentedWidget, segmentedWidget2, segmentedWidget3]);
 
-WidgetDemo.controlsSurface.get('layers').pushObject(rootLayer);
+  var selectWidget = SC.ComboboxWidget.create({
+  // var selectWidget = SC.SelectWidget.create({
+    layout: { top: 430, left: 510, width: 140, height: 24 },
+    theme: 'regular',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    valueBinding: 'WidgetDemo.value',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
+
+  var selectWidget2 = SC.SelectWidget.create({
+    layout: { top: 430+30, left: 510, width: 140, height: 24 },
+    theme: 'capsule',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            "", // Spacer
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    value: 'red',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
+
+  var selectWidget3 = SC.SelectWidget.create({
+    layout: { top: 430+60, left: 510, width: 140, height: 24 },
+    theme: 'square',
+    items: [{ title: "Red",
+              value: "red",
+              enabled: true,
+              icon: "button_red" },
+            { title: "Green",
+              value: "green",
+              enabled: true,
+              icon: 'button_green' },
+            { title: "Purple",
+              value: "purple",
+              enabled: true,
+              icon: 'button_purple' },
+            { title: "Blue",
+              value: "blue",
+              enabled: true,
+              icon: 'button_blue' }],
+    value: 'red',
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIconKey: 'icon',
+    itemIsEnabledKey: 'enabled'
+  });
+
+  rootLayer.get('sublayers').pushObjects([selectWidget, selectWidget2, selectWidget3]);
+
+  WidgetDemo.controlsSurface.get('layers').pushObject(rootLayer);
+
+};

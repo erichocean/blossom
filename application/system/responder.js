@@ -10,6 +10,8 @@
 // ==========================================================================
 /*globals sc_assert */
 
+sc_require('behaviors/behavior');
+
 /** @mixin
 
   Provides common methods for sending events down a responder chain.

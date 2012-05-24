@@ -212,7 +212,7 @@ SC.ComboboxWidget = SC.TextFieldWidget.extend({
   }.property('value'),
 
   render: function(ctx) {
-    console.log('SC.ComboboxWidget#render()', SC.guidFor(this));
+    // console.log('SC.ComboboxWidget#render()', SC.guidFor(this));
     var bounds = this.get('bounds'),
         h = bounds.height, w = bounds.width,
         isEnabled = this.get('isEnabled');
