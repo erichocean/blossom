@@ -44,8 +44,27 @@ SC.View = SC.LeafSurface.extend({
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.layers = [];
-    this._sc_layersDidChange();
+
+    // We need to observe layers for changes; set that up now.
+    if (!this.layers) {
+      this.layers = [];
+      this._sc_layersDidChange();
+
+    // Also handle providing layer classes to instantiate.
+    } else {
+      var layers = this.layers,
+          ary = [];
+
+      for (var idx=0, len=layers.length; idx<len; ++idx) {
+        var layer = layers[idx];
+        if (layer.isClass) layer = layer.create();
+        sc_assert(layer.kindOf(SC.Layer));
+        ary.push(layer);
+      }
+
+      this.layers = ary;
+      this._sc_layersDidChange();
+    }
 
     var canvas = document.createElement('canvas'),
         context = canvas.getContext('2d'),

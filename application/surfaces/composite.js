@@ -106,7 +106,27 @@ SC.CompositeSurface = SC.Surface.extend(
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.set('subsurfaces', []);
+
+    // We need to observe subsurfaces for changes; set that up now.
+    if (!this.subsurfaces) {
+      this.subsurfaces = [];
+      this._sc_subsurfacesDidChange();
+
+    // Also handle providing surface classes to instantiate.
+    } else {
+      var subsurfaces = this.subsurfaces,
+          ary = [];
+
+      for (var idx=0, len=subsurfaces.length; idx<len; ++idx) {
+        var surface = subsurfaces[idx];
+        if (surface.isClass) surface = surface.create();
+        sc_assert(surface.kindOf(SC.Surface));
+        ary.push(surface);
+      }
+
+      this.subsurfaces = ary;
+      this._sc_subsurfacesDidChange();
+    }
   }
 
 });

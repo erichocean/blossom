@@ -745,6 +745,21 @@ SC.Layer = SC.Object.extend({
     if (this.sublayers === null) {
       this.sublayers = [];
       this._sc_sublayersDidChange();
+
+    // Also handle providing layer classes to instantiate.
+    } else {
+      var sublayers = this.sublayers,
+          ary = [];
+
+      for (var idx=0, len=sublayers.length; idx<len; ++idx) {
+        var layer = sublayers[idx];
+        if (layer.isClass) layer = layer.create();
+        sc_assert(layer.kindOf(SC.Layer));
+        ary.push(layer);
+      }
+
+      this.sublayers = ary;
+      this._sc_sublayersDidChange();
     }
 
     // This is a specialized initializer for our subclasses, so that each 
