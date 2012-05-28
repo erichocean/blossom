@@ -780,9 +780,9 @@ SC.Surface = SC.Object.extend(SC.Responder, {
     // We want to allow a developer to specify initial properties inline,
     // but we actually need the computed properties for correct behavior.
     // The code below takes care of all this, as well as correct defaults.
-    var P = this.constructor.prototype;
+    var P = this.constructor.prototype, that = this;
     function hasNonPrototypeNonComputedDefaultProperty(key) {
-      return this[key] !== P[key] && this[key] && !this[key].isProperty;
+      return that[key] !== P[key] && that[key] && !that[key].isProperty;
     }
 
     if (hasNonPrototypeNonComputedDefaultProperty('frame')) {
@@ -813,11 +813,17 @@ SC.Surface = SC.Object.extend(SC.Responder, {
       this._sc_perspectiveOrigin = SC.MakePointFromBuffer(buf, 23, 0.5, 0.5);
     }
 
+    SC.Surface.animatableProperties.forEach(function(key) {
+      if (hasNonPrototypeNonComputedDefaultProperty(key)) {
+        this['_sc_'+key] = this[key];
+        delete this[key]; // let the prototype shine through
+      }
+    }, this);
+
     // Float32Array's prototype has been enhanced with custom getters and
     // setters using named property keys (x, y, width, height, m11, tx, etc.)
     // These getters and setters are kvo-compliant if we configure them to
     // be so; do that now.
-    var that = this;
     SC.Surface.OBSERVABLE_STRUCTURES.forEach(function (key) {
       var structure = that['_sc_'+key];
       sc_assert(structure.owner === undefined && structure.keyName === undefined);
@@ -1093,6 +1099,9 @@ SC.Surface.transitions = {
   perspective:       SC.TransitionAnimation.create(),
   perspectiveOrigin: SC.TransitionAnimation.create()
 };
+
+SC.Surface.animatableProperties = ('backgroundColor borderColor borderWidth '+
+  'opacity cornerRadius zIndex perspective isVisible').w();
 
 // These two must line up exactly.
 SC.Surface.styleProperties = ('backgroundColor borderColor borderWidth '+
