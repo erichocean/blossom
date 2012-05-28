@@ -117,6 +117,21 @@ SC.FieldEditor = SC.Object.extend(SC.Responder, {
       evt.preventDefault();
     }
 
+    // Handle control-a/command-a specially, for some some reason 
+    // evt.allowDefault() is not getting the job done...
+    if (evt.keyCode === 65 && (evt.metaKey || evt.ctrlKey)) {
+      // Select all text.
+      var that = this;
+      setTimeout(function() {
+        SC.RunLoop.begin();
+        var input = that._sc_input,
+            value = input.value;
+
+        input.setSelectionRange(0, value? value.length : 0);
+        SC.RunLoop.end();
+      }, 0);
+    }
+
     var widget = this.widget;
     if (widget) widget.tryToPerform('keyDown', evt);
 

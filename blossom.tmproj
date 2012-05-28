@@ -169,34 +169,6 @@
 			<key>firstVisibleLine</key>
 			<integer>222</integer>
 		</dict>
-		<key>application/layers/shape_layer.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>12</integer>
-				<key>line</key>
-				<integer>38</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>37</integer>
-		</dict>
-		<key>application/panes/pane.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>638</integer>
-		</dict>
 		<key>application/surfaces/container.js</key>
 		<dict>
 			<key>caret</key>
@@ -280,20 +252,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>115</integer>
-		</dict>
-		<key>application/system/root_responder.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>3</integer>
 		</dict>
 		<key>buildtools/buildtools.js</key>
 		<dict>
@@ -384,7 +342,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>108</integer>
 			</dict>
@@ -436,20 +394,6 @@
 				<key>line</key>
 				<integer>413</integer>
 			</dict>
-		</dict>
-		<key>foundation/system/plugin.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
 		</dict>
 		<key>node_modules/vows/bin/vows</key>
 		<dict>
@@ -697,6 +641,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{321, 243}, {1322, 1139}}</string>
+	<string>{{403, 224}, {1322, 1139}}</string>
 </dict>
 </plist>
