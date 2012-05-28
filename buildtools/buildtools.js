@@ -1285,7 +1285,7 @@ BT.Project = BT.BuildNode.extend({
     var app = this.findApp(name),
         indexHTML = app? app.get('productionIndexHTML') : null,
         javascriptFiles = app? app.get('javascriptSourceFiles'): null, // an array
-        buildPath = path.join(__dirname, '../build'), appPath;
+        buildPath = path.join(this.get('projectPath'), 'build'), appPath;
 
     if (!app) {
       console.log("Build error: "+name+" could not be found.");
@@ -1550,7 +1550,15 @@ BT.Proxy = BT.BuildNode.extend({
       });
 
       request.headers.host = that.get('proxyPort');
+      if (that.get('auth')) {
+        request.headers['Authorization'] = 'Basic ' + new Buffer(that.get('auth')).toString('base64');
+      }
       request.headers['content-length'] = body.length;
+      if (that.get('ignoreCache')) {
+        delete request.headers['If-None-Match'];
+        delete request.headers['if-none-match'];
+        delete request.headers['cache-control'];
+      }
       request.headers['X-Forwarded-Host'] = request.headers.host + ':' + serverPort;
       if (that.get('proxyPort') != 80) request.headers.host += ':' + that.get('proxyPort');
 
