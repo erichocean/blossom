@@ -17,15 +17,11 @@ var project = BT.Project.create({
     "splitsurface_demo": require('./examples/splitsurface_demo'),
     "surface_test": require('./examples/surface_test'),
     "scroll_demo": require('./examples/scroll_demo'),
-    "constraints_demo": require('./examples/constraints_demo'),
     "bindings_demo": require('./examples/bindings_demo'),
     "psurfaces_test": require('./examples/psurfaces_test'),
     "text_demo": require('./examples/text_demo'),
     "list_demo": require('./examples/list_demo'),
-    // "stage_test": require('./examples/stage_test'),
     "behavior_test": require('./examples/behavior_test'),
-    // "bullet_test": require('./examples/bullet_test'),
-    // "box2d_test": require('./examples/box2d_test'),
 
     // A one-off app target that results in just the code for blossom.
     "blossom-latest": BT.App.create({

@@ -8,10 +8,5 @@
 var path = require('path');
 
 module.exports = BT.Framework.create({
-  "frameworks": "constraints".w(),
-
-  sourceTree: path.join(__dirname, ".."),
-
-  "constraints": require('../../constraints/node/buildfile')
-
+  sourceTree: path.join(__dirname, "..")
 });
