@@ -17,9 +17,9 @@ shell providers, for example, xTuple's Postbooks 4.0, which can be found
 [here](https://github.com/xtuple/client).
 
 > Blossom only includes a very minimal set of built-in widgets, but makes 
-developing new widgets **extremely** easy. Because Blossom is mean to be used 
+developing new widgets **extremely** easy. Because Blossom is meant to be used 
 in the context of specific, re-usable application shells, the widgets are 
-expected to be custom-build for these shells.
+expected to be custom-built for these shells.
 
 About Blossom
 -------------
