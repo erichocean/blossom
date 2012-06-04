@@ -963,6 +963,7 @@ SC.Surface = SC.Object.extend(SC.Responder, {
   */
   _sc_firstResponder: null, // Note: Required, we're strict about null checking.
   _sc_firstResponderDidChange: function() {
+    // console.log('SC.Surface#_sc_firstResponderDidChange()', SC.guidFor(this));
     var old = this._sc_firstResponder,
         cur = this.get('firstResponder'),
         isInputSurface = SC.app.get('inputSurface') === this,
@@ -1002,6 +1003,8 @@ SC.Surface = SC.Object.extend(SC.Responder, {
       old.set('isMenuResponder',  false);
       old.endPropertyChanges();
     }
+
+    this._sc_firstResponder = cur;
 
     if (cur) {
       cur.beginPropertyChanges();
