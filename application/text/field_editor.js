@@ -238,6 +238,8 @@ SC._sc_openEditorForWidget = function(editor, widget) {
 
   if (SC.activeEditor) SC.CloseFieldEditor();
 
+  widget.becomeFirstResponder();
+
   editor.widget = widget;
   SC.activeEditor = editor;
 
@@ -302,7 +304,7 @@ SC.CloseFieldEditor = function() {
     }
   }
 
-  widget.tryToPerform('fieldEditorDidClose');
+  widget.tryToPerform('fieldEditorDidClose', value);
 };
 
 SC.ready(function() {
