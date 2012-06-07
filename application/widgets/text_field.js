@@ -161,6 +161,7 @@ SC.TextFieldWidget = SC.Widget.extend({
     ctx.fill();
 
     // Draw the text.
+    ctx.textAlign = this.get('textAlign');
     ctx.textBaseline = this.get('textBaseline');
     ctx.font = this.get('font');
     ctx.fillStyle = this.get('color');

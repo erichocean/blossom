@@ -65,7 +65,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   _sc_value: null,
   _sc_valueDidChange: function() {
-    console.log('SC.SelectWidget#_sc_valueDidChange()', SC.guidFor(this));
+    // console.log('SC.SelectWidget#_sc_valueDidChange()', SC.guidFor(this));
     var cur = this.get('value'),
         old = this._sc_value,
         menu = this._sc_menuView,
@@ -73,20 +73,20 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
     // cur === old === val on init(), so nothing to do.
     if (cur === old) {
-      console.log('value did not change from', cur);
+      // console.log('value did not change from', cur);
       return;
     }
 
     // This happens when our 'value' was updated by our select widget. Avoid 
     // a loop by not setting 'value' on select widget again.
     if (cur === val) {
-      console.log('value was updated by our select widget to', val);
+      // console.log('value was updated by our select widget to', val);
       this._sc_value = cur;
 
     // This happens when our 'value' has been updated by anyone but select 
     // widget.  Let our select widget know we've changed.
     } else {
-      console.log('value was updated by our model to', cur);
+      // console.log('value was updated by our model to', cur);
       this._sc_value = cur;
       menu.set('value', cur);
     }
@@ -358,14 +358,18 @@ SC.SelectWidget = SC.ButtonWidget.extend({
 
   font: "10pt Helvetica",
 
+  menuViewClass: null,
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
 
     var that = this, menuView;
-    menuView = this._sc_menuView = SC.SelectWidgetMenuView.create({
+    menuView = this._sc_menuView = (this.get('menuViewClass') || SC.SelectWidgetMenuView).create({
       value: this.get('value'),
 
       _sc_backgroundColor: 'rgb(70,70,70)',
+
+      selectWidget: this,
 
       action: function() {
         that.set('value', this.get('value'));
@@ -743,7 +747,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
         isEnabled = this.get('isEnabled'),
         font = this.get('font');
 
-    // console.log(displayItems);
+    console.log('displayItems in _sc_itemContentDidChange', displayItems);
 
     var menuItems = [], len = displayItems.length, last = len-1,
         y = 6, padding = 50, height = 24, spacerHeight = 12, maxWidth = 0;
