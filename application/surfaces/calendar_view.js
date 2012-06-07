@@ -31,14 +31,13 @@ SC.CalendarView = SC.View.extend({
         layers = this.get('layers');
 
     ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
+    ctx.textAlign = 'left';
     ctx.font = '13pt Helvetica, Arial';
     ctx.fillStyle = 'black';
 
-    ctx.fillText(this.months[monthStartOn.get('month')-1] + ' ' + monthStartOn.get('year'), 160, 20);
-
     ctx.font = '11pt Helvetica, Arial';
 
+    ctx.textAlign = 'center';
     for (var idx=0; idx<7; ++idx) {
       ctx.fillText(weekdayStrings[idx], 40 + 40*idx, 50);
     }
@@ -106,6 +105,78 @@ SC.CalendarView = SC.View.extend({
         var monthStartOn = that.get('monthStartOn');
         that.set('monthStartOn', monthStartOn.advance({ month: 1 }));
       }
+    }));
+
+    var monthController = SC.ObjectController.create({
+      contentBinding: SC.Binding.from('monthStartOn', that)
+    });
+
+    // Then add the month pop-up.
+    var selectWidget = SC.SelectWidget.create({
+      layout: { top: 11, centerX: -30, width: 140, height: 22 },
+      theme: 'capsule',
+      items: [{ title: "January".loc(),
+                value: 1,
+                enabled: true },
+              { title: "February".loc(),
+                value: 2,
+                enabled: true },
+              { title: "March".loc(),
+                value: 3,
+                enabled: true },
+              { title: "April".loc(),
+                value: 4,
+                enabled: true },
+              { title: "May".loc(),
+                value: 5,
+                enabled: true },
+              { title: "June".loc(),
+                value: 6,
+                enabled: true },
+              { title: "July".loc(),
+                value: 7,
+                enabled: true },
+              { title: "August".loc(),
+                value: 8,
+                enabled: true },
+              { title: "September".loc(),
+                value: 9,
+                enabled: true },
+              { title: "October".loc(),
+                value: 10,
+                enabled: true },
+              { title: "November".loc(),
+                value: 11,
+                enabled: true },
+              { title: "December".loc(),
+                value: 12,
+                enabled: true }],
+      valueBinding: SC.Binding.from('month', monthController),
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIconKey: 'icon',
+      itemIsEnabledKey: 'enabled'
+    });
+
+    // HACK: Dates are read only, so we need a workaround to update the 
+    // month.
+    selectWidget._sc_menuView.action = function() {
+      var value = this.get('value'), // `this` is the select widget
+          monthStartOn = that.get('monthStartOn');
+
+      that.set('monthStartOn', monthStartOn.adjust({ month: value }));
+    };
+
+    layers.pushObject(selectWidget);
+
+    var yearController = SC.ObjectController.create({
+      contentBinding: SC.Binding.from('monthStartOn', that)
+    });
+
+    layers.pushObject(SC.TextFieldWidget.create({
+      layout: { top: 11, centerX: +70, width: 54, height: 22 },
+      valueBinding: SC.Binding.from('year', yearController),
+      isEnabled: false
     }));
   }
 

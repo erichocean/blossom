@@ -45,15 +45,18 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
 
       target: this,
 
-      didLoseMenuSurfaceTo: function(surface) {
-        this.target.tryToPerform('popUpMenuDidClose');
-      },
+      isPresentInViewportDidChange: function(surface) {
+        if (!this.get('isPresentInViewport')) {
+          this.target.tryToPerform('popUpMenuDidClose');
+        }
+      }.observes('isPresentInViewport'),
 
       mouseDown: function(evt) {
         if (evt.layer) {
           var date = evt.layer.date;
           if (date) {
             that.set('value', date);
+            SC.CloseFieldEditor();
             that.tryToPerform('didSelectDate');
           }
         }
@@ -198,10 +201,10 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
         datePicker.set('selectedDate', date || SC.DateTime.create());
         datePicker.triggerLayoutAndRendering();
         SC.app.addSurface(datePicker);
-        SC.app.set('menuSurface', datePicker);
+        SC.app.pushMenuSurface(datePicker);
         return;
       case 'exit':
-        SC.app.set('menuSurface', null);
+        SC.app.popMenuSurface();
         SC.app.removeSurface(datePicker);
         return;
       case 'didSelectDate':
@@ -341,7 +344,9 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
   computeSupersurface: function() {
     var surface = this.get('surface');
     sc_assert(surface);
-    while (surface.isLeafSurface) surface = surface.get('supersurface');
+    while (surface.isLeafSurface && surface.get('supersurface')) {
+      surface = surface.get('supersurface');
+    }
     sc_assert(surface);
     return surface;
   },
@@ -393,8 +398,36 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
 
   takeValueFromFieldEditor: function(value) {
     // console.log('takeValueFromFieldEditor', value);
-    var date = SC.DateTime.parse(value, this.get('format'));
-    if (date && this.__behaviorKey__ === 'Editor') this.set('value', date);
+    var ret = null, num, sense;
+
+    // Handle relative date by day
+    if(value.indexOf('+') === 0 ||
+       value.indexOf('-') === 0) {
+      sense = value.substring(0, 1);
+      num = value.substring(1, value.length) - 0;
+
+      if(SC.typeOf(num) === SC.T_NUMBER && !isNaN(num)) {
+        if(sense === "-") { num = num * -1; }
+        ret = SC.DateTime.create().advance({ day: num });
+      }
+      // Handle day of year
+    } else if(value.indexOf('#') === 0) {
+      num = value.substring(1, value.length) - 0;
+
+      if(SC.typeOf(num) === SC.T_NUMBER && !isNaN(num)) {
+        ret = SC.DateTime.create().adjust({ month: 1, day: 0 }).advance({ day: num });
+      }
+      // Handle a straight number as specific day
+    } else if(value.length && !isNaN(value - 0)) {
+      ret = SC.DateTime.create();
+      if(value - 0) { ret = ret.adjust({ day: value }); }
+      // Handle a regular date
+    } else if(value.length) {
+      num = Date.parse(value, this.get('format'));
+      if(!isNaN(num)) { ret = SC.DateTime.create(num); }
+    }
+
+    if (ret && this.__behaviorKey__ === 'Editor') this.set('value', ret);
   },
 
   styleInputElement: function(input) {
