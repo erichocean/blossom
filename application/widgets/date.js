@@ -314,7 +314,7 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
     ctx.font = this.get('font');
     ctx.fillStyle = this.get('color');
     var date = this.get('value');
-    sc_assert(date || null);
+    sc_assert(date || date === null);
     if (date) {
       sc_assert(date.kindOf(SC.DateTime));
       var val = date.toFormattedString(this.get('format'));
@@ -388,7 +388,7 @@ SC.DateWidget = SC.Widget.extend(SC.Control, {
 
   valueForFieldEditor: function() {
     var date = this.get('value');
-    sc_assert(date || null);
+    sc_assert(date || date === null);
     if (date) {
       sc_assert(date.kindOf(SC.DateTime));
       var val = date.toFormattedString(this.get('format'));
