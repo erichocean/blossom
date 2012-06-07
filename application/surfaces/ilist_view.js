@@ -309,6 +309,8 @@ SC.IListView = SC.View.extend({
 
     this.__forceFullRender__ = false;
 
+    if (forceFullRender) ctx.clearRect(0, 0, ctx.width, ctx.height);
+
     // If we have fewer rows (no scrolling), don't try and render too much.
     len = Math.min(len, (content? content.get('length') : 0) - rowIndex);
     // console.log(idx, len);
@@ -790,6 +792,8 @@ SC.IListView = SC.View.extend({
     }
 
     this._sc_content = cur;
+    this.__forceFullRender__ = true;
+    this._sc_plistItems = {};
 
     if (cur) {
       cur.addObserver('length', this, func);
@@ -800,9 +804,20 @@ SC.IListView = SC.View.extend({
   }.observes('content'),
 
   _sc_contentLengthDidChange: function() {
-    // console.log('SC.ListView#_sc_contentLengthDidChange()', SC.guidFor(this));
+    console.log('SC.ListView#_sc_contentLengthDidChange()', SC.guidFor(this));
     this._sc_updateContentRangeObserver();
     this.triggerLayoutAndRendering();
+    var old = this._sc_contentLength || 0,
+        cur = this.getPath('content.length') || 0;
+
+    console.log('old length is ', old);
+    console.log('new length is ', cur);
+
+    if (cur < old) {
+      this.__forceFullRender__ = true;
+      this._sc_plistItems = {}; // Reset
+    }
+    this._sc_contentLength = cur;
   },
 
   _sc_contentRangeObserver: null,
