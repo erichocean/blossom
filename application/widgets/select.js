@@ -333,7 +333,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     // }
 
     frame.x = evt.clientX - evt.hitPoint.x;
-    frame.y = evt.clientY - evt.hitPoint.y - idx*24 - 6; // + rowOffsetForLayerTree;
+    frame.y = Math.max(evt.clientY - evt.hitPoint.y - idx*24 - 6, 0); // + rowOffsetForLayerTree;
     frame.width = menuView.measuredWidth;
     frame.height = menuView.measuredHeight;
 
