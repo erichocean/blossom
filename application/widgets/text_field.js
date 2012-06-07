@@ -183,7 +183,9 @@ SC.TextFieldWidget = SC.Widget.extend({
   computeSupersurface: function() {
     var surface = this.get('surface');
     sc_assert(surface);
-    while (surface.isLeafSurface) surface = surface.get('supersurface');
+    while (surface.isLeafSurface && surface.get('supersurface')) {
+      surface = surface.get('supersurface');
+    }
     sc_assert(surface);
     return surface;
   },

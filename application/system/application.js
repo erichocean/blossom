@@ -70,7 +70,7 @@ SC.needsRendering = false;
   A `menuSurface` receives text input and keyboard shortcuts before both the 
   `inputSurface` and `ui` surface have had a chance to respond:
 
-      SC.app.set('menuSurface', aSurface);
+      SC.app.pushMenuSurface(aSurface);
 
   See "Dispatching Events" below for detailed documentation on how these 
   surfaces are used by `SC.Application`.
@@ -485,16 +485,35 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
   // MENU SURFACE
   //
 
+  _sc_menuSurfaces: [],
+
+  pushMenuSurface: function(surface) {
+    sc_assert(surface);
+    sc_assert(surface.kindOf(SC.Surface));
+
+    this._sc_menuSurfaces.push(surface);
+    this.set('menuSurface', surface);
+  },
+
+  popMenuSurface: function() {
+    if (this._sc_menuSurfaces.length > 0) {
+      this._sc_menuSurfaces.popObject();
+    }
+    var surface = this._sc_menuSurfaces.lastObject();
+    if (surface) this.set('menuSurface', surface);
+    else this.set('menuSurface', null);
+  },
+
   /**
-    The current menu surface. This surface receives text input events before 
-    any other surface, but tends to be transient, as it is usually only set 
-    when a surface representing a "menu" is open.
+    Read Only. The current menu surface. This surface receives text input 
+    events before any other surface, but tends to be transient, as it is 
+    usually only set when a surface representing a "menu" is open.
 
     @type SC.Surface or null
   */
   menuSurface: null,
 
-  _sc_menuSurface : null, // Note: Required, we're strict about null checking.
+  _sc_menuSurface: null, // Note: Required, we're strict about null checking.
   _sc_menuSurfaceDidChange: function() {
     var old = this._sc_menuSurface,
         cur = this.get('menuSurface');
@@ -1476,7 +1495,7 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
     // automatically if a mousedown occurs on anything but the menu surface.
     var menuSurface = this.get('menuSurface');
     if (menuSurface && responder.get('surface') !== menuSurface) {
-      this.set('menuSurface', null);
+      this.popMenuSurface();
       this.removeSurface(menuSurface);
       return true;
     }

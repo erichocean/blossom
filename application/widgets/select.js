@@ -340,7 +340,7 @@ SC.SelectWidget = SC.ButtonWidget.extend({
     if (frame.width === 0 || frame.height === 0) return;
 
     SC.app.addSurface(menuView);
-    SC.app.set('menuSurface', menuView);
+    SC.app.pushMenuSurface(menuView);
 
     this._sc_mouseDownStarted = Date.now();
 
@@ -692,7 +692,7 @@ SC.SelectWidgetMenuView = SC.View.extend({
       }
     }
 
-    SC.app.set('menuSurface', null);
+    SC.app.popMenuSurface(null);
     SC.app.removeSurface(this);
 
     return ret;
