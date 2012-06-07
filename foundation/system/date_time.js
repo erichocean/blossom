@@ -388,6 +388,12 @@ SC.DateTime = SC.Object.extend(SC.Freezable, SC.Copyable,
     return this;
   },
   
+  hash: function() {
+    var hash = this._sc_hash;
+    if (!hash) hash = this._sc_hash = '%' + this.get('milliseconds');
+    return hash;
+  },
+
   /**
     Returns a copy of the receiver with the timezone set to the passed
     timezone. The returned value is equal to the receiver (ie SC.Compare
@@ -884,7 +890,7 @@ SC.DateTime.mixin(SC.Comparable,
       });
     }
   },
-  
+
   /** @private
     Calls the create() method with the current internal _date value.
     
