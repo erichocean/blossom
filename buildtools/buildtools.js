@@ -1322,7 +1322,15 @@ BT.Project = BT.BuildNode.extend({
     var javascript = [];
     javascriptFiles.forEach(function(p) {
       if (path.existsSync(p)) {
-        javascript.push(fs.readFileSync(p, 'utf-8'));
+        if (path.extname(p) === '.js') {
+          javascript.push(fs.readFileSync(p, 'utf-8'));
+        }
+        if (path.extname(p) === '.coffee') {
+          (function() {
+            var data = fs.readFileSync(p, 'utf-8');
+            javascript.push(coffee.compile(data, { bare: true }));
+          })();
+        }
       }
     });
     javascript = javascript.join(';\n');
