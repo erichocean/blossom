@@ -426,8 +426,10 @@ SC.View = SC.LeafSurface.extend({
     psurface = SC.psurfaces[this.__id__];
     if (!psurface) return;
 
-    // Must be a mouse event.
-    if (type !== 'mousedown' && type !== 'mousemove' && type !== 'mouseup') return;
+    // Must be a mouse event or a touch event.
+    if (type !== 'mousedown' && type !== 'mousemove' && type !== 'mouseup'
+        && type !== 'touchstart' && type !== 'touchmove' && type !== 'touchend'
+        && type !== 'touchcancel') return;
 
     evt.layer = layer;
 
