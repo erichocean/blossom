@@ -1632,19 +1632,19 @@ SC.Application = SC.Object.extend(SC.Responder, SC.DelegateSupport,
 
   touchend: function(evt) {
     // console.log('touchend');
-    // var touch = evt.touches[0];
-    // evt.pageX = touch.pageX;
-    // evt.pageY = touch.pageY;
-    // evt.target = touch.target;
+    var touch = evt.changedTouches[0];
+    evt.clientX = touch.clientX;
+    evt.clientY = touch.clientY;
+    evt.target = touch.target;
     return this.mouseup(evt);
   },
 
   touchcancel: function(evt) {
     // console.log('touchcancel');
-    // var touch = evt.touches[0];
-    // evt.pageX = touch.pageX;
-    // evt.pageY = touch.pageY;
-    // evt.target = touch.target;
+    var touch = evt.changedTouches[0];
+    evt.clientX = touch.clientX;
+    evt.clientY = touch.clientY;
+    evt.target = touch.target;
     return this.mouseup(evt);
   },
 
