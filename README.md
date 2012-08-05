@@ -37,7 +37,7 @@ itself is licensed under the GPLv3.
 
 If you are interested in using Blossom as the basis for your own business 
 application shell, and would like a commercial license, please contact 
-Lauren Ocean at locean@fohr.com.
+Erich Ocean at eocean@fohr.com.
 
 Getting Involved
 ----------------
