@@ -12,10 +12,6 @@ business application shells across desktop, tablet and mobile browsers.  As
 such, there is no public documentation or support for Blossom itself, and 
 none will be forthcoming.  Blossom is not an end-user product.
 
-> Instead, Blossom development is being supported by specific application 
-shell providers, for example, xTuple's Postbooks 4.0, which can be found 
-[here](https://github.com/xtuple/client).
-
 > Blossom only includes a very minimal set of built-in widgets, but makes 
 developing new widgets **extremely** easy. Because Blossom is meant to be used 
 in the context of specific, re-usable application shells, the widgets are 
