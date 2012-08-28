@@ -43,7 +43,6 @@ Getting Involved
 ----------------
 
 * Why Blossom exists: http://bit.ly/future-of-sproutcore
-* IRC Channel: #blossom on irc.freenode.net
 * Want to give Blossom a spin? https://github.com/fohr/blossom-testproject
 * Demo: http://fohr.github.com/blossom
 * Questions? Use [stackoverflow.com](http://stackoverflow.com/) and the *blossom* tag.
