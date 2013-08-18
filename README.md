@@ -1,26 +1,3 @@
-Blossom - A Modern Business Application Framework
-=================================================
-
-**NEW!** Blossom 1.0 was released on May 28, 2012.  Here's the release notes:
-
-> Blossom is a business application framework written in JavaScript and 
-targeting tablet, mobile, and desktop browsers. It is based on Apple's 
-SproutCore application framework. 
-
-> Blossom is primarily being used as the basis for re-usable, model-driven 
-business application shells across desktop, tablet and mobile browsers.  As 
-such, there is no public documentation or support for Blossom itself, and 
-none will be forthcoming.  Blossom is not an end-user product.
-
-> Instead, Blossom development is being supported by specific application 
-shell providers, for example, xTuple's Postbooks 4.0, which can be found 
-[here](https://github.com/xtuple/client).
-
-> Blossom only includes a very minimal set of built-in widgets, but makes 
-developing new widgets **extremely** easy. Because Blossom is mean to be used 
-in the context of specific, re-usable application shells, the widgets are 
-expected to be custom-build for these shells.
-
 About Blossom
 -------------
 
@@ -42,9 +19,7 @@ itself is licensed under the GPLv3.
 If you are interested in using Blossom as the basis for your own business 
 application shell, please contact Lauren Ocean at locean@fohr.com.
 
-
-Watch this repository on GitHub to follow development, or fork it and submit 
-a pull request to help contribute to it's evolution.
+-----
 
 Blossom was conceived and written by Erich Ocean at Fohr <eocean@fohr.com>,
 and is based on the SproutCore version 1.4.5 release.
