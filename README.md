@@ -42,14 +42,6 @@ itself is licensed under the GPLv3.
 If you are interested in using Blossom as the basis for your own business 
 application shell, please contact Lauren Ocean at locean@fohr.com.
 
-Getting Involved
-----------------
-
-* Why Blossom exists: http://bit.ly/future-of-sproutcore
-* IRC Channel: #blossom on irc.freenode.net
-* Want to give Blossom a spin? https://github.com/fohr/blossom-testproject
-* Demo: http://fohr.github.com/blossom
-* Questions? Use [stackoverflow.com](http://stackoverflow.com/) and the *blossom* tag.
 
 Watch this repository on GitHub to follow development, or fork it and submit 
 a pull request to help contribute to it's evolution.
